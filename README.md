@@ -10,8 +10,8 @@ Welcome to the **Engineering Portfolio Platform** of Aditya Chavan. This reposit
 |---------------|----------------------------------------|
 | Frontend      | HTML, CSS, JavaScript                 |
 | Backend       | Flask (REST APIs), FastAPI            |
-| Database      | SQL Server (SSMS)                     |
-| Infra (Planned) | Docker, Render, GitHub Actions         |
+| Database      | Microsoft SQL Server (SSMS)                     |
+| Infra (Planned) | Docker, Render        |
 | Dev Tools     | VS Code, DevTunnels, Postman, Telegram Bot |
 
 ---
