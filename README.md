@@ -180,8 +180,8 @@ pytest
 
 ## 🤝 Contact
 
-* 📧 [adityachavan@email.com](mailto:adityachavan3@email.com)
-* 💼 [LinkedIn]([https://linkedin.com/in/adityachavan](https://www.linkedin.com/in/aditya-chavan-6974ab27b/))
+* 📧 [adityachavan3@email.com](mailto:adityachavan3@email.com)
+* 💼 [LinkedIn](https://www.linkedin.com/in/aditya-chavan-6974ab27b/))
 
 ---
 
