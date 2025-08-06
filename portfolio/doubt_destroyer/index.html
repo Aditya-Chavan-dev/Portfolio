@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doubt Destroyer - Quickfire Answers for Busy Recruiters</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="decorative-shape shape-1"></div>
+            <div class="decorative-shape shape-2"></div>
+            
+            <h1 class="main-title">Doubt Destroyer</h1>
+            <p class="subtitle">Quickfire answers for busy recruiters</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Questions Section -->
+            <div class="questions-section">
+                <h2 class="section-title">Quick Questions</h2>
+                
+                <div class="questions-content">
+                    <div class="question-cards" id="questionCards">
+                        <!-- Question cards will be populated by JavaScript -->
+                    </div>
+
+                    <!-- Smart Chatbot Input -->
+                    <div class="chatbot-section">
+                        <div class="chatbot-title">
+                            <div class="chatbot-icon">🤖</div>
+                            Ask me anything
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chatInput" 
+                                   placeholder="What would you like to know?">
+                            <button class="chat-send-btn" onclick="handleChatQuestion()">
+                                ➤
+                            </button>
+                        </div>
+                        <div class="chat-suggestions">
+                            <div class="suggestion-chip" onclick="fillSuggestion('Salary Expectations')">💰 Salary</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('Tech Stack')">⚡ Tech Stack</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('Availability')">📅 Start Date</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('Team Fit')">👥 Team Fit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Answer Section -->
+            <div class="answer-section">
+                <div class="answer-placeholder" id="answerPlaceholder">
+                    <div class="answer-placeholder-icon">💭</div>
+                    <h3>Ready to answer your questions</h3>
+                    <p>Click on a question or ask me anything in the chat</p>
+                </div>
+                
+                <div class="answer-content" id="answerContent">
+                    <div class="answer-header">
+                        <h3 class="answer-title" id="answerTitle"></h3>
+                        <div class="typing-indicator" id="typingIndicator">
+                            <span>Typing</span>
+                            <div class="typing-dots">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="answer-text" id="answerText"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="doubt_destroyer.js"></script>
+</body>
+</html>
