@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Elite Portfolio Gateway</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-animation">
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+    <div class="floating-particles"></div>
+  </div>
+  
+  <div class="container">
+    <div class="logo-section">
+      <div class="logo-icon">⚡</div>
+      <h1 class="brand-title">Portfolio Gateway</h1>
+    </div>
+    
+    <div class="welcome-section">
+      <h2 class="welcome-msg">Welcome, Talent Hunter Extraordinaire! 🎯</h2>
+      <p class="subtitle">Ready to discover something exceptional? Choose your approach below.</p>
+      <div class="accent-line"></div>
+    </div>
+
+    <!-- Error message display -->
+    {% if error %}
+    <div class="error-banner" id="errorBanner">
+      <span class="error-icon">⚠️</span>
+      <span class="error-text">{{ error }}</span>
+      <button class="error-close" onclick="closeError()">×</button>
+    </div>
+    {% endif %}
+
+    <form id="companyForm" action="/submit_company" method="post" autocomplete="off" novalidate>
+      <div class="input-group">
+        <div class="input-container">
+          <input 
+            type="text" 
+            name="company_name" 
+            id="company_name" 
+            placeholder="Enter your company name" 
+            aria-label="Company Name"
+            maxlength="100"
+          />
+          <div class="input-highlight"></div>
+          <div class="character-counter" id="charCounter">0/100</div>
+        </div>
+        
+        <div class="divider-section">
+          <div class="divider-line"></div>
+          <span class="divider-text">OR</span>
+          <div class="divider-line"></div>
+        </div>
+        
+        <div class="anonymous-container" id="anonymousContainer">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="anonymous" name="anonymous" />
+            <span class="checkmark"></span>
+            <span class="checkbox-label">Stay Anonymous</span>
+          </label>
+        </div>
+        
+        <div class="validation-message hidden" id="validationMsg">
+          <span class="validation-icon">❌</span>
+          <span id="validationText">Please choose either company name or anonymous option.</span>
+        </div>
+      </div>
+
+      <button type="submit" id="proceedBtn" class="cta-button">
+        <span class="button-text">Enter Portfolio</span>
+        <div class="button-bg"></div>
+        <div class="button-shine"></div>
+        <div class="ripple"></div>
+      </button>
+    </form>
+
+    <div class="footer-text">
+      <p>Crafted with precision for discerning professionals</p>
+      <div class="typing-indicator">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
