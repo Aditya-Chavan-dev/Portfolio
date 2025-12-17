@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-        ? ['https://your-firebase-app.web.app'] // Update this after deployment
+    origin: process.env.NODE_ENV === 'production'
+        ? ['https://portfolio0110.web.app', 'https://portfolio0110.firebaseapp.com']
         : 'http://localhost:5173' // Vite dev port
 }));
 app.use(express.json());
