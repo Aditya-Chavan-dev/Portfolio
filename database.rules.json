@@ -6,6 +6,15 @@
         ".write": true
       }
     },
+    "analytics": {
+      ".read": "auth != null",
+      ".write": true,
+      "sessions": {
+        "$sessionId": {
+          ".write": true
+        }
+      }
+    },
     ".read": false,
     ".write": false
   }
