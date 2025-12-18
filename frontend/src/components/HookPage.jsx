@@ -31,30 +31,30 @@ function HookPage({ onEnter }) {
         }
 
         .hook-container {
-          max-width: 850px;
+          max-width: 700px; /* Reduced from 850px for better reading line-length */
           text-align: center;
           z-index: 10;
         }
 
         .hook-title {
-          font-size: clamp(36px, 6vw, 54px);
+          font-size: clamp(28px, 4vw, 36px); /* Significant reduction from 36-54px */
           font-weight: 600;
-          line-height: 1.1;
-          margin-bottom: 4rem;
+          line-height: 1.2;
+          margin-bottom: 3rem;
           color: var(--text-primary);
         }
 
         .hook-body {
-          font-size: 20px;
+          font-size: 16px; /* Reduced from 20px */
           font-weight: 400;
-          line-height: 1.8;
+          line-height: 1.7; /* Slightly tighter line height */
           color: var(--text-muted);
-          margin-bottom: 5rem;
+          margin-bottom: 4rem;
           text-align: center;
         }
 
         .hook-body p {
-          margin-bottom: 2.5rem;
+          margin-bottom: 1.5rem; /* Reduced spacing between paragraphs */
         }
 
         .hook-body strong {
@@ -70,7 +70,7 @@ function HookPage({ onEnter }) {
         .status-circles {
           display: flex;
           gap: 1.5rem;
-          margin-top: 1.5rem;
+          margin-top: 1rem;
           justify-content: center;
           align-items: center;
         }
@@ -78,23 +78,23 @@ function HookPage({ onEnter }) {
         .status-item {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
-          font-size: 13px;
-          color: rgba(255, 255, 255, 0.5);
+          gap: 0.5rem;
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.4);
           letter-spacing: 0.05em;
           text-transform: uppercase;
         }
 
         .circle {
-          width: 8px;
-          height: 8px;
+          width: 6px;
+          height: 6px;
           border-radius: 50%;
           background: #333;
         }
 
         .circle.active {
           background: var(--accent);
-          box-shadow: 0 0 10px var(--accent);
+          box-shadow: 0 0 8px var(--accent);
         }
 
         .circle.pulsing {
@@ -104,22 +104,22 @@ function HookPage({ onEnter }) {
 
         @keyframes statusPulse {
           0% { opacity: 0.4; }
-          50% { opacity: 1; box-shadow: 0 0 15px var(--accent); }
+          50% { opacity: 1; box-shadow: 0 0 12px var(--accent); }
           100% { opacity: 0.4; }
         }
 
         .hook-footer-line {
           position: absolute;
-          bottom: 3.5rem;
+          bottom: 2.5rem;
           width: 100%;
           text-align: center;
         }
 
         .footer-text {
-          font-size: 13px;
+          font-size: 12px;
           letter-spacing: 0.1em;
-          color: rgba(255, 255, 255, 0.4);
-          margin-bottom: 1rem;
+          color: rgba(255, 255, 255, 0.3);
+          margin-bottom: 0.8rem;
           text-transform: uppercase;
         }
       `}</style>
