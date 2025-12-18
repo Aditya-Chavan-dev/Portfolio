@@ -1,12 +1,12 @@
 {
     "rules": {
-        ".read": false,
-        ".write": false,
         "test": {
             "message": {
                 ".read": true,
-                ".write": "auth != null || true"
+                ".write": true
             }
-        }
+        },
+        ".read": false,
+        ".write": false
     }
 }
