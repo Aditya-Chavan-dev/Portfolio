@@ -1,6 +1,11 @@
 {
-  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
+    "test": {
+      "message": {
+        ".read": true,
+        ".write": true
+      }
+    },
     ".read": false,
     ".write": false
   }
