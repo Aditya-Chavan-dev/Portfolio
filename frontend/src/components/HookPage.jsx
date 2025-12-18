@@ -110,9 +110,10 @@ function HookPage({ onEnter }) {
 
         .hook-footer-line {
           position: absolute;
-          bottom: 2.5rem;
+          bottom: 2rem;
           width: 100%;
           text-align: center;
+          padding-top: 2rem; /* Ensure padding from content above */
         }
 
         .footer-text {
@@ -146,9 +147,9 @@ function HookPage({ onEnter }) {
           </p>
         </div>
 
-        <div className="fade-in" style={{ animationDelay: '1000ms' }}>
+        <div className="fade-in" style={{ animationDelay: '1000ms', marginBottom: '4rem' }}>
           <button onClick={onEnter} className="cta-button pulse">
-            &darr; ENTER THE SYSTEM
+            &darr; ENTER THE PORTFOLIO
           </button>
         </div>
       </div>

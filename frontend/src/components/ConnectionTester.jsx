@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import api from '../services/api'
 import { db } from '../services/firebase'
+import { telemetry } from '../services/telemetry'
 import { ref, onValue } from 'firebase/database'
 
 /**
@@ -46,12 +47,15 @@ function ConnectionTester() {
     // 3. Manual Backend Connectivity Check
     const checkBackend = async () => {
         setLoading(true);
+        telemetry.logEvent('connection_test_click');
         try {
             const response = await api.get('/test');
             setBackendStatus(response.data);
+            telemetry.logEvent('connection_test_result', { status: 'success' });
         } catch (error) {
             console.error("Backend Error:", error);
             setBackendStatus({ status: 'error', message: error.message });
+            telemetry.logEvent('connection_test_result', { status: 'error', error: error.message });
         }
         setLoading(false);
     }

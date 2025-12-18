@@ -25,13 +25,17 @@ class TelemetryService {
         if (!sid) {
             sid = generateSessionId();
             sessionStorage.setItem(SESSION_KEY, sid);
+            // Must set ID before logging so logEvent doesn't return early
+            this.sessionId = sid;
+
             this.logEvent('session_start', {
                 userAgent: navigator.userAgent,
                 screen: `${window.screen.width}x${window.screen.height}`,
                 referrer: document.referrer
             });
+        } else {
+            this.sessionId = sid;
         }
-        this.sessionId = sid;
     }
 
     /**
@@ -40,9 +44,13 @@ class TelemetryService {
      * @param {object} metadata - Optional extra data
      */
     logEvent(eventName, metadata = {}) {
-        if (!this.sessionId) return;
+        if (!this.sessionId) {
+            console.warn('Telemetry: No Session ID');
+            return;
+        }
 
         try {
+            console.log(`[Telemetry] Logging: ${eventName}`, metadata); // Debug Log
             const eventRef = ref(db, `analytics/sessions/${this.sessionId}/events`);
             push(eventRef, {
                 event: eventName,
@@ -50,14 +58,11 @@ class TelemetryService {
                 ...metadata
             });
 
-            // Update last active timestamp for the session root
-            // This helps us see "Active Now" users
+            // Update last active timestamp
             const sessionRef = ref(db, `analytics/sessions/${this.sessionId}/last_active`);
             // We use a simplified write here just to keep the session "warm"
-            // In a real app we might use set(), but push/update works too.
         } catch (error) {
-            // Telemetry should stay silent and never break the app
-            console.warn('Telemetry Error:', error);
+            console.error('Telemetry Error:', error);
         }
     }
 }
