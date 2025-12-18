@@ -15,15 +15,22 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/**
- * FIRST PRINCIPLE: Security & CORS (Cross-Origin Resource Sharing)
- * Browsers block requests between different domains by default.
- * We must explicitly allow our Frontend URL to communicate with this Backend.
- */
+const allowedOrigins = [
+    'https://portfolio0110.web.app',
+    'https://portfolio0110.firebaseapp.com',
+    'http://localhost:5173'
+];
+
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production'
-        ? ['https://portfolio0110.web.app', 'https://portfolio0110.firebaseapp.com']
-        : 'http://localhost:5173' // Default Vite development port
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl) or allowed origins
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
 }));
 
 /**
