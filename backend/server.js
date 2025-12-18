@@ -3,7 +3,11 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const { admin, db } = require('./firebase');
 
-// Load env vars from root .env if not in production (Render handles env vars via dashboard)
+/**
+ * FIRST PRINCIPLE: Environment Configuration
+ * Separation of configuration from code.
+ * Local development uses .env file; Production (Render) uses Dashboard Variables.
+ */
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config({ path: '../.env' });
 }
@@ -11,25 +15,43 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+/**
+ * FIRST PRINCIPLE: Security & CORS (Cross-Origin Resource Sharing)
+ * Browsers block requests between different domains by default.
+ * We must explicitly allow our Frontend URL to communicate with this Backend.
+ */
 app.use(cors({
     origin: process.env.NODE_ENV === 'production'
         ? ['https://portfolio0110.web.app', 'https://portfolio0110.firebaseapp.com']
-        : 'http://localhost:5173' // Vite dev port
+        : 'http://localhost:5173' // Default Vite development port
 }));
+
+/**
+ * FIRST PRINCIPLE: Data Parsing
+ * Middleware to translate incoming JSON strings into JavaScript objects.
+ */
 app.use(express.json());
 
-// Routes
+/**
+ * FIRST PRINCIPLE: Modular Routing
+ * Keeping the main server file clean by delegating route logic to separate files.
+ */
 const testRoutes = require('./routes/test');
-app.use('/api/test', testRoutes);
+const pingRoutes = require('./routes/ping');
 
-// Health Check
+app.use('/api/test', testRoutes); // General connectivity test
+app.use('/api/ping', pingRoutes); // Silent wake-up endpoint
+
+/**
+ * Root Endpoint: Simple health check for the API.
+ */
 app.get('/', (req, res) => {
     res.send('Portfolio Backend is Running');
 });
 
-// Start Server
+// Start the server and listen for incoming traffic
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`[SERVER] Running on port ${PORT}`);
+    console.log(`[SERVER] Mode: ${process.env.NODE_ENV || 'development'}`);
 });
+
