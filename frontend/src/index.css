@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  --bg-primary: #0a0a0a;
+  --bg-primary: #050505;
+  /* Deeper black */
   --text-primary: #ffffff;
-  --text-muted: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.6);
   --accent: #64ffda;
+  --accent-glow: rgba(100, 255, 218, 0.3);
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
 
   font-family: var(--font-family);
@@ -21,64 +23,177 @@
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  display: flex;
   min-height: 100vh;
   overflow-x: hidden;
+  background-color: var(--bg-primary);
+}
+
+/* Matrix/Grid Background */
+.matrix-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(100, 255, 218, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 255, 218, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center center;
+  z-index: -1;
+  mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
+  animation: bgPulse 10s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
 }
 
 #root {
   width: 100%;
 }
 
-/* Base Link/Button Reset */
-button,
-.cta-text {
+/* Base CTA Button style */
+.cta-button {
   all: unset;
   cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-button:hover,
-.cta-text:hover {
-  opacity: 0.8;
-}
-
-/* Connectivity specific styles moved to component or kept here for simplicity */
-.status-box {
-  border: 1px solid #222;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  border-radius: 4px;
-  background: #111;
-  text-align: left;
-}
-
-.success {
-  color: var(--accent);
-}
-
-.loading {
+  padding: 12px 32px;
+  background: transparent;
+  border: 1px solid var(--text-muted);
   color: var(--text-muted);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
-/* Animation Utility */
+.cta-button:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+/* Animations */
 .fade-in {
   opacity: 0;
-  animation: fadeIn 0.4s ease forwards;
+  animation: fadeIn 0.6s ease-out forwards;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(10px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.typing-text {
+  border-right: 2px solid var(--accent);
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: typing 2.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0
+  }
+
+  to {
+    width: 100%
+  }
+}
+
+@keyframes blink-caret {
+
+  from,
+  to {
+    border-color: transparent
+  }
+
+  50% {
+    border-color: var(--accent);
+  }
+}
+
+.status-box {
+  border: 1px solid #222;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  background: #0a0a0a;
+  text-align: left;
+}
+
+.pulse {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(100, 255, 218, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(100, 255, 218, 0);
+  }
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 80px;
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollDown 2s infinite;
+}
+
+@keyframes scrollDown {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  51% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
   }
 }

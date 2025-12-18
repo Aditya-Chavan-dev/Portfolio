@@ -1,20 +1,22 @@
 import { useState } from 'react'
 import HookPage from './components/HookPage'
 import SystemDashboard from './components/SystemDashboard'
+import api from './services/api'
 import './index.css'
 
-/**
- * FIRST PRINCIPLE: Deliberate Entry Flow
- * We don't just dump the user into content.
- * We establish a mindset first via the HookPage, then reveal the System.
- */
 function App() {
     const [view, setView] = useState('hook')
+
+    const handleEnter = () => {
+        // Explicitly trigger a backend wake-up call when the user interacts
+        api.get('/ping').catch(() => { });
+        setView('dashboard');
+    }
 
     return (
         <div className="app-root">
             {view === 'hook' ? (
-                <HookPage onEnter={() => setView('dashboard')} />
+                <HookPage onEnter={handleEnter} />
             ) : (
                 <SystemDashboard />
             )}
@@ -23,5 +25,6 @@ function App() {
 }
 
 export default App
+
 
 
