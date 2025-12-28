@@ -1,57 +1,64 @@
-import { useState, Suspense, lazy } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import HookPage from './components/HookPage'
-import SystemDashboard from './components/SystemDashboard'
-import api from './services/api'
-import { telemetry } from './services/telemetry'
-import './index.css'
+import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import EntryGate from './components/EntryGate';
+import SessionHandshake from './components/SessionHandshake';
+import HeroDashboard from './components/hero/HeroDashboard';
 
-// Lazy Load the Console so it's NOT in the main bundle (Recruiters never download it)
-const MetricConsole = lazy(() => import('./components/MetricConsole'));
+// PHASE CONSTANTS
+const PHASE_ENTRY = 0;
+const PHASE_HANDSHAKE = 1;
+const PHASE_DASHBOARD = 2;
 
-// The Public Portfolio Component
-function Portfolio() {
-    const [view, setView] = useState('hook')
-
-    const handleEnter = () => {
-        // Explicitly trigger a backend wake-up call when the user interacts
-        api.get('/ping').catch(() => { });
-
-        // Track the conversion
-        telemetry.logEvent('hook_enter');
-
-        setView('dashboard');
-    }
-
-    return (
-        <div className="app-root">
-            {view === 'hook' ? (
-                <HookPage onEnter={handleEnter} />
-            ) : (
-                <SystemDashboard />
-            )}
-        </div>
-    )
-}
-
-// The Main Router
 function App() {
+    const [phase, setPhase] = useState(PHASE_ENTRY);
+
+    const startSession = () => {
+        setPhase(PHASE_HANDSHAKE);
+    };
+
+    const enterDashboard = () => {
+        setPhase(PHASE_DASHBOARD);
+    };
+
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Portfolio />} />
-                <Route
-                    path="/console"
-                    element={
-                        <Suspense fallback={<div style={{ color: '#0f0', background: '#000', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'monospace' }}>INITIALIZING SYSTEM...</div>}>
-                            <MetricConsole />
-                        </Suspense>
-                    }
-                />
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-        </BrowserRouter>
-    )
+        <div className="text-[var(--color-text-primary)] font-sans">
+            <AnimatePresence mode="wait">
+
+                {phase === PHASE_ENTRY && (
+                    <motion.div
+                        key="entry"
+                        exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <EntryGate onUnlock={startSession} />
+                    </motion.div>
+                )}
+
+                {phase === PHASE_HANDSHAKE && (
+                    <motion.div
+                        key="handshake"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <SessionHandshake onComplete={enterDashboard} />
+                    </motion.div>
+                )}
+
+                {phase === PHASE_DASHBOARD && (
+                    <motion.div
+                        key="dashboard"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <HeroDashboard />
+                    </motion.div>
+                )}
+
+            </AnimatePresence>
+        </div>
+    );
 }
 
 export default App;

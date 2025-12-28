@@ -25,6 +25,7 @@ class TelemetryService {
         if (!sid) {
             sid = generateSessionId();
             sessionStorage.setItem(SESSION_KEY, sid);
+            sessionStorage.setItem('session_start_time', Date.now()); // Persist start time
             // Must set ID before logging so logEvent doesn't return early
             this.sessionId = sid;
 
@@ -33,9 +34,23 @@ class TelemetryService {
                 screen: `${window.screen.width}x${window.screen.height}`,
                 referrer: document.referrer
             });
+
+            // Increment detailed global counter
+            this.incrementGlobalCounter();
         } else {
             this.sessionId = sid;
         }
+    }
+
+    incrementGlobalCounter() {
+        // Increment a global counter for "Live Verified Sessions"
+        // Using a transaction to ensure atomicity
+        import('firebase/database').then(({ runTransaction, ref }) => {
+            const counterRef = ref(db, 'analytics/total_sessions');
+            runTransaction(counterRef, (currentValue) => {
+                return (currentValue || 0) + 1;
+            }).catch(err => console.error("Counter increment failed", err));
+        });
     }
 
     /**
@@ -44,13 +59,9 @@ class TelemetryService {
      * @param {object} metadata - Optional extra data
      */
     logEvent(eventName, metadata = {}) {
-        if (!this.sessionId) {
-            console.warn('Telemetry: No Session ID');
-            return;
-        }
+        if (!this.sessionId) return;
 
         try {
-            console.log(`[Telemetry] Logging: ${eventName}`, metadata); // Debug Log
             const eventRef = ref(db, `analytics/sessions/${this.sessionId}/events`);
             push(eventRef, {
                 event: eventName,
@@ -62,7 +73,7 @@ class TelemetryService {
             const sessionRef = ref(db, `analytics/sessions/${this.sessionId}/last_active`);
             // We use a simplified write here just to keep the session "warm"
         } catch (error) {
-            console.error('Telemetry Error:', error);
+            // Fail silently as requested
         }
     }
 }

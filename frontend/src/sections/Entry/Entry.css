@@ -1,0 +1,89 @@
+/* Entry Gate Styles */
+:root {
+    --entry-bg: #050505;
+    --entry-text-primary: #ffffff;
+    --entry-text-muted: #666666;
+    --entry-accent: #646cff;
+    /* Match Vite/System default or override later */
+}
+
+.entry-gate-root {
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--entry-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.entry-content {
+    max-width: 600px;
+    padding: 0 2rem;
+    text-align: center;
+    z-index: 10;
+    opacity: 0;
+    animation: fadeInEntry 1s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.entry-note {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--entry-text-muted);
+    margin-bottom: 3rem;
+    font-weight: 300;
+}
+
+.entry-note p {
+    margin-bottom: 0.5rem;
+}
+
+.entry-strong {
+    color: var(--entry-text-primary);
+    font-weight: 500;
+}
+
+.entry-cta-container {
+    margin-top: 2rem;
+}
+
+.entry-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--entry-text-primary);
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.entry-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+    letter-spacing: 0.15em;
+}
+
+.entry-btn:active {
+    transform: translateY(0);
+}
+
+@keyframes fadeInEntry {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
