@@ -29,13 +29,21 @@ const SessionHandshake = ({ onComplete }) => {
     };
 
     return (
-        <div className="h-screen w-screen bg-[var(--color-bg-deep)] flex-center flex-col font-mono text-[var(--color-accent-green)]">
-            <div className="w-full max-w-md p-6">
+        <div className="h-screen w-screen bg-[var(--color-bg-deep)] flex-center flex-col font-mono text-[var(--color-accent-green)] relative overflow-hidden">
+
+            {/* CRT/Scanline Effects */}
+            <div className="absolute inset-0 pointer-events-none z-20" style={{
+                background: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+                backgroundSize: '100% 2px, 2px 100%'
+            }}></div>
+            <div className="absolute inset-0 pointer-events-none z-20 opacity-10 animate-pulse bg-white mix-blend-overlay"></div>
+
+            <div className="w-full max-w-md p-6 relative z-30">
 
                 {/* Terminal Header */}
-                <div className="flex items-center space-x-2 border-b border-[var(--border-subtle)] pb-4 mb-6 opacity-50">
-                    <Terminal size={14} />
-                    <span className="text-xs uppercase tracking-widest">Secure Handshake Protocol</span>
+                <div className="flex items-center space-x-2 border-b border-[var(--border-subtle)] pb-4 mb-6 opacity-70 text-glow">
+                    <Terminal size={14} className="animate-pulse" />
+                    <span className="text-xs uppercase tracking-widest text-[#00ff94] text-glow">Secure Handshake Protocol</span>
                 </div>
 
                 {/* Steps Output */}
@@ -48,14 +56,14 @@ const SessionHandshake = ({ onComplete }) => {
                             className="flex items-center space-x-3 text-sm h-6"
                         >
                             <span className="opacity-50">{`>`}</span>
-                            <span className={index === currentStep ? "animate-pulse" : ""}>
+                            <span className={index === currentStep ? "animate-pulse text-[#00ff94] text-glow" : "text-[var(--color-text-secondary)]"}>
                                 {formatStep(stepKey)}...
                             </span>
                             {index < currentStep && (
                                 <motion.span
                                     initial={{ scale: 0 }}
                                     animate={{ scale: 1 }}
-                                    className="text-[var(--color-accent-blue)]"
+                                    className="text-[var(--color-accent-blue)] text-glow"
                                 >
                                     <CheckCircle2 size={12} />
                                 </motion.span>
@@ -69,7 +77,7 @@ const SessionHandshake = ({ onComplete }) => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="mt-8 text-center text-[var(--color-text-primary)]"
+                        className="mt-8 text-center text-[var(--color-text-primary)] text-xl tracking-widest uppercase text-glow font-bold animate-pulse"
                     >
                         {config.handshake.completionMessage}
                     </motion.div>

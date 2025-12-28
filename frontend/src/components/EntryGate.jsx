@@ -1,53 +1,63 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import config from '../portfolio.config';
-import { Lock, ArrowRight } from 'lucide-react';
+import { Lock, ArrowRight, Zap } from 'lucide-react';
 
 const EntryGate = ({ onUnlock }) => {
     return (
         <div className="h-screen w-screen bg-[var(--color-bg-deep)] flex-center relative overflow-hidden">
-            {/* Background Ambience (Subtle Grid or Noise can go here) */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
-                backgroundImage: 'radial-gradient(circle at 50% 50%, #222 1px, transparent 1px)',
-                backgroundSize: '40px 40px'
-            }}></div>
+
+            {/* Ambient Particles / Background Glow */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent-blue)] opacity-[0.05] blur-[120px] rounded-full mix-blend-screen animate-pulse duration-[4s]"></div>
+                <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-accent-purple)] opacity-[0.05] blur-[150px] rounded-full mix-blend-screen"></div>
+            </div>
 
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="max-w-2xl px-6 text-center space-y-12 z-10"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} // Custom Quint easing
+                className="max-w-2xl px-6 text-center space-y-12 z-10 relative"
             >
-                {/* Status Indicator */}
-                <div className="flex-center space-x-2 text-[var(--color-accent-orange)] font-mono text-xs tracking-widest uppercase mb-8">
-                    <Lock size={12} />
-                    <span>{config.entry.title}</span>
-                    <span className="w-2 h-2 rounded-full bg-[var(--color-accent-orange)] animate-pulse"></span>
+                {/* Status Indicator - Tech Pill Style */}
+                <div className="inline-flex items-center space-x-3 px-4 py-2 rounded-full border border-[var(--border-subtle)] bg-[var(--glass-overlay)] backdrop-blur-sm mb-8">
+                    <Lock size={12} className="text-[var(--color-accent-orange)]" />
+                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[var(--color-text-secondary)]">
+                        {config.entry.title}
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-orange)] shadow-[0_0_10px_var(--color-accent-orange)] animate-pulse"></span>
                 </div>
 
-                {/* The Note */}
-                <h1 className="text-xl md:text-2xl leading-relaxed font-light text-[var(--color-text-primary)]">
-                    {config.entry.message.split('\n').map((line, i) => (
-                        <span key={i} className="block mb-2">{line}</span>
-                    ))}
-                </h1>
+                {/* The Note - Cinematic Typography */}
+                <div className="space-y-6">
+                    <h1 className="text-xl md:text-3xl leading-relaxed font-light text-[var(--color-text-primary)] font-display tracking-wide">
+                        {config.entry.message.split('\n').map((line, i) => (
+                            <span key={i} className="block mb-2 opacity-90">{line}</span>
+                        ))}
+                    </h1>
 
-                {/* Secondary Subtitle */}
-                <p className="text-[var(--color-text-secondary)] text-sm font-mono mt-4">
-                    {config.entry.subtitle}
-                </p>
+                    <p className="text-[var(--color-text-secondary)] text-xs font-mono tracking-widest uppercase opacity-60">
+                        {config.entry.subtitle}
+                    </p>
+                </div>
 
-                {/* The Action Button */}
+                {/* The Reactor Button */}
                 <motion.button
-                    whileHover={{ scale: 1.05, borderColor: 'var(--color-accent-green)', color: 'var(--color-accent-green)' }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={onUnlock}
-                    className="mt-12 px-8 py-4 bg-transparent border border-[var(--border-subtle)] 
-                               text-[var(--color-text-primary)] font-mono text-sm tracking-widest uppercase 
-                               hover:bg-[var(--glass-overlay)] transition-all duration-300 flex-center mx-auto gap-3 group"
+                    className="group relative mt-16 mx-auto px-10 py-5 bg-transparent overflow-hidden rounded-sm transition-all duration-300 cursor-pointer"
                 >
-                    {config.entry.buttonText}
-                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                    {/* Glowing Borders */}
+                    <div className="absolute inset-0 border border-[var(--color-accent-blue)] opacity-30 group-hover:opacity-100 group-hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-500 rounded-sm"></div>
+
+                    {/* Background Fill on Hover */}
+                    <div className="absolute inset-0 bg-[var(--color-accent-blue)] opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+
+                    <div className="relative flex items-center justify-center gap-4 text-[var(--color-accent-blue)] font-mono text-sm tracking-[0.2em] uppercase group-hover:text-white transition-colors duration-300">
+                        <span>{config.entry.buttonText}</span>
+                        <ArrowRight size={16} className="group-hover:translate-x-1 group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.8)] transition-all duration-300" />
+                    </div>
                 </motion.button>
             </motion.div>
         </div>
