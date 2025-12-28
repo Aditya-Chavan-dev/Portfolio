@@ -33,6 +33,19 @@ export const GitHubService = {
             const totalSizeKB = repos.reduce((acc, repo) => acc + repo.size, 0);
             const estimatedLoC = Math.floor(totalSizeKB * 40);
 
+            // Calculate "Real" Tech Stack (Frequency based on Repo Count)
+            const languageMap = {};
+            repos.forEach(repo => {
+                if (repo.language) {
+                    languageMap[repo.language] = (languageMap[repo.language] || 0) + 1;
+                }
+            });
+
+            const topStack = Object.entries(languageMap)
+                .sort(([, a], [, b]) => b - a) // Sort by frequency desc
+                .slice(0, 5) // Take Top 5
+                .map(([name]) => ({ name })); // Format for Component
+
             // Calculate Streak from Calendar (Unbounded)
             const streak = GitHubService.calculateCalendarStreak(calendarRes.data);
 
@@ -40,6 +53,7 @@ export const GitHubService = {
                 loc: estimatedLoC > config.hero.metrics.loc.value ? estimatedLoC : config.hero.metrics.loc.value,
                 repos: publicRepos,
                 streak: `${streak} Days`,
+                stack: topStack.length > 0 ? topStack : config.hero.stack // Fallback to config if no languages found
             };
 
         } catch (error) {
