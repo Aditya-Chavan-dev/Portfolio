@@ -25,6 +25,7 @@ I have built this system to demonstrate the engineering standards you are lookin
     // Phase 3: The Dashboard (Hero)
     hero: {
         name: "ADITYA CHAVAN",
+        githubUsername: "Aditya-Chavan-dev", // Used for fetching real stats
         role: "Full Stack System Architect",
         tagline: "I don't just write code. I build digital assets that compound in value.",
 
