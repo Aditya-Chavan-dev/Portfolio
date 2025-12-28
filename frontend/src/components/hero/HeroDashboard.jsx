@@ -40,7 +40,7 @@ const HeroDashboard = () => {
                     ...prev,
                     loc: stats.loc,
                     repos: stats.repos,
-                    // Streak stays mocked for now as it needs a complex scraper
+                    streak: stats.streak
                 }));
             }
         };
