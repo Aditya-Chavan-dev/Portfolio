@@ -45,14 +45,55 @@ export const GitHubService = {
             // DECISION: Return calculated LoC, and Real Repo Count. 
             // We will replace "Git Commits" with "Total Projects" (Real number) OR keep Commits as manual.
 
+            // 4. Calculate Real "Streak" via Events API
+            // Fetch last 90 days of events (max 1 page for speed, 100 events)
+            const eventsRes = await axios.get(`${GITHUB_API_BASE}/users/${username}/events?per_page=100`);
+            const events = eventsRes.data;
+            const streak = GitHubService.calculateStreak(events);
+
             return {
-                loc: estimatedLoC > config.hero.metrics.loc.value ? estimatedLoC : config.hero.metrics.loc.value, // Use larger
+                loc: estimatedLoC > config.hero.metrics.loc.value ? estimatedLoC : config.hero.metrics.loc.value,
                 repos: publicRepos,
+                streak: `${streak} Days`, // Return formatted string
             };
 
         } catch (error) {
             console.error("GitHub Fetch Failed:", error);
             return null;
         }
+    },
+
+    calculateStreak(events) {
+        if (!events || events.length === 0) return 0;
+
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        // Normalize dates to YYYY-MM-DD
+        const toDateString = (date) => date.toISOString().split('T')[0];
+        const eventDates = new Set(
+            events
+                .filter(e => e.type === 'PushEvent' || e.type === 'CreateEvent' || e.type === 'PullRequestEvent')
+                .map(e => toDateString(new Date(e.created_at)))
+        );
+
+        let currentStreak = 0;
+        let checkDate = today;
+
+        // Check today (if no activity today yet, streak continues from yesterday)
+        if (eventDates.has(toDateString(today))) {
+            currentStreak++;
+            checkDate = yesterday;
+        } else {
+            checkDate = yesterday; // Start checking from yesterday
+        }
+
+        while (eventDates.has(toDateString(checkDate))) {
+            currentStreak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        }
+
+        return currentStreak;
     }
 };
