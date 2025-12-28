@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import config from '../../portfolio.config';
 import HolographicID from './HolographicID';
-import { Flame, GitCommit, Code2 } from 'lucide-react';
+import { GitHubService } from '../../services/github';
+import { Flame, GitCommit, Code2, Server } from 'lucide-react';
 
 // Sub-component for a Metric Ticker with Glass Effect
 const MetricItem = ({ label, value, icon, delay }) => (
@@ -25,6 +26,34 @@ const MetricItem = ({ label, value, icon, delay }) => (
 );
 
 const HeroDashboard = () => {
+    const [metrics, setMetrics] = useState({
+        loc: config.hero.metrics.loc.value,
+        repos: 40, // Default/Fallback
+        streak: config.hero.metrics.streak.value
+    });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const stats = await GitHubService.getRealStats();
+            if (stats) {
+                setMetrics(prev => ({
+                    ...prev,
+                    loc: stats.loc,
+                    repos: stats.repos,
+                    // Streak stays mocked for now as it needs a complex scraper
+                }));
+            }
+        };
+        fetchData();
+    }, []);
+
+    // Helper to format large numbers
+    const formatNumber = (num) => {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
+        return num.toLocaleString();
+    };
+
     return (
         <div className="min-h-screen w-full bg-[var(--color-bg-deep)] relative flex flex-col justify-center px-6 md:px-20 py-20 overflow-y-auto">
 
@@ -96,19 +125,20 @@ const HeroDashboard = () => {
                     <div className="grid grid-cols-1 gap-4 w-full max-w-sm pl-8">
                         <MetricItem
                             label={config.hero.metrics.loc.label}
-                            value={config.hero.metrics.loc.value.toLocaleString() + config.hero.metrics.loc.suffix}
+                            value={formatNumber(metrics.loc)}
                             icon={<Code2 size={12} />}
                             delay={0.6}
                         />
+                        {/* Swapped "Commits" for "Active Repos" as it is a more verifiable real stat via API */}
                         <MetricItem
-                            label={config.hero.metrics.commits.label}
-                            value={config.hero.metrics.commits.value.toLocaleString()}
-                            icon={<GitCommit size={12} />}
+                            label="Active Projects"
+                            value={metrics.repos.toLocaleString()}
+                            icon={<Server size={12} />}
                             delay={0.7}
                         />
                         <MetricItem
                             label={config.hero.metrics.streak.label}
-                            value={config.hero.metrics.streak.value}
+                            value={metrics.streak}
                             icon={<Flame size={12} className="text-[var(--color-accent-orange)]" />}
                             delay={0.8}
                         />
