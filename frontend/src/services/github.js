@@ -2,96 +2,116 @@ import axios from 'axios';
 import config from '../portfolio.config';
 
 const GITHUB_API_BASE = 'https://api.github.com';
+const CONTRIBUTIONS_API_BASE = 'https://github-contributions-api.jogruber.de/v4';
 
 export const GitHubService = {
     /**
      * Fetches profile and repo data to calculate "Real" stats.
      * Logic:
      * - LoC = Sum of size (KB) of all public repos * 30 (Avg lines per KB)
-     * - Commits = Sum of 'pushed_at' activity or proxy (Hard to get total without auth)
-     *   -> We will use a safe estimation based on Repo Count * Avg Commits + Special "big" repos.
-     *   -> OR we calculate "Project Velocity" based on recent pushes.
-     * - Streak = Mocked for now (Safe) or use public events (Complex).
+     * - Public Repos = Direct form API
+     * - Streak = Calculated from FULL Contribution Calendar via Proxy API
      */
     async getRealStats() {
         try {
             const username = config.hero.githubUsername;
             if (!username) throw new Error("No GitHub Username Configured");
 
-            // 1. Fetch User Profile (Public Repos count)
-            const userRes = await axios.get(`${GITHUB_API_BASE}/users/${username}`);
-            const publicRepos = userRes.data.public_repos;
+            // 1. Fetch User Profile
+            // 2. Fetch All Public Repos 
+            // 3. Fetch Full Contribution Calendar (Parallel)
+            const [userRes, reposRes, calendarRes] = await Promise.all([
+                axios.get(`${GITHUB_API_BASE}/users/${username}`),
+                axios.get(`${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=pushed`),
+                axios.get(`${CONTRIBUTIONS_API_BASE}/${username}`)
+            ]);
 
-            // 2. Fetch All Public Repos (for size/language calculation)
-            // Limit to 100 recent repos to save bandwidth
-            const reposRes = await axios.get(`${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=pushed`);
+            const publicRepos = userRes.data.public_repos;
             const repos = reposRes.data;
 
-            // 3. Calculate "Real" LoC Estimate
-            // GitHub 'size' is in Kilobytes.
-            // Heuristic: 1KB ~= 40 lines of code (mixed density)
+            // Calculate "Real" LoC Estimate
             const totalSizeKB = repos.reduce((acc, repo) => acc + repo.size, 0);
             const estimatedLoC = Math.floor(totalSizeKB * 40);
 
-            // 4. Calculate "Project Velocity" or Commits Estimate
-            // Since we can't scrape total commits easily, we'll track "Active Projects".
-            // Let's use specific logic: Metric = Repos * ~150 commits avg? 
-            // Better: Let's fetch the "Events" to see if active recently.
-
-            // For now, let's Stick to the "Mock" commits but update LoC and Repos if we can.
-            // Actually, let's overwrite "Git Commits" with "Public Repos" if it's more impressive?
-            // No, "2,450 Commits" looks better than "40 Repos".
-            // Let's keep a configured base and ADD the live activity?
-            // DECISION: Return calculated LoC, and Real Repo Count. 
-            // We will replace "Git Commits" with "Total Projects" (Real number) OR keep Commits as manual.
-
-            // 4. Calculate Real "Streak" via Events API
-            // Fetch last 90 days of events (max 1 page for speed, 100 events)
-            const eventsRes = await axios.get(`${GITHUB_API_BASE}/users/${username}/events?per_page=100`);
-            const events = eventsRes.data;
-            const streak = GitHubService.calculateStreak(events);
+            // Calculate Streak from Calendar (Unbounded)
+            const streak = GitHubService.calculateCalendarStreak(calendarRes.data);
 
             return {
                 loc: estimatedLoC > config.hero.metrics.loc.value ? estimatedLoC : config.hero.metrics.loc.value,
                 repos: publicRepos,
-                streak: `${streak} Days`, // Return formatted string
+                streak: `${streak} Days`,
             };
 
         } catch (error) {
             console.error("GitHub Fetch Failed:", error);
-            return null;
+            // Fallback
+            return {
+                loc: config.hero.metrics.loc.value,
+                repos: "40+",
+                streak: config.hero.metrics.streak.value
+            };
         }
     },
 
-    calculateStreak(events) {
-        if (!events || events.length === 0) return 0;
+    calculateCalendarStreak(data) {
+        if (!data || !data.contributions) return 0;
+
+        // Data structure: { contributions: [ { date: "YYYY-MM-DD", count: 5, level: 2 }, ... ] }
+        // The API returns ALL contributions for the current/previous years.
+        // We need to sort descending just in case, though usually returned sorted.
+        const contributions = data.contributions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         const today = new Date();
+        // Normalize today to YYYY-MM-DD local logic if needed, but the API returns YYYY-MM-DD.
+        // Let's rely on simple string comparison against the API's dates.
+
+        const toDateString = (date) => date.toISOString().split('T')[0];
+        const todayStr = toDateString(today);
+
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-
-        // Normalize dates to YYYY-MM-DD
-        const toDateString = (date) => date.toISOString().split('T')[0];
-        const eventDates = new Set(
-            events
-                .filter(e => e.type === 'PushEvent' || e.type === 'CreateEvent' || e.type === 'PullRequestEvent')
-                .map(e => toDateString(new Date(e.created_at)))
-        );
+        const yesterdayStr = toDateString(yesterday);
 
         let currentStreak = 0;
-        let checkDate = today;
+        let streakBroken = false;
 
-        // Check today (if no activity today yet, streak continues from yesterday)
-        if (eventDates.has(toDateString(today))) {
-            currentStreak++;
-            checkDate = yesterday;
+        // Find where to start counting
+        // We look for Today. If found and count > 0, streak starts 1.
+        // If Today not found (or count 0), we look for Yesterday.
+        // If Yesterday found and count > 0, streak starts 1 (from yesterday).
+
+        // Note: The API might return today's empty slot if no contribs yet.
+
+        let startIndex = contributions.findIndex(c => c.date === todayStr);
+
+        // If today is not in list (future?) or 0 contribs
+        if (startIndex !== -1 && contributions[startIndex].count > 0) {
+            // Started today!
         } else {
-            checkDate = yesterday; // Start checking from yesterday
+            // Check yesterday
+            startIndex = contributions.findIndex(c => c.date === yesterdayStr);
+            if (startIndex === -1 || contributions[startIndex].count === 0) {
+                return 0; // No streak active
+            }
         }
 
-        while (eventDates.has(toDateString(checkDate))) {
-            currentStreak++;
-            checkDate.setDate(checkDate.getDate() - 1);
+        // Count backwards from startIndex
+        for (let i = startIndex; i < contributions.length; i++) {
+            if (contributions[i].count > 0) {
+                currentStreak++;
+
+                // Verify continuity
+                if (i < contributions.length - 1) {
+                    const currDate = new Date(contributions[i].date);
+                    const nextDate = new Date(contributions[i + 1].date);
+                    const diffTime = Math.abs(currDate - nextDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays > 1) break; // Gap detected
+                }
+            } else {
+                break; // 0 contributions stops the streak
+            }
         }
 
         return currentStreak;
