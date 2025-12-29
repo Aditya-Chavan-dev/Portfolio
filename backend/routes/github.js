@@ -4,6 +4,13 @@ const router = express.Router();
 
 const USERNAME = 'Aditya-Chavan-dev';
 
+// Server-Side Cache
+let CACHE = {
+  data: null,
+  timestamp: 0
+};
+const CACHE_TTL = 1000 * 60 * 15; // 15 Minutes
+
 // Helper to calculate streak from GraphQL data
 const calculateCalendarStreak = (data) => {
   if (!data || !data.contributions) return 0;
@@ -52,7 +59,13 @@ const calculateCalendarStreak = (data) => {
 
 router.get('/', async (req, res) => {
   try {
-    console.log(`[GITHUB] Fetching stats for ${USERNAME} via GraphQL...`);
+    // Check Cache
+    if (CACHE.data && (Date.now() - CACHE.timestamp < CACHE_TTL)) {
+      console.log(`[GITHUB] Serving stats for ${USERNAME} from CACHE`);
+      return res.json(CACHE.data);
+    }
+
+    console.log(`[GITHUB] Cache Stale/Empty. Fetching stats for ${USERNAME} via GraphQL...`);
 
     if (!process.env.GITHUB_TOKEN) {
       console.warn("[GITHUB] No GITHUB_TOKEN found. GraphQL API requires auth.");
@@ -150,6 +163,10 @@ router.get('/', async (req, res) => {
       projectLastActive: portfolioRepo ? portfolioRepo.pushedAt : null,
       timestamp: Date.now()
     };
+
+    // Update Server Cache
+    CACHE.data = stats;
+    CACHE.timestamp = Date.now();
 
     res.json(stats);
 
