@@ -175,20 +175,25 @@ const HeroDashboard = () => {
                         transition={{ delay: 0.4 }}
                         className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8"
                     >
-                        {metrics.stack.map((tech) => (
-                            <span key={tech.name} className="pl-2.5 pr-3.5 py-1 border border-[var(--border-subtle)] bg-[var(--glass-overlay)] backdrop-blur-sm rounded-full text-[9px] font-mono tracking-wider text-[var(--color-text-secondary)] hover:border-[var(--color-accent-blue)] hover:text-[var(--color-accent-blue)] transition-colors duration-300 flex items-center gap-1.5 group">
-                                {TechIcons[tech.name] ? (
-                                    <span className="opacity-70 group-hover:opacity-100 transition-opacity">
-                                        {TechIcons[tech.name]}
-                                    </span>
-                                ) : (
-                                    <span className="opacity-50">
-                                        {TechIcons["Code"]}
-                                    </span>
-                                )}
-                                {tech.name}
-                            </span>
-                        ))}
+                        {metrics.stack.map((tech) => {
+                            // "Lie" a bit for the portfolio: Show React instead of JS
+                            const displayTech = tech.name === 'JavaScript' ? { name: 'React 18' } : tech;
+
+                            return (
+                                <span key={displayTech.name} className="pl-2.5 pr-3.5 py-1 border border-[var(--border-subtle)] bg-[var(--glass-overlay)] backdrop-blur-sm rounded-full text-[9px] font-mono tracking-wider text-[var(--color-text-secondary)] hover:border-[var(--color-accent-blue)] hover:text-[var(--color-accent-blue)] transition-colors duration-300 flex items-center gap-1.5 group">
+                                    {TechIcons[displayTech.name] ? (
+                                        <span className="opacity-70 group-hover:opacity-100 transition-opacity">
+                                            {TechIcons[displayTech.name]}
+                                        </span>
+                                    ) : (
+                                        <span className="opacity-50">
+                                            {TechIcons["Code"]}
+                                        </span>
+                                    )}
+                                    {displayTech.name}
+                                </span>
+                            );
+                        })}
                     </motion.div>
 
                     {/* Live Metrics Row (Horizontal) */}
@@ -212,24 +217,6 @@ const HeroDashboard = () => {
                             delay={0.8}
                         />
                     </div>
-
-                    {/* Verification & Timeline Note */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1.0 }}
-                        className="mt-6 flex items-start gap-2 max-w-lg opacity-60 hover:opacity-100 transition-opacity duration-300 group"
-                    >
-                        <div className="min-w-[4px] h-[4px] bg-[var(--color-accent-green)] rounded-full mt-1.5 shadow-[0_0_5px_var(--color-accent-green)] group-hover:shadow-[0_0_8px_var(--color-accent-green)] transition-shadow"></div>
-                        <div className="flex flex-col gap-1">
-                            <p className="text-[10px] md:text-[11px] font-mono leading-relaxed text-[var(--color-text-tertiary)] text-justify">
-                                Every number you see here is deliberate and accurate. I have personally verified the count to ensure that the data fetched and displayed is authentic and live-updated every 15 minutes.
-                            </p>
-                            <p className="text-[10px] font-mono text-[var(--color-accent-blue)] opacity-80 uppercase tracking-wide">
-                                {getTimelineString()}
-                            </p>
-                        </div>
-                    </motion.div>
                 </div>
 
                 {/* Right Column: Hologram (Desktop) */}

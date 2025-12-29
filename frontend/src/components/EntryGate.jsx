@@ -17,7 +17,7 @@ const EntryGate = ({ onUnlock }) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} // Custom Quint easing
-                className="max-w-2xl px-6 text-center space-y-12 z-10 relative"
+                className="max-w-6xl px-6 text-center space-y-12 z-10 relative"
             >
                 {/* Status Indicator - Tech Pill Style */}
                 <div className="inline-flex items-center space-x-3 px-4 py-2 rounded-full border border-[var(--border-subtle)] bg-[var(--glass-overlay)] backdrop-blur-sm mb-8">
@@ -30,9 +30,9 @@ const EntryGate = ({ onUnlock }) => {
 
                 {/* The Note - Cinematic Typography */}
                 <div className="space-y-6">
-                    <h1 className="text-xl md:text-3xl leading-relaxed font-light text-[var(--color-text-primary)] font-display tracking-wide">
+                    <h1 className="text-lg md:text-2xl leading-loose font-light text-[var(--color-text-primary)] font-display tracking-wide">
                         {config.entry.message.split('\n').map((line, i) => (
-                            <span key={i} className="block mb-2 opacity-90">{line}</span>
+                            <span key={i} className="block mb-8 opacity-90">{line}</span>
                         ))}
                     </h1>
 
