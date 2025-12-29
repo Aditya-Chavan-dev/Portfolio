@@ -49,15 +49,14 @@ export const initSession = () => {
     const forceNew = params.get('force') === 'true';
     const hasRef = params.has('ref');
 
-    // 1. Check if session exists (unless forced or new specific ref source)
-    // "Nuclear Option": If a user specifically comes from a Reference Link (Resume/LinkedIn), 
-    // we TREAT IT AS A NEW SESSION to ensure the counter increments for them.
-    // This allows testing and accurate tracking of "Campaign Clicks" rather than just unique users.
+    // 1. Check if session exists (unless forced)
+    // Standard Behavior: If session exists (even if ref is present), we resume it.
+    // This prevents "Refresh Inflation". Closing the tab clears session, so re-opening counts as new.
 
     let sessionId = sessionStorage.getItem(SESSION_STORAGE_KEY);
     const source = detectSource();
 
-    if (sessionId && !forceNew && !hasRef) {
+    if (sessionId && !forceNew) {
         console.log(`[TRACKING] Resuming Session: ${sessionId}`);
         return { sessionId, isNew: false };
     }
