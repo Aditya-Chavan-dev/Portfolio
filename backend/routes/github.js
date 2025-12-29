@@ -2,14 +2,14 @@ const express = require('express');
 const axios = require('axios');
 const router = express.Router();
 
-const GITHUB_API_BASE = 'https://api.github.com';
-const CONTRIBUTIONS_API_BASE = 'https://github-contributions-api.jogruber.de/v4';
 const USERNAME = 'Aditya-Chavan-dev';
 
-// Helper to calculate streak
+// Helper to calculate streak from GraphQL data
 const calculateCalendarStreak = (data) => {
     if (!data || !data.contributions) return 0;
-    const contributions = data.contributions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // GraphQL returns sorted by date ASC usually, but let's reverse to be safe for backward counting
+    const contributions = [...data.contributions].reverse();
+
     const todayStr = new Date().toISOString().split('T')[0];
 
     // Yesterday
@@ -18,26 +18,29 @@ const calculateCalendarStreak = (data) => {
     const yesterdayStr = yesterday.toISOString().split('T')[0];
 
     let currentStreak = 0;
+
+    // Check start
     let startIndex = contributions.findIndex(c => c.date === todayStr);
 
     if (startIndex !== -1 && contributions[startIndex].count > 0) {
         // Started today
     } else {
-        // Check yesterday
         startIndex = contributions.findIndex(c => c.date === yesterdayStr);
         if (startIndex === -1 || contributions[startIndex].count === 0) {
             return 0; // No streak
         }
     }
 
-    // Count backwards
+    // Count backwards from startIndex
     for (let i = startIndex; i < contributions.length; i++) {
         if (contributions[i].count > 0) {
             currentStreak++;
-            // Check gaps (simplified)
+            // Check gaps
             if (i < contributions.length - 1) {
                 const curr = new Date(contributions[i].date);
                 const next = new Date(contributions[i + 1].date);
+                // Difference should be 1 day (approx 86400000ms)
+                // Since we are iterating backwards, curr is NEWER than next
                 const diff = Math.abs(curr - next);
                 const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
                 if (days > 1) break;
@@ -51,78 +54,95 @@ const calculateCalendarStreak = (data) => {
 
 router.get('/', async (req, res) => {
     try {
-        console.log(`[GITHUB] Fetching stats for ${USERNAME}...`);
+        console.log(`[GITHUB] Fetching stats for ${USERNAME} via GraphQL...`);
 
-        // 0. Config Headers to avoid 403 (GitHub requires User-Agent)
+        if (!process.env.GITHUB_TOKEN) {
+            console.warn("[GITHUB] No GITHUB_TOKEN found. GraphQL API requires auth.");
+            return res.status(500).json({ error: "Missing GITHUB_TOKEN in backend environment variables. Please add it in Render Dashboard." });
+        }
+
+        const query = `
+          query($username: String!) {
+            user(login: $username) {
+              contributionsCollection {
+                contributionCalendar {
+                  totalContributions
+                  weeks {
+                    contributionDays {
+                      contributionCount
+                      date
+                    }
+                  }
+                }
+              }
+              repositories(first: 100, orderBy: {field: PUSHED_AT, direction: DESC}, privacy: PUBLIC) {
+                nodes {
+                  languages(first: 1, orderBy: {field: SIZE, direction: DESC}) {
+                    edges {
+                      node {
+                        name
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        `;
+
         const headers = {
-            'User-Agent': 'Portfolio-Backend-Service',
-            'Accept': 'application/vnd.github.v3+json'
+            'Authorization': `bearer ${process.env.GITHUB_TOKEN}`,
+            'User-Agent': 'Portfolio-Backend'
         };
-        if (process.env.GITHUB_TOKEN) {
-            headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+
+        // Execute GraphQL Query
+        const response = await axios.post('https://api.github.com/graphql', {
+            query,
+            variables: { username: USERNAME }
+        }, { headers });
+
+        if (response.data.errors) {
+            console.error("GraphQL Error:", JSON.stringify(response.data.errors));
+            throw new Error("GitHub GraphQL Query Failed");
         }
 
-        // 1. Fetch User Profile
-        const userRes = await axios.get(`${GITHUB_API_BASE}/users/${USERNAME}`, { headers });
-        const createdAt = new Date(userRes.data.created_at);
-        const startYear = createdAt.getFullYear();
-        const currentYear = new Date().getFullYear();
+        const data = response.data.data.user;
 
-        // 2. Fetch Repos
-        const reposRes = await axios.get(`${GITHUB_API_BASE}/users/${USERNAME}/repos?per_page=100&sort=pushed`, { headers });
+        // Extract Data
+        const totalContributions = data.contributionsCollection.contributionCalendar.totalContributions;
 
-        // 3. Fetch Contributions for ALL years
-        // Note: Jogruber API might also need UA or might be rate limiting shared IPs
-        const contributionPromises = [];
-        for (let year = startYear; year <= currentYear; year++) {
-            contributionPromises.push(axios.get(`${CONTRIBUTIONS_API_BASE}/${USERNAME}?y=${year}`, { headers }));
-        }
+        // Flatten calendar for streak calc
+        const allContributions = data.contributionsCollection.contributionCalendar.weeks
+            .flatMap(week => week.contributionDays)
+            .map(day => ({
+                date: day.date,
+                count: day.contributionCount
+            }));
 
-        const contributionResponses = await Promise.all(contributionPromises);
-
-
-        const publicRepos = userRes.data.public_repos;
-        const repos = reposRes.data;
-
-        // Contributions: Sum up ALL years
-        let totalContributions = 0;
-        let allContributions = []; // Flattened list for streak calc
-
-        contributionResponses.forEach(res => {
-            // Jogruber API returns { total: { [year]: count }, contributions: [...] }
-            // Safe summing
-            if (res.data.total) {
-                Object.values(res.data.total).forEach(count => totalContributions += count);
-            }
-
-            if (res.data.contributions) {
-                allContributions = [...allContributions, ...res.data.contributions];
-            }
-        });
-
-        // Use the most recent year's data structure for streak calculation or the merged list
-        const streakData = { contributions: allContributions };
-
-        // Tech Stack
+        // Parse Tech Stack
         const languageMap = {};
-        repos.forEach(repo => {
-            if (repo.language) {
-                languageMap[repo.language] = (languageMap[repo.language] || 0) + 1;
-            }
-        });
+        if (data.repositories && data.repositories.nodes) {
+            data.repositories.nodes.forEach(repo => {
+                if (repo.languages && repo.languages.edges && repo.languages.edges[0]) {
+                    const langName = repo.languages.edges[0].node.name;
+                    languageMap[langName] = (languageMap[langName] || 0) + 1;
+                }
+            });
+        }
+
         const topStack = Object.entries(languageMap)
             .sort(([, a], [, b]) => b - a)
             .slice(0, 5)
             .map(([name]) => ({ name }));
 
-        // Streak
-        const streak = calculateCalendarStreak(streakData);
+        const streak = calculateCalendarStreak({ contributions: allContributions });
 
+        // Return Stats
         const stats = {
             loc: totalContributions,
-            repos: publicRepos,
+            repos: data.repositories.nodes.length,
             streak: `${streak} Days`,
-            stack: topStack.length > 0 ? topStack : null, // Frontend has fallback
+            stack: topStack.length > 0 ? topStack : null,
             timestamp: Date.now()
         };
 
