@@ -78,7 +78,9 @@ const HeroDashboard = () => {
             loc: config.hero.metrics.loc.value,
             repos: 40,
             streak: config.hero.metrics.streak.value,
-            stack: config.hero.stack
+            stack: config.hero.stack,
+            projectStart: null,
+            projectLastActive: null
         };
     });
 
@@ -92,7 +94,9 @@ const HeroDashboard = () => {
                     loc: stats.loc,
                     repos: stats.repos,
                     streak: stats.streak,
-                    stack: stats.stack || config.hero.stack
+                    stack: stats.stack || config.hero.stack,
+                    projectStart: stats.projectStart,
+                    projectLastActive: stats.projectLastActive
                 }));
             }
         };
@@ -104,6 +108,22 @@ const HeroDashboard = () => {
         if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
         if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
         return num.toLocaleString();
+    };
+
+    // Timeline Formatter
+    const getTimelineString = () => {
+        if (!metrics.projectStart || !metrics.projectLastActive) return "Loading timeline...";
+
+        const start = new Date(metrics.projectStart).toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+        const lastActive = new Date(metrics.projectLastActive);
+        const now = new Date();
+        const diffDays = Math.ceil((now - lastActive) / (1000 * 60 * 60 * 24));
+
+        const isRecent = diffDays <= 7; // Consider "Active" if pushed in last 7 days
+
+        const endStr = isRecent ? "still going on" : `went on till ${lastActive.toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}`;
+
+        return `Build started ${start} • ${endStr}`;
     };
 
     return (
@@ -192,6 +212,24 @@ const HeroDashboard = () => {
                             delay={0.8}
                         />
                     </div>
+
+                    {/* Verification & Timeline Note */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.0 }}
+                        className="mt-6 flex items-start gap-2 max-w-lg opacity-60 hover:opacity-100 transition-opacity duration-300 group"
+                    >
+                        <div className="min-w-[4px] h-[4px] bg-[var(--color-accent-green)] rounded-full mt-1.5 shadow-[0_0_5px_var(--color-accent-green)] group-hover:shadow-[0_0_8px_var(--color-accent-green)] transition-shadow"></div>
+                        <div className="flex flex-col gap-1">
+                            <p className="text-[10px] md:text-[11px] font-mono leading-relaxed text-[var(--color-text-tertiary)] text-justify">
+                                Every number you see here is deliberate and accurate. I have personally verified the count to ensure that the data fetched and displayed is authentic and live-updated every 15 minutes.
+                            </p>
+                            <p className="text-[10px] font-mono text-[var(--color-accent-blue)] opacity-80 uppercase tracking-wide">
+                                {getTimelineString()}
+                            </p>
+                        </div>
+                    </motion.div>
                 </div>
 
                 {/* Right Column: Hologram (Desktop) */}
