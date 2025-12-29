@@ -129,14 +129,14 @@ const HeroDashboard = () => {
     };
 
     return (
-        <div className="h-screen w-full bg-[var(--color-bg-deep)] relative flex flex-col justify-center px-6 md:px-20 overflow-hidden">
+        <div className="min-h-screen w-full bg-[var(--color-bg-deep)] relative flex flex-col justify-center px-6 py-20 md:px-20 md:py-0 overflow-x-hidden">
 
             {/* Top Bar (Time/Status) - Compact Position */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="absolute top-0 left-0 w-full p-8 flex justify-between items-center text-[var(--color-text-secondary)] text-[10px] font-mono uppercase tracking-widest z-50"
+                className="absolute top-0 left-0 w-full p-4 md:p-8 flex justify-between items-center text-[var(--color-text-secondary)] text-[10px] font-mono uppercase tracking-widest z-50"
             >
                 <div className="flex items-center gap-2">
                     <span className={`w-1.5 h-1.5 rounded-full ${metrics.source === 'LIVE' ? 'bg-[var(--color-accent-green)] shadow-[0_0_5px_var(--color-accent-green)]' : metrics.source === 'CACHE' ? 'bg-[var(--color-accent-blue)]' : 'bg-[var(--color-accent-orange)]'} animate-pulse`}></span>
@@ -223,14 +223,14 @@ const HeroDashboard = () => {
                     </div>
                 </div>
 
-                {/* Right Column: Hologram (Desktop) */}
-                <div className="hidden lg:flex lg:col-span-5 flex-col items-center justify-center relative translate-y-4">
+                {/* Right Column: Hologram (Mobile & Desktop) */}
+                <div className="flex lg:col-span-5 flex-col items-center justify-center relative translate-y-4 lg:translate-y-4 order-first lg:order-last mb-8 lg:mb-0">
 
                     {/* Background Glow - Expanded */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-accent-blue)] opacity-[0.08] blur-[120px] rounded-full pointer-events-none"></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[600px] lg:h-[600px] bg-[var(--color-accent-blue)] opacity-[0.08] blur-[60px] lg:blur-[120px] rounded-full pointer-events-none"></div>
 
-                    {/* Hologram - Significantly Larger for Premium feel */}
-                    <div className="relative z-10 scale-150 transform transition-transform duration-700 hover:scale-[1.6]">
+                    {/* Hologram - Responsive Scaling */}
+                    <div className="relative z-10 scale-100 lg:scale-150 transform transition-transform duration-700 hover:scale-110 lg:hover:scale-[1.6]">
                         <HolographicID />
                     </div>
                 </div>
