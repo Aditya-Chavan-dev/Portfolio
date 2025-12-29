@@ -7,6 +7,39 @@ const HolographicID = () => {
     const isOnline = config.hero.identity.status === 'available';
     const statusColor = isOnline ? 'var(--color-accent-green)' : 'var(--color-accent-orange)';
 
+    // Custom Image Logic
+    const [heroImage, setHeroImage] = React.useState(() => {
+        return localStorage.getItem('custom_hero_image') || "/assets/hero-portrait.png";
+    });
+    const [isUploading, setIsUploading] = React.useState(false);
+    const fileInputRef = React.useRef(null);
+
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            setIsUploading(true);
+            const { storage } = await import('../../services/firebase');
+            const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+
+            // Upload to a fixed path (overwrites previous)
+            const storageRef = ref(storage, 'profile/hero_custom.jpg');
+            await uploadBytes(storageRef, file);
+
+            // Get URL and persist
+            const url = await getDownloadURL(storageRef);
+            localStorage.setItem('custom_hero_image', url);
+            setHeroImage(url);
+            console.log("Hero image updated successfully!");
+        } catch (error) {
+            console.error("Upload failed:", error);
+            alert("Upload failed. Check console.");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     return (
         <div className="relative group cursor-help w-80 h-80 flex-center">
 
@@ -24,15 +57,34 @@ const HolographicID = () => {
             <div className="absolute inset-0 rounded-full border border-[var(--border-subtle)] scale-75 opacity-50"></div>
 
             {/* The Image Container */}
-            <div className="relative w-48 h-48 rounded-full overflow-hidden border-2 border-[var(--border-subtle)] z-10 bg-[var(--color-bg-card)] shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+            <div className="relative w-48 h-48 rounded-full overflow-hidden border-2 border-[var(--border-subtle)] z-10 bg-[var(--color-bg-card)] shadow-[0_0_30px_rgba(0,0,0,0.5)] group/image">
                 {/* Inner Glow */}
                 <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] z-20 pointer-events-none"></div>
 
                 {/* Live Portrait */}
                 <img
-                    src="/assets/hero-portrait.jpg"
+                    src={heroImage}
                     alt={config.hero.name}
                     className="w-full h-full object-cover object-[50%_35%] opacity-90 hover:opacity-100 transition-opacity duration-500"
+                />
+
+                {/* Hidden Upload Trigger (Only visible on hover) */}
+                <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 cursor-pointer text-white/80 hover:text-white"
+                >
+                    {isUploading ? (
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    ) : (
+                        <Camera className="w-8 h-8 opacity-50 hover:opacity-100" />
+                    )}
+                </div>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleUpload}
+                    accept="image/*"
+                    className="hidden"
                 />
             </div>
 
