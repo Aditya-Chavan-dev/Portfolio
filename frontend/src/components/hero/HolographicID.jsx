@@ -28,10 +28,12 @@ const HolographicID = () => {
                 {/* Inner Glow */}
                 <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] z-20 pointer-events-none"></div>
 
-                {/* Fallback Icon if no image yet */}
-                <div className="w-full h-full flex-center text-[var(--color-accent-blue)] opacity-80 z-10 bg-black">
-                    <UserCheck size={48} />
-                </div>
+                {/* Live Portrait */}
+                <img
+                    src="/assets/hero-portrait.jpg"
+                    alt={config.hero.name}
+                    className="w-full h-full object-cover object-[50%_35%] opacity-90 hover:opacity-100 transition-opacity duration-500"
+                />
             </div>
 
             {/* Status Dot */}
