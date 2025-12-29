@@ -75,7 +75,7 @@ router.get('/', async (req, res) => {
         // Note: Jogruber API might also need UA or might be rate limiting shared IPs
         const contributionPromises = [];
         for (let year = startYear; year <= currentYear; year++) {
-            contributionPromises.push(axios.get(`${CONTRIBUTIONS_API_BASE}/${USERNAME}?y=${year}`));
+            contributionPromises.push(axios.get(`${CONTRIBUTIONS_API_BASE}/${USERNAME}?y=${year}`, { headers }));
         }
 
         const contributionResponses = await Promise.all(contributionPromises);
