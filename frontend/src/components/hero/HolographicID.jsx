@@ -8,7 +8,7 @@ const HolographicID = () => {
     const statusColor = isOnline ? 'var(--color-accent-green)' : 'var(--color-accent-orange)';
 
     return (
-        <div className="relative group cursor-help w-64 h-64 flex-center">
+        <div className="relative group cursor-help w-80 h-80 flex-center">
 
             {/* Layer 1: Outer Slow Ring */}
             <svg className="absolute inset-0 w-full h-full animate-[spin_10s_linear_infinite] opacity-20">
@@ -24,7 +24,7 @@ const HolographicID = () => {
             <div className="absolute inset-0 rounded-full border border-[var(--border-subtle)] scale-75 opacity-50"></div>
 
             {/* The Image Container */}
-            <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-[var(--border-subtle)] z-10 bg-[var(--color-bg-card)] shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+            <div className="relative w-48 h-48 rounded-full overflow-hidden border-2 border-[var(--border-subtle)] z-10 bg-[var(--color-bg-card)] shadow-[0_0_30px_rgba(0,0,0,0.5)]">
                 {/* Inner Glow */}
                 <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] z-20 pointer-events-none"></div>
 
@@ -35,7 +35,7 @@ const HolographicID = () => {
             </div>
 
             {/* Status Dot */}
-            <div className="absolute bottom-16 right-16 w-6 h-6 bg-[var(--color-bg-deep)] rounded-full flex-center z-20 border border-[var(--border-subtle)]">
+            <div className="absolute bottom-20 right-20 w-6 h-6 bg-[var(--color-bg-deep)] rounded-full flex-center z-20 border border-[var(--border-subtle)]">
                 <div
                     className="w-2 h-2 rounded-full animate-pulse shadow-[0_0_8px_currentColor]"
                     style={{ backgroundColor: statusColor, color: statusColor }}

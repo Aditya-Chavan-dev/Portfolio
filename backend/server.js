@@ -45,9 +45,11 @@ app.use(express.json());
  */
 const testRoutes = require('./routes/test');
 const pingRoutes = require('./routes/ping');
+const githubRoutes = require('./routes/github');
 
 app.use('/api/test', testRoutes); // General connectivity test
 app.use('/api/ping', pingRoutes); // Silent wake-up endpoint
+app.use('/api/github', githubRoutes); // Github Stats
 
 /**
  * Root Endpoint: Simple health check for the API.

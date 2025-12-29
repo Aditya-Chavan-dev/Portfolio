@@ -38,8 +38,8 @@ I have built this system to demonstrate the engineering standards you are lookin
         // The Metrics Ticker
         metrics: {
             loc: {
-                label: "Lines of Code",
-                value: 1450200, // 1.4M+
+                label: "Contributions",
+                value: 2000,
                 suffix: "+"
             },
             commits: {
