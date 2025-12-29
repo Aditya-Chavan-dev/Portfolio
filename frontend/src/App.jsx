@@ -10,13 +10,17 @@ const PHASE_HANDSHAKE = 1;
 const PHASE_DASHBOARD = 2;
 
 function App() {
-    const [phase, setPhase] = useState(PHASE_ENTRY);
+    const [phase, setPhase] = useState(() => {
+        // If session is already active (refresh), skip straight to Dashboard
+        return sessionStorage.getItem('session_active') ? PHASE_DASHBOARD : PHASE_ENTRY;
+    });
 
     const startSession = () => {
         setPhase(PHASE_HANDSHAKE);
     };
 
     const enterDashboard = () => {
+        sessionStorage.setItem('session_active', 'true');
         setPhase(PHASE_DASHBOARD);
     };
 

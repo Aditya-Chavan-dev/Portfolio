@@ -80,7 +80,8 @@ const HeroDashboard = () => {
             streak: config.hero.metrics.streak.value,
             stack: config.hero.stack,
             projectStart: null,
-            projectLastActive: null
+            projectLastActive: null,
+            source: 'INIT'
         };
     });
 
@@ -96,7 +97,8 @@ const HeroDashboard = () => {
                     streak: stats.streak,
                     stack: stats.stack || config.hero.stack,
                     projectStart: stats.projectStart,
-                    projectLastActive: stats.projectLastActive
+                    projectLastActive: stats.projectLastActive,
+                    source: stats.source || 'OFFLINE'
                 }));
             }
         };
@@ -137,8 +139,10 @@ const HeroDashboard = () => {
                 className="absolute top-0 left-0 w-full p-8 flex justify-between items-center text-[var(--color-text-secondary)] text-[10px] font-mono uppercase tracking-widest z-50"
             >
                 <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-green)] animate-pulse shadow-[0_0_5px_var(--color-accent-green)]"></span>
-                    System Online
+                    <span className={`w-1.5 h-1.5 rounded-full ${metrics.source === 'LIVE' ? 'bg-[var(--color-accent-green)] shadow-[0_0_5px_var(--color-accent-green)]' : metrics.source === 'CACHE' ? 'bg-[var(--color-accent-blue)]' : 'bg-[var(--color-accent-orange)]'} animate-pulse`}></span>
+                    <span className="opacity-80">
+                        {metrics.source === 'LIVE' ? 'System Online: LIVE' : metrics.source === 'CACHE' ? 'System Online: CACHED' : 'System Online: OFFLINE'}
+                    </span>
                 </div>
                 <div>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} IST</div>
             </motion.div>
