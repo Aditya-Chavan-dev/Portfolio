@@ -55,7 +55,7 @@ const GlobalStatsHUD = ({ sessionId }) => {
                                 <span className={`text-xs font-bold font-mono ${item.color}`}>
                                     {item.label}
                                 </span>
-                                <Counter value={item.count} />
+                                <MagicCounter value={item.count} className="text-sm font-bold text-white font-mono" />
                             </div>
                         ))}
                     </div>
@@ -71,33 +71,6 @@ const GlobalStatsHUD = ({ sessionId }) => {
                 </div>
             </div>
         </motion.div>
-    );
-};
-
-// Magic Counter with Spring Animation
-const Counter = ({ value }) => {
-    const springValue = useSpring(0, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001
-    });
-
-    const [displayValue, setDisplayValue] = useState(0);
-
-    useEffect(() => {
-        springValue.set(value);
-    }, [value, springValue]);
-
-    useEffect(() => {
-        return springValue.on("change", (latest) => {
-            setDisplayValue(Math.round(latest));
-        });
-    }, [springValue]);
-
-    return (
-        <span className="relative text-sm font-bold text-white font-mono min-w-[20px] text-center inline-block">
-            {displayValue}
-        </span>
     );
 };
 
