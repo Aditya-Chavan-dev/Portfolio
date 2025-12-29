@@ -53,16 +53,26 @@ router.get('/', async (req, res) => {
     try {
         console.log(`[GITHUB] Fetching stats for ${USERNAME}...`);
 
-        // 1. Fetch User Profile to get "created_at"
-        const userRes = await axios.get(`${GITHUB_API_BASE}/users/${USERNAME}`);
+        // 0. Config Headers to avoid 403 (GitHub requires User-Agent)
+        const headers = {
+            'User-Agent': 'Portfolio-Backend-Service',
+            'Accept': 'application/vnd.github.v3+json'
+        };
+        if (process.env.GITHUB_TOKEN) {
+            headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+        }
+
+        // 1. Fetch User Profile
+        const userRes = await axios.get(`${GITHUB_API_BASE}/users/${USERNAME}`, { headers });
         const createdAt = new Date(userRes.data.created_at);
         const startYear = createdAt.getFullYear();
         const currentYear = new Date().getFullYear();
 
         // 2. Fetch Repos
-        const reposRes = await axios.get(`${GITHUB_API_BASE}/users/${USERNAME}/repos?per_page=100&sort=pushed`);
+        const reposRes = await axios.get(`${GITHUB_API_BASE}/users/${USERNAME}/repos?per_page=100&sort=pushed`, { headers });
 
         // 3. Fetch Contributions for ALL years
+        // Note: Jogruber API might also need UA or might be rate limiting shared IPs
         const contributionPromises = [];
         for (let year = startYear; year <= currentYear; year++) {
             contributionPromises.push(axios.get(`${CONTRIBUTIONS_API_BASE}/${USERNAME}?y=${year}`));
