@@ -13,10 +13,12 @@ const PHASE_DASHBOARD = 2;
 
 function App() {
     const [phase, setPhase] = useState(PHASE_ENTRY);
+    const [sessionId, setSessionId] = useState(null);
 
     useEffect(() => {
         // Initialize Session on App Mount (Detects source & increments if new)
-        initSession();
+        const { sessionId } = initSession();
+        setSessionId(sessionId);
     }, []);
 
     const startSession = () => {
@@ -29,7 +31,7 @@ function App() {
 
     return (
         <div className="text-[var(--color-text-primary)] font-sans">
-            <GlobalStatsHUD />
+            <GlobalStatsHUD sessionId={sessionId} />
             <AnimatePresence mode="wait">
 
                 {phase === PHASE_ENTRY && (

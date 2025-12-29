@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useSpring } from 'framer-motion';
 import { subscribeToVisits } from '../services/tracking';
 
-const GlobalStatsHUD = () => {
+const GlobalStatsHUD = ({ sessionId }) => {
     const [counts, setCounts] = useState({ linkedin: 0, resume: 0, anonymous: 0 });
     const [prevTotal, setPrevTotal] = useState(0);
     const [highlight, setHighlight] = useState(false);
@@ -44,6 +44,10 @@ const GlobalStatsHUD = () => {
                     <span className="text-[8px] md:text-[10px] uppercase tracking-[0.2em] text-white/50 font-mono">
                         Global Tracking
                     </span>
+                    {/* Unique Session ID Display */}
+                    <span className="text-[8px] font-mono text-[var(--color-accent-orange)] tracking-wider mb-1">
+                        ID: {sessionId || 'INITIALIZING...'}
+                    </span>
 
                     <div className="flex gap-4">
                         {items.map((item) => (
@@ -70,23 +74,30 @@ const GlobalStatsHUD = () => {
     );
 };
 
-// Animated Counter Sub-component
+// Magic Counter with Spring Animation
 const Counter = ({ value }) => {
+    const springValue = useSpring(0, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
+    const [displayValue, setDisplayValue] = useState(0);
+
+    useEffect(() => {
+        springValue.set(value);
+    }, [value, springValue]);
+
+    useEffect(() => {
+        return springValue.on("change", (latest) => {
+            setDisplayValue(Math.round(latest));
+        });
+    }, [springValue]);
+
     return (
-        <div className="relative h-5 w-8 overflow-hidden text-center">
-            <AnimatePresence mode='popLayout'>
-                <motion.span
-                    key={value}
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className="absolute inset-0 text-sm font-bold text-white font-mono"
-                >
-                    {value}
-                </motion.span>
-            </AnimatePresence>
-        </div>
+        <span className="relative text-sm font-bold text-white font-mono min-w-[20px] text-center inline-block">
+            {displayValue}
+        </span>
     );
 };
 
