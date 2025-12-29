@@ -71,23 +71,28 @@ const TechIcons = {
 };
 
 const HeroDashboard = () => {
-    const [metrics, setMetrics] = useState({
-        loc: config.hero.metrics.loc.value,
-        repos: 40,
-        streak: config.hero.metrics.streak.value,
-        stack: config.hero.stack // Initialize with config
+    const [metrics, setMetrics] = useState(() => {
+        const cached = GitHubService.getCachedStats();
+        if (cached) return cached;
+        return {
+            loc: config.hero.metrics.loc.value,
+            repos: 40,
+            streak: config.hero.metrics.streak.value,
+            stack: config.hero.stack
+        };
     });
 
     useEffect(() => {
         const fetchData = async () => {
-            const stats = await GitHubService.getRealStats();
+            // Smart fetch: Only hits API if cache is > 1 hour old
+            const stats = await GitHubService.getSmartStats();
             if (stats) {
                 setMetrics(prev => ({
                     ...prev,
                     loc: stats.loc,
                     repos: stats.repos,
                     streak: stats.streak,
-                    stack: stats.stack || config.hero.stack // Use real stack if available
+                    stack: stats.stack || config.hero.stack
                 }));
             }
         };
@@ -171,7 +176,7 @@ const HeroDashboard = () => {
                         <MetricItem
                             label={config.hero.metrics.loc.label}
                             value={formatNumber(metrics.loc)}
-                            icon={<Code2 size={12} />}
+                            icon={<GitCommit size={12} />}
                             delay={0.6}
                         />
                         <MetricItem
@@ -192,11 +197,11 @@ const HeroDashboard = () => {
                 {/* Right Column: Hologram (Desktop) */}
                 <div className="hidden lg:flex lg:col-span-5 flex-col items-center justify-center relative translate-y-4">
 
-                    {/* Background Glow */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--color-accent-blue)] opacity-[0.08] blur-[100px] rounded-full pointer-events-none"></div>
+                    {/* Background Glow - Expanded */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-accent-blue)] opacity-[0.08] blur-[120px] rounded-full pointer-events-none"></div>
 
-                    {/* Hologram - Slightly Larger for Premium feel */}
-                    <div className="relative z-10 scale-110">
+                    {/* Hologram - Significantly Larger for Premium feel */}
+                    <div className="relative z-10 scale-150 transform transition-transform duration-700 hover:scale-[1.6]">
                         <HolographicID />
                     </div>
                 </div>

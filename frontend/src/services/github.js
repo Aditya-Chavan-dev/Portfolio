@@ -1,133 +1,75 @@
-import axios from 'axios';
 import config from '../portfolio.config';
+import api from './api';
 
-const GITHUB_API_BASE = 'https://api.github.com';
-const CONTRIBUTIONS_API_BASE = 'https://github-contributions-api.jogruber.de/v4';
+const CACHE_KEY = 'github_stats_v2';
+const CACHE_DURATION = 1000 * 60 * 15; // 15 Mins
 
 export const GitHubService = {
     /**
-     * Fetches profile and repo data to calculate "Real" stats.
-     * Logic:
-     * - LoC = Sum of size (KB) of all public repos * 30 (Avg lines per KB)
-     * - Public Repos = Direct form API
-     * - Streak = Calculated from FULL Contribution Calendar via Proxy API
+     * Fetches stats from our Render Backend.
+     * The backend handles the complexity of calling GitHub/Jogruber APIs.
      */
     async getRealStats() {
         try {
-            const username = config.hero.githubUsername;
-            if (!username) throw new Error("No GitHub Username Configured");
+            console.log("Fetching GitHub stats from Backend...");
 
-            // 1. Fetch User Profile
-            // 2. Fetch All Public Repos 
-            // 3. Fetch Full Contribution Calendar (Parallel)
-            const [userRes, reposRes, calendarRes] = await Promise.all([
-                axios.get(`${GITHUB_API_BASE}/users/${username}`),
-                axios.get(`${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=pushed`),
-                axios.get(`${CONTRIBUTIONS_API_BASE}/${username}`)
-            ]);
+            // Call our own backend API
+            const response = await api.get('/github');
+            const stats = response.data;
 
-            const publicRepos = userRes.data.public_repos;
-            const repos = reposRes.data;
+            // Timestamp it for client-side caching
+            stats.timestamp = Date.now();
 
-            // Calculate "Real" LoC Estimate
-            const totalSizeKB = repos.reduce((acc, repo) => acc + repo.size, 0);
-            const estimatedLoC = Math.floor(totalSizeKB * 40);
+            // Save to Cache
+            try {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(stats));
+            } catch (e) {
+                console.warn("Failed to save GitHub stats to cache", e);
+            }
 
-            // Calculate "Real" Tech Stack (Frequency based on Repo Count)
-            const languageMap = {};
-            repos.forEach(repo => {
-                if (repo.language) {
-                    languageMap[repo.language] = (languageMap[repo.language] || 0) + 1;
-                }
-            });
-
-            const topStack = Object.entries(languageMap)
-                .sort(([, a], [, b]) => b - a) // Sort by frequency desc
-                .slice(0, 5) // Take Top 5
-                .map(([name]) => ({ name })); // Format for Component
-
-            // Calculate Streak from Calendar (Unbounded)
-            const streak = GitHubService.calculateCalendarStreak(calendarRes.data);
-
-            return {
-                loc: estimatedLoC > config.hero.metrics.loc.value ? estimatedLoC : config.hero.metrics.loc.value,
-                repos: publicRepos,
-                streak: `${streak} Days`,
-                stack: topStack.length > 0 ? topStack : config.hero.stack // Fallback to config if no languages found
-            };
+            return stats;
 
         } catch (error) {
-            console.error("GitHub Fetch Failed:", error);
-            // Fallback
+            console.error("GitHub Fetch Failed (Backend):", error);
+            // Fallback to config defaults
             return {
                 loc: config.hero.metrics.loc.value,
                 repos: "40+",
-                streak: config.hero.metrics.streak.value
+                streak: config.hero.metrics.streak.value,
+                stack: config.hero.stack,
+                timestamp: Date.now()
             };
         }
     },
 
-    calculateCalendarStreak(data) {
-        if (!data || !data.contributions) return 0;
+    /**
+     * Tries to get stats from local storage.
+     */
+    getCachedStats() {
+        try {
+            const cached = localStorage.getItem(CACHE_KEY);
+            if (!cached) return null;
+            return JSON.parse(cached);
+        } catch (e) {
+            return null;
+        }
+    },
 
-        // Data structure: { contributions: [ { date: "YYYY-MM-DD", count: 5, level: 2 }, ... ] }
-        // The API returns ALL contributions for the current/previous years.
-        // We need to sort descending just in case, though usually returned sorted.
-        const contributions = data.contributions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    /**
+     * Smart Fetch:
+     * - If cache is fresh (< 15 Mins), return cache.
+     * - If cache is stale or missing, fetch from Backend.
+     */
+    async getSmartStats() {
+        const cached = this.getCachedStats();
+        const isFresh = cached && (Date.now() - cached.timestamp < CACHE_DURATION);
 
-        const today = new Date();
-        // Normalize today to YYYY-MM-DD local logic if needed, but the API returns YYYY-MM-DD.
-        // Let's rely on simple string comparison against the API's dates.
-
-        const toDateString = (date) => date.toISOString().split('T')[0];
-        const todayStr = toDateString(today);
-
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = toDateString(yesterday);
-
-        let currentStreak = 0;
-        let streakBroken = false;
-
-        // Find where to start counting
-        // We look for Today. If found and count > 0, streak starts 1.
-        // If Today not found (or count 0), we look for Yesterday.
-        // If Yesterday found and count > 0, streak starts 1 (from yesterday).
-
-        // Note: The API might return today's empty slot if no contribs yet.
-
-        let startIndex = contributions.findIndex(c => c.date === todayStr);
-
-        // If today is not in list (future?) or 0 contribs
-        if (startIndex !== -1 && contributions[startIndex].count > 0) {
-            // Started today!
-        } else {
-            // Check yesterday
-            startIndex = contributions.findIndex(c => c.date === yesterdayStr);
-            if (startIndex === -1 || contributions[startIndex].count === 0) {
-                return 0; // No streak active
-            }
+        if (isFresh) {
+            console.log("GitHub Stats: Cache is fresh. Using cached data.");
+            return cached;
         }
 
-        // Count backwards from startIndex
-        for (let i = startIndex; i < contributions.length; i++) {
-            if (contributions[i].count > 0) {
-                currentStreak++;
-
-                // Verify continuity
-                if (i < contributions.length - 1) {
-                    const currDate = new Date(contributions[i].date);
-                    const nextDate = new Date(contributions[i + 1].date);
-                    const diffTime = Math.abs(currDate - nextDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                    if (diffDays > 1) break; // Gap detected
-                }
-            } else {
-                break; // 0 contributions stops the streak
-            }
-        }
-
-        return currentStreak;
+        console.log("GitHub Stats: Cache is stale or missing. Fetching new data...");
+        return this.getRealStats();
     }
 };
