@@ -53,17 +53,45 @@ router.get('/', async (req, res) => {
     try {
         console.log(`[GITHUB] Fetching stats for ${USERNAME}...`);
 
-        const [userRes, reposRes, calendarRes] = await Promise.all([
-            axios.get(`${GITHUB_API_BASE}/users/${USERNAME}`),
-            axios.get(`${GITHUB_API_BASE}/users/${USERNAME}/repos?per_page=100&sort=pushed`),
-            axios.get(`${CONTRIBUTIONS_API_BASE}/${USERNAME}`)
-        ]);
+        // 1. Fetch User Profile to get "created_at"
+        const userRes = await axios.get(`${GITHUB_API_BASE}/users/${USERNAME}`);
+        const createdAt = new Date(userRes.data.created_at);
+        const startYear = createdAt.getFullYear();
+        const currentYear = new Date().getFullYear();
+
+        // 2. Fetch Repos
+        const reposRes = await axios.get(`${GITHUB_API_BASE}/users/${USERNAME}/repos?per_page=100&sort=pushed`);
+
+        // 3. Fetch Contributions for ALL years
+        const contributionPromises = [];
+        for (let year = startYear; year <= currentYear; year++) {
+            contributionPromises.push(axios.get(`${CONTRIBUTIONS_API_BASE}/${USERNAME}?y=${year}`));
+        }
+
+        const contributionResponses = await Promise.all(contributionPromises);
+
 
         const publicRepos = userRes.data.public_repos;
         const repos = reposRes.data;
 
-        // Contributions
-        const totalContributions = calendarRes.data.contributions.reduce((acc, day) => acc + day.count, 0);
+        // Contributions: Sum up ALL years
+        let totalContributions = 0;
+        let allContributions = []; // Flattened list for streak calc
+
+        contributionResponses.forEach(res => {
+            // Jogruber API returns { total: { [year]: count }, contributions: [...] }
+            // Safe summing
+            if (res.data.total) {
+                Object.values(res.data.total).forEach(count => totalContributions += count);
+            }
+
+            if (res.data.contributions) {
+                allContributions = [...allContributions, ...res.data.contributions];
+            }
+        });
+
+        // Use the most recent year's data structure for streak calculation or the merged list
+        const streakData = { contributions: allContributions };
 
         // Tech Stack
         const languageMap = {};
@@ -78,7 +106,7 @@ router.get('/', async (req, res) => {
             .map(([name]) => ({ name }));
 
         // Streak
-        const streak = calculateCalendarStreak(calendarRes.data);
+        const streak = calculateCalendarStreak(streakData);
 
         const stats = {
             loc: totalContributions,
