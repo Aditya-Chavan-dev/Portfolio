@@ -4,9 +4,10 @@ import config from '../../portfolio.config';
 import HolographicID from './HolographicID';
 import { GitHubService } from '../../services/github';
 import { Flame, GitCommit, Code2, Server } from 'lucide-react';
+import MagicCounter from '../ui/MagicCounter'; // Import the new component
 
 // Sub-component for a Metric Ticker with Glass Effect
-const MetricItem = ({ label, value, icon, delay }) => (
+const MetricItem = ({ label, rawValue, formatter, icon, delay }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -20,7 +21,7 @@ const MetricItem = ({ label, value, icon, delay }) => (
             <span>{label}</span>
         </div>
         <div className="text-2xl md:text-3xl font-display font-bold text-[var(--color-text-primary)] group-hover:text-glow transition-all duration-300">
-            {value}
+            <MagicCounter value={rawValue} formatter={formatter} />
         </div>
     </motion.div>
 );
@@ -204,19 +205,22 @@ const HeroDashboard = () => {
                     <div className="flex flex-row flex-wrap justify-center lg:justify-start gap-4 w-full">
                         <MetricItem
                             label={config.hero.metrics.loc.label}
-                            value={formatNumber(metrics.loc)}
+                            rawValue={metrics.loc}
+                            formatter={formatNumber}
                             icon={<GitCommit size={12} />}
                             delay={0.6}
                         />
                         <MetricItem
                             label="Active Projects"
-                            value={metrics.repos.toLocaleString()}
+                            rawValue={metrics.repos}
+                            formatter={(v) => v.toLocaleString()}
                             icon={<Server size={12} />}
                             delay={0.7}
                         />
                         <MetricItem
                             label={config.hero.metrics.streak.label}
-                            value={metrics.streak}
+                            rawValue={metrics.streak}
+                            formatter={(v) => v}
                             icon={<Flame size={12} className="text-[var(--color-accent-orange)]" />}
                             delay={0.8}
                         />
