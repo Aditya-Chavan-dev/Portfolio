@@ -2,7 +2,7 @@ import config from '../portfolio.config';
 import api from './api';
 
 const CACHE_KEY = 'github_stats_v2';
-const CACHE_DURATION = 1000 * 60 * 15; // 15 Mins
+const CACHE_DURATION = 1000 * 60 * 5; // 5 Mins - Updated for freshness
 
 export const GitHubService = {
     /**
