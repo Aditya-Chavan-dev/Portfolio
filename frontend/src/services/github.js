@@ -19,6 +19,7 @@ export const GitHubService = {
 
             // Timestamp it for client-side caching
             stats.timestamp = Date.now();
+            stats.source = 'LIVE'; // Tag as Live
 
             // Save to Cache
             try {
@@ -37,7 +38,8 @@ export const GitHubService = {
                 repos: "40+",
                 streak: config.hero.metrics.streak.value,
                 stack: config.hero.stack,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                source: 'OFFLINE' // Tag as Offline/Fallback
             };
         }
     },
@@ -49,7 +51,8 @@ export const GitHubService = {
         try {
             const cached = localStorage.getItem(CACHE_KEY);
             if (!cached) return null;
-            return JSON.parse(cached);
+            const parsed = JSON.parse(cached);
+            return { ...parsed, source: 'CACHE' }; // Tag as Cache
         } catch (e) {
             return null;
         }
@@ -57,11 +60,13 @@ export const GitHubService = {
 
     /**
      * Smart Fetch:
-     * - If cache is fresh (< 15 Mins), return cache.
+     * - If cache is fresh (< 5 Mins), return cache.
      * - If cache is stale or missing, fetch from Backend.
      */
     async getSmartStats() {
         const cached = this.getCachedStats();
+        // Check if cache exists and is fresh
+        // Note: getCachedStats now returns an object with source='CACHE', so we check the timestamp inside it
         const isFresh = cached && (Date.now() - cached.timestamp < CACHE_DURATION);
 
         if (isFresh) {
