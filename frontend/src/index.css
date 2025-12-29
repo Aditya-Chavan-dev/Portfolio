@@ -46,9 +46,10 @@ body {
   background-image: radial-gradient(circle at 50% 50%, #111111 0%, #050505 100%);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
-  overflow: hidden;
-  width: 100vw;
-  height: 100vh;
+  overflow-x: hidden;
+  min-height: 100dvh;
+  width: 100%;
+  touch-action: auto;
 }
 
 /* Global Noise Overlay (Film Grain) */
