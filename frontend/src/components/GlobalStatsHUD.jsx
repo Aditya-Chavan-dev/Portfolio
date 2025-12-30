@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useSpring } from 'framer-motion';
 import { subscribeToVisits } from '../services/tracking';
+import MagicCounter from './ui/MagicCounter';
 
 const GlobalStatsHUD = ({ sessionId }) => {
     const [counts, setCounts] = useState({ linkedin: 0, resume: 0, anonymous: 0 });
