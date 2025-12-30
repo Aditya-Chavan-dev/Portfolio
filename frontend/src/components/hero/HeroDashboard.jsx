@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import config from '../../portfolio.config';
 import HolographicID from './HolographicID';
 import { GitHubService } from '../../services/github';
-import { Flame, GitCommit, Code2, Server } from 'lucide-react';
+import { Flame, GitCommit, Code2, Server, ChevronDown } from 'lucide-react';
 import MagicCounter from '../ui/MagicCounter'; // Import the new component
 
 // Sub-component for a Metric Ticker with Glass Effect
@@ -239,6 +239,22 @@ const HeroDashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Scroll Indicator */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, y: [0, 10, 0] }}
+                transition={{ delay: 2, duration: 2, repeat: Infinity }}
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 cursor-pointer z-20 flex flex-col items-center gap-2 group"
+                onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+            >
+                <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent-blue)] transition-colors">
+                    System Architecture
+                </span>
+                <div className="w-10 h-10 rounded-full border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.03)] backdrop-blur-sm flex items-center justify-center group-hover:border-[var(--color-accent-blue)] transition-colors">
+                    <ChevronDown size={16} className="text-[var(--color-text-primary)] group-hover:text-[var(--color-accent-blue)]" />
+                </div>
+            </motion.div>
         </div>
     );
 };
