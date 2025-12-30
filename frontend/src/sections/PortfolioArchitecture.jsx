@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Database, Server, Globe, Box, Cpu, Activity } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // --- Icons (Inline for portability, matching Hero style) ---
 const TechIcons = {
@@ -51,7 +50,7 @@ const PortfolioArchitecture = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setPhase(p => (p + 1) % 4);
-        }, 2000); // 2 seconds per phase
+        }, 1500); // Speed up slightly for flow (1.5s per phase)
         return () => clearInterval(interval);
     }, []);
 
@@ -108,79 +107,42 @@ const PortfolioArchitecture = () => {
                         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" overflow="visible">
                             <defs>
                                 <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor="transparent" />
-                                    <stop offset="50%" stopColor="var(--color-accent-blue)" />
-                                    <stop offset="100%" stopColor="transparent" />
+                                    <stop offset="0%" stopColor="var(--color-accent-blue)" stopOpacity="0" />
+                                    <stop offset="50%" stopColor="var(--color-accent-blue)" stopOpacity="1" />
+                                    <stop offset="100%" stopColor="var(--color-accent-blue)" stopOpacity="0" />
                                 </linearGradient>
                             </defs>
 
                             {/* Path 1: GitHub -> Render */}
-                            <motion.path
+                            <DataCable
                                 d="M 80 150 L 250 150"
-                                stroke="#333"
-                                strokeWidth="2"
-                                fill="none"
-                            />
-                            <motion.path
-                                d="M 80 150 L 250 150"
-                                stroke="url(#flowGradient)"
-                                strokeWidth="3"
-                                fill="none"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={isPhaseActive(1) ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-                                transition={{ duration: 0.8, ease: "easeInOut" }}
+                                active={isPhaseActive(1)}
+                                color="var(--color-accent-blue)"
                             />
 
                             {/* Path 2: Render -> Node */}
-                            <motion.path
+                            <DataCable
                                 d="M 320 150 L 400 150"
-                                stroke="#333"
-                                strokeWidth="2"
-                                fill="none"
-                            />
-                            <motion.path
-                                d="M 320 150 L 400 150"
-                                stroke="url(#flowGradient)"
-                                strokeWidth="3"
-                                fill="none"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={isPhaseActive(2) ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-                                transition={{ duration: 0.8, delay: 0.2, ease: "easeInOut" }}
+                                active={isPhaseActive(2)}
+                                color="var(--color-accent-purple)"
+                                delay={0.2}
                             />
 
                             {/* Path 3: Node -> Split (Firebase Up / React Down) */}
                             {/* Firebase Branch */}
-                            <motion.path
+                            <DataCable
                                 d="M 460 150 C 500 150, 500 80, 540 80"
-                                stroke="#333"
-                                strokeWidth="2"
-                                fill="none"
-                            />
-                            <motion.path
-                                d="M 460 150 C 500 150, 500 80, 540 80"
-                                stroke="var(--color-accent-orange)"
-                                strokeWidth="3"
-                                fill="none"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={isPhaseActive(3) ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-                                transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
+                                active={isPhaseActive(3)}
+                                color="var(--color-accent-orange)"
+                                delay={0.4}
                             />
 
                             {/* React Branch */}
-                            <motion.path
+                            <DataCable
                                 d="M 460 150 C 500 150, 500 220, 540 220"
-                                stroke="#333"
-                                strokeWidth="2"
-                                fill="none"
-                            />
-                            <motion.path
-                                d="M 460 150 C 500 150, 500 220, 540 220"
-                                stroke="var(--color-accent-blue)"
-                                strokeWidth="3"
-                                fill="none"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={isPhaseActive(3) ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-                                transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
+                                active={isPhaseActive(3)}
+                                color="var(--color-accent-blue)"
+                                delay={0.4}
                             />
 
                         </svg>
@@ -192,8 +154,9 @@ const PortfolioArchitecture = () => {
                             <NodeCard
                                 icon={TechIcons.GitHub}
                                 label="Repository"
-                                active={isPhaseActive(0)}
+                                active={phase >= 0}
                                 color="white"
+                                triggerPulse={phase === 0} // Pulse on start
                             />
                         </div>
 
@@ -203,14 +166,18 @@ const PortfolioArchitecture = () => {
                                 icon={TechIcons.Render}
                                 label="Render Host"
                                 subLabel="Live Backend"
-                                active={isPhaseActive(1)}
+                                active={phase >= 1}
                                 color="#bc13fe"
                                 size="lg"
-                                pulsing={true}
+                                triggerPulse={phase === 1} // Pulse when data hits
                             />
                             {/* Sync Badge */}
                             <div className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                                <span className="bg-[var(--color-bg-deep)] border border-[var(--color-accent-purple)] text-[var(--color-accent-purple)] text-[9px] px-2 py-0.5 rounded-full uppercase tracking-wider font-mono shadow-[0_0_10px_rgba(188,19,254,0.3)]">
+                                <span className={`
+                                    bg-[var(--color-bg-deep)] border border-[var(--color-accent-purple)] text-[var(--color-accent-purple)] text-[9px] px-2 py-0.5 rounded-full uppercase tracking-wider font-mono shadow-[0_0_10px_rgba(188,19,254,0.3)]
+                                    transition-opacity duration-300
+                                    ${phase >= 1 ? 'opacity-100' : 'opacity-0'}
+                                `}>
                                     ● Sync Active
                                 </span>
                             </div>
@@ -221,8 +188,9 @@ const PortfolioArchitecture = () => {
                             <NodeCard
                                 icon={TechIcons.Node}
                                 label="API Logic"
-                                active={isPhaseActive(2)}
+                                active={phase >= 2}
                                 color="#339933"
+                                triggerPulse={phase === 2}
                             />
                         </div>
 
@@ -231,8 +199,9 @@ const PortfolioArchitecture = () => {
                             <NodeCard
                                 icon={TechIcons.Firebase}
                                 label="Realtime DB"
-                                active={isPhaseActive(3)}
+                                active={phase >= 3}
                                 color="#FFAB00"
+                                triggerPulse={phase === 3}
                             />
                         </div>
 
@@ -241,8 +210,9 @@ const PortfolioArchitecture = () => {
                             <NodeCard
                                 icon={TechIcons.React}
                                 label="React Frontend"
-                                active={isPhaseActive(3)}
+                                active={phase >= 3}
                                 color="#61DAFB"
+                                triggerPulse={phase === 3}
                             />
                         </div>
 
@@ -253,8 +223,44 @@ const PortfolioArchitecture = () => {
     );
 };
 
-// --- Subcomponent: Glass Node Card ---
-const NodeCard = ({ icon, label, subLabel, active, color, size = "md", pulsing = false }) => {
+// --- Subcomponent: Animated Data Cable (Fiber Optic Effect) ---
+const DataCable = ({ d, active, color, delay = 0 }) => {
+    return (
+        <>
+            {/* Base Path (Dim) */}
+            <motion.path
+                d={d}
+                stroke={color}
+                strokeWidth="1"
+                strokeOpacity="0.2"
+                fill="none"
+            />
+            {/* Active Data Packet (Dash) */}
+            <motion.path
+                d={d}
+                stroke={color}
+                strokeWidth="3"
+                fill="none"
+                strokeDasharray="10 120" // Short dash, long gap
+                strokeLinecap="round"
+                initial={{ strokeDashoffset: 0, opacity: 0 }}
+                animate={active ? {
+                    strokeDashoffset: [-130, 0], // Move continuously
+                    opacity: 1
+                } : { opacity: 0 }}
+                transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: delay
+                }}
+            />
+        </>
+    );
+};
+
+// --- Subcomponent: Glass Node Card (Reactive) ---
+const NodeCard = ({ icon, label, subLabel, active, color, size = "md", triggerPulse = false }) => {
     const isLg = size === "lg";
 
     return (
@@ -266,21 +272,27 @@ const NodeCard = ({ icon, label, subLabel, active, color, size = "md", pulsing =
                 bg-[rgba(20,20,20,0.6)] backdrop-blur-xl border 
                 transition-all duration-500
                 shadow-lg
+                z-10
             `}
             style={{
                 borderColor: active ? color : 'rgba(255,255,255,0.05)',
-                boxShadow: active ? `0 0 20px ${color}40` : 'none'
+                boxShadow: active ? `0 0 20px ${color}20` : 'none'
             }}
-            animate={{
-                scale: active ? 1.05 : 1,
+            animate={triggerPulse ? {
+                scale: [1, 1.15, 1],
+                boxShadow: [`0 0 20px ${color}20`, `0 0 40px ${color}60`, `0 0 20px ${color}20`],
+                borderColor: [color, 'white', color]
+            } : {
+                scale: active ? 1.05 : 1
             }}
+            transition={{ duration: 0.4 }}
         >
             {/* Inner Glow Pulse */}
-            {pulsing && active && (
+            {triggerPulse && (
                 <div className="absolute inset-0 rounded-2xl animate-ping opacity-20" style={{ backgroundColor: color }}></div>
             )}
 
-            <div className={`transition-all duration-500 ${active ? 'opacity-100 scale-110' : 'opacity-50 grayscale'}`}>
+            <div className={`transition-all duration-500 ${active ? 'opacity-100' : 'opacity-30 grayscale'}`}>
                 {icon}
             </div>
 
