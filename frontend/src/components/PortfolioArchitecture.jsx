@@ -152,24 +152,13 @@ const PortfolioArchitecture = () => {
 
         </div>
 
-        {/* Scrollytelling Text Overlay - Absolute positioned at bottom or side */}
-        <div className="absolute bottom-12 left-0 right-0 flex justify-center">
-          <motion.div
-            style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [0, 1]) }}
-            className="bg-black/80 backdrop-blur border border-gray-800 px-6 py-3 rounded-full text-sm text-gray-400"
-          >
-            Scroll to explore the architecture
-          </motion.div>
+        {/* Invisible Spacers to drive the scroll - keeping height for animation timing */}
+        <div className="relative z-10 pointer-events-none">
+          <div className="h-[80vh] w-full" />
+          <div className="h-[80vh] w-full" />
+          <div className="h-[80vh] w-full" />
+          <div className="h-[80vh] w-full" />
         </div>
-      </div>
-
-      {/* Invisible Spacers to drive the scroll */}
-      <div className="relative z-10 pointer-events-none">
-        <div className="h-[80vh] flex items-center justify-start ml-[5%] lg:ml-[20%]"><div className="bg-gray-900/90 p-6 rounded-xl border border-gray-800 max-w-sm backdrop-blur-md shadow-2xl"><h3 className="text-blue-400 font-bold mb-2">1. The Origin</h3><p className="text-gray-400 text-sm">Development begins in the local IDE (VS Code). Code is written, tested, and staged for commit.</p></div></div>
-        <div className="h-[80vh] flex items-center justify-start ml-[5%] lg:ml-[20%]"><div className="bg-gray-900/90 p-6 rounded-xl border border-gray-800 max-w-sm backdrop-blur-md shadow-2xl"><h3 className="text-purple-400 font-bold mb-2">2. Version Control</h3><p className="text-gray-400 text-sm">Code is pushed to GitHub. This triggers the automated CI/CD pipelines immediately.</p></div></div>
-        <div className="h-[80vh] flex items-center justify-start ml-[5%] lg:ml-[20%]"><div className="bg-gray-900/90 p-6 rounded-xl border border-gray-800 max-w-sm backdrop-blur-md shadow-2xl"><h3 className="text-green-400 font-bold mb-2">3. Parallel Build</h3><p className="text-gray-400 text-sm">The pipeline splits: Render builds the Node.js backend while Firebase deploys the React frontend.</p></div></div>
-        <div className="h-[80vh] flex items-center justify-start ml-[5%] lg:ml-[20%]"><div className="bg-gray-900/90 p-6 rounded-xl border border-gray-800 max-w-sm backdrop-blur-md shadow-2xl"><h3 className="text-orange-400 font-bold mb-2">4. Live Sync</h3><p className="text-gray-400 text-sm">Both ends connect to the Realtime Database, establishing a privileged live-sync channel.</p></div></div>
-      </div>
 
     </section>
   );
