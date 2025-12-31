@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import EntryGate from './components/EntryGate';
 import SessionHandshake from './components/SessionHandshake';
 import HeroDashboard from './components/hero/HeroDashboard';
-import PortfolioArchitecture from './sections/PortfolioArchitecture';
+import PortfolioArchitecture from './components/PortfolioArchitecture';
 import GlobalStatsHUD from './components/GlobalStatsHUD';
 import { initSession } from './services/tracking';
 

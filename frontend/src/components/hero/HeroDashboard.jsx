@@ -57,7 +57,7 @@ const HeroDashboard = () => {
         if (cached) return cached;
         return {
             loc: config.hero.metrics.loc.value,
-            repos: 40,
+            repos: 0,
             streak: config.hero.metrics.streak.value,
             stack: config.hero.stack,
             projectStart: null,
@@ -200,7 +200,7 @@ const HeroDashboard = () => {
                         <MetricItem
                             label={config.hero.metrics.streak.label}
                             rawValue={metrics.streak}
-                            formatter={(v) => v}
+                            formatter={(v) => `${v} Days`}
                             icon={<Flame size={12} className="text-[var(--color-accent-orange)]" />}
                             delay={0.8}
                         />

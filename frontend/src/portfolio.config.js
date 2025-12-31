@@ -41,16 +41,16 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
         metrics: {
             loc: {
                 label: "Contributions",
-                value: 2000,
+                value: 0,
                 suffix: "+"
             },
             commits: {
                 label: "Git Commits",
-                value: 2450
+                value: 0
             },
             streak: {
                 label: "Github Streak",
-                value: "42 Days",
+                value: 0,
                 icon: "fire"
             }
         },

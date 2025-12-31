@@ -35,7 +35,7 @@ export const GitHubService = {
             // Fallback to config defaults
             return {
                 loc: config.hero.metrics.loc.value,
-                repos: "40+",
+                repos: 0,
                 streak: config.hero.metrics.streak.value,
                 stack: config.hero.stack,
                 timestamp: Date.now(),
