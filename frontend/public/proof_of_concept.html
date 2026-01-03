@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Animation Proof of Concept</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        body {
+            background-color: #0B0E14;
+            background-image: radial-gradient(circle at 50% 50%, #1a1f2e 0%, #0B0E14 100%);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* --- GLASS CARD STYLE --- */
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: 1px solid rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.6),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 0 20px rgba(0, 150, 255, 0.05); /* Subtle blue glow */
+            border-radius: 24px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 150, 255, 0.15);
+        }
+
+        /* Inner inset for "screen" feel */
+        .glass-inset {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* --- GLOW LINES --- */
+        .connector {
+            stroke-dasharray: 10;
+            animation: dash 30s linear infinite;
+            filter: drop-shadow(0 0 4px #00f0ff);
+        }
+        
+        .connector-pulse {
+            stroke-dasharray: 10, 200;
+            stroke-dashoffset: 0;
+            animation: dash 1.5s linear infinite;
+            filter: drop-shadow(0 0 8px #00f0ff);
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 2px #00f0ff); }
+            50% { opacity: 1; filter: drop-shadow(0 0 10px #00f0ff); }
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .label-top {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .label-bottom {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #e2e8f0;
+            margin-top: 16px;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .sub-label {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        /* --- ICONS (Specific Styling) --- */
+        .icon-glow-blue { filter: drop-shadow(0 0 15px rgba(0, 122, 204, 0.6)); }
+        .icon-glow-white { filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4)); }
+        .icon-glow-green { filter: drop-shadow(0 0 15px rgba(50, 200, 50, 0.6)); }
+        .icon-glow-yellow { filter: drop-shadow(0 0 15px rgba(255, 200, 0, 0.6)); }
+
+        .db-stack {
+            position: relative;
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateX(60deg) rotateZ(-45deg);
+        }
+
+    </style>
+</head>
+<body class="selection:bg-cyan-500/30">
+
+    <div class="relative w-[1200px] h-[600px] flex items-center justify-center scale-[0.9] lg:scale-100">
+
+        <!-- SVG LAYER (Connectors) -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" overflow="visible">
+            <defs>
+                <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2" />
+                    <stop offset="50%" stop-color="#22d3ee" />
+                    <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.2" />
+                </linearGradient>
+            </defs>
+
+            <!-- 1. Start -> Control -->
+            <path d="M180 300 L 280 300" stroke="#0ea5e9" stroke-width="2" stroke-opacity="0.2" />
+            
+            <!-- Arrow Head -->
+             <g transform="translate(230, 300)">
+                <path d="M-10 -10 L 10 0 L -10 10" fill="none" class="connector-pulse" stroke="#00f0ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+             </g>
+             <text x="230" y="335" fill="#00f0ff" font-family="JetBrains Mono" font-size="10" text-anchor="middle" class="animate-pulse">Push</text>
+
+
+            <!-- 2. Control -> Build Split -->
+            <path d="M400 300 C 440 300, 440 200, 480 200" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.2" fill="none" />
+            <path d="M400 300 C 440 300, 440 400, 480 400" stroke="#22d3ee" stroke-width="2" stroke-opacity="0.2" fill="none" />
+            
+            <path d="M400 300 C 440 300, 440 200, 480 200" stroke="#3b82f6" stroke-width="2" class="connector" fill="none" stroke-dasharray="5 5" />
+            <path d="M400 300 C 440 300, 440 400, 480 400" stroke="#22d3ee" stroke-width="2" class="connector" fill="none" stroke-dasharray="5 5" style="animation-direction: reverse;" />
+
+
+            <!-- 3. Build -> Sync Merge -->
+            <path d="M680 200 C 720 200, 720 300, 760 300" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.2" fill="none" />
+            <path d="M680 400 C 720 400, 720 300, 760 300" stroke="#22d3ee" stroke-width="2" stroke-opacity="0.2" fill="none" />
+            
+            <text x="730" y="240" fill="#64748b" font-family="Inter" font-size="9" text-anchor="middle">Deployment</text>
+            <text x="730" y="380" fill="#64748b" font-family="Inter" font-size="9" text-anchor="middle">Deployment</text>
+
+            <path d="M680 200 C 720 200, 720 300, 760 300" stroke="url(#grad-cyan)" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100" fill="none">
+                 <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
+                 <animate attributeName="stroke-opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+            </path>
+             <path d="M680 400 C 720 400, 720 300, 760 300" stroke="url(#grad-cyan)" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100" fill="none">
+                 <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" begin="1s"/>
+                 <animate attributeName="stroke-opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="1s"/>
+            </path>
+
+
+            <!-- 4. Sync -> End -->
+            <path d="M900 300 L 980 300" stroke="#8b5cf6" stroke-width="2" stroke-opacity="0.2" />
+            
+            <!-- ECG Pulse -->
+            <path d="M910 300 H 925 L 932 285 L 940 315 L 948 290 L 955 300 H 970" 
+                  stroke="#a855f7" stroke-width="2" fill="none" 
+                  stroke-dasharray="100" stroke-dashoffset="100"
+                  class="connector"  style="filter: drop-shadow(0 0 5px #a855f7);">
+                  <animate attributeName="stroke-dashoffset" values="100;0" dur="1.5s" repeatCount="indefinite" />
+                  <animate attributeName="stroke-opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" />
+            </path>
+            <text x="940" y="335" fill="#a855f7" font-family="JetBrains Mono" font-size="10" text-anchor="middle" class="animate-pulse">Live Sync</text>
+
+        </svg>
+
+        <!-- --- NODES --- -->
+
+        <!-- 1. START -->
+        <div class="absolute left-[50px] flex flex-col items-center z-10">
+            <div class="label-top">START</div>
+            <div class="glass-card w-32 h-32 flex items-center justify-center p-6">
+                <!-- VS Code Icon -->
+                <svg viewBox="0 0 24 24" class="w-16 h-16 icon-glow-blue" fill="none">
+                    <path d="M23.5 18C23.5 19.1 22.6 20 21.5 20H2.5C1.4 20 0.5 19.1 0.5 18V6C0.5 4.9 1.4 4 2.5 4H21.5C22.6 4 23.5 4.9 23.5 6V18Z" fill="#007ACC" fill-opacity="0.1" />
+                    <path d="M17.5 12L5 5V19L17.5 12Z" fill="#007ACC" />
+                    <path d="M17.5 12L12.5 15L19 19L23 18V6L19 5L12.5 9.5L17.5 12Z" fill="#007ACC" fill-opacity="0.8" />
+                </svg>
+            </div>
+            <div class="label-bottom">Local IDE</div>
+        </div>
+
+        <!-- 2. CONTROL -->
+        <div class="absolute left-[280px] flex flex-col items-center z-10">
+            <div class="label-top">CONTROL</div>
+            <div class="glass-card w-32 h-32 flex items-center justify-center p-6">
+                 <!-- GitHub Icon -->
+                 <svg viewBox="0 0 24 24" class="w-16 h-16 icon-glow-white fill-white">
+                    <path d="M12 2C6.477 2 2 6.484 2 12.017C2 16.44 5.092 20.194 9.12 21.536C9.62 21.628 9.8 21.318 9.8 21.054C9.8 20.82 9.791 20.198 9.787 19.38C6.785 20.032 6.151 17.934 6.151 17.934C5.696 16.777 5.04 16.47 5.04 16.47C4.06 15.83 5.111 15.843 5.111 15.843C6.195 15.919 6.765 16.956 6.765 16.956C7.728 18.608 9.291 18.131 9.907 17.854C10.005 17.155 10.285 16.678 10.594 16.408C8.198 16.136 5.679 15.209 5.679 11.077C5.679 9.9 6.099 8.941 6.792 8.183C6.679 7.91 6.31 6.81 6.898 5.321C6.898 5.321 7.803 5.031 9.862 6.426C10.722 6.186 11.644 6.067 12.564 6.072C13.483 6.067 14.405 6.186 15.267 6.426C17.325 5.031 18.228 5.321 18.228 5.321C18.818 6.81 18.45 7.91 18.337 8.183C19.032 8.941 19.45 9.9 19.45 11.077C19.45 15.221 16.924 16.131 14.516 16.399C14.909 16.738 15.26 17.408 15.26 18.433C15.26 19.901 15.245 21.082 15.245 21.318C15.245 21.586 15.422 21.902 15.933 21.805C19.957 20.46 23.045 16.703 23.045 12.261C23.045 6.738 18.57 2.257 13.045 2.257H12Z" />
+                </svg>
+            </div>
+            <div class="label-bottom">GitHub</div>
+        </div>
+
+
+        <!-- 3. BUILD GROUP -->
+        <div class="absolute left-[480px] flex flex-col items-center gap-6 z-10 w-[200px]">
+            <div class="label-top relative top-[-10px]">BUILD</div>
+            
+            <!-- Backend -->
+            <div class="glass-card w-[200px] h-[90px] flex items-center p-3 gap-3">
+                 <!-- Render Cloud -->
+                 <div class="w-10 h-10 flex flex-col items-center justify-center">
+                      <svg viewBox="0 0 24 24" fill="none" class="w-8 h-8 text-blue-400 icon-glow-blue"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 7V17" stroke="currentColor" stroke-width="1.5"/><path d="M8 12H16" stroke="currentColor" stroke-width="1.5"/></svg>
+                      <span class="text-[8px] mt-1 text-gray-400">Render</span>
+                 </div>
+                 <!-- Node Hex -->
+                 <div class="w-12 h-12 flex flex-col items-center justify-center relative">
+                      <svg viewBox="0 0 24 24" class="w-12 h-12 text-green-500 icon-glow-green" fill="none">
+                         <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-width="1.5" />
+                         <path d="M12 12V22 M12 12L2 7 M12 12L22 7" stroke="currentColor" stroke-width="1.5" />
+                      </svg>
+                      <span class="text-[8px] absolute -bottom-3 text-gray-400">Node.js</span>
+                 </div>
+            </div>
+            <div class="label-bottom !mt-1">Backend API</div>
+
+            <!-- Frontend -->
+             <div class="glass-card w-[200px] h-[90px] flex items-center p-3 gap-3">
+                 <!-- Firebase Flame -->
+                 <div class="w-10 h-10 flex flex-col items-center justify-center">
+                      <svg viewBox="0 0 24 24" class="w-8 h-8 icon-glow-yellow" fill="none"><path d="M3.89 15.67L6.46 3.09C6.52 2.76 6.94 2.65 7.17 2.89L12 7.64L3.89 15.67Z" fill="#FFCA28" /><path d="M12 7.64L16.81 2.91C17.03 2.69 17.43 2.8 17.49 3.11L20.12 15.67L12 7.64Z" fill="#FFA000" /><path d="M12 7.64L20.12 15.68L12.7 19.85C12.26 20.1 11.73 20.1 11.29 19.85L3.88 15.67L12 7.64Z" fill="#F57C00" /></svg>
+                      <span class="text-[8px] mt-1 text-gray-400">Hosting</span>
+                 </div>
+                 <!-- React Atom -->
+                 <div class="w-12 h-12 flex flex-col items-center justify-center relative">
+                      <svg viewBox="0 0 24 24" class="w-10 h-10 text-cyan-400 icon-glow-blue animate-spin-[spin_10s_linear_infinite]" fill="none">
+                          <circle cx="12" cy="12" r="2" fill="currentColor" />
+                          <ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" stroke-width="1.5" transform="rotate(60 12 12)" />
+                          <ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" stroke-width="1.5" transform="rotate(120 12 12)" />
+                          <ellipse cx="12" cy="12" rx="10" ry="4" stroke="currentColor" stroke-width="1.5" />
+                      </svg>
+                 </div>
+            </div>
+            <div class="label-bottom !mt-1">Frontend CDN</div>
+        </div>
+
+
+        <!-- 4. SYNC -->
+        <div class="absolute left-[760px] flex flex-col items-center z-10">
+            <div class="label-top">SYNC</div>
+            <div class="glass-card w-36 h-36 flex flex-col items-center justify-center p-2 relative overflow-hidden">
+                <!-- Glowing Floor -->
+                <div class="absolute bottom-0 w-full h-1/2 bg-blue-500/10 blur-xl"></div>
+                
+                <!-- DB Stack Simulation -->
+                <div class="relative w-20 h-24 flex flex-col items-center justify-center gap-[-10px]">
+                    <!-- Cylinders -->
+                    <div class="w-16 h-6 rounded-[50%] bg-blue-500/20 border border-blue-400/50 absolute top-2 shadow-[0_0_15px_rgba(59,130,246,0.3)]"></div>
+                    <div class="w-16 h-6 rounded-[50%] bg-blue-500/20 border border-blue-400/50 absolute top-6 shadow-[0_0_15px_rgba(59,130,246,0.3)]"></div>
+                    <div class="w-16 h-6 rounded-[50%] bg-blue-500/20 border border-blue-400/50 absolute top-10 shadow-[0_0_15px_rgba(59,130,246,0.3)]"></div>
+                    
+                    <!-- Firebase Lock Logo Overlay -->
+                    <div class="absolute top-8 z-10 drop-shadow-xl animate-bounce">
+                         <svg viewBox="0 0 24 24" class="w-10 h-10 icon-glow-yellow" fill="none"><path d="M3.89 15.67L6.46 3.09C6.52 2.76 6.94 2.65 7.17 2.89L12 7.64L3.89 15.67Z" fill="#FFCA28" /><path d="M12 7.64L16.81 2.91C17.03 2.69 17.43 2.8 17.49 3.11L20.12 15.67L12 7.64Z" fill="#FFA000" /><path d="M12 7.64L20.12 15.68L12.7 19.85C12.26 20.1 11.73 20.1 11.29 19.85L3.88 15.67L12 7.64Z" fill="#F57C00" /></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="label-bottom">Realtime<br>Database</div>
+        </div>
+
+
+        <!-- 5. END -->
+        <div class="absolute left-[980px] flex flex-col items-center z-10">
+            <div class="label-top">END</div>
+            <div class="glass-card w-36 h-36 flex flex-col items-center justify-center p-3 relative">
+                 <div class="relative w-full h-full flex items-center justify-center">
+                      <!-- Browser Window -->
+                      <div class="absolute w-28 h-20 bg-white/5 border border-white/20 rounded-lg top-4 left-0 backdrop-blur-sm shadow-xl">
+                           <div class="w-full h-4 border-b border-white/10 flex items-center gap-1 px-2">
+                               <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+                               <div class="w-1.5 h-1.5 rounded-full bg-yellow-400"></div>
+                               <div class="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+                           </div>
+                           <div class="p-2 gap-2 flex flex-col">
+                               <div class="w-full h-2 bg-white/10 rounded"></div>
+                               <div class="flex gap-2">
+                                   <div class="w-1/3 h-8 bg-white/10 rounded"></div>
+                                   <div class="w-2/3 h-8 bg-white/10 rounded"></div>
+                               </div>
+                           </div>
+                      </div>
+                      
+                      <!-- Mobile Phone -->
+                      <div class="absolute w-10 h-20 bg-black/80 border border-white/20 rounded-xl bottom-2 right-2 backdrop-blur-md shadow-2xl flex flex-col items-center p-1">
+                          <div class="w-4 h-1 bg-white/20 rounded-full mb-1"></div>
+                          <div class="w-full h-full bg-white/5 rounded"></div>
+                      </div>
+                 </div>
+            </div>
+            <div class="label-bottom">User Interface</div>
+        </div>
+
+    </div>
+
+</body>
+</html>
