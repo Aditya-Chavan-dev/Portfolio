@@ -3,209 +3,312 @@ import './ArchitectureDiagram.css';
 
 const ArchitectureDiagram = () => {
     return (
-        <div className="architecture-wrapper">
-            <div className="pipeline-container">
+        <div className="architecture-diagram-container">
 
-                {/* 1. START STAGE */}
-                <div className="stage-column">
-                    <div className="stage-title">Start</div>
-                    <div className="glass-card card-square">
-                        <div className="well-inset">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg" width="50" height="50" className="icon-img" alt="VS Code" />
-                        </div>
-                    </div>
-                    <div className="label-main">Local IDE</div>
-                </div>
-
-                {/* CONNECTOR: START -> CONTROL (PUSH ARROW) */}
-                <div className="connector-gap" style={{ height: '130px', width: '80px' }}>
-                    <svg width="80" height="40" viewBox="0 0 80 40" style={{ overflow: 'visible' }}>
-                        <defs>
-                            <linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.1" />
-                                <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.6" />
-                            </linearGradient>
-                        </defs>
-                        {/* Arrow Container */}
-                        <path d="M0,12 L50,12 L50,2 L75,20 L50,38 L50,28 L0,28 Z" fill="url(#arrowGrad)" stroke="#22d3ee" strokeWidth="1" strokeOpacity="0.5" />
-                        {/* Internal Chevron Animation */}
-                        <path d="M10,12 L20,20 L10,28" fill="none" stroke="#fff" strokeWidth="2" strokeOpacity="0.5">
-                            <animate attributeName="d" values="M10,12 L20,20 L10,28; M40,12 L50,20 L40,28" dur="1.5s" repeatCount="indefinite" />
-                            <animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite" />
-                        </path>
-                    </svg>
-                    <div style={{ position: 'absolute', bottom: '30px', color: '#22d3ee', fontSize: '11px', fontWeight: '700', textShadow: '0 0 5px rgba(34,211,238,0.5)' }}>Push</div>
-                </div>
-
-                {/* 2. CONTROL STAGE */}
-                <div className="stage-column">
-                    <div className="stage-title">Control</div>
-                    <div className="glass-card card-square">
-                        <div className="well-float">
-                            {/* Glow behind logo */}
-                            <div style={{ position: 'absolute', width: '40px', height: '40px', background: '#38bdf8', filter: 'blur(20px)', opacity: '0.3' }}></div>
-                            <img src="https://cdn.simpleicons.org/github/ffffff" width="55" height="55" className="icon-img" alt="GitHub" />
-                        </div>
-                    </div>
-                    <div className="label-main">GitHub</div>
-                </div>
-
-                {/* CONNECTOR: CONTROL -> BUILD (SPLIT) */}
-                <div className="connector-gap-wide" style={{ width: '50px' }}>
-                    <svg width="50" height="260" viewBox="0 0 50 260">
-                        {/* Top Path */}
-                        <path d="M0,130 L20,130 Q35,130 35,115 L35,60 Q35,45 50,45" className="path-glow" strokeOpacity="0.6" />
-                        {/* Bottom Path */}
-                        <path d="M0,130 L20,130 Q35,130 35,145 L35,200 Q35,215 50,215" className="path-glow" strokeOpacity="0.6" />
-                        {/* Moving Particles */}
-                        <circle r="2" fill="#fff"><animateMotion dur="2s" repeatCount="indefinite" path="M0,130 L20,130 Q35,130 35,115 L35,60 Q35,45 50,45" /></circle>
-                        <circle r="2" fill="#fff"><animateMotion dur="2s" repeatCount="indefinite" begin="1s" path="M0,130 L20,130 Q35,130 35,145 L35,200 Q35,215 50,215" /></circle>
-                    </svg>
-                </div>
-
-                {/* 3. BUILD STAGE */}
-                <div className="stage-column">
-                    <div className="stage-title">Build</div>
-                    <div className="build-group">
-                        {/* Backend API */}
-                        <div className="stage-column" style={{ marginTop: '0' }}>
-                            <div className="glass-card card-wide">
-                                {/* Render */}
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <img src="https://cdn.simpleicons.org/render/46E3B7" width="45" height="45" className="icon-img" alt="Render" />
-                                    <span style={{ fontSize: '10px', color: '#cbd5e1', marginTop: '6px', fontWeight: '600' }}>Render</span>
-                                </div>
-                                {/* Node */}
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <div className="well-inset" style={{ width: '48px', height: '48px', borderRadius: '12px' }}>
-                                        <img src="https://cdn.simpleicons.org/nodedotjs/339933" width="28" height="28" className="icon-img" alt="Node.js" />
-                                    </div>
-                                    <span style={{ fontSize: '10px', color: '#cbd5e1', marginTop: '6px', fontWeight: '600' }}>Node.js</span>
-                                </div>
-                            </div>
-                            <div className="label-main">Backend API</div>
-                        </div>
-
-                        {/* Frontend CDN */}
-                        <div className="stage-column" style={{ marginTop: '0' }}>
-                            <div className="glass-card card-wide">
-                                {/* Firebase/Hosting Combined Ref */}
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                        <img src="https://cdn.simpleicons.org/firebase/FFCA28" width="14" height="14" alt="Firebase" />
-                                        <span style={{ fontSize: '11px', color: '#fff', fontWeight: '600' }}>Firebase</span>
-                                    </div>
-                                    <div style={{ marginTop: '4px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                        <img src="https://cdn.simpleicons.org/firebase/FFCA28" width="32" height="32" className="icon-img" alt="Hosting" />
-                                        <span style={{ fontSize: '9px', color: '#cbd5e1', marginTop: '2px' }}>Hosting</span>
-                                    </div>
-                                </div>
-                                {/* React */}
-                                <div style={{ position: 'relative', width: '50px', height: '50px', background: 'rgba(56,189,248,0.1)', borderRadius: '50%', border: '1px solid rgba(56,189,248,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <img src="https://cdn.simpleicons.org/react/61DAFB" width="28" height="28" className="icon-img" style={{ animation: 'spin 10s linear infinite' }} alt="React" />
-                                </div>
-                            </div>
-                            <div className="label-main">Frontend CDN</div>
-                        </div>
+            {/* 1. START */}
+            <div className="node-container-lg">
+                <div className="label-top">Start</div>
+                <div className="glass-shell">
+                    <div className="inner-well-vscode">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg"
+                            className="vscode-icon" alt="VS Code" />
                     </div>
                 </div>
-
-                {/* CONNECTOR: BUILD -> SYNC (MERGE) */}
-                <div className="connector-gap-wide" style={{ width: '50px' }}>
-                    {/* Deployment Labels attached to line positions */}
-                    <div className="label-deploy" style={{ top: '50px', left: '5px' }}>Deployment</div>
-                    <div className="label-deploy" style={{ bottom: '50px', left: '5px' }}>Deployment</div>
-
-                    <svg width="50" height="260" viewBox="0 0 50 260">
-                        {/* Top Merge */}
-                        <path d="M0,45 L15,45 Q30,45 30,60 L30,115 Q30,130 40,130 L50,130" className="path-glow" strokeOpacity="0.6" />
-                        {/* Bottom Merge */}
-                        <path d="M0,215 L15,215 Q30,215 30,200 L30,145 Q30,130 40,130 L50,130" className="path-glow" strokeOpacity="0.6" />
-                        {/* Particles */}
-                        <circle r="2" fill="#fff"><animateMotion dur="2s" repeatCount="indefinite" path="M0,45 L15,45 Q30,45 30,60 L30,115 Q30,130 40,130 L50,130" /></circle>
-                        <circle r="2" fill="#fff"><animateMotion dur="2s" repeatCount="indefinite" begin="1s" path="M0,215 L15,215 Q30,215 30,200 L30,145 Q30,130 40,130 L50,130" /></circle>
-                    </svg>
-                </div>
-
-                {/* 4. SYNC STAGE */}
-                <div className="stage-column">
-                    <div className="stage-title">Sync</div>
-                    <div className="glass-card card-square">
-                        {/* Database SVG */}
-                        <div style={{ position: 'relative', width: '70px', height: '70px' }}>
-                            <svg width="70" height="70" viewBox="0 0 70 70">
-                                <defs>
-                                    <linearGradient id="dbCyl" x1="0" y1="0" x2="1" y2="0"><stop stopColor="#2563eb" /><stop offset="0.5" stopColor="#60a5fa" /><stop offset="1" stopColor="#2563eb" /></linearGradient>
-                                    <linearGradient id="dbTop" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#bfdbfe" /><stop offset="1" stopColor="#60a5fa" /></linearGradient>
-                                </defs>
-                                {/* 4-Stack Cluster */}
-                                {/* Back Left */}
-                                <path d="M5,10 L5,45 Q15,52 25,45 L25,10" fill="url(#dbCyl)" />
-                                <ellipse cx="15" cy="10" rx="10" ry="4" fill="url(#dbTop)" />
-                                {/* Back Right */}
-                                <path d="M40,10 L40,45 Q50,52 60,45 L60,10" fill="url(#dbCyl)" />
-                                <ellipse cx="50" cy="10" rx="10" ry="4" fill="url(#dbTop)" />
-                                {/* Front Left */}
-                                <path d="M5,35 L5,60 Q15,67 25,60 L25,35" fill="url(#dbCyl)" />
-                                <ellipse cx="15" cy="35" rx="10" ry="4" fill="url(#dbTop)" />
-                                {/* Front Right */}
-                                <path d="M40,35 L40,60 Q50,67 60,60 L60,35" fill="url(#dbCyl)" />
-                                <ellipse cx="50" cy="35" rx="10" ry="4" fill="url(#dbTop)" />
-                                {/* Blue Rings */}
-                                <path d="M5,25 Q15,32 25,25" fill="none" stroke="#22d3ee" strokeWidth="1.5" opacity="0.8" />
-                                <path d="M40,25 Q50,32 60,25" fill="none" stroke="#22d3ee" strokeWidth="1.5" opacity="0.8" />
-                            </svg>
-                            {/* Badge */}
-                            <div style={{ position: 'absolute', top: '20px', left: '20px', width: '30px', height: '30px', background: '#1e293b', borderRadius: '50%', border: '2px solid #0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.6)' }}>
-                                <img src="https://cdn.simpleicons.org/firebase/FFCA28" width="16" height="16" alt="Firebase Badge" />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="label-main">Realtime Database</div>
-                </div>
-
-                {/* CONNECTOR: SYNC -> END (HEARTBEAT) */}
-                <div className="connector-gap" style={{ width: '70px' }}>
-                    <svg width="70" height="50" viewBox="0 0 70 50">
-                        <defs>
-                            <filter id="glowPulse"><feGaussianBlur stdDeviation="1.5" floodColor="#22d3ee" result="coloredBlur" /><feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-                        </defs>
-                        {/* Pulse Path */}
-                        <path d="M0,25 L10,25 L20,10 L30,40 L40,5 L50,45 L60,25 L70,25"
-                            stroke="#22d3ee" strokeWidth="2" fill="none" strokeLinejoin="round" filter="url(#glowPulse)">
-                            <animate attributeName="stroke-opacity" values="0.4;1;0.4" dur="1.2s" repeatCount="indefinite" />
-                        </path>
-                    </svg>
-                    <div style={{ position: 'absolute', bottom: '30px', color: '#22d3ee', fontSize: '10px', fontWeight: '700', textTransform: 'uppercase' }}>Live Sync</div>
-                </div>
-
-                {/* 5. END STAGE */}
-                <div className="stage-column">
-                    <div className="stage-title">End</div>
-                    <div className="glass-card card-square">
-                        <div className="well-inset" style={{ overflow: 'hidden', position: 'relative' }}>
-                            {/* UI Wireframe */}
-                            <svg width="80" height="80" viewBox="0 0 80 80">
-                                {/* Desktop */}
-                                <rect x="5" y="15" width="60" height="45" rx="3" fill="#475569" stroke="#64748b" />
-                                <rect x="7" y="17" width="56" height="41" rx="1" fill="#f1f5f9" />
-                                <rect x="10" y="20" width="50" height="15" rx="1" fill="#cbd5e1" />
-                                <rect x="10" y="38" width="22" height="15" rx="1" fill="#cbd5e1" opacity="0.6" />
-                                {/* Mobile Overlay */}
-                                <g transform="translate(48,30)" filter="drop-shadow(-2px 2px 4px rgba(0,0,0,0.5))">
-                                    <rect x="0" y="0" width="20" height="35" rx="3" fill="#0f172a" stroke="#64748b" strokeWidth="1.5" />
-                                    <rect x="2" y="2" width="16" height="31" rx="1" fill="#f8fafc" />
-                                    <rect x="4" y="5" width="12" height="8" rx="1" fill="#94a3b8" />
-                                    <rect x="4" y="16" width="12" height="3" rx="1" fill="#cbd5e1" />
-                                    <rect x="4" y="21" width="12" height="3" rx="1" fill="#cbd5e1" />
-                                </g>
-                            </svg>
-                        </div>
-                    </div>
-                    <div className="label-main">User Interface</div>
-                </div>
-
+                <div className="label-bot">Local IDE</div>
             </div>
+
+            {/* 2. ARROW */}
+            <div className="arrow-wrapper">
+                <svg width="60" height="40" viewBox="0 0 60 40" style={{ overflow: 'visible' }}>
+                    <defs>
+                        <linearGradient id="speedGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.1" />
+                            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.8" />
+                        </linearGradient>
+                        <filter id="arrowGlow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                            <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    {/* Centered Arrow Path (Start 0, End 60, Center Y = 20) */}
+                    <path d="M 0,20 L 40,20 L 40,5 L 60,20 L 40,35 L 40,20 L 0,20" fill="none" stroke="#22d3ee" strokeWidth="2"
+                        strokeOpacity="0.8" filter="url(#arrowGlow)" />
+                    <g clipPath="url(#arrowClip2)">
+                        <clipPath id="arrowClip2">
+                            <path d="M 0,20 L 40,20 L 40,5 L 60,20 L 40,35 L 40,20 L 0,20" />
+                        </clipPath>
+                        <path d="M 0,20 L 40,20 L 40,5 L 60,20 L 40,35 L 40,20 L 0,20" fill="url(#speedGrad)" opacity="0.3" />
+                        <rect x="-60" y="0" width="80" height="40" fill="#a5f3fc" opacity="0.0">
+                            {/* Abstract dash animation */}
+                            <animate attributeName="x" from="-60" to="60" dur="0.8s" repeatCount="indefinite" />
+                        </rect>
+                        <path d="M 0,20 L 60,20" stroke="#fff" strokeWidth="1" strokeDasharray="10 20">
+                            <animate attributeName="stroke-dashoffset" from="30" to="0" dur="0.5s" repeatCount="indefinite" />
+                        </path>
+                    </g>
+                </svg>
+                <div className="label-push" style={{ bottom: '-20px' }}>Push</div>
+            </div>
+
+            {/* 3. CONTROL */}
+            <div className="node-container">
+                <div className="label-top">Control</div>
+                <div className="glass-shell">
+                    <div className="inner-well-github">
+                        <div className="github-glow-spot"></div>
+                        <svg className="github-icon" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
+                    </div>
+                </div>
+                <div className="label-bot">GitHub</div>
+            </div>
+
+            {/* 4. SPLIT LINES */}
+            <div className="branch-lines">
+                {/* SVG Height 310 to match build stack. Center is 155.
+                    Targets: 
+                    Top: Center of top card. 
+                         Gap is 30. Top card is 140. Center is 155 - 15 - 70 = 70.
+                    Bottom: Center of bot card.
+                         Center is 155 + 15 + 70 = 240.
+                    Input: Center of Middle (Control) = 155.
+                 */}
+                <svg width="40" height="310" viewBox="0 0 40 310" style={{ overflow: 'visible' }}>
+                    <defs>
+                        <filter id="branchGlow">
+                            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                            <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <g stroke="#22d3ee" strokeWidth="2" fill="none" filter="url(#branchGlow)" strokeLinecap="round">
+                        {/* Start at 0,155 */}
+                        <path d="M 0,155 L 10,155" />
+                        {/* Split to Top (70) */}
+                        <path d="M 10,155 Q 25,155 25,140 L 25,85 Q 25,70 40,70" />
+                        {/* Split to Bottom (240) */}
+                        <path d="M 10,155 Q 25,155 25,170 L 25,225 Q 25,240 40,240" />
+                    </g>
+                    {/* Animated Dots */}
+                    <circle r="2" fill="#fff"><animateMotion dur="2s" repeatCount="indefinite" path="M 0,155 L 10,155 Q 25,155 25,140 L 25,85 Q 25,70 40,70" /></circle>
+                    <circle r="2" fill="#fff"><animateMotion dur="2s" repeatCount="indefinite" begin="1s" path="M 0,155 L 10,155 Q 25,155 25,170 L 25,225 Q 25,240 40,240" /></circle>
+                </svg>
+            </div>
+
+            {/* 5. BUILD COLUMN */}
+            <div className="build-column">
+                <div className="node-container">
+                    <div className="label-top">Build</div>
+                    <div className="glass-shell-wide">
+                        <div className="layout-backend">
+                            <div className="group-render"><img src="https://cdn.simpleicons.org/render/46E3B7"
+                                className="icon-render-svg" alt="Render" /><span className="mini-label">Render</span></div>
+                            <div className="group-node">
+                                <div className="inner-well-small"><img src="https://cdn.simpleicons.org/nodedotjs/339933"
+                                    className="icon-node-svg" alt="Node.js" /></div><span className="mini-label">Node.js</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="label-bot" style={{ bottom: '-25px' }}>Backend API</div>
+                </div>
+                <div className="node-container">
+                    <div className="glass-shell-wide">
+                        <div className="layout-frontend">
+                            <div className="fe-header"><img src="https://cdn.simpleicons.org/firebase/FFCA28"
+                                className="icon-firebase-sm" alt="Firebase" /><span className="text-firebase">Firebase</span></div>
+                            <div className="fe-hosting"><img src="https://cdn.simpleicons.org/firebase/FFCA28"
+                                className="icon-hosting-lg" alt="Hosting" /><span className="text-hosting">Hosting</span></div>
+                            <div className="fe-react-bubble"><img src="https://cdn.simpleicons.org/react/61DAFB" className="icon-react"
+                                alt="React" /></div>
+                        </div>
+                    </div>
+                    <div className="label-bot" style={{ bottom: '-25px' }}>Frontend CDN</div>
+                </div>
+            </div>
+
+            {/* 6. MERGE LINES (WITH DEPLOYMENT TEXT) */}
+            <div className="merge-lines">
+                {/* Deployment Labels */}
+                <span className="deployment-label" style={{ top: '55px', left: '5px' }}>Deployment</span>
+                <span className="deployment-label" style={{ bottom: '55px', left: '5px' }}>Deployment</span>
+
+                <svg width="40" height="310" viewBox="0 0 40 310" style={{ overflow: 'visible' }}>
+                    <g stroke="#22d3ee" strokeWidth="2" fill="none" filter="url(#branchGlow)" strokeLinecap="round">
+                        {/* Top Merge (70 to 155) */}
+                        <path d="M 0,70 L 15,70 Q 30,70 30,85 L 30,140 Q 30,155 40,155" />
+                        {/* Bottom Merge (240 to 155) */}
+                        <path d="M 0,240 L 15,240 Q 30,240 30,225 L 30,170 Q 30,155 40,155" />
+                    </g>
+                    <circle r="2" fill="#fff" filter="drop-shadow(0 0 5px #fff)">
+                        <animateMotion dur="2.5s" repeatCount="indefinite"
+                            path="M 0,70 L 15,70 Q 30,70 30,85 L 30,140 Q 30,155 40,155" />
+                    </circle>
+                    <circle r="2" fill="#fff" filter="drop-shadow(0 0 5px #fff)">
+                        <animateMotion dur="2.5s" repeatCount="indefinite" begin="0.8s"
+                            path="M 0,240 L 15,240 Q 30,240 30,225 L 30,170 Q 30,155 40,155" />
+                    </circle>
+                </svg>
+            </div>
+
+            {/* 7. SYNC */}
+            <div className="node-container">
+                <div className="label-top">Sync</div>
+                <div className="glass-shell">
+                    <div className="db-container">
+                        <svg width="120" height="110" viewBox="0 0 120 110" style={{ position: 'absolute', overflow: 'visible' }}>
+                            <defs>
+                                <linearGradient id="rayGrad" x1="0" y1="1" x2="0" y2="0">
+                                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
+                                    <stop offset="50%" stopColor="#60a5fa" stopOpacity="0.5" />
+                                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+                                </linearGradient>
+                                <filter id="softRayBlur">
+                                    <feGaussianBlur stdDeviation="4" />
+                                </filter>
+                                <linearGradient id="dbBody" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stopColor="#1e40af" />
+                                    <stop offset="50%" stopColor="#3b82f6" />
+                                    <stop offset="100%" stopColor="#1e40af" />
+                                </linearGradient>
+                                <linearGradient id="dbTop" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#bfdbfe" />
+                                    <stop offset="100%" stopColor="#60a5fa" />
+                                </linearGradient>
+                                <filter id="neonRing" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="1" result="blur" />
+                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                    <feDropShadow dx="0" dy="0" stdDeviation="2" floodColor="#00f2ff" />
+                                    <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#00f2ff" />
+                                </filter>
+                            </defs>
+                            <rect x="25" y="-20" width="4" height="140" fill="url(#rayGrad)" filter="url(#softRayBlur)"
+                                opacity="0.6" />
+                            <rect x="58" y="-30" width="6" height="160" fill="url(#rayGrad)" filter="url(#softRayBlur)"
+                                opacity="0.8" />
+                            <rect x="92" y="-20" width="4" height="140" fill="url(#rayGrad)" filter="url(#softRayBlur)"
+                                opacity="0.6" />
+                            <g transform="translate(20, 15)">
+                                <path d="M0,8 L0,55 Q20,63 40,55 L40,8" fill="url(#dbBody)" opacity="0.9" />
+                                <ellipse cx="20" cy="8" rx="20" ry="7" fill="url(#dbTop)" />
+                                <path d="M0,22 Q20,29 40,22" stroke="#60a5fa" strokeWidth="1.5" fill="none"
+                                    filter="url(#neonRing)" opacity="0.8" />
+                                <path d="M0,40 Q20,47 40,40" stroke="#60a5fa" strokeWidth="1.5" fill="none"
+                                    filter="url(#neonRing)" opacity="0.8" />
+                            </g>
+                            <g transform="translate(60, 15)">
+                                <path d="M0,8 L0,55 Q20,63 40,55 L40,8" fill="url(#dbBody)" opacity="0.9" />
+                                <ellipse cx="20" cy="8" rx="20" ry="7" fill="url(#dbTop)" />
+                                <path d="M0,22 Q20,29 40,22" stroke="#60a5fa" strokeWidth="1.5" fill="none"
+                                    filter="url(#neonRing)" opacity="0.8" />
+                                <path d="M0,40 Q20,47 40,40" stroke="#60a5fa" strokeWidth="1.5" fill="none"
+                                    filter="url(#neonRing)" opacity="0.8" />
+                            </g>
+                            <g transform="translate(20, 45)">
+                                <path d="M0,8 L0,50 Q20,58 40,50 L40,8" fill="url(#dbBody)" />
+                                <ellipse cx="20" cy="8" rx="20" ry="7" fill="url(#dbTop)" />
+                                <path d="M0,28 Q20,35 40,28" stroke="#ffffff" strokeWidth="2" fill="none"
+                                    filter="url(#neonRing)" opacity="1" />
+                            </g>
+                            <g transform="translate(60, 45)">
+                                <path d="M0,8 L0,50 Q20,58 40,50 L40,8" fill="url(#dbBody)" />
+                                <ellipse cx="20" cy="8" rx="20" ry="7" fill="url(#dbTop)" />
+                                <path d="M0,28 Q20,35 40,28" stroke="#ffffff" strokeWidth="2" fill="none"
+                                    filter="url(#neonRing)" opacity="1" />
+                            </g>
+                        </svg>
+                        <div className="db-badge-overlay"><img src="https://cdn.simpleicons.org/firebase/FFCA28"
+                            style={{ width: '32px', height: '32px' }} alt="Firebase" />
+                            <div className="badge-lock"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#1e293b"
+                                strokeWidth="4">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="label-bot">Realtime<br />Database</div>
+            </div>
+
+            {/* 8. LIVE SYNC HEARTBEAT */}
+            <div className="heartbeat-wrapper">
+                <svg width="80" height="60" viewBox="0 0 80 60" style={{ overflow: 'visible' }}>
+                    <defs>
+                        <filter id="heartGlow">
+                            <feGaussianBlur stdDeviation="3" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <path d="M 0,30 L 10,30 L 20,10 L 30,50 L 40,5 L 50,55 L 60,30 L 80,30" stroke="rgba(34, 211, 238, 0.2)"
+                        strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M 0,30 L 10,30 L 20,10 L 30,50 L 40,5 L 50,55 L 60,30 L 80,30" stroke="#22d3ee" strokeWidth="2"
+                        fill="none" strokeLinecap="round" strokeLinejoin="round" filter="url(#heartGlow)"
+                        strokeDasharray="200" strokeDashoffset="200">
+                        <animate attributeName="stroke-dashoffset" from="200" to="0" dur="1.5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite" />
+                    </path>
+                </svg>
+                <div className="label-livesync" style={{ bottom: '-20px' }}>Live Sync</div>
+            </div>
+
+            {/* 9. END NODE (UI) */}
+            <div className="node-container-lg">
+                <div className="label-top">End</div>
+                <div className="glass-shell">
+                    <div className="inner-well-ui">
+                        <svg className="ui-scene-svg" viewBox="0 0 100 90">
+                            <defs>
+                                <linearGradient id="winGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#e2e8f0" />
+                                    <stop offset="100%" stopColor="#cbd5e1" />
+                                </linearGradient>
+                                <linearGradient id="contentGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#94a3b8" />
+                                    <stop offset="100%" stopColor="#64748b" />
+                                </linearGradient>
+                                <filter id="shadowMobile">
+                                    <feDropShadow dx="2" dy="2" stdDeviation="3" floodColor="rgba(0,0,0,0.5)" />
+                                </filter>
+                            </defs>
+                            {/* DESKTOP WINDOW */}
+                            <g transform="translate(5, 10)">
+                                <rect x="0" y="0" width="80" height="60" rx="3" fill="#334155" stroke="#475569"
+                                    strokeWidth="1" />
+                                <rect x="1" y="1" width="78" height="8" rx="2" fill="#1e293b" />
+                                <circle cx="5" cy="5" r="1.5" fill="#ef4444" />
+                                <circle cx="9" cy="5" r="1.5" fill="#f59e0b" />
+                                <circle cx="13" cy="5" r="1.5" fill="#22c55e" />
+                                <rect x="4" y="13" width="72" height="53" rx="1" fill="#f1f5f9" opacity="0.9" />
+                                <rect x="8" y="17" width="64" height="20" rx="2" fill="url(#contentGrad)" opacity="0.4" />
+                                <rect x="8" y="41" width="30" height="20" rx="2" fill="url(#contentGrad)" opacity="0.4" />
+                                <rect x="42" y="41" width="30" height="20" rx="2" fill="url(#contentGrad)" opacity="0.4" />
+                            </g>
+                            {/* MOBILE PHONE */}
+                            <g transform="translate(65, 30)" filter="url(#shadowMobile)">
+                                <rect x="0" y="0" width="26" height="50" rx="4" fill="#0f172a" stroke="#64748b"
+                                    strokeWidth="1.5" />
+                                <path d="M 8,2 L 18,2" stroke="#334155" strokeWidth="2" strokeLinecap="round" />
+                                <rect x="2" y="5" width="22" height="40" fill="#f1f5f9" opacity="0.9" />
+                                <rect x="4" y="8" width="18" height="12" rx="2" fill="url(#contentGrad)" opacity="0.6" />
+                                <rect x="4" y="24" width="18" height="3" rx="1" fill="#94a3b8" />
+                                <rect x="4" y="30" width="18" height="3" rx="1" fill="#94a3b8" />
+                                <rect x="8" y="46" width="10" height="1.5" rx="1" fill="#ffffff" />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+                <div className="label-bot">User Interface</div>
+            </div>
+
         </div>
     );
 };
