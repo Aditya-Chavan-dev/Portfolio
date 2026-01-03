@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import EntryGate from './components/EntryGate';
 import SessionHandshake from './components/SessionHandshake';
 import HeroDashboard from './components/hero/HeroDashboard';
+import ArchitectureDiagram from './components/hero/ArchitectureDiagram';
 
 import GlobalStatsHUD from './components/GlobalStatsHUD';
 import { initSession } from './services/tracking';
@@ -31,7 +32,7 @@ function App() {
     };
 
     return (
-        <div className="text-[var(--color-text-primary)] font-sans">
+        <div className="text-[var(--color-text-primary)] font-sans h-screen overflow-hidden">
             <GlobalStatsHUD sessionId={sessionId} />
             <AnimatePresence mode="wait">
 
@@ -40,6 +41,7 @@ function App() {
                         key="entry"
                         exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
                         transition={{ duration: 0.5 }}
+                        className="h-full w-full"
                     >
                         <EntryGate onUnlock={startSession} />
                     </motion.div>
@@ -51,6 +53,7 @@ function App() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
+                        className="h-full w-full"
                     >
                         <SessionHandshake onComplete={enterDashboard} />
                     </motion.div>
@@ -62,9 +65,23 @@ function App() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.8 }}
+                        className="h-full w-full overflow-y-auto overflow-x-hidden bg-[var(--color-bg-deep)]"
                     >
                         <HeroDashboard />
 
+                        {/* Architecture Section - Separate Flow */}
+                        <div className="w-full py-20 px-4 flex flex-col items-center justify-center relative min-h-[80vh]">
+                            <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-bg-deep)] to-black/80 pointer-events-none" />
+
+                            <div className="relative z-10 text-center mb-16">
+                                <h2 className="text-[var(--color-accent-blue)] font-mono text-xs tracking-[0.3em] uppercase mb-4 opacity-80">System Architecture</h2>
+                                <h3 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                                    Neural Network
+                                </h3>
+                            </div>
+
+                            <ArchitectureDiagram />
+                        </div>
                     </motion.div>
                 )}
 

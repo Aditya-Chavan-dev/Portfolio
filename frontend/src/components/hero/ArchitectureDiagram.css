@@ -1,0 +1,137 @@
+/* ArchitectureDiagram.css */
+
+.architecture-wrapper {
+    /* Scoped variables */
+    --arch-bg-dark: #020617;
+    --arch-glass-bg: linear-gradient(180deg, rgba(30, 41, 59, 0.3) 0%, rgba(15, 23, 42, 0.4) 100%);
+    --arch-glass-border: rgba(255, 255, 255, 0.05);
+    --arch-cyan-glow: #22d3ee;
+    --arch-text-label: #94a3b8;
+    --arch-text-title: #f8fafc;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    /* Ensure it fits within parent container */
+    overflow: hidden; 
+    padding: 20px 0;
+    /* Optional: retain the dark theme background if needed, but usually parent handles it. */
+}
+
+/* LAYOUT GRID */
+.architecture-wrapper .pipeline-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: scale(0.9); /* Slight scale down to fit typical containers */
+}
+
+.architecture-wrapper .stage-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-top: 30px; /* Space for top label */
+}
+
+.architecture-wrapper .stage-title {
+    position: absolute;
+    top: -30px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* GLASS CARD BASE */
+.architecture-wrapper .glass-card {
+    background: var(--arch-glass-bg);
+    border-radius: 24px;
+    box-shadow: 
+        0 0 0 1px var(--arch-glass-border),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+        0 20px 40px -10px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+/* CYAN BOTTOM RIM LIGHT */
+.architecture-wrapper .glass-card::after {
+    content: ''; position: absolute; bottom: 0; left: 15%; right: 15%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--arch-cyan-glow), transparent);
+    box-shadow: 0 0 15px 1px rgba(34, 211, 238, 0.3);
+    opacity: 0.7;
+}
+
+/* CARD SIZES */
+.architecture-wrapper .card-square { width: 130px; height: 130px; }
+.architecture-wrapper .card-wide { width: 180px; height: 120px; flex-direction: row; justify-content: space-between; padding: 0 20px; box-sizing: border-box; }
+
+/* INNER WELLS */
+.architecture-wrapper .well-inset {
+    width: 80px; height: 80px; border-radius: 18px;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.5) 100%);
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+    display: flex; align-items: center; justify-content: center;
+}
+
+.architecture-wrapper .well-float {
+    width: 80px; height: 80px; border-radius: 18px;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.05), transparent 70%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+}
+
+/* TEXT LABELS */
+.architecture-wrapper .label-main {
+    margin-top: 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--arch-text-title);
+    letter-spacing: 0.3px;
+}
+
+/* ICONS */
+.architecture-wrapper .icon-img { display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+
+/* BUILD SECTION SPECIFIC */
+.architecture-wrapper .build-group {
+    display: flex; flex-direction: column; gap: 24px; position: relative;
+}
+
+/* CONNECTORS */
+.architecture-wrapper .connector-gap {
+    width: 60px; height: 100px; display: flex; align-items: center; justify-content: center; position: relative;
+}
+.architecture-wrapper .connector-gap-wide {
+    width: 60px; height: 260px; display: flex; align-items: center; justify-content: center; position: relative;
+}
+
+/* SVG PATHS */
+.architecture-wrapper .path-glow {
+    stroke: var(--arch-cyan-glow); stroke-width: 2; fill: none; stroke-linecap: round;
+    filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.4));
+}
+
+.architecture-wrapper .path-glow-opacity {
+    opacity: 0.6;
+}
+
+/* DEPLOYMENT TEXT */
+.architecture-wrapper .label-deploy {
+    position: absolute;
+    font-size: 9px; font-weight: 700; color: var(--arch-cyan-glow);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    text-shadow: 0 0 8px rgba(34,211,238,0.4);
+}
+
+/* Keyframes for React Spin */
+@keyframes spin { 100% { transform: rotate(360deg); } }
