@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import config from '../../portfolio.config';
 import HolographicID from './HolographicID';
 import { GitHubService } from '../../services/github';
-import { Flame, GitCommit, Server, ShieldCheck, Cpu } from 'lucide-react';
+import { Flame, GitCommit, Server, ShieldCheck, Cpu, Clock } from 'lucide-react';
 import MetricItem from './MetricItem';
 
 // Expanded Brand Icons for Real-Time Tech Stack
@@ -127,11 +127,18 @@ const HeroDashboard = () => {
                         })}
                     </motion.div>
 
-                    {/* Live Metrics Row */}
-                    <div className="flex flex-row flex-wrap justify-center lg:justify-start gap-4 w-full">
+                    {/* Live Metrics Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
                         <MetricItem label={config.hero.metrics.loc.label} rawValue={metrics.loc} formatter={formatNumber} icon={<GitCommit size={12} />} delay={0.6} />
                         <MetricItem label="Active Projects" rawValue={metrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={12} />} delay={0.7} />
                         <MetricItem label={config.hero.metrics.streak.label} rawValue={metrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={12} className="text-[var(--color-accent-orange)]" />} delay={0.8} />
+                        <MetricItem
+                            label={config.hero.metrics.uptime.label}
+                            isUptime={true}
+                            uptimeStart={config.hero.metrics.uptime.src}
+                            icon={<Clock size={12} className="text-[var(--color-accent-blue)]" />}
+                            delay={0.9}
+                        />
                     </div>
                 </div>
 

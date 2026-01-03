@@ -52,6 +52,11 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
                 label: "Github Streak",
                 value: 0,
                 icon: "fire"
+            },
+            uptime: {
+                label: "System Uptime",
+                src: "2024-01-01T00:00:00",
+                icon: "clock"
             }
         },
 
