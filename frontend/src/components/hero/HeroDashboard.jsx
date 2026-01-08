@@ -22,7 +22,7 @@ const TechIcons = {
     "Postgres": (<svg viewBox="0 0 24 24" fill="none" className="w-2.5 h-2.5 text-[#336791]"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20Z" fill="currentColor" opacity="0.2" /><path d="M12 6C9 6 7 8 7 11C7 14 9 16 12 16C15 16 16.5 14 16.5 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 12L17 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /><path d="M12 9V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>)
 };
 
-const HeroDashboard = () => {
+const HeroDashboard = ({ onInitiate }) => {
     const [metrics, setMetrics] = useState(() => {
         const cached = GitHubService.getCachedStats();
         if (cached) return cached;
@@ -158,6 +158,36 @@ const HeroDashboard = () => {
                 </div>
             </div>
         </div>
+
+            {/* System Core Trigger */ }
+    <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-40"
+    >
+        <button
+            onClick={onInitiate}
+            className="group relative px-8 py-3 bg-transparent overflow-hidden rounded-none"
+        >
+            <div className="absolute inset-0 w-full h-full bg-[var(--color-bg-deep)] opacity-80 border border-[var(--color-accent-blue)] transition-all duration-300 group-hover:bg-[var(--color-accent-blue)] group-hover:opacity-10"></div>
+            <div className="absolute inset-0 w-full h-full border border-[var(--color-accent-blue)] opacity-30 scale-105 transition-all duration-500 group-hover:scale-100 group-hover:opacity-100"></div>
+
+            {/* Corner Markers */}
+            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[var(--color-accent-blue)]"></div>
+            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[var(--color-accent-blue)]"></div>
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[var(--color-accent-blue)]"></div>
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[var(--color-accent-blue)]"></div>
+
+            <span className="relative z-10 font-mono text-xs tracking-[0.3em] text-[var(--color-accent-blue)] group-hover:text-white transition-colors duration-300 uppercase">
+                [ Initiate_System_Core ]
+            </span>
+
+            {/* Scanline Hover */}
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-[var(--color-accent-blue)] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 opacity-20"></div>
+        </button>
+    </motion.div>
+        </div >
     );
 };
 

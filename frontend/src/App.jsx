@@ -4,6 +4,7 @@ import EntryGate from './components/EntryGate';
 import SessionHandshake from './components/SessionHandshake';
 import HeroDashboard from './components/hero/HeroDashboard';
 import ArchitectureDiagram from './components/hero/ArchitectureDiagram';
+import SystemBreach from './components/SystemBreach';
 
 import GlobalStatsHUD from './components/GlobalStatsHUD';
 import { initSession } from './services/tracking';
@@ -12,6 +13,8 @@ import { initSession } from './services/tracking';
 const PHASE_ENTRY = 0;
 const PHASE_HANDSHAKE = 1;
 const PHASE_DASHBOARD = 2;
+const PHASE_TRANSITION = 3;
+const PHASE_ARCHITECTURE = 4;
 
 function App() {
     const [phase, setPhase] = useState(PHASE_ENTRY);
@@ -64,24 +67,33 @@ function App() {
                         key="dashboard"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
                         transition={{ duration: 0.8 }}
                         className="h-full w-full overflow-y-auto overflow-x-hidden bg-[var(--color-bg-deep)]"
                     >
-                        <HeroDashboard />
+                        <HeroDashboard onInitiate={() => setPhase(PHASE_TRANSITION)} />
+                    </motion.div>
+                )}
 
-                        {/* Architecture Section - Separate Flow */}
-                        <div className="w-full py-20 px-4 flex flex-col items-center justify-center relative min-h-[80vh]">
-                            <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-bg-deep)] to-black/80 pointer-events-none" />
+                {phase === PHASE_TRANSITION && (
+                    <SystemBreach onComplete={() => setPhase(PHASE_ARCHITECTURE)} />
+                )}
 
-                            <div className="relative z-10 text-center mb-16">
-                                <h2 className="text-[var(--color-accent-blue)] font-mono text-xs tracking-[0.3em] uppercase mb-4 opacity-80">System Architecture</h2>
-                                <h3 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
-                                    Neural Network
-                                </h3>
-                            </div>
-
-                            <ArchitectureDiagram />
+                {phase === PHASE_ARCHITECTURE && (
+                    <motion.div
+                        key="architecture"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1 }}
+                        className="h-full w-full overflow-y-auto overflow-x-hidden bg-[var(--color-bg-deep)] flex flex-col items-center justify-center p-4 md:p-10"
+                    >
+                        <div className="text-center mb-12">
+                            <h2 className="text-[var(--color-accent-blue)] font-mono text-xs tracking-[0.3em] uppercase mb-4 opacity-80 animate-pulse">// SYSTEM_CORE_EXPOSED</h2>
+                            <h3 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                                Neural Network
+                            </h3>
                         </div>
+                        <ArchitectureDiagram />
                     </motion.div>
                 )}
 
