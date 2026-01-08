@@ -135,7 +135,7 @@ const HeroDashboard = () => {
                         <MetricItem
                             label={config.hero.metrics.uptime.label}
                             isUptime={true}
-                            uptimeStart={config.hero.metrics.uptime.src}
+                            uptimeStart={metrics.projectStart || config.hero.metrics.uptime.src}
                             icon={<Clock size={12} className="text-[var(--color-accent-blue)]" />}
                             delay={0.9}
                         />

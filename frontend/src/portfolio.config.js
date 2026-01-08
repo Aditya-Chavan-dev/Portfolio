@@ -55,7 +55,7 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
             },
             uptime: {
                 label: "System Uptime",
-                src: "2024-01-01T00:00:00",
+                src: null,
                 icon: "clock"
             }
         },
