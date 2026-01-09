@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Fidelity Pedestal (Fixed View)</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+    <!-- Import Three.js and Post Processing -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from 'three';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // --- SCENE SETUP ---
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x020205, 0.05);
+
+        const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+        // MATCHING REFERENCE ANGLE: Low, zoomed in, frontal
+        camera.position.set(0, 3.5, 14);
+        camera.lookAt(0, 0.5, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: false }); // Antialias handled by FXAA or simple upscaling
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        document.body.appendChild(renderer.domElement);
+
+        // --- POST PROCESSING (BLOOM) ---
+        const renderScene = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloomPass.threshold = 0.2; // Glow only bright things
+        bloomPass.strength = 1.2;  // Strong Sci-Fi Glare
+        bloomPass.radius = 0.5;
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // --- MATERIALS ---
+        // Dark, heavy metal
+        const metalDark = new THREE.MeshStandardMaterial({
+            color: 0x0a0a0a,
+            roughness: 0.4,
+            metalness: 0.9,
+        });
+
+        const metalBrushed = new THREE.MeshStandardMaterial({
+            color: 0x222222,
+            roughness: 0.3,
+            metalness: 0.8,
+        });
+
+        // Glowing Cyan
+        const glowCyan = new THREE.MeshBasicMaterial({
+            color: 0x00ffff,
+            side: THREE.DoubleSide
+        });
+
+        const glowCyanDim = new THREE.MeshBasicMaterial({
+            color: 0x0088aa,
+            transparent: true,
+            opacity: 0.4,
+            side: THREE.DoubleSide
+        });
+
+        // --- GEOMETRY CONSTRUCTION ---
+        const pedestal = new THREE.Group();
+
+        // 1. FLOOR DISK (The very wide outer ring)
+        const floorGeom = new THREE.CylinderGeometry(6, 6, 0.2, 64);
+        const floorMesh = new THREE.Mesh(floorGeom, metalDark);
+        floorMesh.position.y = -0.1;
+        pedestal.add(floorMesh);
+
+        // Floor Light Tracks
+        const floorRingGeom = new THREE.RingGeometry(5.2, 5.3, 64);
+        const floorRing = new THREE.Mesh(floorRingGeom, glowCyanDim);
+        floorRing.rotation.x = -Math.PI / 2;
+        floorRing.position.y = 0.01;
+        pedestal.add(floorRing);
+
+        // 2. MAIN BASE (Segmented)
+        const baseGeom = new THREE.CylinderGeometry(4.5, 5, 0.5, 64);
+        const baseMesh = new THREE.Mesh(baseGeom, metalDark);
+        baseMesh.position.y = 0.25;
+        pedestal.add(baseMesh);
+
+        // Side Armor Plates
+        for (let i = 0; i < 6; i++) {
+            const angle = (i / 6) * Math.PI * 2;
+            const plate = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.6, 0.4), metalBrushed);
+            plate.position.set(Math.cos(angle) * 4.8, 0.3, Math.sin(angle) * 4.8);
+            plate.rotation.y = -angle;
+            pedestal.add(plate);
+
+            // Light Detail in Plate
+            const light = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.05, 0.42), glowCyan);
+            light.position.copy(plate.position);
+            light.position.y -= 0.1;
+            light.rotation.y = plate.rotation.y;
+            pedestal.add(light);
+        }
+
+        // 3. MID TIER (Sloped)
+        const midGeom = new THREE.CylinderGeometry(3.5, 4.2, 0.6, 64);
+        const midMesh = new THREE.Mesh(midGeom, metalBrushed);
+        midMesh.position.y = 0.8;
+        pedestal.add(midMesh);
+
+        // 4. TOP RING
+        const topGeom = new THREE.CylinderGeometry(3.2, 3.5, 0.2, 64);
+        const topMesh = new THREE.Mesh(topGeom, metalDark);
+        topMesh.position.y = 1.2;
+        pedestal.add(topMesh);
+
+        // Top Glowing Ring
+        const topLightGeom = new THREE.TorusGeometry(3.2, 0.05, 16, 100);
+        const topLight = new THREE.Mesh(topLightGeom, glowCyan);
+        topLight.rotation.x = Math.PI / 2;
+        topLight.position.y = 1.3;
+        pedestal.add(topLight);
+
+        // 5. CORE EMITTER
+        const coreGeom = new THREE.CylinderGeometry(1.5, 1.5, 0.1, 32);
+        const coreMesh = new THREE.Mesh(coreGeom, new THREE.MeshBasicMaterial({ color: 0x000 }));
+        coreMesh.position.y = 1.25;
+        pedestal.add(coreMesh);
+
+        const emitterDisc = new THREE.Mesh(new THREE.CircleGeometry(1.2, 32), new THREE.MeshBasicMaterial({ color: 0xe0ffff }));
+        emitterDisc.rotation.x = -Math.PI / 2;
+        emitterDisc.position.y = 1.31;
+        pedestal.add(emitterDisc);
+
+        scene.add(pedestal);
+
+
+        // --- BEAMS (Volumetric Frustum) ---
+        // Using multiple transparent cones to simulate the light shaft
+        const beamGeo = new THREE.CylinderGeometry(2, 2.5, 10, 32, 1, true);
+        const beamMat = new THREE.ShaderMaterial({
+            uniforms: {
+                color: { value: new THREE.Color(0x00f0ff) },
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 color;
+                varying vec2 vUv;
+                void main() {
+                    // Fade out at top and bottom edges
+                    float alpha = smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.6, vUv.y);
+                    // Hollow center intensity
+                    alpha *= 0.3; 
+                    gl_FragColor = vec4(color, alpha);
+                }
+            `,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            side: THREE.DoubleSide
+        });
+
+        const beam = new THREE.Mesh(beamGeo, beamMat);
+        beam.position.y = 6.3; // Sit on top
+        scene.add(beam);
+
+
+        // --- LIGHTING ---
+        const spotLight = new THREE.SpotLight(0x00f0ff, 50);
+        spotLight.position.set(0, 10, 0);
+        spotLight.angle = 0.5;
+        spotLight.penumbra = 0.5;
+        spotLight.decay = 2;
+        spotLight.distance = 50;
+        spotLight.castShadow = true;
+        scene.add(spotLight);
+
+        const fillLight = new THREE.PointLight(0x00f0ff, 2, 10);
+        fillLight.position.set(2, 2, 2);
+        scene.add(fillLight);
+
+        const rimLight = new THREE.DirectionalLight(0xffffff, 2);
+        rimLight.position.set(-5, 0, -5);
+        scene.add(rimLight);
+
+
+        // --- BACKGROUND STARS ---
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 500;
+        const posArray = new Float32Array(starCount * 3);
+
+        for (let i = 0; i < starCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 50;
+        }
+
+        starGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const starMat = new THREE.PointsMaterial({ size: 0.05, color: 0xffffff, transparent: true, opacity: 0.6 });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+
+        // --- ANIMATION ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Subtle pulse
+            const time = Date.now() * 0.001;
+            bloomPass.strength = 1.2 + Math.sin(time) * 0.2;
+            beam.material.uniforms.color.value.setHSL(0.5, 1, 0.5 + Math.sin(time * 2) * 0.1);
+
+            composer.render();
+        }
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+
+</html>
