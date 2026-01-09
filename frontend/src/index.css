@@ -1,5 +1,5 @@
 /* Import Google Fonts - MUST BE FIRST */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,7 +11,8 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-display: 'Space Grotesk', system-ui, sans-serif;
-  /* New Display Font */
+  /* New Display Font - Chakra Petch */
+  --font-hitmarker: 'Chakra Petch', system-ui, sans-serif;
 
   /* The "Cinematic Dark" Theme */
   --color-bg-deep: #050505;
@@ -69,6 +70,10 @@ body::after {
 /* Typography Utilities */
 .font-mono {
   font-family: var(--font-mono);
+}
+
+.font-hitmarker {
+  font-family: var(--font-hitmarker);
 }
 
 .font-display {
@@ -162,5 +167,30 @@ body::after {
 
   to {
     opacity: 1;
+  }
+}
+
+/* --- Hologram Utilities --- */
+.mask-image-gradient {
+  mask-image: linear-gradient(to top, black 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+}
+
+.mask-image-bust {
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+}
+
+.animate-scan {
+  animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100%);
   }
 }
