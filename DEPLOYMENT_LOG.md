@@ -340,3 +340,16 @@ We have implemented a rigorous "Self-Updating" protocol for the PWA. This ensure
 
 ### Final Summary
 The application is now "Evergreen". Deploying a new version will automatically propagate to all installed instances within seconds of them opening, guaranteeing consistency across all users.
+ 
+## Reliability: System Health Scanner (Phase 10)
+
+### What is the new feature about?
+We have added a comprehensive 'One-Click Diagnostic' tool to the Nexus Admin Panel. This tool probes the entire infrastructure (Frontend, Backend, Database) and generates a downloadable Forensic Report.
+
+### How did we implement it?
+1.  **ConsoleSpy**: A hidden utility (Nexus/frontend/utils/ConsoleSpy.js) that silently records all console.error and console.warn events in memory.
+2.  **Full Stack Probe**: The SystemHealth component now executes a fetch request to the backend /api/health endpoint, which in turn pings the database and Google DNS.
+3.  **Report Generation**: Results are compiled into a structured .txt file that can be downloaded for offline debugging.
+
+### Final Summary
+The Admin can now instantly diagnose 'Invisible' errors. If the dashboard acts up, they just click 'DIAGNOSTICS' -> 'START SCAN' -> 'DOWNLOAD LOGS' and send the text file to the developer.

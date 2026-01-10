@@ -33,26 +33,41 @@ function App() {
     const [showSystemCheck, setShowSystemCheck] = useState(false);
 
     useEffect(() => {
-        // --- PWA AUTO-UPDATE MECHANISM ---
-        // When a new Service Worker takes control (skipWaiting + clients.claim),
-        // we reload the page to ensure the user is seeing the absolute latest version.
-        let refreshing = false;
-        const handleControllerChange = () => {
-            if (!refreshing) {
-                refreshing = true;
-                window.location.reload();
-            }
-        };
-
+        // --- PWA AUTO-UPDATE MECHANISM (AGGRESSIVE) ---
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
-        }
+            let refreshing = false;
 
-        return () => {
-            if ('serviceWorker' in navigator) {
+            // 1. The "Reloader" - Listen for successful updates
+            const handleControllerChange = () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            };
+            navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
+
+            // 2. The "Checker" - Force browser to check for new SW
+            const checkForUpdate = () => {
+                navigator.serviceWorker.ready.then(registration => {
+                    registration.update();
+                });
+            };
+
+            // Check immediately
+            checkForUpdate();
+
+            // Check every 60s
+            const interval = setInterval(checkForUpdate, 60 * 1000);
+
+            // Check when user returns to tab
+            window.addEventListener('focus', checkForUpdate);
+
+            return () => {
                 navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
-            }
-        };
+                window.removeEventListener('focus', checkForUpdate);
+                clearInterval(interval);
+            };
+        }
     }, []);
 
     useEffect(() => {
