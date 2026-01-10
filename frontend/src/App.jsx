@@ -10,9 +10,9 @@ import { initSession } from './services/tracking';
 import { GitHubService } from './services/github';
 import config from './portfolio.config';
 
-// System Core
-import AuthGate from '@nexus/AuthGate';
-import SystemRoot from '@nexus/SystemRoot';
+// System Core (Lazy Loaded for Security & Perf)
+const AuthGate = React.lazy(() => import('@nexus/AuthGate'));
+const SystemRoot = React.lazy(() => import('@nexus/SystemRoot'));
 
 // PHASE CONSTANTS
 const PHASE_ENTRY = 0;
@@ -104,9 +104,15 @@ function App() {
 
     if (phase === PHASE_SYSTEM) {
         return (
-            <AuthGate>
-                <SystemRoot />
-            </AuthGate>
+            <React.Suspense fallback={
+                <div className="h-screen w-full bg-black flex items-center justify-center font-mono text-cyan-500">
+                    <span className="animate-pulse tracking-widest">LOADING SECURE SHELL...</span>
+                </div>
+            }>
+                <AuthGate>
+                    <SystemRoot />
+                </AuthGate>
+            </React.Suspense>
         );
     }
 

@@ -43,14 +43,12 @@ class TelemetryService {
     }
 
     incrementGlobalCounter() {
-        // Increment a global counter for "Live Verified Sessions"
-        // Using a transaction to ensure atomicity
-        import('firebase/database').then(({ runTransaction, ref }) => {
-            const counterRef = ref(db, 'analytics/total_sessions');
-            runTransaction(counterRef, (currentValue) => {
-                return (currentValue || 0) + 1;
-            }).catch(err => console.error("Counter increment failed", err));
-        });
+        // Increment a global counter via Secure API (No client DB writes)
+        const API_URL = import.meta.env.VITE_API_URL || '';
+        fetch(`${API_URL}/api/metrics/session`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        }).catch(err => console.error("Session Ping Failed:", err));
     }
 
     /**
