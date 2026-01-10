@@ -16,6 +16,9 @@
 
   /* The "Cinematic Dark" Theme */
   --color-bg-deep: #050505;
+  --tactical-cyan: #22d3ee;
+  --tactical-emerald: #10b981;
+  --tactical-amber: #f59e0b;
   --color-bg-card: rgba(20, 20, 20, 0.6);
   /* Translucent */
 
@@ -153,6 +156,40 @@ body::after {
 
 .text-glow {
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* TACTICAL UTILITIES */
+.bg-scanlines {
+  background: linear-gradient(to bottom,
+      transparent 50%,
+      rgba(0, 0, 0, 0.5) 50%);
+  background-size: 100% 4px;
+  animation: scanline 10s linear infinite;
+}
+
+@keyframes scanline {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 100%;
+  }
+}
+
+.tactical-border {
+  clip-path: polygon(0% 0%,
+      calc(100% - 10px) 0%, 100% 10px,
+      100% 100%,
+      10px 100%, 0% calc(100% - 10px));
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+}
+
+.glow-text-white {
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 /* Animation Utilities */

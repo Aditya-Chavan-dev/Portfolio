@@ -47,9 +47,31 @@ const testRoutes = require('./routes/test');
 const pingRoutes = require('./routes/ping');
 const githubRoutes = require('./routes/github');
 
+const metricsRoutes = require('./routes/metrics');
+const systemRoutes = require('./system/diagnostics');
+
 app.use('/api/test', testRoutes); // General connectivity test
 app.use('/api/ping', pingRoutes); // Silent wake-up endpoint
 app.use('/api/github', githubRoutes); // Github Stats
+app.use('/api/metrics', metricsRoutes); // SSOT Metrics
+app.use('/api/system', systemRoutes); // Isolated System Core
+
+/**
+ * STARTUP HEALTH CHECK (Pillar 7)
+ * Goal: Fail Fast.
+ * If we can't talk to the "Vault" (Firebase), we shouldn't pretend to be online.
+ */
+const verifyConnection = async () => {
+    try {
+        await db.ref('.info/connected').once('value');
+        console.log("✅ [HEALTH] Connected to Truth Vault (Firebase)");
+    } catch (error) {
+        console.error("❌ [CRITICAL] VITAL CONNECTION FAILED");
+        console.error("The backend cannot reach the database. Check FIREBASE_SERVICE_ACCOUNT.");
+        // In production, you might want to process.exit(1) here, 
+        // but for resilience, we'll keep running to serve cached data if possible.
+    }
+};
 
 /**
  * Root Endpoint: Simple health check for the API.
@@ -59,8 +81,9 @@ app.get('/', (req, res) => {
 });
 
 // Start the server and listen for incoming traffic
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`[SERVER] Running on port ${PORT}`);
     console.log(`[SERVER] Mode: ${process.env.NODE_ENV || 'development'}`);
+    await verifyConnection();
 });
 

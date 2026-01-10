@@ -1,25 +1,14 @@
 {
   "rules": {
-    "test": {
-      "message": {
-        ".read": true,
-        ".write": true
-      }
-    },
-    "analytics": {
-      ".read": "auth != null",
-      ".write": true,
-      "sessions": {
-        "$sessionId": {
-          ".write": true
-        }
-      }
-    },
-    "sources": {
+    "metrics": {
       ".read": true,
       ".write": true
     },
-    ".read": false,
-    ".write": false
+    "system": {
+      "owner": {
+        ".read": "auth != null",
+        ".write": "!data.exists() && newData.exists() && auth != null"
+      }
+    }
   }
 }

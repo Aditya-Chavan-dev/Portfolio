@@ -15,13 +15,14 @@ const HolographicID = () => {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1 }}
                 >
-                    {/* Vertical scan lines */}
-                    {[...Array(8)].map((_, i) => (
+                    {/* Vertical scan lines - Reduced for performance */}
+                    {[...Array(4)].map((_, i) => (
                         <motion.div
                             key={i}
                             className="absolute h-full w-[1px] bg-gradient-to-b from-transparent via-cyan-400 to-transparent"
                             style={{
-                                left: `${i * 12.5}%`
+                                left: `${i * 25}%`,
+                                willChange: 'opacity'
                             }}
                             animate={{
                                 opacity: [0.2, 0.6, 0.2]
@@ -45,6 +46,7 @@ const HolographicID = () => {
                             repeat: Infinity,
                             ease: "linear"
                         }}
+                        style={{ willChange: 'top' }}
                     />
                 </motion.div>
 
@@ -98,11 +100,12 @@ const HolographicID = () => {
                 {/* Holographic Photo */}
                 <motion.div
                     className="absolute inset-0 m-4 overflow-hidden"
-                    initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+                    initial={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
                     animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                     transition={{ duration: 1.2, delay: 0.6 }}
                     style={{
-                        clipPath: "polygon(50px 0, 100% 0, 100% 100%, 0 100%, 0 50px)"
+                        clipPath: "polygon(50px 0, 100% 0, 100% 100%, 0 100%, 0 50px)",
+                        willChange: 'opacity, transform, filter'
                     }}
                 >
                     {/* Photo */}

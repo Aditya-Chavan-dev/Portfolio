@@ -46,7 +46,7 @@ const SessionHandshake = ({ onComplete }) => {
 
                 if (iterations >= text.length) clearInterval(interval);
                 iterations += 1 / 2; // Decrypt speed
-            }, 30);
+            }, 50); // Throttled for performance
 
             return () => clearInterval(interval);
         }, [text, active]);
@@ -107,10 +107,11 @@ const SessionHandshake = ({ onComplete }) => {
                 {/* Completion Message */}
                 {currentStep >= steps.length && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 2, filter: "blur(10px)" }}
+                        initial={{ opacity: 0, scale: 1.5, filter: "blur(4px)" }}
                         animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
                         className="mt-8 text-center"
+                        style={{ willChange: 'opacity, transform, filter' }}
                     >
                         <div className="text-[var(--color-text-primary)] text-xl tracking-[0.5em] uppercase text-glow font-bold animate-pulse text-transparent bg-clip-text bg-gradient-to-r from-white to-[var(--color-accent-green)]">
                             {config.handshake.completionMessage}

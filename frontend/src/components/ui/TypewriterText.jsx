@@ -1,60 +1,88 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const TypewriterText = ({ text, delay = 0, speed = 50, onComplete, className = "" }) => {
+const TypewriterText = ({
+    text,
+    delay = 0,
+    speed = 50,
+    deleteSpeed = 30,
+    waitBeforeDelete = 2000,
+    loop = true,
+    onComplete,
+    className = ""
+}) => {
     const [displayedText, setDisplayedText] = useState("");
-    const [isComplete, setIsComplete] = useState(false);
+    const [isTyping, setIsTyping] = useState(true); // true = typing, false = deleting
+    const [textIndex, setTextIndex] = useState(0);
+    const [charIndex, setCharIndex] = useState(0);
+    const [hasStarted, setHasStarted] = useState(false);
+
+    // Parse text input into array
+    const textArray = Array.isArray(text)
+        ? text
+        : (typeof text === 'string' && text.includes('|'))
+            ? text.split('|')
+            : [text];
 
     useEffect(() => {
+        const startTimeout = setTimeout(() => {
+            setHasStarted(true);
+        }, delay * 1000);
+        return () => clearTimeout(startTimeout);
+    }, [delay]);
+
+    useEffect(() => {
+        if (!hasStarted) return;
+
         let timeout;
-        let currentIndex = 0;
+        const currentFullText = textArray[textIndex];
 
-        const startTyping = () => {
-            if (currentIndex < text.length) {
-                setDisplayedText(text.slice(0, currentIndex + 1));
-                currentIndex++;
-                timeout = setTimeout(startTyping, speed + (Math.random() * 20));
+        if (isTyping) {
+            if (charIndex < currentFullText.length) {
+                // Typing forward
+                timeout = setTimeout(() => {
+                    setDisplayedText(currentFullText.slice(0, charIndex + 1));
+                    setCharIndex(prev => prev + 1);
+                }, speed + (Math.random() * 15)); // Add mild human variance
             } else {
-                setIsComplete(true);
-                if (onComplete) onComplete();
+                // Finished string
+                if (textArray.length > 1 || loop) {
+                    timeout = setTimeout(() => {
+                        setIsTyping(false);
+                    }, waitBeforeDelete);
+                } else if (onComplete) {
+                    onComplete();
+                }
             }
-        };
+        } else {
+            // Deleting backward
+            if (charIndex > 0) {
+                timeout = setTimeout(() => {
+                    setDisplayedText(currentFullText.slice(0, charIndex - 1));
+                    setCharIndex(prev => prev - 1);
+                }, deleteSpeed);
+            } else {
+                // Finished deleting, move to next string
+                setIsTyping(true);
+                setTextIndex(prev => (prev + 1) % textArray.length);
+            }
+        }
 
-        const initialDelay = setTimeout(startTyping, delay * 1000);
-
-        return () => {
-            clearTimeout(initialDelay);
-            clearTimeout(timeout);
-        };
-    }, [text, delay, speed, onComplete]);
+        return () => clearTimeout(timeout);
+    }, [charIndex, isTyping, hasStarted, textArray, textIndex, speed, deleteSpeed, waitBeforeDelete, loop, onComplete]);
 
     return (
         <motion.span
-            className={`font-hitmarker uppercase tracking-widest ${className}`}
-            initial={{ opacity: 0, filter: "blur(8px)" }}
-            animate={{
-                opacity: 1,
-                filter: "blur(0px)",
-                textShadow: [
-                    "0 0 0px currentColor",
-                    "0 0 20px currentColor",
-                    "0 0 10px currentColor"
-                ]
-            }}
-            transition={{
-                duration: 0.6,
-                textShadow: { duration: 1, delay: 0.3 }
-            }}
+            className={`font-mono inline-block ${className}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
         >
             {displayedText}
-            {!isComplete && (
-                <motion.span
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{ repeat: Infinity, duration: 0.8 }}
-                    className="inline-block w-[0.5em] h-[1em] bg-[var(--color-accent-green)] ml-1 align-middle"
-                    style={{ boxShadow: "0 0 10px var(--color-accent-green)" }}
-                />
-            )}
+            <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.8 }}
+                className="inline-block w-[2px] h-[1em] bg-cyan-400 ml-1 align-middle"
+            />
         </motion.span>
     );
 };
