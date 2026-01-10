@@ -3,13 +3,19 @@ import { LogOut, Download } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '@src/services/firebase';
 import MetricGrid from './components/MetricGrid';
+import SystemHealth from './components/SystemHealth';
+import { initConsoleSpy } from './utils/ConsoleSpy';
 
 const SystemRoot = () => {
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [isStandalone, setIsStandalone] = useState(false);
     const [showInstallHelp, setShowInstallHelp] = useState(false);
+    const [view, setView] = useState('dashboard'); // 'dashboard' | 'health'
 
     useEffect(() => {
+        // Init Spy
+        initConsoleSpy();
+
         // 1. Check if already installed
         const mq = window.matchMedia('(display-mode: standalone)');
         setIsStandalone(mq.matches);
@@ -82,6 +88,13 @@ const SystemRoot = () => {
                     </span>
                 </div>
                 <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => setView(view === 'dashboard' ? 'health' : 'dashboard')}
+                        className={`text-xs px-2 py-1 rounded transition-colors ${view === 'health' ? 'text-cyan-400 bg-cyan-900/20' : 'text-white/40 hover:text-white'}`}
+                    >
+                        {view === 'dashboard' ? 'DIAGNOSTICS' : 'DASHBOARD'}
+                    </button>
+
                     {!isStandalone && (
                         <button
                             onClick={handleInstall}
@@ -100,17 +113,22 @@ const SystemRoot = () => {
                         className="flex items-center gap-2 text-xs text-red-400 hover:text-red-300 transition-colors"
                     >
                         <LogOut size={14} />
-                        DISCONNECT
                     </button>
                 </div>
             </header>
 
             {/* Content */}
             <main className="flex-1 flex flex-col items-center justify-start relative p-6 z-0 overflow-y-auto w-full pt-12">
-                <MetricGrid />
-                <div className="mt-8 text-[10px] text-green-500/40 font-mono animate-pulse">
-                    BUILD: v4.0 (EVERGREEN)
-                </div>
+                {view === 'dashboard' ? (
+                    <>
+                        <MetricGrid />
+                        <div className="mt-8 text-[10px] text-green-500/40 font-mono animate-pulse">
+                            BUILD: v5.0 (NUCLEAR)
+                        </div>
+                    </>
+                ) : (
+                    <SystemHealth />
+                )}
             </main>
         </div>
     );
