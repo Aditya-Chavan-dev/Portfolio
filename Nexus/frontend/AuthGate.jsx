@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { ref, get, set } from 'firebase/database';
-import { auth, googleProvider, db } from '../services/firebase';
+import { auth, googleProvider, db } from '@src/services/firebase';
 import { Shield, Lock, AlertTriangle } from 'lucide-react';
 
 const AuthGate = ({ children }) => {
@@ -101,7 +101,7 @@ const AuthGate = ({ children }) => {
                     </button>
 
                     <div className="mt-6 text-[10px] text-white/20">
-                        SYSTEM TERMINAL v3.2
+                        SYSTEM TERMINAL v4.1 (EVERGREEN)
                     </div>
                 </div>
             </div>

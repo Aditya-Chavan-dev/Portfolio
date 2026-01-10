@@ -48,7 +48,7 @@ const pingRoutes = require('./routes/ping');
 const githubRoutes = require('./routes/github');
 
 const metricsRoutes = require('./routes/metrics');
-const systemRoutes = require('./system/diagnostics');
+const systemRoutes = require('../Nexus/backend/diagnostics');
 
 app.use('/api/test', testRoutes); // General connectivity test
 app.use('/api/ping', pingRoutes); // Silent wake-up endpoint

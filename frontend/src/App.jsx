@@ -11,8 +11,8 @@ import { GitHubService } from './services/github';
 import config from './portfolio.config';
 
 // System Core
-import AuthGate from './system/AuthGate';
-import SystemRoot from './system/SystemRoot';
+import AuthGate from '@nexus/AuthGate';
+import SystemRoot from '@nexus/SystemRoot';
 
 // PHASE CONSTANTS
 const PHASE_ENTRY = 0;
@@ -31,6 +31,29 @@ function App() {
     const [sessionId, setSessionId] = useState(null);
     const [heroMetrics, setHeroMetrics] = useState(null);
     const [showSystemCheck, setShowSystemCheck] = useState(false);
+
+    useEffect(() => {
+        // --- PWA AUTO-UPDATE MECHANISM ---
+        // When a new Service Worker takes control (skipWaiting + clients.claim),
+        // we reload the page to ensure the user is seeing the absolute latest version.
+        let refreshing = false;
+        const handleControllerChange = () => {
+            if (!refreshing) {
+                refreshing = true;
+                window.location.reload();
+            }
+        };
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
+        }
+
+        return () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         // Check for Install Route

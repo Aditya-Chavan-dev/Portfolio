@@ -1,4 +1,4 @@
-const CACHE_NAME = 'portfolio-v1';
+const CACHE_NAME = 'portfolio-v5';
 const urlsToCache = [
     '/',
     '/index.html',
@@ -7,6 +7,9 @@ const urlsToCache = [
 
 // Install SW
 self.addEventListener('install', (event) => {
+    // Force immediate takeover
+    self.skipWaiting();
+
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
@@ -24,6 +27,12 @@ self.addEventListener('fetch', (event) => {
                 if (response) {
                     return response;
                 }
+
+                // Navigation fallback for SPA
+                if (event.request.mode === 'navigate') {
+                    return caches.match('/index.html');
+                }
+
                 return fetch(event.request);
             })
     );
@@ -33,14 +42,18 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+        Promise.all([
+            // Take control of all clients immediately
+            self.clients.claim(),
+            caches.keys().then((cacheNames) => {
+                return Promise.all(
+                    cacheNames.map((cacheName) => {
+                        if (cacheWhitelist.indexOf(cacheName) === -1) {
+                            return caches.delete(cacheName);
+                        }
+                    })
+                );
+            })
+        ])
     );
 });

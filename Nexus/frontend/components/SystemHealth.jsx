@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Activity, Database, Globe, Server, Cpu, Play } from 'lucide-react';
-import config from '../../portfolio.config';
+import config from '@src/portfolio.config';
 
 const SystemHealth = () => {
     const [loading, setLoading] = useState(false);
