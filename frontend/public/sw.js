@@ -30,7 +30,10 @@ self.addEventListener('fetch', (event) => {
 
                 // Navigation fallback for SPA
                 if (event.request.mode === 'navigate') {
-                    return caches.match('/index.html');
+                    return caches.match('/index.html')
+                        .then((cacheRes) => {
+                            return cacheRes || fetch(event.request);
+                        });
                 }
 
                 return fetch(event.request);
