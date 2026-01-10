@@ -14,13 +14,35 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=5.0')
+        // 1. Register with v6.0 (New Cache)
+        navigator.serviceWorker.register('/sw.js?v=6.0')
           .then((registration) => {
-            console.log('SW registered: ', registration);
+            console.log('SW Registered [v6.0]: ', registration);
+
+            // 2. Check for updates on focus
+            window.addEventListener('focus', () => {
+              registration.update();
+            });
+
+            // 3. Check for updates every 60s
+            setInterval(() => {
+              registration.update();
+            }, 60000);
           })
           .catch((registrationError) => {
             console.log('SW registration failed: ', registrationError);
           });
+
+        // 4. THE NUCLEAR RELOAD (Moved from App.jsx for speed)
+        // If the SW changes control (skipWaiting called), reload IMMEDIATELY.
+        // This must be here to catch the event before React hydration.
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
       });
     }
   </script>
