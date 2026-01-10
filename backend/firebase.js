@@ -26,7 +26,8 @@ try {
 if (!admin.apps.length && serviceAccount) {
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-        databaseURL: `https://${serviceAccount.project_id}-default-rtdb.firebaseio.com` // Auto-infer or set explicitly
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: `https://${serviceAccount.project_id}-default-rtdb.asia-southeast1.firebasedatabase.app` // Regional Endpoint
     });
 } else if (!admin.apps.length) {
     // Fallback for cases where we might rely on default Google credentials (e.g. GCP)

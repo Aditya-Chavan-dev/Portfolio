@@ -66,7 +66,10 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
             { name: "Node.js", type: "Runtime" },
             { name: "Postgres", type: "Database" }
         ]
-    }
+    },
+
+    // Global Configuration
+    apiBaseUrl: import.meta.env.VITE_API_URL || ""
 };
 
 export default config;

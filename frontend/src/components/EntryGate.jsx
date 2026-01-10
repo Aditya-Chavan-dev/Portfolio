@@ -9,8 +9,14 @@ const EntryGate = ({ onUnlock }) => {
 
             {/* Ambient Particles / Background Glow */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent-blue)] opacity-[0.05] blur-[120px] rounded-full mix-blend-screen animate-pulse duration-[4s]"></div>
-                <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-accent-purple)] opacity-[0.05] blur-[150px] rounded-full mix-blend-screen"></div>
+                <div
+                    className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent-blue)] opacity-[0.05] blur-[60px] rounded-full mix-blend-screen animate-pulse duration-[4s]"
+                    style={{ willChange: 'opacity, transform' }}
+                ></div>
+                <div
+                    className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-accent-purple)] opacity-[0.05] blur-[80px] rounded-full mix-blend-screen"
+                    style={{ willChange: 'opacity' }}
+                ></div>
             </div>
 
             <motion.div

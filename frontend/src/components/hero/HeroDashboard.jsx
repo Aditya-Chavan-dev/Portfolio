@@ -33,13 +33,10 @@ const STEP_TEXT_3 = 3; // "Aditya Chavan"
 const STEP_LOC = 4;
 const STEP_REPOS = 5;
 const STEP_STREAK = 6;
-// Removed STEP_UPTIME
-// Visitor Phase (Consolidated)
-const STEP_GLOBAL_TRACKING = 7;
-// Final Rearrange & Reveal
-const STEP_REARRANGE = 8;
-const STEP_HOLOGRAM = 9;
-const STEP_COMPLETE = 10;
+// Combined Phase
+const STEP_REARRANGE = 7;
+const STEP_HOLOGRAM = 8;
+const STEP_COMPLETE = 9;
 
 const HeroDashboard = ({ onInitiate, metrics }) => {
     const [introStep, setIntroStep] = useState(STEP_INIT);
@@ -50,22 +47,21 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
     });
 
     useEffect(() => {
-        // Strict Timing Sequence
+        // Strict Timing Sequence - Streamlined to reduce layout shifts
         const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
         const runSequence = async () => {
             await delay(500); setIntroStep(STEP_TEXT_1);
-            await delay(2500); setIntroStep(STEP_TEXT_2);
-            await delay(2500); setIntroStep(STEP_TEXT_3);
-            await delay(3000); setIntroStep(STEP_LOC);
-            await delay(2000); setIntroStep(STEP_REPOS);
-            await delay(2000); setIntroStep(STEP_STREAK);
-            // Removed STEP_UPTIME
+            await delay(2000); setIntroStep(STEP_TEXT_2);
+            await delay(2000); setIntroStep(STEP_TEXT_3);
+            await delay(2500); setIntroStep(STEP_LOC);
+            await delay(1500); setIntroStep(STEP_REPOS);
+            await delay(1500); setIntroStep(STEP_STREAK);
 
             // Final Rearrange
-            await delay(2500); setIntroStep(STEP_REARRANGE);
-            await delay(1000); setIntroStep(STEP_HOLOGRAM);
-            await delay(1000); setIntroStep(STEP_COMPLETE);
+            await delay(2000); setIntroStep(STEP_REARRANGE);
+            await delay(800); setIntroStep(STEP_HOLOGRAM);
+            await delay(500); setIntroStep(STEP_COMPLETE);
         };
 
         runSequence();
@@ -74,22 +70,22 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
     const formatNumber = (num) => {
         if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
         if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
-        return num.toLocaleString();
+        return num?.toLocaleString() || '0';
     };
 
     return (
-        <div className="min-h-screen w-full bg-[var(--color-bg-deep)] relative flex flex-col justify-center px-6 py-20 md:px-20 md:py-0 overflow-x-hidden">
+        <div className="h-full w-full bg-[var(--color-bg-deep)] relative flex flex-col justify-center px-6 md:px-20 overflow-hidden">
 
-            {/* Session ID - Top Left Corner */}
+            {/* Session ID - Tactical Top Left (Adjusted for Navbar) */}
             <motion.div
-                className="fixed top-6 left-6 z-50 bg-black/60 border border-cyan-400/40 px-4 py-2 rounded backdrop-blur-sm"
+                className="absolute top-6 left-6 z-50 bg-black/60 border border-cyan-400/40 px-3 py-1.5 rounded backdrop-blur-sm shadow-[0_0_15px_rgba(0,255,255,0.1)]"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: introStep >= STEP_REARRANGE ? 1 : 0, x: introStep >= STEP_REARRANGE ? 0 : -20 }}
-                transition={{ duration: 0.8, delay: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
             >
                 <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    <span className="text-[12px] text-cyan-400 font-mono font-semibold tracking-wider">{sessionId}</span>
+                    <span className="text-[12px] text-cyan-400 font-mono font-semibold tracking-wider font-hitmarker">{sessionId}</span>
                 </div>
             </motion.div>
 
@@ -103,8 +99,9 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
                     <motion.div
                         className="fixed inset-0 z-[100] flex items-center justify-center bg-black"
                         initial={{ opacity: 1 }}
-                        exit={{ opacity: 0, scale: 1.1, filter: "blur(20px)" }}
-                        transition={{ duration: 1.2, ease: [0.43, 0.13, 0.23, 0.96] }}
+                        exit={{ opacity: 0, scale: 1.05, filter: "blur(5px)" }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        style={{ willChange: 'transform, opacity, filter' }}
                     >
                         {introStep === STEP_TEXT_1 && (
                             <TypewriterText text="Welcome friend..." className="text-4xl md:text-6xl text-[var(--color-accent-green)] font-hitmarker" />
@@ -121,140 +118,83 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
                 {/* Centered Metrics (Spawn Phase) */}
                 {introStep >= STEP_LOC && introStep < STEP_REARRANGE && (
                     <div className="fixed inset-0 z-[90] pointer-events-none">
-                        {/* Metrics Row - Stacked Top */}
-                        {introStep >= STEP_LOC && (
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
-                                {introStep >= STEP_LOC && (
-                                    <MetricItem layoutId="metric-loc" label={config.hero.metrics.loc.label} rawValue={metrics.loc} formatter={formatNumber} icon={<GitCommit size={20} />} className="w-[200px] h-[120px] lg:w-[240px] lg:h-[140px] border border-[var(--color-accent-blue)]" font="font-hitmarker" />
-                                )}
-                                {introStep >= STEP_REPOS && (
-                                    <MetricItem layoutId="metric-repos" label="Active Projects" rawValue={metrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={20} />} className="w-[200px] h-[120px] lg:w-[240px] lg:h-[140px] border border-[var(--color-accent-blue)]" font="font-hitmarker" />
-                                )}
-                                {introStep >= STEP_STREAK && (
-                                    <MetricItem layoutId="metric-streak" label={config.hero.metrics.streak.label} rawValue={metrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={20} className="text-[var(--color-accent-orange)]" />} className="w-[200px] h-[120px] lg:w-[240px] lg:h-[140px] border border-[var(--color-accent-orange)]" font="font-hitmarker" />
-                                )}
-                                {/* Removed STEP_UPTIME */}
-                            </div>
-                        )}
-
-
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+                            {introStep >= STEP_LOC && (
+                                <MetricItem layoutId="metric-loc" label={config.hero.metrics.loc.label} rawValue={metrics.loc} formatter={formatNumber} icon={<GitCommit size={20} />} className="w-[200px] h-[120px] lg:w-[240px] lg:h-[140px] border border-[var(--color-accent-blue)]" font="font-hitmarker" />
+                            )}
+                            {introStep >= STEP_REPOS && (
+                                <MetricItem layoutId="metric-repos" label="Active Projects" rawValue={metrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={20} />} className="w-[200px] h-[120px] lg:w-[240px] lg:h-[140px] border border-[var(--color-accent-blue)]" font="font-hitmarker" />
+                            )}
+                            {introStep >= STEP_STREAK && (
+                                <MetricItem layoutId="metric-streak" label={config.hero.metrics.streak.label} rawValue={metrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={20} className="text-[var(--color-accent-orange)]" />} className="w-[200px] h-[120px] lg:w-[240px] lg:h-[140px] border border-[var(--color-accent-orange)]" font="font-hitmarker" />
+                            )}
+                        </div>
                     </div>
                 )}
             </AnimatePresence>
 
 
             {/* --- MAIN DASHBOARD (Target Position) --- */}
-
-            {/* Top Bar */}
-            {/* --- SYMMETRICAL HUD LAYOUT --- */}
-
             <div className={`relative z-10 w-full max-w-[1400px] mx-auto flex flex-col items-center justify-center transition-opacity duration-1000 ${introStep >= STEP_LOC ? 'opacity-100' : 'opacity-0'}`}>
 
                 {/* 1. TOP HEADER (Name & Role) */}
                 <motion.div
-                    initial={{ opacity: 0, y: -30, filter: "blur(10px)" }}
+                    initial={{ opacity: 0, y: -20, filter: "blur(10px)" }}
                     animate={{
                         opacity: introStep >= STEP_REARRANGE ? 1 : 0,
-                        y: introStep >= STEP_REARRANGE ? 0 : -30,
+                        y: introStep >= STEP_REARRANGE ? 0 : -20,
                         filter: introStep >= STEP_REARRANGE ? "blur(0px)" : "blur(10px)"
                     }}
-                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-center mb-8"
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="text-center mb-12"
                 >
                     <motion.h2
-                        className="text-[var(--color-accent-blue)] font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase mb-2 opacity-80"
-                        initial={{ opacity: 0, letterSpacing: "0.8em" }}
-                        animate={{
-                            opacity: introStep >= STEP_REARRANGE ? 0.8 : 0,
-                            letterSpacing: introStep >= STEP_REARRANGE ? "0.3em" : "0.8em"
-                        }}
-                        transition={{ duration: 0.8, delay: 0.3 }}
+                        className="text-[var(--color-accent-blue)] font-mono text-[10px] md:text-xs tracking-[0.4em] uppercase mb-3 opacity-80"
+                        animate={{ letterSpacing: introStep >= STEP_REARRANGE ? "0.4em" : "0.8em" }}
                     >
                         {introStep >= STEP_REARRANGE ? config.hero.role : ''}
                     </motion.h2>
                     <motion.h1
-                        className="text-4xl md:text-6xl font-hitmarker text-white tracking-wider outline-text uppercase"
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 0.5, ease: "backOut" }}
-                        style={{ textShadow: "0 0 30px rgba(0, 200, 255, 0.5)" }}
+                        className="text-5xl md:text-7xl font-hitmarker text-white tracking-widest outline-text uppercase"
+                        style={{ textShadow: "0 0 40px rgba(0, 200, 255, 0.4)" }}
                     >
                         {config.hero.name}
                     </motion.h1>
                 </motion.div>
 
-                {/* 2. MAIN 3-COLUMN CONTROL GRID */}
-                <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                {/* 2. MAIN 2-COLUMN BALANCED GRID */}
+                <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
 
-                    {/* LEFT COLUMN: Developer Metrics */}
-                    <div className="md:col-span-3 flex flex-col gap-4 order-2 md:order-1">
-                        <div className="relative h-[120px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-loc" label="Contributions" rawValue={metrics.loc} formatter={formatNumber} icon={<GitCommit size={14} />} font="font-hitmarker" className="border-white/10" />}</div>
-                        <div className="relative h-[120px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-streak" label={config.hero.metrics.streak.label} rawValue={metrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={14} className="text-[var(--color-accent-orange)]" />} font="font-hitmarker" className="border-white/10" />}</div>
-                        <div className="relative h-[120px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-repos" label="Active Projects" rawValue={metrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={14} />} font="font-hitmarker" className="border-white/10" />}</div>
-                        {/* Removed uptime metric */}
+                    {/* LEFT COLUMN: Developer Metrics (4/12) */}
+                    <div className="md:col-span-4 flex flex-col gap-6 order-2 md:order-1">
+                        <div className="relative h-[130px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-loc" label="Contributions" rawValue={metrics.loc} formatter={formatNumber} icon={<GitCommit size={16} />} font="font-hitmarker" className="border-white/10" />}</div>
+                        <div className="relative h-[130px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-streak" label={config.hero.metrics.streak.label} rawValue={metrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={16} className="text-[var(--color-accent-orange)]" />} font="font-hitmarker" className="border-white/10" />}</div>
+                        <div className="relative h-[130px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-repos" label="Active Projects" rawValue={metrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={16} />} font="font-hitmarker" className="border-white/10" />}</div>
                     </div>
 
-                    {/* CENTER COLUMN: Holographic Avatar */}
-                    <div className="md:col-span-6 flex justify-center order-1 md:order-2">
+                    {/* CENTER/RIGHT COLUMN: Holographic Avatar (8/12 - Centered within its space) */}
+                    <div className="md:col-span-8 flex justify-center order-1 md:order-2">
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.8, filter: "blur(40px)", rotateY: -20 }}
+                            initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
                             animate={{
                                 opacity: introStep >= STEP_HOLOGRAM ? 1 : 0,
-                                scale: introStep >= STEP_HOLOGRAM ? 1 : 0.8,
-                                filter: introStep >= STEP_HOLOGRAM ? "blur(0px)" : "blur(40px)",
-                                rotateY: introStep >= STEP_HOLOGRAM ? 0 : -20
+                                scale: introStep >= STEP_HOLOGRAM ? 1 : 0.9,
+                                filter: introStep >= STEP_HOLOGRAM ? "blur(0px)" : "blur(20px)"
                             }}
-                            transition={{
-                                duration: 2,
-                                ease: [0.16, 1, 0.3, 1],
-                                scale: { duration: 1.8 },
-                                rotateY: { duration: 2.2 }
-                            }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
                             className="relative w-full flex justify-center"
-                            style={{ perspective: 1000 }}
                         >
                             <motion.div
-                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-[var(--color-accent-blue)] opacity-[0.08] blur-[60px] lg:blur-[100px] rounded-full pointer-events-none"
-                                animate={{
-                                    scale: [1, 1.2, 1],
-                                    opacity: [0.08, 0.12, 0.08]
-                                }}
-                                transition={{
-                                    duration: 4,
-                                    repeat: Infinity,
-                                    ease: "easeInOut"
-                                }}
+                                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] lg:w-[600px] lg:h-[600px] bg-[var(--color-accent-blue)] opacity-[0.06] blur-[100px] rounded-full pointer-events-none"
+                                animate={{ scale: [1, 1.1, 1] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                             />
-                            <motion.div
-                                className="relative z-10 scale-100 lg:scale-125 transform transition-transform duration-700"
-                                whileHover={{ scale: 1.05 }}
-                            >
+                            <div className="relative z-10 scale-110 lg:scale-150 transform">
                                 <HolographicID />
-                            </motion.div>
-                        </motion.div>
-                    </div>
-
-                    {/* RIGHT COLUMN: Visitor Analytics */}
-                    <div className="md:col-span-3 flex flex-col gap-4 order-3 md:order-3">
-                        {/* Header for Visitor Stats */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: introStep >= STEP_REARRANGE ? 1 : 0 }}
-                            className="flex items-center justify-between mb-1 px-1"
-                        >
-                            <span className="text-[10px] text-[var(--color-accent-blue)] font-mono tracking-widest uppercase opacity-70">Who visited my portfolio...</span>
-                            <div className="flex gap-1">
-                                <span className="w-1 h-1 rounded-full bg-[var(--color-accent-blue)] animate-pulse"></span>
-                                <span className="w-1 h-1 rounded-full bg-[var(--color-accent-blue)] opacity-50"></span>
                             </div>
                         </motion.div>
-
-                        <div className="relative h-[120px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-resume" label="Visited from Resume" rawValue={metrics.visitorStats?.resume || 0} formatter={(v) => v.toLocaleString()} icon={<FileText size={14} className="text-[var(--color-accent-green)]" />} font="font-hitmarker" className="border-white/10" />}</div>
-                        <div className="relative h-[120px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-linkedin" label="Visited from LinkedIn" rawValue={metrics.visitorStats?.linkedin || 0} formatter={(v) => v.toLocaleString()} icon={<Linkedin size={14} className="text-[#0077b5]" />} font="font-hitmarker" className="border-white/10" />}</div>
-                        <div className="relative h-[120px]">{introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-anon" label="Anonymous Visits" rawValue={metrics.visitorStats?.anonymous || 0} formatter={(v) => v.toLocaleString()} icon={<User size={14} className="text-[var(--color-text-secondary)]" />} font="font-hitmarker" className="border-white/10" />}</div>
                     </div>
                 </div>
-
             </div>
 
             {/* System Core Trigger */}
@@ -283,11 +223,13 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
                         className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[var(--color-accent-blue)]"
                         animate={{ opacity: [0.5, 1, 0.5] }}
                         transition={{ duration: 2, repeat: Infinity }}
+                        style={{ willChange: 'opacity' }}
                     />
                     <motion.div
                         className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[var(--color-accent-blue)]"
                         animate={{ opacity: [0.5, 1, 0.5] }}
                         transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                        style={{ willChange: 'opacity' }}
                     />
                     <motion.div
                         className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[var(--color-accent-blue)]"

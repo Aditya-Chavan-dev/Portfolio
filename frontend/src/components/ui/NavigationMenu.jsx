@@ -16,7 +16,7 @@ const NavigationMenu = () => {
         <>
             {/* Menu Toggle Button */}
             <motion.button
-                className="fixed top-6 right-6 z-[60] bg-black/60 border border-cyan-400/40 p-3 rounded backdrop-blur-sm hover:bg-cyan-400/10 transition-colors"
+                className="fixed top-24 right-6 z-[60] bg-black/60 border border-cyan-400/40 p-3 rounded backdrop-blur-sm hover:bg-cyan-400/10 transition-colors"
                 onClick={() => setIsOpen(!isOpen)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

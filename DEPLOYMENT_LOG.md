@@ -275,3 +275,29 @@ Complete enhancement of the hero section with **cinematic-grade animations** to 
 **Deployed**: 2026-01-09 18:26 IST
 **Build Time**: 10.35s
 **Hosting URL**: https://portfolio0110.web.app
+
+## Feature: Isolated System Core & Health Architecture (Phase 6)
+
+### What is the new feature about?
+We have established a secure, isolated administrative kernel ("System Core") separate from the public portfolio. This core includes a new high-security authentication mechanism, a real-time system health dashboard, and an integrated PWA installer.
+
+### How did we implement it?
+1.  **Architecture**: Created a dedicated `frontend/src/system` directory and `backend/system` module to physically separate admin logic from public code.
+2.  **First-to-Claim Auth**: Implemented a "Highlander" security model in `AuthGate.jsx`. The first Google account to access `/nexus` claims the `system/owner` node in Firebase. Database rules permanently lock this node (`!data.exists()`), ensuring no subsequent overrides are possible.
+3.  **Real-Time Diagnostics**: Built `diagnostics.js` on the backend to perform actual operational checks:
+    *   **Connectivity**: Pings `google.com` to verify outbound DNS/Network.
+    *   **Database**: Performs a write/read roundtrip to Firebase to measure exact latency.
+    *   **Resources**: Reports Server Memory (RSS) and Uptime.
+4.  **PWA Integration**: Embedded the PWA installation logic directly into the secure `SystemRoot`. Added a fallback "Manual Install" modal that detects standalone status and guides users on iOS or restricted browsers.
+
+### How the user is benefitted from it?
+The user (Owner) now has a guaranteed secure command center. The "First-to-Claim" logic imposes a hardware-key-like ownership on the software. The Health Dashboard provides genuine visibility into the server's pulse, replacing the fake "simulated" checks with real telemetry.
+
+### What concepts we used?
+-   **Security by Design**: Database-level immutability rules for ownership.
+-   **Full-Stack Diagnostics**: Measuring real-world latency and resource usage.
+-   **Progressive Web App**: Handling `beforeinstallprompt` and `display-mode: standalone` states.
+
+### Final Summary
+We have successfully bisected the application into "Public" and "Core". The public side remains a cinematic showcase, while the Core is now a functional, protected administrative tool. The system is no longer just a display piece; it is a self-monitoring, secure application with a persistent owner.
+
