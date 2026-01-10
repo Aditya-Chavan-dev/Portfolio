@@ -301,3 +301,42 @@ The user (Owner) now has a guaranteed secure command center. The "First-to-Claim
 ### Final Summary
 We have successfully bisected the application into "Public" and "Core". The public side remains a cinematic showcase, while the Core is now a functional, protected administrative tool. The system is no longer just a display piece; it is a self-monitoring, secure application with a persistent owner.
 
+
+## Refactor: Nexus Root Architecture (Phase 7)
+
+### What is the new feature about?
+We have physically separated the "System Core" code from the main portfolio application. All administrative logic (Frontend and Backend) now resides in a root-level `Nexus` directory, enforcing strict modularity.
+
+### How did we implement it?
+1.  **Directory Restructuring**: Moved `frontend/src/system` to `Nexus/frontend` and `backend/system` to `Nexus/backend`.
+2.  **Vite Alias Configuration**: Updated `vite.config.js` with `@nexus` and `@src` aliases to allow cross-directory imports while keeping build paths clean.
+3.  **Dependency Mapping**: Explicitly aliased `react`, `firebase`, and `lucide-react` in Vite to resolve `node_modules` correctly from the new location.
+
+### Final Summary
+The code structure now mirrors the logical architecture: The "Public Portfolio" is in `frontend/src`, and the "Secure Core" is in `Nexus/`. This separation simplifies security audits and future expansion of the admin system.
+
+## Feature: Mobile Metric Grid (Phase 8)
+
+### What is the new feature about?
+We have implemented a "Mobile-First" analytics dashboard within the secure Nexus Core. This dashboard provides a live, real-time view of the three critical traffic sources: LinkedIn, Resume, and Anonymous.
+
+### How did we implement it?
+1.  **Component**: Created `MetricGrid.jsx` in `Nexus/frontend/components`.
+2.  **Direct Sync**: Unlike the main site which uses API caching, this component connects *directly* to Firebase Realtime Database (`sources/` node) using `onValue`. This ensures the Admin sees 0-latency updates.
+3.  **UI Design**: Designed 3 distinct, high-contrast cards (Blue/Green/Slate) optimized for vertical mobile scrolling.
+
+### Final Summary
+The Admin can now open the Nexus App on their phone and watch visitor counts update live as they happen. It serves as a unified "Command Center" that mirrors the main portfolio's data without any delay.
+
+## Reliability: Forever Update Mechanism (Phase 9)
+
+### What is the new feature about?
+We have implemented a rigorous "Self-Updating" protocol for the PWA. This ensures that the user *never* has to uninstall/reinstall the app again. Updates are pushed immediately upon deployment.
+
+### How did we implement it?
+1.  **Cache Headers**: Configured `firebase.json` to serve `sw.js` and `index.html` with `Cache-Control: no-cache`. This forces the browser to check for updates on every launch.
+2.  **Auto-Reload**: Added a listener in `App.jsx` for the `controllerchange` event. As soon as a new Service Worker takes over, the page automatically reloads to display the new content.
+3.  **Aggressive Handover**: The Service Worker now calls `skipWaiting()` and `clients.claim()` to instantly replace any older versions without waiting for tabs to close.
+
+### Final Summary
+The application is now "Evergreen". Deploying a new version will automatically propagate to all installed instances within seconds of them opening, guaranteeing consistency across all users.

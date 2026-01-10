@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { LogOut, Download } from 'lucide-react';
 import { signOut } from 'firebase/auth';
-import { auth } from '../services/firebase';
-import SystemHealth from './components/SystemHealth';
+import { auth } from '@src/services/firebase';
+import MetricGrid from './components/MetricGrid';
 
 const SystemRoot = () => {
     const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -106,8 +106,11 @@ const SystemRoot = () => {
             </header>
 
             {/* Content */}
-            <main className="flex-1 flex flex-col items-center justify-center relative p-6 z-0 overflow-y-auto">
-                <SystemHealth />
+            <main className="flex-1 flex flex-col items-center justify-start relative p-6 z-0 overflow-y-auto w-full pt-12">
+                <MetricGrid />
+                <div className="mt-8 text-[10px] text-green-500/40 font-mono animate-pulse">
+                    BUILD: v4.0 (EVERGREEN)
+                </div>
             </main>
         </div>
     );

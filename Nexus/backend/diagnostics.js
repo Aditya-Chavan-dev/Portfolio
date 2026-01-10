@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { db } = require('../firebase');
+const { db } = require('../../backend/firebase');
 const os = require('os');
 const dns = require('dns');
 
