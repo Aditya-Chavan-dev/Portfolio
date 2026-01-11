@@ -101,7 +101,7 @@ const AuthGate = ({ children }) => {
                     </button>
 
                     <div className="mt-6 text-[10px] text-white/20">
-                        SYSTEM TERMINAL v5.0 (NUCLEAR)
+                        SYSTEM TERMINAL v8.1 (UI COMPLETE)
                     </div>
                 </div>
             </div>

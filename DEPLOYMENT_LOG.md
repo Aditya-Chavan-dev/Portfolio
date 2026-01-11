@@ -353,3 +353,20 @@ We have added a comprehensive 'One-Click Diagnostic' tool to the Nexus Admin Pan
 
 ### Final Summary
 The Admin can now instantly diagnose 'Invisible' errors. If the dashboard acts up, they just click 'DIAGNOSTICS' -> 'START SCAN' -> 'DOWNLOAD LOGS' and send the text file to the developer.
+
+## Feature: PWA Polish & Nexus Confetti (Phase 11)
+
+### What is the new feature about?
+We finalized the PWA implementation with a robust updater component and added a "Celebration" feature to the Nexus dashboard.
+1.  **Aggressive PWA Updates**: A dedicated `PWAUpdater` now actively checks for service worker changes when the app is focused or visible, ensuring users are always on the latest version without manual refreshes.
+2.  **Nexus Confetti**: A hidden "Sparkles" button in the secure Nexus dashboard allows the Admin to trigger a confetti explosion, adding a touch of delight to the management interface.
+3.  **PWA Hook Architecture**: We laid the groundwork for a cleaner install flow with `usePWAInstall`, decoupling the logic from the UI.
+
+### How did we implement it?
+1.  **PWAUpdater Component**: Created `frontend/src/components/pwa/PWAUpdater.jsx` which uses `vite-plugin-pwa` hooks to poll for updates and listen for visibility changes.
+2.  **Confetti Integration**: Integrated `canvas-confetti` into `ConfettiButton.jsx` and placed it within the `AuthGate` in `App.jsx`, ensuring only authenticated admins can access it.
+3.  **Utility Hooks**: Created `usePWAInstall.js` to abstract the `beforeinstallprompt` event handling.
+
+### Final Summary
+These additions turn the PWA from "functional" to "living". The app now self-heals (updates) aggressively, and the Admin interface has a bit more personality. The hook architecture prepares us for a cleaner codebase in the next refactor.
+

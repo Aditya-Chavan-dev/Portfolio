@@ -123,7 +123,7 @@ const SystemRoot = () => {
                     <>
                         <MetricGrid />
                         <div className="mt-8 text-[10px] text-green-500/40 font-mono animate-pulse">
-                            BUILD: v5.0 (NUCLEAR)
+                            BUILD: v8.1 (UI COMPLETE)
                         </div>
                     </>
                 ) : (
