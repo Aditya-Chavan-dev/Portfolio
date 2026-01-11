@@ -82,49 +82,49 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
     // NOTE: This data is verified against DEPLOYMENT_LOG.md and package.json
     // Phase 5: Deep Project Metadata (Curated)
     // NOTE: This data is verified against Conversation History (ATLAS Work Logs)
+    // NOTE: This data is verified against User-Provided Engineering Logs (Jan 12, 2026)
     projectDetails: {
         "ATLAS": {
             // "Short and Summarized"
-            coreIdea: "A comprehensive Employee Management System responsible for Leave, Attendance, and Payroll logic. It serves as the 'Cortex' for organizational operations, enforcing strict Single Source of Truth (SSOT) principles.",
+            coreIdea: "A Smart Attendance Platform that eliminates the 'Memory Trap' of manual tracking. It replaces the CEO's reliance on memory and Excel sheets with a decentralized, GPS-tagged system where employees mark their own presence, requiring only simple approval.",
 
-            // "Highlight these things" (Inferred from "Rebuild Leave System" contexts)
+            // "Highlight these things"
             tech: {
-                frontend: ["React 18", "Vite", "Tailwind CSS", "Framer Motion"],
-                backend: ["Node.js", "Express", "Firebase Admin SDK"],
-                database: ["Firebase Realtime Database", "Firestore", "Redis"],
-                infrastructure: ["Firebase Hosting", "Google Cloud Functions"]
+                frontend: ["React 18", "Vite", "TanStack Query", "Tailwind CSS"],
+                backend: ["Firebase Cloud Functions", "Node.js"],
+                database: ["Firebase Realtime Database (WebSockets)", "Firestore"],
+                infrastructure: ["Firebase Hosting", "GitHub Actions"]
             },
 
-            // "Highlight these things: Failures, solutions" (Verified from Conversation Summaries)
+            // "Highlight these things: Failures, solutions"
             failures: [
                 {
                     id: "f1",
-                    title: "The Firewall Blocking Issue (ERR_BLOCKED_BY_CLIENT)",
-                    failure: "Corporate networks and aggressive ad-blockers were terminating client-side Firestore connections, rendering the app unusable for enterprise clients on restricted Wi-Fi.",
-                    solution: "Migrated the 'Hot Path' (User Auth & Realtime Data) from Firestore to Firebase Realtime Database and implemented a 'Stale-While-Revalidate' persistence layer to bypass the block.",
-                    outcome: "Restored 100% connectivity for enterprise users without requiring whitelist approval from IT departments."
+                    title: "The 30x Speedup (Serial vs Parallel)",
+                    failure: "The 'My History' tab took ~6 seconds to load because the legacy code was fetching attendance data one day at a time (Serial Fetching). 30 days x 200ms latency = 6000ms wait time.",
+                    solution: "Refactored to Parallel Request Aggregation using Promise.all(). We now fire all 30 requests simultaneously.",
+                    outcome: "Load time dropped from 6s to ~0.3s. The wait time is now just the speed of one request, not thirty combined."
                 },
                 {
                     id: "f2",
-                    title: "The 'Brain/Body' Decoupling (SSOT Violation)",
-                    failure: "Legacy logic allowed the UI (The Body) to calculate leave balances optimistically. This led to 'State Drift' where the frontend showed approved leave while the backend rejected it.",
-                    solution: "Architected the 'Cortex Pattern': Stopped all client-side math. The UI now only renders state snapshots. All mutations are sent to the 'Brain' (Backend) which processes the logic and pushes the new Truth back to the client.",
-                    outcome: "Eliminated all 'Ghost Approval' bugs and guaranteed data integrity across the organization."
+                    title: "The 'Sunday Rule' Race Condition",
+                    failure: "Leave balances were getting corrupted when two approvals happened simultaneously. If a user worked on a Sunday (+1 credit) while taking leave elsewhere, the system would miscount due to a Race Condition.",
+                    solution: "Implemented Atomic Transactions (firebaser.runTransaction). This forces the database to process one update at a time, locking the document during the read-write cycle.",
+                    outcome: "Achieved 100% Data Integrity. The system guarantees the math is always perfect, regardless of concurrency."
                 },
                 {
                     id: "f3",
-                    title: "The Retroactive Override Complexity",
-                    failure: "When leave was approved retroactively (e.g., for last week), the system failed to reconcile it with existing 'Absent' or 'Present' attendance records, causing payroll discrepancies.",
-                    solution: "Built a 'Temporal iterator' workflow that not only books the leave but retroactively scans and updates historical attendance slots to 'leave_override' status.",
-                    outcome: "Automated payroll reconciliation, saving HR ~15 hours of manual checking per month."
+                    title: "The Ad-Blocker Blackout (ERR_BLOCKED)",
+                    failure: "Corporate firewalls and browser extensions were blocking standard REST API calls, causing 10-15% of users to fail at marking attendance even with internet connection.",
+                    solution: "Implemented Protocol Switching. We moved critical checks to use WebSockets via Firebase Realtime Database, which tunnels through standard blockers.",
+                    outcome: "100% Availability. The app now acknowledges user input instantly (0ms perceived latency) thanks to Optimistic UI patterns."
                 }
             ],
 
             // "Short and Summarized"
             timeline: [
-                { year: "2026", event: "Phase 5: Cortex Architecture Rollout" },
-                { year: "2025", event: "Phase 3: Owner vs MD Portal Separation" },
-                { year: "2024", event: "Phase 1: Core Leave System Implementation" },
+                { year: "2026", event: "Work In Progress (WIP)" },
+                { year: "2025", event: "Dec 6: Project Start" },
             ]
         }
     },
