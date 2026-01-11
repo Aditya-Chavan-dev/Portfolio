@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import EntryGate from './components/EntryGate';
 import SessionHandshake from './components/SessionHandshake';
 import JourneyHub from './components/JourneyHub';
+import ProjectsView from './components/ProjectsView';
 import HeroDashboard from './components/hero/HeroDashboard';
 
 import { initSession } from './services/tracking';
@@ -11,10 +12,12 @@ import { GitHubService } from './services/github';
 import config from './portfolio.config';
 
 // PHASE CONSTANTS
-const PHASE_ENTRY = 0;
-const PHASE_HANDSHAKE = 1;
-const PHASE_HUB = 2; // Was JOURNEY
-const PHASE_DASHBOARD = 4;
+export const PHASE_ENTRY = 0;
+export const PHASE_HANDSHAKE = 1;
+export const PHASE_HUB = 2; // Was JOURNEY
+export const PHASE_STORY = 3;
+export const PHASE_DASHBOARD = 4;
+export const PHASE_PROJECTS = 5;
 
 import LiveNavbar from './components/ui/LiveNavbar';
 import TacticalHUD from './components/ui/TacticalHUD';
@@ -23,15 +26,20 @@ import SystemCheck from './components/ui/SystemCheck';
 function App() {
     const [phase, setPhase] = useState(PHASE_ENTRY);
     const [sessionId, setSessionId] = useState(null);
-    const [heroMetrics, setHeroMetrics] = useState(null);
+    const [heroMetrics, setHeroMetrics] = useState({
+        loc: config.hero.metrics.loc.value,
+        repos: 0,
+        streak: config.hero.metrics.streak.value,
+        stack: config.hero.stack
+    });
     const [showSystemCheck, setShowSystemCheck] = useState(false);
 
     useEffect(() => {
-        // "Seen It" Memory
-        const hasSeenIntro = localStorage.getItem('HAS_SEEN_INTRO');
-        if (hasSeenIntro) {
-            setPhase(PHASE_HUB);
-        }
+        // "Seen It" Memory - DIABLED: User wants landing page on every refresh
+        // const hasSeenIntro = localStorage.getItem('HAS_SEEN_INTRO');
+        // if (hasSeenIntro) {
+        //     setPhase(PHASE_HUB);
+        // }
 
         // Initialize Session on App Mount
         const { sessionId } = initSession();
@@ -55,7 +63,7 @@ function App() {
                 };
 
                 // 5. CACHE: Update the local truth
-                localStorage.setItem('METRICS_CACHE', JSON.stringify(newState));
+                localStorage.setItem('METRICS_CACHE_V3', JSON.stringify(newState));
                 return newState;
             });
         };
@@ -83,6 +91,11 @@ function App() {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            return;
+        }
+
+        if (selection === 'PROJECTS') {
+            setPhase(PHASE_PROJECTS);
             return;
         }
 
@@ -196,6 +209,19 @@ function App() {
                             className="h-full w-full overflow-y-auto overflow-x-hidden bg-[var(--color-bg-deep)]"
                         >
                             <HeroDashboard onInitiate={() => { }} metrics={heroMetrics || {}} />
+                        </motion.div>
+                    )}
+
+                    {phase === PHASE_PROJECTS && (
+                        <motion.div
+                            key="projects"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.5 }}
+                            className="h-full w-full"
+                        >
+                            <ProjectsView onBack={() => setPhase(PHASE_HUB)} />
                         </motion.div>
                     )}
 

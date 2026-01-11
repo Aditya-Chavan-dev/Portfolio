@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Database, Cpu, User, FileText, Users, PlayCircle, ArrowRight } from 'lucide-react';
-import { trackMetric, fetchMetrics } from '../services/tracking';
+import { trackMetric } from '../services/tracking';
+import { RealtimeService } from '../services/realtime';
 import CountUp from './ui/CountUp';
 
 const JourneyHub = ({ onSelection }) => {
     const [immersiveCount, setImmersiveCount] = useState(null);
 
     useEffect(() => {
-        const loadStats = async () => {
-            const data = await fetchMetrics();
+        // Real-time Subscription (Live Updates)
+        const unsubscribe = RealtimeService.subscribeToVisitorStats((data) => {
             if (data?.visitorStats?.immersive) {
                 setImmersiveCount(data.visitorStats.immersive);
             } else {
-                setImmersiveCount(0); // Fallback
+                setImmersiveCount(0);
             }
-        };
-        loadStats();
+        });
+
+        return () => unsubscribe();
     }, []);
 
     return (
-        <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#050505] overflow-hidden selection:bg-cyan-500/30 pt-20">
+        <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#050505] overflow-hidden selection:bg-cyan-500/30 pt-16">
 
             {/* Subtle Gradient Background */}
             <div className="absolute inset-0 pointer-events-none">
@@ -29,7 +31,7 @@ const JourneyHub = ({ onSelection }) => {
                 />
             </div>
 
-            <div className="relative z-10 w-full max-w-[1400px] px-8 md:px-12 flex flex-col justify-center items-center h-full gap-12 md:gap-16">
+            <div className="relative z-10 w-full max-w-[1200px] px-8 md:px-12 flex flex-col justify-center items-center h-full gap-6 md:gap-8">
 
                 {/* 
                   --- SECTION 1: HERO FEATURE (Start Journey) --- 
@@ -45,7 +47,7 @@ const JourneyHub = ({ onSelection }) => {
                             trackMetric('paths', 'immersive');
                             onSelection('STORY');
                         }}
-                        className="group relative w-full h-[340px] md:h-[400px] bg-[#0A0A0A] border border-white/10 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-cyan-500/50 hover:shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center text-center"
+                        className="group relative w-full h-[220px] md:h-[260px] bg-[#0A0A0A] border rounded-[2rem] overflow-hidden transition-all duration-500 border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:border-cyan-500/60 hover:shadow-[0_0_40px_rgba(6,182,212,0.3)] flex items-center justify-center text-center"
                     >
                         {/* Background Image / Texture Placeholder */}
                         <div className="absolute inset-0 bg-[url('/assets/noise.svg')] opacity-10" />
@@ -56,22 +58,22 @@ const JourneyHub = ({ onSelection }) => {
 
                         <div className="relative z-20 flex flex-col items-center max-w-3xl px-6">
 
-                            <div className="mb-6 p-4 rounded-full bg-cyan-500/10 text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-400 group-hover:text-black transition-all duration-500">
-                                <PlayCircle size={48} strokeWidth={1.5} />
+                            <div className="mb-4 p-3 rounded-full bg-cyan-500/10 text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-400 group-hover:text-black transition-all duration-500">
+                                <PlayCircle size={36} strokeWidth={1.5} />
                             </div>
 
-                            <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-6 tracking-tight group-hover:tracking-normal transition-all duration-500">
+                            <h2 className="text-2xl md:text-4xl font-display font-bold text-white mb-4 tracking-tight group-hover:tracking-normal transition-all duration-500">
                                 Enter the Immersive Journey
                             </h2>
 
-                            <p className="text-gray-400 text-lg md:text-xl max-w-2xl font-light leading-relaxed mb-10 group-hover:text-white transition-colors">
+                            <p className="text-gray-400 text-sm md:text-base max-w-lg font-light leading-relaxed mb-6 group-hover:text-white transition-colors">
                                 Explore a non-linear narrative of my work, philosophy, and technical expertise in a cinematic experience.
                             </p>
 
                             {/* Live Social Proof Badge */}
-                            <div className="flex items-center gap-4 py-2 px-5 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm group-hover:bg-white/10 transition-colors">
-                                <Users size={16} className="text-cyan-400" />
-                                <span className="text-sm text-gray-300 font-mono">
+                            <div className="flex items-center gap-4 py-1.5 px-4 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm group-hover:bg-white/10 transition-colors">
+                                <Users size={14} className="text-cyan-400" />
+                                <span className="text-xs text-gray-300 font-mono">
                                     <span className="text-white font-bold">{immersiveCount || '---'}</span> Travelers have entered
                                 </span>
                             </div>
@@ -89,12 +91,12 @@ const JourneyHub = ({ onSelection }) => {
                     transition={{ delay: 0.2, duration: 0.8 }}
                     className="w-full"
                 >
-                    <div className="flex items-center gap-6 mb-8">
+                    <div className="flex items-center gap-6 mb-4">
                         <span className="text-xs font-mono text-gray-500 uppercase tracking-[0.2em]">Quick Navigation</span>
                         <div className="h-px flex-1 bg-white/10" />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <QuickActionCard
                             icon={Database}
                             title="Projects"

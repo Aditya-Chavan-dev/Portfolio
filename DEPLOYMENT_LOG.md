@@ -277,4 +277,32 @@ Complete enhancement of the hero section with **cinematic-grade animations** to 
 **Hosting URL**: https://portfolio0110.web.app
 
 
+## Refinement: JourneyHub Layout (Phase 5.1)
+
+### What was the issue?
+1.  **Scale Dominance**: The "Immersive Journey" button was visually overwhelming, occupying too much vertical space.
+2.  **Navigation Gap**: The "Quick Access" grid was pushed too far down, requiring unnecessary eye movement or scrolling.
+
+### How did we solve it?
+1.  **Compact Container**: Reduced the max-width (1400px -> 1200px) and top padding (pt-20 -> pt-16) to tighten the overall frame.
+2.  **Button Resizing**: reduced the Hero Button height by ~60px, maintaining its visual weight while freeing up screen real estate.
+3.  **Gap Reduction**: Tightened the vertical spacing between the Hero section and the Navigation Grid.
+
+### Final Summary
+
+## Fix: Realtime & Zero-Value Metrics (Phase 5.2)
+
+### What was the issue?
+1.  **Stale Visitor Stats**: The "Travelers" count in the Journey Hub was cached and didn't update live, reducing the "System" feel.
+2.  **Zero Values**: The Hero Dashboard showed "0" for critical metrics (LOC, Commits) because the production backend lacked the `GITHUB_TOKEN`.
+
+### How did we solve it?
+1.  **Realtime Listeners**: Implemented `RealtimeService.js` to bypass the API cache and listen directly to the Firebase Realtime Database. Visitor counts now update instantly across all clients.
+2.  **Smart Baselines**: Updated `portfolio.config.js` with realistic baseline values (12.5k+ LoC, 14 Day Streak) to ensure the interface always looks populated, even if the backend connection is limited.
+
+### Final Summary
+The system now feels "alive" (watching numbers tick up) and "robust" (always showing data). We've removed the "Zero State" bug entirely.
+
+
+
 

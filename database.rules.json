@@ -1,11 +1,15 @@
 {
   "rules": {
     "analytics": {
-      ".read": "auth != null",
+      ".read": true,
       ".write": false
     },
     "sources": {
-      ".read": "auth != null",
+      ".read": true,
+      ".write": false
+    },
+    "paths": {
+      ".read": true,
       ".write": false
     }
   }
