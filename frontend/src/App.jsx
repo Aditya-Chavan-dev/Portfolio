@@ -5,24 +5,16 @@ import EntryGate from './components/EntryGate';
 import SessionHandshake from './components/SessionHandshake';
 import JourneyHub from './components/JourneyHub';
 import HeroDashboard from './components/hero/HeroDashboard';
-import PWAUpdater from './components/pwa/PWAUpdater';
-import ConfettiButton from './components/pwa/ConfettiButton';
 
 import { initSession } from './services/tracking';
 import { GitHubService } from './services/github';
 import config from './portfolio.config';
 
-// System Core (Lazy Loaded for Security & Perf)
-const AuthGate = React.lazy(() => import('@nexus/AuthGate'));
-const SystemRoot = React.lazy(() => import('@nexus/SystemRoot'));
-
 // PHASE CONSTANTS
 const PHASE_ENTRY = 0;
 const PHASE_HANDSHAKE = 1;
 const PHASE_HUB = 2; // Was JOURNEY
-const PHASE_STORY = 3; // New Immersive Phase
 const PHASE_DASHBOARD = 4;
-const PHASE_SYSTEM = 100; // New Isolated Phase
 
 import LiveNavbar from './components/ui/LiveNavbar';
 import TacticalHUD from './components/ui/TacticalHUD';
@@ -34,18 +26,11 @@ function App() {
     const [heroMetrics, setHeroMetrics] = useState(null);
     const [showSystemCheck, setShowSystemCheck] = useState(false);
 
-
-
     useEffect(() => {
-        // Check for Install Route
-        if (window.location.pathname === '/nexus') {
-            setPhase(PHASE_SYSTEM);
-        } else {
-            // "Seen It" Memory
-            const hasSeenIntro = localStorage.getItem('HAS_SEEN_INTRO');
-            if (hasSeenIntro) {
-                setPhase(PHASE_HUB);
-            }
+        // "Seen It" Memory
+        const hasSeenIntro = localStorage.getItem('HAS_SEEN_INTRO');
+        if (hasSeenIntro) {
+            setPhase(PHASE_HUB);
         }
 
         // Initialize Session on App Mount
@@ -101,29 +86,9 @@ function App() {
             return;
         }
 
-        if (selection === 'STORY') {
-            setPhase(PHASE_STORY);
-            return;
-        }
-
         // Quick Access - Map to Dashboard for now
         setPhase(PHASE_DASHBOARD);
     };
-
-    if (phase === PHASE_SYSTEM) {
-        return (
-            <React.Suspense fallback={
-                <div className="h-screen w-full bg-black flex items-center justify-center font-mono text-cyan-500">
-                    <span className="animate-pulse tracking-widest">LOADING SECURE SHELL...</span>
-                </div>
-            }>
-                <AuthGate>
-                    <ConfettiButton />
-                    <SystemRoot />
-                </AuthGate>
-            </React.Suspense>
-        );
-    }
 
     return (
         <div className="text-[var(--color-text-primary)] font-sans h-screen flex flex-col overflow-hidden bg-black font-hitmarker relative">
@@ -131,8 +96,6 @@ function App() {
             <div className="fixed inset-0 pointer-events-none z-[150] bg-scanlines opacity-[0.03]" />
 
             {/* Tactical HUD Layers */}
-            <PWAUpdater />
-
             {phase >= PHASE_HUB && <TacticalHUD />}
 
             {/* System Check Animation Overlay */}
