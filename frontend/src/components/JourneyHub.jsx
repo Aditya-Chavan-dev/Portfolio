@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Database, Cpu, User, FileText, Users, Activity, ChevronRight } from 'lucide-react';
+import { Database, Cpu, User, FileText, Users, PlayCircle, ArrowRight } from 'lucide-react';
 import { trackMetric, fetchMetrics } from '../services/tracking';
 import CountUp from './ui/CountUp';
 
@@ -20,110 +20,105 @@ const JourneyHub = ({ onSelection }) => {
     }, []);
 
     return (
-        <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#050505] overflow-hidden selection:bg-cyan-500/30 pt-10">
+        <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#050505] overflow-hidden selection:bg-cyan-500/30 pt-20">
 
-            {/* Ambient Background Aura */}
+            {/* Subtle Gradient Background */}
             <div className="absolute inset-0 pointer-events-none">
                 <div
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-[radial-gradient(circle,rgba(34,211,238,0.04)_0%,transparent_70%)]"
-                    style={{ willChange: 'opacity' }}
+                    className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] bg-[radial-gradient(circle,rgba(34,211,238,0.03)_0%,transparent_60%)]"
                 />
             </div>
 
-            <div className="relative z-10 w-full max-w-5xl px-8 flex flex-col justify-center items-center h-full gap-10 md:gap-14">
+            <div className="relative z-10 w-full max-w-[1400px] px-8 md:px-12 flex flex-col justify-center items-center h-full gap-12 md:gap-16">
 
                 {/* 
-                  --- SECTION 1: THE IMMERSIVE GATEWAY --- 
+                  --- SECTION 1: HERO FEATURE (Start Journey) --- 
                 */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="w-full flex-shrink-0"
+                    transition={{ duration: 0.8 }}
+                    className="w-full"
                 >
                     <button
                         onClick={() => {
                             trackMetric('paths', 'immersive');
                             onSelection('STORY');
                         }}
-                        className="group relative w-full h-52 md:h-64 lg:h-72 bg-[#080808] border border-white/10 rounded-[2rem] overflow-hidden transition-all duration-700 hover:border-cyan-500/40 shadow-2xl"
+                        className="group relative w-full h-[340px] md:h-[400px] bg-[#0A0A0A] border border-white/10 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-cyan-500/50 hover:shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center text-center"
                     >
-                        {/* Interactive Sheen */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent skew-x-[-20deg] translate-x-[-100%] group-hover:translate-x-[100%]" />
+                        {/* Background Image / Texture Placeholder */}
+                        <div className="absolute inset-0 bg-[url('/assets/noise.svg')] opacity-10" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
 
-                        <div className="relative h-full flex flex-col items-center justify-center text-center p-6 z-10">
-                            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/5 border border-cyan-500/10 mb-4 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/30 transition-all duration-500">
-                                <Activity size={10} className="text-cyan-400 animate-pulse" />
-                                <span className="text-[9px] font-mono text-cyan-400 tracking-[0.3em] uppercase">Initialize Experience</span>
+                        {/* Hover Gradient */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br from-cyan-900/10 via-transparent to-purple-900/10" />
+
+                        <div className="relative z-20 flex flex-col items-center max-w-3xl px-6">
+
+                            <div className="mb-6 p-4 rounded-full bg-cyan-500/10 text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-400 group-hover:text-black transition-all duration-500">
+                                <PlayCircle size={48} strokeWidth={1.5} />
                             </div>
 
-                            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white group-hover:text-cyan-50 group-hover:scale-105 transition-all duration-700 leading-tight">
-                                Start Immersive Journey
+                            <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-6 tracking-tight group-hover:tracking-normal transition-all duration-500">
+                                Enter the Immersive Journey
                             </h2>
-                            <p className="mt-4 text-gray-500 font-mono text-[10px] md:text-xs lg:text-sm max-w-md group-hover:text-gray-300 transition-colors">
-                                Experience a non-linear narrative exploring system design, visual engineering, and strategic execution.
+
+                            <p className="text-gray-400 text-lg md:text-xl max-w-2xl font-light leading-relaxed mb-10 group-hover:text-white transition-colors">
+                                Explore a non-linear narrative of my work, philosophy, and technical expertise in a cinematic experience.
                             </p>
 
-                            {/* CONDENSED LIVE STATS */}
-                            <div className="mt-8 relative">
-                                {/* Subtle Glow Background */}
-                                <div className="absolute inset-0 bg-cyan-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-
-                                <div className="relative flex items-center gap-4 bg-white/[0.03] backdrop-blur-xl px-6 py-4 rounded-3xl border border-white/5 group-hover:border-cyan-500/20 transition-all duration-500 shadow-xl">
-
-                                    {/* Icon with Live Signal */}
-                                    <div className="relative flex-shrink-0">
-                                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-500 rounded-full" />
-                                        <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400">
-                                            <Users size={20} strokeWidth={1.5} />
-                                        </div>
-                                    </div>
-
-                                    <div className="text-left flex flex-col justify-center">
-                                        <div className="text-[9px] font-mono text-cyan-400/60 uppercase tracking-[0.2em] font-bold mb-1">
-                                            System Adoption
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="text-2xl md:text-3xl font-bold text-white tracking-tighter tabular-nums drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-                                                {immersiveCount !== null ? (
-                                                    <CountUp end={immersiveCount} duration={2500} />
-                                                ) : (
-                                                    <span className="opacity-20 animate-pulse">---</span>
-                                                )}
-                                            </div>
-                                            <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest leading-none font-medium border-l border-white/10 pl-3">
-                                                Users chose journeys
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            {/* Live Social Proof Badge */}
+                            <div className="flex items-center gap-4 py-2 px-5 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm group-hover:bg-white/10 transition-colors">
+                                <Users size={16} className="text-cyan-400" />
+                                <span className="text-sm text-gray-300 font-mono">
+                                    <span className="text-white font-bold">{immersiveCount || '---'}</span> Travelers have entered
+                                </span>
                             </div>
-                        </div>
 
-                        {/* Animated Ground Light */}
-                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700" />
+                        </div>
                     </button>
                 </motion.div>
 
                 {/* 
-                  --- SECTION 2: TACTICAL QUICK LINKS --- 
+                  --- SECTION 2: DIRECT ACCESS GRID --- 
                 */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="w-full flex-shrink-0"
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                    className="w-full"
                 >
-                    <div className="w-full flex items-center gap-6 mb-8 opacity-20">
-                        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                        <span className="text-[10px] font-mono text-white tracking-[0.6em] uppercase whitespace-nowrap">Direct Access</span>
-                        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                    <div className="flex items-center gap-6 mb-8">
+                        <span className="text-xs font-mono text-gray-500 uppercase tracking-[0.2em]">Quick Navigation</span>
+                        <div className="h-px flex-1 bg-white/10" />
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 w-full max-w-4xl mx-auto">
-                        <QuickAction icon={Database} label="Projects" onClick={() => onSelection('PROJECTS')} />
-                        <QuickAction icon={Cpu} label="Skills" onClick={() => onSelection('SKILLS')} />
-                        <QuickAction icon={User} label="About" onClick={() => onSelection('ABOUT')} />
-                        <QuickAction icon={FileText} label="Resume" onClick={() => onSelection('RESUME')} />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <QuickActionCard
+                            icon={Database}
+                            title="Projects"
+                            desc="Case Studies & Code"
+                            onClick={() => onSelection('PROJECTS')}
+                        />
+                        <QuickActionCard
+                            icon={Cpu}
+                            title="Tech Stack"
+                            desc="Skills & Tools"
+                            onClick={() => onSelection('SKILLS')}
+                        />
+                        <QuickActionCard
+                            icon={User}
+                            title="About Me"
+                            desc="Bio & Philosophy"
+                            onClick={() => onSelection('ABOUT')}
+                        />
+                        <QuickActionCard
+                            icon={FileText}
+                            title="Resume"
+                            desc="Download PDF"
+                            onClick={() => onSelection('RESUME')}
+                        />
                     </div>
                 </motion.div>
 
@@ -132,20 +127,27 @@ const JourneyHub = ({ onSelection }) => {
     );
 };
 
-// Tactical Action Sub-component
-const QuickAction = ({ icon: Icon, label, onClick }) => (
+// Modern, Clean Card Component
+const QuickActionCard = ({ icon: Icon, title, desc, onClick }) => (
     <button
         onClick={onClick}
-        className="group relative flex flex-col items-center justify-center py-6 md:py-8 rounded-3xl bg-[#080808] border border-white/5 transition-all duration-500 hover:bg-white/[0.03] hover:border-cyan-500/20 hover:-translate-y-1 shadow-xl"
+        className="group relative flex items-center p-6 bg-[#0A0A0A] border border-white/5 rounded-2xl hover:bg-white/[0.03] hover:border-white/20 transition-all duration-300 hover:-translate-y-1 text-left"
     >
-        <div className="text-gray-500 group-hover:text-cyan-400 group-hover:scale-110 transition-all duration-500 p-2.5 md:p-3 rounded-2xl bg-white/[0.02] mb-3">
-            <Icon size={20} strokeWidth={1.5} />
+        <div className="p-4 rounded-xl bg-white/[0.03] text-gray-400 group-hover:bg-white/[0.08] group-hover:text-cyan-400 transition-colors duration-300 mr-5">
+            <Icon size={24} strokeWidth={1.5} />
         </div>
-        <span className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest group-hover:text-white transition-colors">{label}</span>
 
-        {/* Subtle Indicator */}
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-40 transition-opacity">
-            <div className="w-1 h-1 bg-cyan-400 rounded-full" />
+        <div className="flex-1">
+            <h3 className="text-lg font-bold text-white mb-1 tracking-wide group-hover:text-cyan-400 transition-colors">
+                {title}
+            </h3>
+            <p className="text-sm text-gray-500 font-mono group-hover:text-gray-400">
+                {desc}
+            </p>
+        </div>
+
+        <div className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300 text-cyan-500">
+            <ArrowRight size={20} />
         </div>
     </button>
 );

@@ -14,10 +14,10 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        // v7.0: Network-First Architecture
-        navigator.serviceWorker.register('/sw.js?v=7.0')
+        // v8.1: Landing Page Revamp
+        navigator.serviceWorker.register('/sw.js?v=8.1')
           .then((registration) => {
-            console.log('SW Registered [v7.0]: ', registration);
+            console.log('SW Registered [v8.1]: ', registration);
           })
           .catch((err) => console.log('SW Failed:', err));
       });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Linkedin, FileText, Globe, Activity } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Users, Linkedin, FileText, Globe, Activity, Clock } from 'lucide-react';
 import { fetchMetrics } from '../../services/tracking';
 import CountUp from './CountUp';
 
@@ -29,66 +29,60 @@ const LiveNavbar = () => {
 
     return (
         <motion.nav
-            initial={{ y: -80, opacity: 0 }}
+            initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="w-full bg-black/80 backdrop-blur-xl border-b border-white/10 z-[100] h-20 flex items-center px-8 shadow-[0_4px_30px_rgba(0,0,0,0.5)] flex-shrink-0"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full bg-[#050505]/90 backdrop-blur-md border-b border-white/10 z-[100] h-24 flex items-center shadow-2xl flex-shrink-0"
         >
-            <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
+            <div className="w-full max-w-[1600px] mx-auto px-6 md:px-12 flex items-center justify-between">
 
-                {/* Branding / Identification - Updated Label */}
-                <div className="flex items-center gap-4">
-                    <div className="relative">
-                        <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+                {/* 1. BRAND IDENTITY - Bold & Clear */}
+                <div className="flex items-center gap-5">
+                    <div className="relative flex items-center justify-center w-12 h-12 bg-white/5 rounded-full border border-white/10 shadow-[0_0_20px_rgba(0,255,255,0.1)]">
+                        <div className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
                     </div>
-                    <div className="flex flex-col">
-                        <span className="text-[12px] font-mono text-cyan-400 font-bold tracking-[0.2em] md:tracking-[0.4em] uppercase leading-none mb-1.5">Portfolio Live Metrics</span>
-                        <span className="text-[8px] font-mono text-gray-500 uppercase tracking-widest leading-none">System Traffic Telemetry</span>
+                    <div className="flex flex-col justify-center">
+                        <span className="text-lg font-display text-white font-bold tracking-wide leading-tight">
+                            NEXUS <span className="text-cyan-400">PORTFOLIO</span>
+                        </span>
+                        <span className="text-xs text-gray-500 font-mono uppercase tracking-[0.2em]">
+                            System Online
+                        </span>
                     </div>
                 </div>
 
-                {/* Live Metrics Container - Prominent & High Contrast */}
-                <div className="flex items-center gap-6 md:gap-14 overflow-x-auto no-scrollbar md:overflow-visible pr-4 md:pr-0">
-
-                    {/* Total Viewers */}
-                    <MetricPill
+                {/* 2. METRICS TELEMETRY - Large & Readable */}
+                <div className="hidden md:flex items-center gap-12">
+                    <MetricGroup
                         icon={Users}
-                        label="Total Viewers"
+                        label="Total Traffic"
                         value={totalViewers}
-                        color="text-white"
-                        pulse
+                        subLabel="Active Sessions"
+                        active
                     />
-
-                    {/* LinkedIn */}
-                    <MetricPill
+                    <div className="h-10 w-px bg-white/10" />
+                    <MetricGroup
                         icon={Linkedin}
                         label="LinkedIn"
                         value={stats?.linkedin || 0}
+                        subLabel="Professional"
                         color="text-blue-400"
                     />
-
-                    {/* Resume */}
-                    <MetricPill
+                    <div className="h-10 w-px bg-white/10" />
+                    <MetricGroup
                         icon={FileText}
-                        label="Resume"
+                        label="Inquiries"
                         value={stats?.resume || 0}
+                        subLabel="Resume Views"
                         color="text-amber-400"
                     />
-
-                    {/* Anonymous */}
-                    <MetricPill
-                        icon={Globe}
-                        label="Anonymous"
-                        value={stats?.anonymous || 0}
-                        color="text-emerald-400"
-                    />
-
                 </div>
 
-                {/* System Status / Time IST */}
-                <div className="hidden lg:flex items-center gap-3 px-4 py-2 rounded-lg bg-white/[0.02] border border-white/5 group transition-colors hover:border-cyan-500/20">
-                    <Activity size={14} className="text-cyan-500 animate-pulse" />
-                    <span className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.2em]">
-                        {time} <span className="text-cyan-500/60 ml-1">IST</span>
+                {/* 3. TIME / STATUS - High Contrast */}
+                <div className="flex items-center gap-4 bg-white/[0.03] border border-white/10 px-6 py-3 rounded-full hover:bg-white/[0.06] transition-colors cursor-default">
+                    <Clock size={16} className="text-gray-400" />
+                    <span className="text-sm font-mono text-gray-300 tracking-widest font-medium">
+                        {time} <span className="text-cyan-500 font-bold">IST</span>
                     </span>
                 </div>
 
@@ -97,17 +91,21 @@ const LiveNavbar = () => {
     );
 };
 
-const MetricPill = ({ icon: Icon, label, value, color, pulse, size }) => (
-    <div className="flex items-center gap-3 md:gap-4 group flex-shrink-0">
-        <div className={`p-2 md:p-3 rounded-xl bg-white/[0.04] ${color} transition-all duration-300 group-hover:scale-110 group-hover:bg-white/[0.08]`}>
-            <Icon size={14} md:size={16} strokeWidth={2} />
+// Reusable Metric Component - Clean & Professional
+const MetricGroup = ({ icon: Icon, label, value, subLabel, color = "text-white", active }) => (
+    <div className="flex items-center gap-4 group cursor-default">
+        <div className={`p-3 rounded-2xl bg-white/[0.03] border border-white/5 group-hover:bg-white/[0.08] transition-all duration-300 ${active ? 'shadow-[0_0_15px_rgba(34,211,238,0.15)] border-cyan-500/30' : ''}`}>
+            <Icon size={20} className={`${color} opacity-80 group-hover:opacity-100 transition-opacity`} strokeWidth={1.5} />
         </div>
         <div className="flex flex-col">
-            <span className="text-[8px] md:text-[10px] font-mono text-gray-500 uppercase tracking-widest leading-none mb-1 group-hover:text-gray-400 transition-colors font-semibold truncate max-w-[50px] md:max-w-none">
-                {label}
+            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider mb-0.5 group-hover:text-gray-400">
+                {subLabel}
             </span>
-            <div className={`text-xs md:text-xl font-bold font-mono tracking-wider tabular-nums leading-none ${pulse ? 'text-white' : 'text-gray-300'}`}>
-                <CountUp end={value} duration={2500} />
+            <div className="flex items-center gap-2">
+                <span className={`text-xl font-display font-bold tabular-nums leading-none ${active ? 'text-white' : 'text-gray-300'} group-hover:text-white transition-colors`}>
+                    <CountUp end={value} duration={2000} />
+                </span>
+                {active && <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />}
             </div>
         </div>
     </div>

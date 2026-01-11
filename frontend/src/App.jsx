@@ -5,6 +5,8 @@ import EntryGate from './components/EntryGate';
 import SessionHandshake from './components/SessionHandshake';
 import JourneyHub from './components/JourneyHub';
 import HeroDashboard from './components/hero/HeroDashboard';
+import PWAUpdater from './components/pwa/PWAUpdater';
+import ConfettiButton from './components/pwa/ConfettiButton';
 
 import { initSession } from './services/tracking';
 import { GitHubService } from './services/github';
@@ -116,6 +118,7 @@ function App() {
                 </div>
             }>
                 <AuthGate>
+                    <ConfettiButton />
                     <SystemRoot />
                 </AuthGate>
             </React.Suspense>
@@ -128,6 +131,8 @@ function App() {
             <div className="fixed inset-0 pointer-events-none z-[150] bg-scanlines opacity-[0.03]" />
 
             {/* Tactical HUD Layers */}
+            <PWAUpdater />
+
             {phase >= PHASE_HUB && <TacticalHUD />}
 
             {/* System Check Animation Overlay */}

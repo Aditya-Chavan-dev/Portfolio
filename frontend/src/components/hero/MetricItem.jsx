@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import MagicCounter from '../ui/MagicCounter';
+import CountUp from '../ui/CountUp';
 
-const MetricItem = ({ label, rawValue, formatter, icon, delay, isUptime = false, uptimeStart, layoutId, className = "", font = "font-display" }) => {
-
-    // --- UPTIME SPECIFIC LOGIC ---
-    const [uptimeString, setUptimeString] = useState("00d 00h 00m 00s");
+const MetricItem = ({ label, icon, rawValue, formatter, delay, isUptime, uptimeStart, className, layoutId }) => {
+    const [uptimeString, setUptimeString] = useState("");
 
     useEffect(() => {
-        if (!isUptime || !uptimeStart) return;
+        if (!isUptime) return;
 
         const updateTimer = () => {
             const now = new Date();
@@ -23,7 +21,7 @@ const MetricItem = ({ label, rawValue, formatter, icon, delay, isUptime = false,
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const minutes = Math.floor((diff / 1000 / 60) % 60);
-            const seconds = Math.floor((diff / 1000) % 60);
+            // const seconds = Math.floor((diff / 1000) % 60); // unused in display format below
 
             setUptimeString(
                 `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`
@@ -69,22 +67,19 @@ const MetricItem = ({ label, rawValue, formatter, icon, delay, isUptime = false,
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: delay + 0.2, duration: 0.5 }}
             >
-                {icon}
-                <span>{label}</span>
+                <div className="flex items-center gap-4 mb-3 opacity-60">
+                    <div className="p-2 bg-white/5 rounded-lg">
+                        {icon}
+                    </div>
+                    <span className="text-xs md:text-sm font-mono text-gray-400 uppercase tracking-widest font-bold">
+                        {label}
+                    </span>
+                </div>
             </motion.div>
 
-            <motion.div
-                className={`text-2xl md:text-3xl ${font} font-bold text-[var(--color-text-primary)] group-hover:text-glow transition-all duration-300 ${isUptime ? 'font-mono text-xl md:text-2xl tracking-tight' : ''}`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: delay + 0.3, duration: 0.6, ease: "backOut" }}
-            >
-                {isUptime ? (
-                    <span>{uptimeString}</span>
-                ) : (
-                    <MagicCounter value={rawValue} formatter={formatter} />
-                )}
-            </motion.div>
+            <div className={`text-4xl md:text-5xl font-display font-bold text-white tracking-tight tabular-nums`}>
+                {isUptime ? uptimeString : <CountUp end={rawValue} duration={2500} formatter={formatter} />}
+            </div>
         </motion.div>
     );
 };
