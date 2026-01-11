@@ -1,62 +1,73 @@
-const CACHE_NAME = 'portfolio-v6';
-const urlsToCache = [
+const CACHE_NAME = 'portfolio-v7.0';
+const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
     '/manifest.json'
 ];
 
-// Install SW
+// 1. INSTALL: Cache Core Assets
 self.addEventListener('install', (event) => {
-    // Force immediate takeover
-    self.skipWaiting();
-
+    self.skipWaiting(); // Takeover immediately
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                return cache.addAll(urlsToCache);
-            })
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(ASSETS_TO_CACHE);
+        })
     );
 });
 
-// Listen for requests
-self.addEventListener('fetch', (event) => {
-    event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                // Cache hit - return response
-                if (response) {
-                    return response;
-                }
-
-                // Navigation fallback for SPA
-                if (event.request.mode === 'navigate') {
-                    return caches.match('/index.html')
-                        .then((cacheRes) => {
-                            return cacheRes || fetch(event.request);
-                        });
-                }
-
-                return fetch(event.request);
-            })
-    );
-});
-
-// Activate the SW
+// 2. ACTIVATE: Cleanup Old Caches
 self.addEventListener('activate', (event) => {
-    const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         Promise.all([
-            // Take control of all clients immediately
-            self.clients.claim(),
-            caches.keys().then((cacheNames) => {
+            self.clients.claim(), // Control clients immediately
+            caches.keys().then((keys) => {
                 return Promise.all(
-                    cacheNames.map((cacheName) => {
-                        if (cacheWhitelist.indexOf(cacheName) === -1) {
-                            return caches.delete(cacheName);
+                    keys.map((key) => {
+                        if (key !== CACHE_NAME) {
+                            return caches.delete(key);
                         }
                     })
                 );
             })
         ])
+    );
+});
+
+// 3. FETCH: The "Network-First" Strategy (The Fix)
+self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
+
+    // A. Navigation Requests (HTML) -> NETWORK FIRST
+    // This ensures the user ALWAYS gets the latest version if online.
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request)
+                .then((networkResponse) => {
+                    return caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, networkResponse.clone());
+                        return networkResponse;
+                    });
+                })
+                .catch(() => {
+                    // Offline? Fallback to cache
+                    return caches.match('/index.html');
+                })
+        );
+        return;
+    }
+
+    // B. Assets (JS, CSS, Images) -> STALE-WHILE-REVALIDATE
+    // Serve fast from cache, but update it in the background.
+    event.respondWith(
+        caches.match(event.request).then((cachedResponse) => {
+            const fetchPromise = fetch(event.request).then((networkResponse) => {
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, networkResponse.clone());
+                });
+                return networkResponse;
+            });
+
+            return cachedResponse || fetchPromise;
+        })
     );
 });
