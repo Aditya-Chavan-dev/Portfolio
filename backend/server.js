@@ -48,13 +48,13 @@ const pingRoutes = require('./routes/ping');
 const githubRoutes = require('./routes/github');
 
 const metricsRoutes = require('./routes/metrics');
-const systemRoutes = require('../Nexus/backend/diagnostics');
+
 
 app.use('/api/test', testRoutes); // General connectivity test
 app.use('/api/ping', pingRoutes); // Silent wake-up endpoint
 app.use('/api/github', githubRoutes); // Github Stats
 app.use('/api/metrics', metricsRoutes); // SSOT Metrics
-app.use('/api/system', systemRoutes); // Isolated System Core
+
 
 /**
  * STARTUP HEALTH CHECK (Pillar 7)

@@ -4,12 +4,6 @@
       ".read": "auth != null",
       ".write": false
     },
-    "system": {
-      "owner": {
-        ".read": "auth != null",
-        ".write": "auth.token.email === 'adityagchavan310@gmail.com'"
-      }
-    },
     "sources": {
       ".read": "auth != null",
       ".write": false
