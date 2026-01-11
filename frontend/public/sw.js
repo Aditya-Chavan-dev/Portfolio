@@ -34,22 +34,25 @@ self.addEventListener('activate', (event) => {
 });
 
 // 3. FETCH: The "Network-First" Strategy (The Fix)
+// 3. FETCH: The "Network-First" Strategy (The Fix)
 self.addEventListener('fetch', (event) => {
+    // Only handle GET requests
+    if (event.request.method !== 'GET') return;
+
     const url = new URL(event.request.url);
 
     // A. Navigation Requests (HTML) -> NETWORK FIRST
-    // This ensures the user ALWAYS gets the latest version if online.
     if (event.request.mode === 'navigate') {
         event.respondWith(
             fetch(event.request)
                 .then((networkResponse) => {
-                    return caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
                     });
+                    return networkResponse;
                 })
                 .catch(() => {
-                    // Offline? Fallback to cache
                     return caches.match('/index.html');
                 })
         );
@@ -57,12 +60,17 @@ self.addEventListener('fetch', (event) => {
     }
 
     // B. Assets (JS, CSS, Images) -> STALE-WHILE-REVALIDATE
-    // Serve fast from cache, but update it in the background.
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             const fetchPromise = fetch(event.request).then((networkResponse) => {
+                // Check for valid response
+                if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+                    return networkResponse;
+                }
+
+                const responseToCache = networkResponse.clone();
                 caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, networkResponse.clone());
+                    cache.put(event.request, responseToCache);
                 });
                 return networkResponse;
             });

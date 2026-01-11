@@ -22,6 +22,13 @@ const STEP_HOLOGRAM = 8;
 const STEP_COMPLETE = 9;
 
 const HeroDashboard = ({ onInitiate, metrics }) => {
+    // Fail-safe: Merge with config defaults ensuring no "undefined" props
+    const safeMetrics = {
+        loc: metrics?.loc || config.hero.metrics.loc.value,
+        repos: metrics?.repos || 0,
+        streak: metrics?.streak || config.hero.metrics.streak.value,
+        ...metrics
+    };
     const [introStep, setIntroStep] = useState(STEP_INIT);
     const [sessionId] = useState(() => {
         const randomNum = Math.floor(Math.random() * 999999).toString().padStart(6, '0');
@@ -95,13 +102,13 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
                     <div className="fixed inset-0 z-[90] pointer-events-none flex items-center justify-center">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
                             {introStep >= STEP_LOC && (
-                                <MetricItem layoutId="metric-loc" label={config.hero.metrics.loc.label} rawValue={metrics.loc} formatter={formatNumber} icon={<GitCommit size={32} />} className="w-[280px] h-[160px] border border-[var(--color-accent-blue)]" />
+                                <MetricItem layoutId="metric-loc" label={config.hero.metrics.loc.label} rawValue={safeMetrics.loc} formatter={formatNumber} icon={<GitCommit size={32} />} className="w-[280px] h-[160px] border border-[var(--color-accent-blue)]" />
                             )}
                             {introStep >= STEP_REPOS && (
-                                <MetricItem layoutId="metric-repos" label="Active Projects" rawValue={metrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={32} />} className="w-[280px] h-[160px] border border-[var(--color-accent-blue)]" />
+                                <MetricItem layoutId="metric-repos" label="Active Projects" rawValue={safeMetrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={32} />} className="w-[280px] h-[160px] border border-[var(--color-accent-blue)]" />
                             )}
                             {introStep >= STEP_STREAK && (
-                                <MetricItem layoutId="metric-streak" label={config.hero.metrics.streak.label} rawValue={metrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={32} className="text-[var(--color-accent-orange)]" />} className="w-[280px] h-[160px] border border-[var(--color-accent-orange)]" />
+                                <MetricItem layoutId="metric-streak" label={config.hero.metrics.streak.label} rawValue={safeMetrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={32} className="text-[var(--color-accent-orange)]" />} className="w-[280px] h-[160px] border border-[var(--color-accent-orange)]" />
                             )}
                         </div>
                     </div>
@@ -139,13 +146,13 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
                     {/* LEFT COLUMN: Developer Metrics (Increased Size) */}
                     <div className="md:col-span-4 flex flex-col gap-8 order-2 md:order-1">
                         <div className="relative h-[160px]">
-                            {introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-loc" label="Contributions" rawValue={metrics.loc} formatter={formatNumber} icon={<GitCommit size={24} />} className="border-white/10 bg-white/[0.02]" />}
+                            {introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-loc" label="Contributions" rawValue={safeMetrics.loc} formatter={formatNumber} icon={<GitCommit size={24} />} className="border-white/10 bg-white/[0.02]" />}
                         </div>
                         <div className="relative h-[160px]">
-                            {introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-streak" label={config.hero.metrics.streak.label} rawValue={metrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={24} className="text-[var(--color-accent-orange)]" />} className="border-white/10 bg-white/[0.02]" />}
+                            {introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-streak" label={config.hero.metrics.streak.label} rawValue={safeMetrics.streak} formatter={(v) => `${v} Days`} icon={<Flame size={24} className="text-[var(--color-accent-orange)]" />} className="border-white/10 bg-white/[0.02]" />}
                         </div>
                         <div className="relative h-[160px]">
-                            {introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-repos" label="Active Projects" rawValue={metrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={24} />} className="border-white/10 bg-white/[0.02]" />}
+                            {introStep >= STEP_REARRANGE && <MetricItem layoutId="metric-repos" label="Active Projects" rawValue={safeMetrics.repos} formatter={(v) => v.toLocaleString()} icon={<Server size={24} />} className="border-white/10 bg-white/[0.02]" />}
                         </div>
                     </div>
 
