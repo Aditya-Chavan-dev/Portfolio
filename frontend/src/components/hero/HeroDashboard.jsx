@@ -250,6 +250,22 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
                     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-[var(--color-accent-blue)] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 opacity-20"></div>
                 </motion.button>
             </motion.div>
+
+            {/* v6.1 VERIFICATION SIGNAL */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2 }}
+                className="absolute bottom-4 right-4 z-50"
+            >
+                <button
+                    onClick={() => alert("✅ SYSTEM UPDATE VERIFIED: v6.1 LIVE")}
+                    className="px-4 py-2 bg-green-900/40 border border-green-500/50 text-[10px] items-center gap-2 text-green-400 font-mono tracking-widest hover:bg-green-500 hover:text-black transition-colors hidden md:flex"
+                >
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    UPDATE PROTOCOL: v6.1 (ACTIVE)
+                </button>
+            </motion.div>
         </div >
     );
 };

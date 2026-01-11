@@ -38,6 +38,12 @@ function App() {
         // Check for Install Route
         if (window.location.pathname === '/nexus') {
             setPhase(PHASE_SYSTEM);
+        } else {
+            // "Seen It" Memory
+            const hasSeenIntro = localStorage.getItem('HAS_SEEN_INTRO');
+            if (hasSeenIntro) {
+                setPhase(PHASE_HUB);
+            }
         }
 
         // Initialize Session on App Mount
@@ -173,7 +179,10 @@ function App() {
                             exit={{ opacity: 0 }}
                             className="h-full w-full"
                         >
-                            <SessionHandshake onComplete={() => setShowSystemCheck(true)} />
+                            <SessionHandshake onComplete={() => {
+                                localStorage.setItem('HAS_SEEN_INTRO', 'true');
+                                setShowSystemCheck(true);
+                            }} />
                         </motion.div>
                     )}
 
