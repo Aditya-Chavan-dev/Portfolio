@@ -101,6 +101,7 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
                 {
                     id: "f1",
                     title: "The 30x Speedup (Serial vs Parallel)",
+                    summary: "Legacy code fetched data day-by-day (serial), causing a 6-second load time.",
                     failure: "The 'My History' tab took ~6 seconds to load because the legacy code was fetching attendance data one day at a time (Serial Fetching). 30 days x 200ms latency = 6000ms wait time.",
                     solution: "Refactored to Parallel Request Aggregation using Promise.all(). We now fire all 30 requests simultaneously.",
                     outcome: "Load time dropped from 6s to ~0.3s. The wait time is now just the speed of one request, not thirty combined."
@@ -108,6 +109,7 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
                 {
                     id: "f2",
                     title: "The 'Sunday Rule' Race Condition",
+                    summary: "Concurrent leave approvals caused data corruption when users worked on holidays.",
                     failure: "Leave balances were getting corrupted when two approvals happened simultaneously. If a user worked on a Sunday (+1 credit) while taking leave elsewhere, the system would miscount due to a Race Condition.",
                     solution: "Implemented Atomic Transactions (firebaser.runTransaction). This forces the database to process one update at a time, locking the document during the read-write cycle.",
                     outcome: "Achieved 100% Data Integrity. The system guarantees the math is always perfect, regardless of concurrency."
@@ -115,6 +117,7 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
                 {
                     id: "f3",
                     title: "The Ad-Blocker Blackout (ERR_BLOCKED)",
+                    summary: "Corporate firewalls blocked REST APIs, causing a 10-15% check-in failure rate.",
                     failure: "Corporate firewalls and browser extensions were blocking standard REST API calls, causing 10-15% of users to fail at marking attendance even with internet connection.",
                     solution: "Implemented Protocol Switching. We moved critical checks to use WebSockets via Firebase Realtime Database, which tunnels through standard blockers.",
                     outcome: "100% Availability. The app now acknowledges user input instantly (0ms perceived latency) thanks to Optimistic UI patterns."

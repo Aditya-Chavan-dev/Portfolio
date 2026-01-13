@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ExternalLink, Calendar, AlertTriangle, CheckCircle, Flame, Layers, Server, Database, Cloud } from 'lucide-react';
-import config from '../portfolio.config';
 import ExpandableFeature from './ExpandableFeature';
+import ExpandableFailure from './ExpandableFailure';
 
 // Reusing the icon helper
 const getTechIcon = (language) => {
@@ -53,6 +53,7 @@ const getTechIcon = (language) => {
 const ProjectDetailsPage = ({ project, onClose }) => {
     const metadata = config.projectDetails?.[project.name];
     const [expandedFeatureIndex, setExpandedFeatureIndex] = useState(null);
+    const [expandedFailureIndex, setExpandedFailureIndex] = useState(null);
 
     // Smooth scroll to top on mount
     useEffect(() => {
@@ -246,45 +247,23 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                                 <div className="h-px flex-1 bg-red-900/20" />
                             </div>
 
-                            <div className="grid grid-cols-1 gap-8">
+                            <div className="space-y-4">
                                 {metadata.failures.map((f, i) => (
-                                    <div key={i} className="group relative bg-[#0A0A0A] border border-white/5 rounded-xl p-6 md:p-8 hover:border-red-500/20 transition-all duration-500 overflow-hidden">
-                                        {/* Subtle background glow */}
-                                        <div className="absolute -right-20 -top-20 w-64 h-64 bg-red-900/5 blur-[80px] rounded-full group-hover:bg-red-900/10 transition-all" />
-
-                                        <div className="relative z-10 flex flex-col gap-6">
-                                            {/* Failure Header */}
-                                            <div className="flex items-start justify-between">
-                                                <div className="flex items-center gap-3 text-red-400 font-mono text-xs uppercase tracking-widest">
-                                                    <AlertTriangle size={14} /> Critical Failure #{i + 1}
-                                                </div>
-                                            </div>
-
-                                            <h3 className="text-2xl font-bold text-white leading-tight">{f.title}</h3>
-
-                                            {/* The Split: Problem vs Solution */}
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                                                {/* Problem */}
-                                                <div className="space-y-2">
-                                                    <span className="text-red-500/50 text-[10px] uppercase font-mono tracking-widest">Incident Report</span>
-                                                    <p className="text-gray-400 leading-relaxed font-light border-l-2 border-red-900/30 pl-4">
-                                                        "{f.failure}"
-                                                    </p>
-                                                </div>
-
-                                                {/* Solution */}
-                                                <div className="space-y-2">
-                                                    <span className="text-green-500/50 text-[10px] uppercase font-mono tracking-widest">Patch Applied</span>
-                                                    <p className="text-gray-300 leading-relaxed">
-                                                        {f.solution}
-                                                    </p>
-                                                    <div className="pt-2">
-                                                        <span className="text-green-400/80 text-sm font-medium">{f.outcome}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <ExpandableFailure
+                                        key={i}
+                                        index={i}
+                                        title={f.title}
+                                        summary={f.summary || f.failure.split('.')[0] + '.'} // Fallback to first sentence
+                                        failure={f.failure}
+                                        solution={f.solution}
+                                        outcome={f.outcome}
+                                        isExpanded={expandedFailureIndex === i}
+                                        onToggle={() => {
+                                            setExpandedFailureIndex(
+                                                expandedFailureIndex === i ? null : i
+                                            );
+                                        }}
+                                    />
                                 ))}
                             </div>
                         </section>
