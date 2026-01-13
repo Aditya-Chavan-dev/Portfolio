@@ -345,7 +345,7 @@ We refined the visual density of the application. The Navbar now enters a 'Compa
 
 ## Hotfix: Compact Navbar Visibility
 - Fixed visual bug where Compact Navbar was transparent.
-- Added glassmorphism container (g-black/80 backdrop-blur) to ensure stats are readable and don't overlap underlying content.
+- Added glassmorphism container ( g-black/80 backdrop-blur) to ensure stats are readable and don't overlap underlying content.
 
 ## Hotfix: Removed Conflicting Header
 - Removed the 'System Modules' sticky header from ProjectsView.jsx as it was overlapping with the new Compact Navbar.
@@ -403,3 +403,16 @@ We refined the visual density of the application. The Navbar now enters a 'Compa
 - Refactored EntryGate to use 'h-full overflow-y-auto' instead of fixed min-height.
 - Ensures content (Initialize Button) is reachable on small mobile screens.
 - Reduced text sizes and margins for mobile.
+
+## Fix: Refresh State Persistence (Phase 8.1)
+
+### What was the issue?
+Refreshing the page kept the user in the "Dashboard/Hub" state instead of resetting to the "Entry Gate", causing the "First Impression" sequence to be skipped. This was effectively bypassing the landing page on subsequent visits, which was contrary to the user's design intent.
+
+### How did we solve it?
+1.  **Identified the Root Cause:** A lingering Service Worker (`sw.js`) from a previous PWA implementation was caching the application state and assets, serving stale logic that included "state persistence" features we thought we had disabled.
+2.  **Force Unregister:** Removed the active SW registration from `index.html` and replaced it with a script that explicitly finds and unregisters any active service workers. This forces a cache flush for all users.
+3.  **Removed PWA Artifacts:** Deleted `sw.js` and `manifest.json` to completely opt-out of PWA behavior for now.
+
+### Final Summary
+The application now correctly resets to the "Entry Gate" on every full refresh. This ensures every unique session experiences the intended cinematic introduction, maintaining the "Intrigue -> Handshake -> Dashboard" narrative flow.
