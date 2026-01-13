@@ -131,12 +131,36 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
             // New: Demo Link
             demoUrl: "#", // Placeholder for actual demo link
 
-            // New: Flagship Features
-            flagshipFeatures: [
-                "GPS-Fenced Attendance",
-                "Offline-First Architecture",
-                "Protocol Switching (Anti-Blocker)",
-                "One-Tap Check-in"
+            // New: Flagship Features (Expandable)
+            features: [
+                {
+                    title: "GPS-Fenced Attendance",
+                    what: "Placeholder: Simple explanation of what this feature does",
+                    tech: "Placeholder: Technologies used to build this",
+                    security: "Placeholder: Security assessment and potential exploits",
+                    tip: "Placeholder: War story tip (1-2 lines with humor)"
+                },
+                {
+                    title: "Offline-First Architecture",
+                    what: "Placeholder: Simple explanation of what this feature does",
+                    tech: "Placeholder: Technologies used to build this",
+                    security: "Placeholder: Security assessment and potential exploits",
+                    tip: "Placeholder: War story tip (1-2 lines with humor)"
+                },
+                {
+                    title: "Protocol Switching (Anti-Blocker)",
+                    what: "Placeholder: Simple explanation of what this feature does",
+                    tech: "Placeholder: Technologies used to build this",
+                    security: "Placeholder: Security assessment and potential exploits",
+                    tip: "Placeholder: War story tip (1-2 lines with humor)"
+                },
+                {
+                    title: "One-Tap Check-in",
+                    what: "Placeholder: Simple explanation of what this feature does",
+                    tech: "Placeholder: Technologies used to build this",
+                    security: "Placeholder: Security assessment and potential exploits",
+                    tip: "Placeholder: War story tip (1-2 lines with humor)"
+                }
             ]
         }
     },

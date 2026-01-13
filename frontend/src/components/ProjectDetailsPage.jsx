@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ExternalLink, Calendar, AlertTriangle, CheckCircle, Flame, Layers, Server, Database, Cloud } from 'lucide-react';
 import config from '../portfolio.config';
+import ExpandableFeature from './ExpandableFeature';
 
 // Reusing the icon helper
 const getTechIcon = (language) => {
@@ -51,6 +52,7 @@ const getTechIcon = (language) => {
 
 const ProjectDetailsPage = ({ project, onClose }) => {
     const metadata = config.projectDetails?.[project.name];
+    const [expandedFeatureIndex, setExpandedFeatureIndex] = useState(null);
 
     // Smooth scroll to top on mount
     useEffect(() => {
@@ -192,20 +194,30 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                 {/* === RIGHT COLUMN: Scrollable Feed (Failures, Timeline) === */}
                 <div className="w-full lg:flex-1 flex flex-col gap-16 pb-20">
 
-                    {/* 2.5 Flagship Features (New Main Section) */}
-                    {metadata?.flagshipFeatures && (
+                    {/* 2.5 Flagship Features (Expandable) */}
+                    {metadata?.features && (
                         <section>
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="p-2 rounded bg-yellow-500/20 text-yellow-500"><CheckCircle size={20} /></div>
                                 <h2 className="text-2xl font-bold text-white tracking-tight">Flagship Features</h2>
                                 <div className="h-px flex-1 bg-yellow-500/20" />
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {metadata.flagshipFeatures.map((feat, i) => (
-                                    <div key={i} className="p-4 border border-white/5 bg-white/[0.02] rounded flex items-center gap-3">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
-                                        <span className="text-gray-300 font-mono text-sm">{feat}</span>
-                                    </div>
+                            <div className="space-y-4">
+                                {metadata.features.map((feature, index) => (
+                                    <ExpandableFeature
+                                        key={index}
+                                        title={feature.title}
+                                        what={feature.what}
+                                        tech={feature.tech}
+                                        security={feature.security}
+                                        tip={feature.tip}
+                                        isExpanded={expandedFeatureIndex === index}
+                                        onToggle={() => {
+                                            setExpandedFeatureIndex(
+                                                expandedFeatureIndex === index ? null : index
+                                            );
+                                        }}
+                                    />
                                 ))}
                             </div>
                         </section>
