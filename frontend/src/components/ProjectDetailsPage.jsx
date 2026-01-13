@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Calendar, CheckCircle, Flame, Layers, X, Github, Hexagon, Activity, Cpu } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Calendar, CheckCircle, Flame, Layers, X, Github, Hexagon, Component, Activity, Terminal } from 'lucide-react';
 import config from '../portfolio.config';
 import ExpandableFeature from './ExpandableFeature';
 import ExpandableFailure from './ExpandableFailure';
 
-// Reusing the icon helper
 const getTechIcon = (language) => {
     if (!language) return null;
     const map = {
@@ -22,7 +21,7 @@ const getTechIcon = (language) => {
         'Dart': 'dart/dart-original',
         'Go': 'go/go-original-wordmark',
         'Shell': 'bash/bash-original',
-        'Files': 'file-icons/file-icons-original', // Fallback
+        'Files': 'file-icons/file-icons-original',
         'Node.js': 'nodejs/nodejs-original',
         'Express': 'express/express-original',
         'Redis': 'redis/redis-original',
@@ -42,11 +41,8 @@ const getTechIcon = (language) => {
         'Nginx': 'nginx/nginx-original',
         'Linux': 'linux/linux-original',
     };
-
-    // Fuzzy matching for arrays of strings
     const key = Object.keys(map).find(k => language.includes(k));
     const slug = key ? map[key] : null;
-
     if (!slug) return null;
     return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${slug}.svg`;
 };
@@ -61,199 +57,161 @@ const ProjectDetailsPage = ({ project, onClose }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#000508] text-white font-sans selection:bg-cyan-500/30 flex flex-col overflow-hidden"
+            className="fixed inset-0 z-50 bg-[#02040a] text-white font-sans selection:bg-cyan-500/30 overflow-hidden flex flex-col"
         >
-            {/* Inline Styles for hiding scrollbars */}
             <style>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+                .mask-fade-bottom { mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); }
             `}</style>
 
-            {/* Background Texture */}
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-900/10 via-[#000508] to-[#000508]" />
-            <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+            {/* Background Atmosphere */}
+            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-950/20 via-[#02040a] to-[#02040a]" />
+            <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
 
-            {/* === GLOBAL HEADER === */}
-            <header className="h-16 flex-shrink-0 flex items-center justify-between px-6 bg-white/[0.02] border-b border-white/[0.05] z-50 backdrop-blur-md">
-                <div className="flex items-center gap-4">
-                    <Hexagon size={20} className="text-cyan-400" strokeWidth={2} />
-                    <span className="text-sm font-mono uppercase tracking-widest text-gray-400">Panoramic View // {project.name}</span>
+            {/* Global Header (Minimal) */}
+            <div className="absolute top-0 left-0 right-0 h-16 flex items-center justify-between px-8 z-50 pointer-events-none">
+                <div className="pointer-events-auto cursor-default">
+                    {/* Placeholder for left header content if needed */}
                 </div>
-                <button onClick={onClose} className="p-2 text-gray-500 hover:text-white transition-colors">
-                    <X size={20} />
+                <button
+                    onClick={onClose}
+                    className="pointer-events-auto p-2 rounded-full hover:bg-white/5 text-gray-500 hover:text-white transition-colors"
+                >
+                    <X size={24} />
                 </button>
-            </header>
+            </div>
 
+            {/* SEAMLESS 2x2 GRID */}
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 grid-rows-2 p-4 md:p-12 gap-8 md:gap-16 w-full max-w-[1920px] mx-auto">
 
-            {/* === 3-COLUMN PANORAMIC GRID === */}
-            <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-[30%_30%_40%] lg:divide-x divide-white/[0.05]">
-
-                {/* === COL 1: IDENTITY (30%) === */}
-                <div className="relative h-full flex flex-col bg-[#000508]/50 overflow-y-auto scrollbar-hide p-8 md:p-12 space-y-10">
+                {/* === Q1: IDENTITY (Top Left) === */}
+                <div className="flex flex-col justify-center space-y-8 relative group">
                     <div className="space-y-6">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-900/20 border border-cyan-500/20 rounded-full w-fit">
-                            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                            <span className="text-[10px] uppercase tracking-widest text-cyan-400 font-mono">System Deployed</span>
+                        <div className="flex items-center gap-3">
+                            <div className="relative">
+                                <div className="absolute inset-0 bg-cyan-500/30 blur-lg rounded-full animate-pulse" />
+                                <Hexagon className="text-cyan-400 relative z-10" fill="currentColor" fillOpacity={0.1} size={32} />
+                            </div>
+                            <span className="text-xs font-mono uppercase tracking-[0.3em] text-cyan-500/80">Project Atlas // {metadata?.timeline?.[metadata.timeline.length - 1]?.year || '2025'}</span>
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-none">
+
+                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-gray-500">
                             {metadata?.title || project.title}
                         </h1>
-                        <p className="text-gray-400 leading-relaxed font-light text-lg">
+                        <p className="text-lg md:text-xl text-gray-400 font-light max-w-lg leading-relaxed">
                             {metadata?.description || project.desc}
                         </p>
                     </div>
 
-                    {/* Buttons */}
-                    <div className="flex flex-col gap-3">
+                    {/* Actions */}
+                    <div className="flex flex-wrap gap-4">
                         {metadata?.demoUrl && (
                             <a href={metadata.demoUrl} target="_blank" rel="noopener noreferrer"
-                                className="flex items-center justify-center gap-3 px-6 py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-bold tracking-wide rounded-lg transition-all shadow-[0_0_20px_rgba(6,182,212,0.2)] hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]">
-                                <ExternalLink size={18} /> INITIALIZE DEMO
+                                className="px-6 py-3 bg-white text-black font-semibold tracking-wide rounded hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                                OPEN DEMO
                             </a>
                         )}
                         <a href={project.html_url} target="_blank" rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-3 px-6 py-4 bg-white/5 hover:bg-white/10 text-gray-300 font-medium tracking-wide rounded-lg border border-white/10 transition-colors">
-                            <Github size={18} /> SOURCE CODE
+                            className="px-6 py-3 bg-white/5 border border-white/10 text-white font-medium tracking-wide rounded hover:bg-white/10 transition-colors">
+                            SOURCE CODE
                         </a>
                     </div>
+                </div>
 
-                    {/* Compact Timeline */}
-                    <div className="pt-8 mt-auto border-t border-white/5">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Calendar size={14} className="text-gray-500" />
-                            <span className="text-xs font-mono uppercase tracking-widest text-gray-500">Timeline</span>
-                        </div>
-                        <div className="space-y-4 pl-2 relative border-l border-white/5">
-                            {metadata?.timeline?.map((item, index) => (
-                                <div key={index} className="pl-4 relative group">
-                                    <div className="absolute -left-[4.5px] top-1.5 w-[9px] h-[9px] rounded-full bg-[#000508] border border-white/20 group-hover:border-cyan-500 transition-colors" />
-                                    <div className="text-xs text-gray-500 font-mono mb-0.5 group-hover:text-cyan-400">{item.year}</div>
-                                    <div className="text-sm text-gray-400">{item.event}</div>
+
+                {/* === Q2: TECH STACK (Top Right) === */}
+                <div className="relative flex flex-col justify-center items-start md:items-end md:text-right space-y-6">
+                    <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Terminal size={100} className="text-gray-800/20 rotate-12" />
+                    </div>
+
+                    <div className="space-y-4 z-10">
+                        <h3 className="text-sm font-mono uppercase tracking-widest text-gray-500">Core Technologies</h3>
+                        <div className="flex flex-wrap justify-start md:justify-end gap-3 max-w-md">
+                            {config.projectDetails?.ATLAS?.stack?.map((tech, i) => (
+                                <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] backdrop-blur-md rounded-lg border border-white/5 hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300 group/icon cursor-default">
+                                    <img
+                                        src={getTechIcon(tech)}
+                                        alt={tech}
+                                        className="w-5 h-5 opacity-60 group-hover/icon:opacity-100 grayscale group-hover/icon:grayscale-0 transition-all"
+                                    />
+                                    <span className="text-sm text-gray-400 group-hover/icon:text-cyan-200 font-mono">{tech}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
-                </div>
 
-
-                {/* === COL 2: SYSTEMS & TECH (30%) === */}
-                <div className="relative h-full flex flex-col bg-[#000508]/30 overflow-y-auto scrollbar-hide">
-                    {/* Header */}
-                    <div className="sticky top-0 z-10 px-8 py-6 bg-[#000508]/90 backdrop-blur-md border-b border-white/[0.05] flex items-center justify-between">
-                        <h2 className="text-xs font-mono uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                            <Cpu size={16} /> Systems Architecture
-                        </h2>
-                    </div>
-
-                    <div className="p-8 space-y-12">
-                        {/* Tech Cloud */}
-                        <div className="space-y-6">
-                            <div className="flex flex-wrap gap-2">
-                                {config.projectDetails?.ATLAS?.stack?.map((tech, i) => (
-                                    <div key={i} className="flex items-center gap-2 px-3 py-2 bg-white/[0.03] hover:bg-white/[0.08] rounded border border-white/[0.05] transition-all cursor-default group">
-                                        <img
-                                            src={getTechIcon(tech)}
-                                            alt={tech}
-                                            className="w-5 h-5 opacity-60 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all"
-                                        />
-                                        <span className="text-xs text-gray-400 group-hover:text-gray-200 font-mono">{tech}</span>
-                                    </div>
-                                )) || (
-                                        project.tags?.map((tag, i) => (
-                                            <div key={i} className="px-3 py-1 bg-white/5 rounded text-xs text-gray-400 border border-white/5">{tag}</div>
-                                        ))
-                                    )}
-                            </div>
-                        </div>
-
-                        {/* Extra Metrics/Stats (Mocked for visual balance if not in metadata) */}
-                        <div className="space-y-6">
-                            <h3 className="text-xs font-mono uppercase tracking-widest text-gray-600 flex items-center gap-2">
-                                <Activity size={14} /> Performance Metrics
-                            </h3>
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="p-4 bg-green-500/5 border border-green-500/10 rounded-lg">
-                                    <div className="text-2xl font-mono text-green-400">99.9%</div>
-                                    <div className="text-[10px] text-green-500/60 uppercase tracking-widest">Uptime Guarantee</div>
-                                </div>
-                                <div className="p-4 bg-purple-500/5 border border-purple-500/10 rounded-lg">
-                                    <div className="text-2xl font-mono text-purple-400">&lt;100ms</div>
-                                    <div className="text-[10px] text-purple-500/60 uppercase tracking-widest">Latency (Global)</div>
-                                </div>
-                            </div>
-                        </div>
+                    {/* Timeline as minimal visuals */}
+                    <div className="flex items-center justify-end gap-1 mt-8 opacity-50 hover:opacity-100 transition-opacity">
+                        {metadata?.timeline?.map((item, i) => (
+                            <div key={i} className="h-1 w-8 rounded-full bg-white/20 hover:bg-cyan-400 transition-colors" title={`${item.year}: ${item.event}`} />
+                        ))}
                     </div>
                 </div>
 
 
-                {/* === COL 3: DIAGNOSTICS (40%) === */}
-                <div className="relative h-full flex flex-col bg-[#000508]/10 overflow-y-auto scrollbar-hide">
-                    {/* Header */}
-                    <div className="sticky top-0 z-10 px-8 py-6 bg-[#000508]/90 backdrop-blur-md border-b border-white/[0.05] flex items-center justify-between">
-                        <h2 className="text-xs font-mono uppercase tracking-widest text-gray-500 flex items-center gap-2">
-                            <Layers size={16} /> Diagnostics & Features
-                        </h2>
+                {/* === Q3: FEATURES (Bottom Left) === */}
+                <div className="relative flex flex-col overflow-hidden group">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Activity size={18} className="text-emerald-500" />
+                        <h3 className="text-sm font-mono uppercase tracking-widest text-gray-400">Flagship Capabilities</h3>
                     </div>
 
-                    <div className="p-8 space-y-16">
-                        {/* Features List */}
-                        <section className="space-y-6">
-                            <div className="flex items-center gap-3 text-cyan-500/60 pb-2 border-b border-white/5">
-                                <CheckCircle size={16} />
-                                <span className="text-xs font-mono uppercase tracking-widest">Active Modules</span>
-                            </div>
-                            <div className="grid grid-cols-1 gap-4">
-                                {(metadata?.features || metadata?.flagshipFeatures) && (
-                                    metadata?.features ? (
-                                        metadata.features.map((feature, index) => (
-                                            <ExpandableFeature
-                                                key={index}
-                                                title={feature.title}
-                                                what={feature.what}
-                                                tech={feature.tech}
-                                                security={feature.security}
-                                                tip={feature.tip}
-                                                isExpanded={expandedFeatureIndex === index}
-                                                onToggle={() => {
-                                                    setExpandedFeatureIndex(
-                                                        expandedFeatureIndex === index ? null : index
-                                                    );
-                                                }}
-                                            />
-                                        ))
-                                    ) : (
-                                        <div className="text-gray-500 text-sm">Modules Loading...</div>
-                                    )
-                                )}
-                            </div>
-                        </section>
-
-                        {/* Failures List */}
-                        <section className="space-y-6">
-                            <div className="flex items-center gap-3 text-red-500/60 pb-2 border-b border-white/5">
-                                <Flame size={16} />
-                                <span className="text-xs font-mono uppercase tracking-widest">Resolved Incidents</span>
-                            </div>
-                            <div className="grid grid-cols-1 gap-4">
-                                {metadata?.failures && metadata.failures.map((f, i) => (
-                                    <ExpandableFailure
-                                        key={i}
-                                        index={i}
-                                        title={f.title}
-                                        summary={f.summary || f.failure?.split('.')[0] + '.'}
-                                        failure={f.failure}
-                                        solution={f.solution}
-                                        outcome={f.outcome}
-                                        isExpanded={expandedFailureIndex === i}
+                    <div className="flex-1 overflow-y-auto scrollbar-hide mask-fade-bottom pb-12 pr-4 -mr-4">
+                        <div className="space-y-4">
+                            {metadata?.features ? (
+                                metadata.features.map((feature, index) => (
+                                    <ExpandableFeature
+                                        key={index}
+                                        title={feature.title}
+                                        what={feature.what}
+                                        tech={feature.tech}
+                                        security={feature.security}
+                                        tip={feature.tip}
+                                        isExpanded={expandedFeatureIndex === index}
                                         onToggle={() => {
-                                            setExpandedFailureIndex(
-                                                expandedFailureIndex === i ? null : i
+                                            setExpandedFeatureIndex(
+                                                expandedFeatureIndex === index ? null : index
                                             );
                                         }}
                                     />
-                                ))}
-                            </div>
-                        </section>
+                                ))
+                            ) : (
+                                <div className="p-4 border border-white/5 rounded text-gray-500">Loading Features...</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+
+                {/* === Q4: FAILURES (Bottom Right) === */}
+                <div className="relative flex flex-col overflow-hidden group">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Flame size={18} className="text-rose-500" />
+                        <h3 className="text-sm font-mono uppercase tracking-widest text-gray-400">Critical Incidents</h3>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto scrollbar-hide mask-fade-bottom pb-12 pr-4 -mr-4">
+                        <div className="space-y-4">
+                            {metadata?.failures?.map((f, i) => (
+                                <ExpandableFailure
+                                    key={i}
+                                    index={i}
+                                    title={f.title}
+                                    summary={f.summary || f.failure?.split('.')[0] + '.'}
+                                    failure={f.failure}
+                                    solution={f.solution}
+                                    outcome={f.outcome}
+                                    isExpanded={expandedFailureIndex === i}
+                                    onToggle={() => {
+                                        setExpandedFailureIndex(
+                                            expandedFailureIndex === i ? null : i
+                                        );
+                                    }}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
 
