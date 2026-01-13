@@ -35,12 +35,6 @@ function App() {
     const [showSystemCheck, setShowSystemCheck] = useState(false);
 
     useEffect(() => {
-        // "Seen It" Memory - DIABLED: User wants landing page on every refresh
-        // const hasSeenIntro = localStorage.getItem('HAS_SEEN_INTRO');
-        // if (hasSeenIntro) {
-        //     setPhase(PHASE_HUB);
-        // }
-
         // Initialize Session on App Mount
         const { sessionId } = initSession();
         setSessionId(sessionId);
@@ -130,9 +124,11 @@ function App() {
                         initial={{ y: -60 }}
                         animate={{ y: 0 }}
                         exit={{ y: -60 }}
+                        // Compact mode uses fixed positioning inside the component, so we don't need layout wrapper classes as much, 
+                        // but we need to ensure z-index.
                         className="w-full flex-shrink-0"
                     >
-                        <LiveNavbar />
+                        <LiveNavbar compactMode={phase === PHASE_PROJECTS || phase === PHASE_STORY} />
                     </motion.div>
                 )}
             </AnimatePresence>
