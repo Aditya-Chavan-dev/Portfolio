@@ -306,3 +306,100 @@ The system now feels "alive" (watching numbers tick up) and "robust" (always sho
 
 
 
+
+## Feature: Project Details Sticky Layout (Phase 6)
+
+### What is the new feature about?
+We redesigned the Project Details page to handle information density better. We moved from a linear vertical scroll to a split-screen 'Dashboard' layout where key context (Core + Tech) stays visible while reading deep content (Failures).
+
+### How did we implement it?
+1.  **Split Architecture:** We refactored the main container into a flex-row layout on large screens.
+2.  **Sticky Positioning:** We applied position: sticky to the left column, anchoring the Tech Matrix to the viewport top.
+3.  **Independent Scrolling:** The right column (Failure Log) allows for deep scrolling without losing the project context.
+
+### How is the user benefitted from it?
+It reduces cognitive load. Users don't have to remember the tech stack while reading about a failure that involves that stack. The context is always 'right there', making the technical analysis easier to digest.
+
+### What concepts we used?
+-   **CSS Sticky Positioning:** For the anchoring effect.
+-   **Responsive Flexbox:** To switch between 'Stacked' (Mobile) and 'Split' (Desktop) modes seamlessly.
+
+### Final Summary
+We moved away from a 'Document' feel to a 'Workstation' feel. The split layout respects the user's attention, keeping the core facts available at a glance while they dive deep into the stories.
+
+## Refinement: Compact Navbar & Icon Grid (Phase 7)
+
+### What is the new feature about?
+We refined the visual density of the application. The Navbar now enters a 'Compact Mode' during immersive sections to maximize screen real estate, and the Project Tech Stack now uses an Icon Grid instead of text lists to save vertical space.
+
+### How did we implement it?
+1.  **Compact Navbar:** Updates LiveNavbar to support a compactMode prop which triggers a layout transition to a right-aligned, brand-less stats bar.
+2.  **Smart Trigger:** In App.jsx, we detect the current phase (PROJECTS or STORY) and auto-toggle the compact mode.
+3.  **Icon Grid:** Refactored ProjectDetailsPage to loop through tech stacks and render TechBadge components using the getTechIcon helper.
+
+### How is the user benefitted from it?
+**Focus.** By removing the large navbar branding during deep reading, we reduce distraction. By densifying the tech stack, we prevent the user from having to scroll the sidebar, keeping context visible.
+
+## Hotfix: Missing Component Definition
+- Fixed ReferenceError: TechBadge is not defined by adding the missing TechBadge component to ProjectDetailsPage.jsx.
+
+## Hotfix: Compact Navbar Visibility
+- Fixed visual bug where Compact Navbar was transparent.
+- Added glassmorphism container (g-black/80 backdrop-blur) to ensure stats are readable and don't overlap underlying content.
+
+## Hotfix: Removed Conflicting Header
+- Removed the 'System Modules' sticky header from ProjectsView.jsx as it was overlapping with the new Compact Navbar.
+
+## Hotfix: GitHub Link Position
+- Moved the 'GitHub Repo' link in ProjectDetailsPage.jsx to a fixed position (	op-24 right-6).
+- Ensuring it sits clearly below the Compact Navbar and avoids z-index issues.
+
+## Polish: Compact Tech Matrix
+- Redesigned 'System Specs' in ProjectDetailsPage.jsx to use a Dense Grid Layout (2 columns).
+- Reduced TechBadge size and padding for better info density.
+- Consolidated category headers to simpler labels to save vertical space.
+
+## Polish: Widen Layout
+- Increased ProjectDetailsPage container width to 1800px to use available screen space.
+- Fixed Left Sidebar width to 360px to maximize space for the Failure Log content.
+
+## Deployment Confirmation
+- Triggered final manual deployment to ensure all assets (layout, badges, visual fixes) are synchronized and live.
+
+## Polish: Widen System Analysis
+- Increased Left Sidebar width to 480px.
+- Switched Tech Stack to 3-column grid to eliminate scrolling.
+
+## Hotfix: Tech Stack Grid
+- Reverted Tech Stack to 2-column grid.
+- 3-column grid caused overlapping text for long items in the 480px sidebar.
+- 2-column grid provides sufficient horizontal space (240px) while maintaining the same vertical footprint (2 rows).
+
+## Polish: Refine Tech Stack
+- Switched to vertical flex layout for 'System Specs' to fully utilize 480px width.
+- Disabled grayscale/opacity filters on TechBadge icons so they are always colored/lit.
+
+## Polish: Shift Sidebar Up
+- Reduced lg:top-32 to lg:top-20 for the Left Sidebar.
+- Effectively shifts the 'System Analysis' section up by ~48px to improve visibility of content 'above the fold'.
+
+## Polish: Relocate Timeline
+- Moved 'Development Timeline' to the Left Sidebar (below Core Concept).
+- Reduces vertical height of the main content column and utilizes sidebar space.
+
+## Polish: Details & Features
+- Merged Timeline side-by-side with Core Concept description.
+- Added 'Flagship Features' section.
+- Renamed 'System Failure Log' to 'Critical Failures'.
+- Added 'Initialize Demo Sequence' button.
+
+## Phase 8: Mobile Overhaul
+- Fixed LiveNavbar layout overflow on mobile (padding/gaps reduced).
+- Hidden secondary metrics (LinkedIn/Resume) on small screens for cleaner UI.
+- Updated ProjectDetailsPage to use full-width sidebar and stacked layout on mobile.
+- Optimized ProjectsView padding and font sizes for smaller devices.
+
+## Hotfix: Entry Gate Mobile Scroll
+- Refactored EntryGate to use 'h-full overflow-y-auto' instead of fixed min-height.
+- Ensures content (Initialize Button) is reachable on small mobile screens.
+- Reduced text sizes and margins for mobile.
