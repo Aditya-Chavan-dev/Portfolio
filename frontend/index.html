@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Portfolio</title>
-  <link rel="manifest" href="/manifest.json" />
+
 </head>
 
 <body>
@@ -13,13 +13,11 @@
   <script type="module" src="/src/main.jsx"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        // v8.1: Landing Page Revamp
-        navigator.serviceWorker.register('/sw.js?v=8.1')
-          .then((registration) => {
-            console.log('SW Registered [v8.1]: ', registration);
-          })
-          .catch((err) => console.log('SW Failed:', err));
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+          console.log('Service Worker unregistered.');
+        }
       });
     }
   </script>

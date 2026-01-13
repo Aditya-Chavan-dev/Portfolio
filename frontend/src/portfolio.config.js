@@ -122,9 +122,21 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
             ],
 
             // "Short and Summarized"
+            // "Short and Summarized"
             timeline: [
                 { year: "2026", event: "Work In Progress (WIP)" },
                 { year: "2025", event: "Dec 6: Project Start" },
+            ],
+
+            // New: Demo Link
+            demoUrl: "#", // Placeholder for actual demo link
+
+            // New: Flagship Features
+            flagshipFeatures: [
+                "GPS-Fenced Attendance",
+                "Offline-First Architecture",
+                "Protocol Switching (Anti-Blocker)",
+                "One-Tap Check-in"
             ]
         }
     },

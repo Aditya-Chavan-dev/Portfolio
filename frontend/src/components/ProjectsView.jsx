@@ -75,8 +75,8 @@ const ProjectsView = ({ onBack }) => {
     return (
         <div className="relative w-full h-full bg-[#050505] overflow-y-auto overflow-x-hidden text-white scrollbar-thin scrollbar-thumb-cyan-900 scrollbar-track-black">
 
-            {/* Header / Nav */}
-            <div className="sticky top-0 z-40 bg-black/80 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between">
+            {/* Header / Nav - REMOVED (Conflicting with LiveNavbar) */}
+            <div className="pt-20 md:pt-24 px-4 md:px-6 max-w-4xl mx-auto flex items-center justify-between">
                 <button
                     onClick={onBack}
                     className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors"
@@ -84,13 +84,9 @@ const ProjectsView = ({ onBack }) => {
                     <ArrowLeft size={18} />
                     <span className="font-mono text-sm uppercase tracking-wider">Back to Hub</span>
                 </button>
-                <div className="text-right">
-                    <h1 className="text-xl font-bold font-display tracking-tight">System Modules</h1>
-                    <p className="text-xs text-gray-500 font-mono">Click on any module to inspect source</p>
-                </div>
             </div>
 
-            <div className="max-w-4xl mx-auto px-6 py-12 flex flex-col gap-12">
+            <div className="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 flex flex-col gap-8 md:gap-12">
 
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20">
@@ -121,7 +117,7 @@ const ProjectsView = ({ onBack }) => {
                                     {/* Glow Effect */}
                                     <div className="absolute top-0 right-0 p-32 bg-cyan-500/10 blur-[100px] rounded-full group-hover:bg-cyan-400/20 transition-all duration-700" />
 
-                                    <div className="relative z-10 p-8 md:p-10 flex flex-col md:flex-row gap-8 items-start md:items-center">
+                                    <div className="relative z-10 p-5 md:p-10 flex flex-col md:flex-row gap-8 items-start md:items-center">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-3 mb-2">
                                                 <h2 className="text-3xl md:text-5xl font-display font-bold text-white tracking-tighter group-hover:text-cyan-400 transition-colors">
@@ -133,7 +129,17 @@ const ProjectsView = ({ onBack }) => {
                                             </div>
 
                                             <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mb-6 group-hover:text-gray-300 transition-colors">
-                                                {flagship.description || "Leading the charge in innovation."}
+                                                {flagship.name === 'ATLAS' ? (
+                                                    <>
+                                                        <span className="text-cyan-400 font-bold">A</span>ttendance{' '}
+                                                        <span className="text-cyan-400 font-bold">T</span>racking &{' '}
+                                                        <span className="text-cyan-400 font-bold">L</span>ogging{' '}
+                                                        <span className="text-cyan-400 font-bold">A</span>utomation{' '}
+                                                        <span className="text-cyan-400 font-bold">S</span>ystem
+                                                    </>
+                                                ) : (
+                                                    flagship.description || "Leading the charge in innovation."
+                                                )}
                                             </p>
 
                                             <div className="flex flex-wrap items-center gap-6 text-sm font-mono text-cyan-600/80">
@@ -184,7 +190,7 @@ const ProjectsView = ({ onBack }) => {
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.1 * Math.min(idx, 10) }}
-                                        className="group w-full flex flex-col md:flex-row md:items-center justify-between p-6 bg-[#0A0A0A] border border-white/5 rounded-xl hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 text-left"
+                                        className="group w-full flex flex-col md:flex-row md:items-center justify-between p-4 md:p-6 bg-[#0A0A0A] border border-white/5 rounded-xl hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 text-left"
                                     >
                                         <div className="flex-1 mb-4 md:mb-0">
                                             <div className="flex items-center gap-3 mb-2">
