@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Calendar, AlertTriangle, CheckCircle, Flame, Layers, Server, Database, Cloud } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Calendar, AlertTriangle, CheckCircle, Flame, Layers } from 'lucide-react';
+import config from '../portfolio.config';
 import ExpandableFeature from './ExpandableFeature';
 import ExpandableFailure from './ExpandableFailure';
 
@@ -62,151 +63,129 @@ const ProjectDetailsPage = ({ project, onClose }) => {
     }, [project]);
 
     return (
-        <div className="relative w-full h-full bg-[#050505] overflow-y-auto overflow-x-hidden text-white scrollbar-thin scrollbar-thumb-cyan-900 scrollbar-track-black">
-            <div id="project-details-top" />
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-xl overflow-y-auto"
+        >
+            <div className="relative w-full max-w-5xl bg-[#030303] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto">
+                <div id="project-details-top" />
 
-            {/* --- Header / Nav --- */}
-            <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between">
+                {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors"
+                    className="absolute top-6 right-6 z-50 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                 >
-                    <ArrowLeft size={18} />
-                    <span className="font-mono text-sm uppercase tracking-wider">Back to List</span>
+                    <ArrowLeft size={20} />
                 </button>
-            </div>
 
-            {/* Fixed GitHub Link (Positioned below Compact Navbar) */}
-            <a
-                href={project.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fixed top-24 right-6 z-[90] flex items-center gap-3 px-5 py-2.5 bg-black/80 backdrop-blur-md border border-white/10 rounded-full text-xs font-mono uppercase tracking-widest text-gray-300 hover:text-white hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all group"
-            >
-                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 group-hover:animate-pulse" />
-                <span>GitHub Repo</span>
-                <ExternalLink size={14} className="opacity-50 group-hover:opacity-100" />
-            </a>
+                <div className="p-8 md:p-12 space-y-16">
 
-            {/* --- Main Content: Split Layout --- */}
-            <div className="w-full max-w-[1800px] mx-auto px-4 md:px-6 lg:px-12 py-8 md:py-12 flex flex-col lg:flex-row gap-8 md:gap-12 items-start">
-
-                {/* === LEFT COLUMN: Sticky Anchor (Identity, Core, Tech) === */}
-                <div className="w-full lg:w-[480px] flex-shrink-0 flex flex-col gap-10 lg:sticky lg:top-20 transition-all">
-
-                    {/* 1. Hero identity */}
-                    <div>
-                        <div className="flex items-center gap-3 mb-4">
-                            <h1 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tighter">
-                                {project.name}
-                            </h1>
-                            {metadata && (
-                                <span className="px-2 py-1 rounded bg-yellow-500/10 text-yellow-500 text-[10px] font-mono uppercase tracking-widest border border-yellow-500/20">
-                                    System Analysis
-                                </span>
-                            )}
-                        </div>
-                        {/* Core Idea & Timeline Side-by-Side */}
-                        <div className="flex flex-col xl:flex-row gap-6">
-                            {/* Description */}
-                            <div className="flex-1 pl-4 border-l-2 border-cyan-500/50">
-                                <h3 className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-2">Core Concept</h3>
-                                <p className="text-sm text-gray-300 font-light leading-relaxed">
-                                    {metadata?.coreIdea || project.description || "No core analysis available."}
-                                </p>
+                    {/* === PART 1: HEADER & TIMELINE === */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                        {/* 1A: Intro (Left - 2cols) */}
+                        <div className="lg:col-span-2 space-y-6">
+                            {/* Title & Badge */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <span className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono tracking-wider">
+                                        PROJECT DETAILS
+                                    </span>
+                                    {metadata?.demoUrl && (
+                                        <a
+                                            href={metadata.demoUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-mono tracking-wider hover:bg-green-500/20 transition-colors flex items-center gap-2"
+                                        >
+                                            <ExternalLink size={12} /> DEMO AVAILABLE
+                                        </a>
+                                    )}
+                                </div>
+                                <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                                    {metadata?.title || project.title}
+                                </h1>
                             </div>
 
-                            {/* Timeline (Compact Right) */}
-                            {metadata?.timeline && (
-                                <div className="w-full xl:w-[120px] shrink-0 pt-1">
-                                    <h3 className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                        <Calendar size={12} /> Timeline
-                                    </h3>
-                                    <div className="flex flex-row flex-wrap xl:flex-col gap-x-6 gap-y-3">
-                                        {metadata.timeline.map((t, i) => (
-                                            <div key={i} className="relative pl-3 border-l border-white/10">
-                                                <div className="absolute -left-[3px] top-1.5 w-1.5 h-1.5 rounded-full bg-cyan-500" />
-                                                <span className="block text-xs font-bold text-cyan-400">{t.year}</span>
-                                                <span className="block text-[10px] text-gray-500 leading-tight">{t.event.replace(/^\d{4}\s?/, '')}</span>
-                                            </div>
-                                        ))}
-                                    </div>
+                            {/* Description */}
+                            <p className="text-lg text-gray-400 leading-relaxed max-w-2xl">
+                                {metadata?.description || project.desc}
+                            </p>
+
+                            {/* Demo Button (Primary CTA) */}
+                            {metadata?.demoUrl && (
+                                <div className="pt-4">
+                                    <a
+                                        href={metadata.demoUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-cyan-500 text-black font-bold tracking-wide hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-1"
+                                    >
+                                        <ExternalLink size={20} />
+                                        LAUNCH LIVE DEMO
+                                    </a>
                                 </div>
                             )}
                         </div>
 
-                        {/* Demo Link */}
-                        {metadata?.demoUrl && (
-                            <a href={metadata.demoUrl} className="mt-6 flex items-center justify-center gap-2 w-full py-3 bg-cyan-500/10 border border-cyan-500/20 rounded hover:bg-cyan-500/20 text-cyan-400 text-xs font-mono uppercase tracking-widest transition-all">
-                                <ExternalLink size={14} /> Initialize Demo Sequence
-                            </a>
-                        )}
+                        {/* 1B: Timeline (Right - 1col) */}
+                        <div className="lg:col-span-1 border-l border-white/10 pl-8 space-y-6">
+                            <div className="flex items-center gap-3 text-cyan-400 mb-4">
+                                <Calendar size={18} />
+                                <span className="text-sm font-mono tracking-widest uppercase">Project Timeline</span>
+                            </div>
+
+                            <div className="space-y-6 relative">
+                                {metadata?.timeline?.map((item, index) => (
+                                    <div key={index} className="relative pl-4 border-l border-white/10">
+                                        <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-[#0A0A0A] border border-cyan-500/50" />
+                                        <span className="block text-cyan-500/70 text-xs font-mono mb-1">{item.year}</span>
+                                        <span className="text-gray-300 text-sm leading-snug block">{item.event}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
-                    {/* 2. Tech Stack (In Sidebar) */}
-                    <section>
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="p-2 rounded bg-cyan-900/20 text-cyan-400"><Layers size={20} /></div>
-                            <h2 className="text-xl font-bold text-white tracking-tight">System Specs</h2>
+                    {/* === PART 2: TECH STACK === */}
+                    <section className="space-y-6">
+                        <div className="flex items-center gap-4">
+                            <div className="p-2 rounded bg-purple-500/20 text-purple-400"><Layers size={20} /></div>
+                            <h2 className="text-2xl font-bold text-white tracking-tight">Tech Stack & Infrastructure</h2>
+                            <div className="h-px flex-1 bg-white/10" />
                         </div>
 
-                        {metadata?.tech ? (
-                            <div className="flex flex-col gap-5">
-                                {/* Frontend */}
-                                <div className="space-y-1.5">
-                                    <span className="text-[9px] uppercase font-mono text-gray-500 tracking-widest pl-1">Frontend Layer</span>
-                                    <div className="flex flex-wrap gap-2">
-                                        {metadata.tech.frontend.map(item => <TechBadge key={item} name={item} />)}
-                                    </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+                            {config.projectDetails?.ATLAS?.stack?.map((tech, i) => ( // Fallback to ATLAS stack pattern, really should use metadata.stack if structure matches
+                                <div key={i} className="flex flex-col items-center justify-center gap-3 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-purple-500/30 transition-all group">
+                                    <img
+                                        src={getTechIcon(tech)}
+                                        alt={tech}
+                                        className="w-10 h-10 opacity-70 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0"
+                                    />
+                                    <span className="text-xs text-gray-500 group-hover:text-gray-300 font-mono text-center">{tech}</span>
                                 </div>
-
-                                {/* Backend */}
-                                <div className="space-y-1.5">
-                                    <span className="text-[9px] uppercase font-mono text-gray-500 tracking-widest pl-1">Server Core</span>
-                                    <div className="flex flex-wrap gap-2">
-                                        {metadata.tech.backend.map(item => <TechBadge key={item} name={item} />)}
-                                    </div>
-                                </div>
-
-                                {/* Database */}
-                                <div className="space-y-1.5">
-                                    <span className="text-[9px] uppercase font-mono text-gray-500 tracking-widest pl-1">Data Storage</span>
-                                    <div className="flex flex-wrap gap-2">
-                                        {metadata.tech.database.map(item => <TechBadge key={item} name={item} />)}
-                                    </div>
-                                </div>
-
-                                {/* Infra */}
-                                <div className="space-y-1.5">
-                                    <span className="text-[9px] uppercase font-mono text-gray-500 tracking-widest pl-1">Infrastructure</span>
-                                    <div className="flex flex-wrap gap-2">
-                                        {metadata.tech.infrastructure.map(item => <TechBadge key={item} name={item} />)}
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="p-6 rounded-xl border border-white/5 bg-white/[0.02] flex items-center gap-4">
-                                <span className="text-gray-500 italic">Detailed tech stack not indexed.</span>
-                            </div>
-                        )}
+                            )) || (
+                                    // Fallback
+                                    project.tags?.map((tag, i) => (
+                                        <div key={i} className="p-3 bg-white/5 rounded text-center text-gray-400 text-sm border border-white/5">{tag}</div>
+                                    ))
+                                )}
+                        </div>
                     </section>
-                </div>
 
-                {/* === RIGHT COLUMN: Scrollable Feed (Failures, Timeline) === */}
-                <div className="w-full lg:flex-1 flex flex-col gap-16 pb-20">
-
-                    {/* 2.5 Flagship Features (Adaptive: Expandable or Legacy) */}
+                    {/* === PART 3: FLAGSHIP FEATURES === */}
                     {(metadata?.features || metadata?.flagshipFeatures) && (
-                        <section>
-                            <div className="flex items-center gap-4 mb-8">
+                        <section className="space-y-8">
+                            <div className="flex items-center gap-4">
                                 <div className="p-2 rounded bg-yellow-500/20 text-yellow-500"><CheckCircle size={20} /></div>
                                 <h2 className="text-2xl font-bold text-white tracking-tight">Flagship Features</h2>
-                                <div className="h-px flex-1 bg-yellow-500/20" />
+                                <div className="h-px flex-1 bg-white/10" />
                             </div>
 
                             {metadata?.features ? (
-                                /* New Expandable Layout */
-                                <div className="space-y-4">
+                                <div className="grid grid-cols-1 gap-4">
                                     {metadata.features.map((feature, index) => (
                                         <ExpandableFeature
                                             key={index}
@@ -225,7 +204,6 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                                     ))}
                                 </div>
                             ) : (
-                                /* Legacy Grid Layout (Fallback) */
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {metadata.flagshipFeatures.map((feat, i) => (
                                         <div key={i} className="p-4 border border-white/5 bg-white/[0.02] rounded flex items-center gap-3">
@@ -238,22 +216,22 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                         </section>
                     )}
 
-                    {/* 3. Failure Analysis (The Main Content) */}
+                    {/* === PART 4: CRITICAL FAILURES === */}
                     {metadata?.failures && (
-                        <section>
-                            <div className="flex items-center gap-4 mb-8">
+                        <section className="space-y-8">
+                            <div className="flex items-center gap-4">
                                 <div className="p-2 rounded bg-red-900/20 text-red-500"><Flame size={20} /></div>
-                                <h2 className="text-2xl font-bold text-white tracking-tight">Critical Failures</h2>
-                                <div className="h-px flex-1 bg-red-900/20" />
+                                <h2 className="text-2xl font-bold text-white tracking-tight">Critical Failures & Solutions</h2>
+                                <div className="h-px flex-1 bg-white/10" />
                             </div>
 
-                            <div className="space-y-4">
+                            <div className="grid grid-cols-1 gap-4">
                                 {metadata.failures.map((f, i) => (
                                     <ExpandableFailure
                                         key={i}
                                         index={i}
                                         title={f.title}
-                                        summary={f.summary || f.failure.split('.')[0] + '.'} // Fallback to first sentence
+                                        summary={f.summary || f.failure?.split('.')[0] + '.'}
                                         failure={f.failure}
                                         solution={f.solution}
                                         outcome={f.outcome}
@@ -269,23 +247,10 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                         </section>
                     )}
 
-
                 </div>
-
             </div>
-        </div>
+        </motion.div>
     );
 };
-
-// Helper Item for badges (COMPACT)
-const TechBadge = ({ name }) => {
-    const icon = getTechIcon(name);
-    return (
-        <div className="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/5 hover:bg-white/10 hover:border-cyan-500/30 transition-all cursor-default group">
-            {icon ? <img src={icon} alt={name} className="w-3.5 h-3.5 object-contain" /> : <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />}
-            <span className="text-[10px] font-mono text-gray-400 group-hover:text-cyan-400 transition-colors whitespace-nowrap">{name}</span>
-        </div>
-    )
-}
 
 export default ProjectDetailsPage;
