@@ -121,7 +121,7 @@ const ProjectDetailsPage = ({ project, onClose }) => {
 
 
                 {/* === Q2: TECH STACK (Top Right) === */}
-                <div className="relative flex flex-col justify-center items-start md:items-end md:text-right space-y-6">
+                <div className="relative flex flex-col justify-center items-start md:items-end md:text-right space-y-6 min-h-0">
                     <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Terminal size={100} className="text-gray-800/20 rotate-12" />
                     </div>
@@ -152,7 +152,7 @@ const ProjectDetailsPage = ({ project, onClose }) => {
 
 
                 {/* === Q3: FEATURES (Bottom Left) === */}
-                <div className="relative flex flex-col overflow-hidden group">
+                <div className="relative flex flex-col overflow-hidden group min-h-0">
                     <div className="flex items-center gap-3 mb-6">
                         <Activity size={18} className="text-emerald-500" />
                         <h3 className="text-sm font-mono uppercase tracking-widest text-gray-400">Flagship Capabilities</h3>
@@ -160,22 +160,29 @@ const ProjectDetailsPage = ({ project, onClose }) => {
 
                     <div className="flex-1 overflow-y-auto scrollbar-hide mask-fade-bottom pb-12 pr-4 -mr-4">
                         <div className="space-y-4">
-                            {metadata?.features ? (
-                                metadata.features.map((feature, index) => (
-                                    <ExpandableFeature
-                                        key={index}
-                                        title={feature.title}
-                                        what={feature.what}
-                                        tech={feature.tech}
-                                        security={feature.security}
-                                        tip={feature.tip}
-                                        isExpanded={expandedFeatureIndex === index}
-                                        onToggle={() => {
-                                            setExpandedFeatureIndex(
-                                                expandedFeatureIndex === index ? null : index
-                                            );
-                                        }}
-                                    />
+                            {(metadata?.features || metadata?.flagshipFeatures) ? (
+                                (metadata.features || metadata.flagshipFeatures).map((feature, index) => (
+                                    // Handle both object (new) and string (legacy) formats
+                                    typeof feature === 'string' ? (
+                                        <div key={index} className="p-4 bg-white/[0.03] border border-white/5 rounded text-gray-300 text-sm">
+                                            {feature}
+                                        </div>
+                                    ) : (
+                                        <ExpandableFeature
+                                            key={index}
+                                            title={feature.title}
+                                            what={feature.what}
+                                            tech={feature.tech}
+                                            security={feature.security}
+                                            tip={feature.tip}
+                                            isExpanded={expandedFeatureIndex === index}
+                                            onToggle={() => {
+                                                setExpandedFeatureIndex(
+                                                    expandedFeatureIndex === index ? null : index
+                                                );
+                                            }}
+                                        />
+                                    )
                                 ))
                             ) : (
                                 <div className="p-4 border border-white/5 rounded text-gray-500">Loading Features...</div>
@@ -186,7 +193,7 @@ const ProjectDetailsPage = ({ project, onClose }) => {
 
 
                 {/* === Q4: FAILURES (Bottom Right) === */}
-                <div className="relative flex flex-col overflow-hidden group">
+                <div className="relative flex flex-col overflow-hidden group min-h-0">
                     <div className="flex items-center gap-3 mb-6">
                         <Flame size={18} className="text-rose-500" />
                         <h3 className="text-sm font-mono uppercase tracking-widest text-gray-400">Critical Incidents</h3>
