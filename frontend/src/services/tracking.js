@@ -71,7 +71,8 @@ export const fetchMetrics = async () => {
         const response = await api.get('/metrics/stats');
         return response.data;
     } catch (error) {
-        console.error("[TRACKING] Fetch Error:", error);
-        return null; // Return null to signal "Keep using Last Known Good"
+        // Fail silently - backend may be sleeping (Render free tier)
+        // Return null to signal "Keep using Last Known Good"
+        return null;
     }
 };
