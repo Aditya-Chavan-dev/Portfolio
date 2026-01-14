@@ -1,25 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Database, Cpu, User, FileText, Users, PlayCircle, ArrowRight } from 'lucide-react';
+import config from '../../portfolio.config';
 import { trackMetric } from '../../services/tracking';
-import { RealtimeService } from '../../services/realtime';
+
+import { useRealtimeStats } from '../../hooks/useRealtimeStats';
 import CountUp from '../../shared/ui/CountUp';
 
 const JourneyHub = ({ onSelection }) => {
-    const [immersiveCount, setImmersiveCount] = useState(null);
-
-    useEffect(() => {
-        // Real-time Subscription (Live Updates)
-        const unsubscribe = RealtimeService.subscribeToVisitorStats((data) => {
-            if (data?.visitorStats?.immersive) {
-                setImmersiveCount(data.visitorStats.immersive);
-            } else {
-                setImmersiveCount(0);
-            }
-        });
-
-        return () => unsubscribe();
-    }, []);
+    const { immersiveCount } = useRealtimeStats();
 
     return (
         <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#050505] overflow-hidden selection:bg-cyan-500/30 pt-16">
@@ -97,30 +86,21 @@ const JourneyHub = ({ onSelection }) => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <QuickActionCard
-                            icon={Database}
-                            title="Projects"
-                            desc="Case Studies & Code"
-                            onClick={() => onSelection('PROJECTS')}
-                        />
-                        <QuickActionCard
-                            icon={Cpu}
-                            title="Tech Stack"
-                            desc="Skills & Tools"
-                            onClick={() => onSelection('SKILLS')}
-                        />
-                        <QuickActionCard
-                            icon={User}
-                            title="About Me"
-                            desc="Bio & Philosophy"
-                            onClick={() => onSelection('ABOUT')}
-                        />
-                        <QuickActionCard
-                            icon={FileText}
-                            title="Resume"
-                            desc="Download PDF"
-                            onClick={() => onSelection('RESUME')}
-                        />
+                        {config.journey.quickActions.map(action => {
+                            const IconComponent = {
+                                Database, Cpu, User, FileText
+                            }[action.icon] || Database;
+
+                            return (
+                                <QuickActionCard
+                                    key={action.id}
+                                    icon={IconComponent}
+                                    title={action.title}
+                                    desc={action.desc}
+                                    onClick={() => onSelection(action.id)}
+                                />
+                            );
+                        })}
                     </div>
                 </motion.div>
 

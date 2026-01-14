@@ -8,18 +8,21 @@ import TypewriterText from '../../../shared/ui/TypewriterText';
 import NavigationMenu from '../../../shared/ui/NavigationMenu';
 
 // --- CONSTANTS ---
-const STEP_INIT = 0;
-const STEP_TEXT_1 = 1; // "Welcome friend"
-const STEP_TEXT_2 = 2; // "I'm Chavan"
-const STEP_TEXT_3 = 3; // "Aditya Chavan"
-// Metrics Phase
-const STEP_LOC = 4;
-const STEP_REPOS = 5;
-const STEP_STREAK = 6;
-// Combined Phase
-const STEP_REARRANGE = 7;
-const STEP_HOLOGRAM = 8;
-const STEP_COMPLETE = 9;
+import { useHeroSequence, HERO_STEPS } from '../../../hooks/useHeroSequence';
+
+// --- CONSTANTS ---
+const {
+    INIT: STEP_INIT,
+    TEXT_1: STEP_TEXT_1,
+    TEXT_2: STEP_TEXT_2,
+    TEXT_3: STEP_TEXT_3,
+    LOC: STEP_LOC,
+    REPOS: STEP_REPOS,
+    STREAK: STEP_STREAK,
+    REARRANGE: STEP_REARRANGE,
+    HOLOGRAM: STEP_HOLOGRAM,
+    COMPLETE: STEP_COMPLETE
+} = HERO_STEPS;
 
 const HeroDashboard = ({ onInitiate, metrics }) => {
     // Fail-safe: Merge with config defaults ensuring no "undefined" props
@@ -29,27 +32,14 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
         streak: metrics?.streak || config.hero.metrics.streak.value,
         ...metrics
     };
-    const [introStep, setIntroStep] = useState(STEP_INIT);
+
+    // Logic extracted to custom hook -> Clean Architecture
+    const introStep = useHeroSequence();
+
     const [sessionId] = useState(() => {
         const randomNum = Math.floor(Math.random() * 999999).toString().padStart(6, '0');
         return `SES-${randomNum}`;
     });
-
-    useEffect(() => {
-        const delay = (ms) => new Promise(res => setTimeout(res, ms));
-        const runSequence = async () => {
-            await delay(500); setIntroStep(STEP_TEXT_1);
-            await delay(2000); setIntroStep(STEP_TEXT_2);
-            await delay(2000); setIntroStep(STEP_TEXT_3);
-            await delay(2500); setIntroStep(STEP_LOC);
-            await delay(1500); setIntroStep(STEP_REPOS);
-            await delay(1500); setIntroStep(STEP_STREAK);
-            await delay(2000); setIntroStep(STEP_REARRANGE);
-            await delay(800); setIntroStep(STEP_HOLOGRAM);
-            await delay(500); setIntroStep(STEP_COMPLETE);
-        };
-        runSequence();
-    }, []);
 
     const formatNumber = (num) => {
         if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';

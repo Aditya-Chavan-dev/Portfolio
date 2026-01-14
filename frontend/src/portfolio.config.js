@@ -37,6 +37,16 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
         completionMessage: "Environment Loaded."
     },
 
+    // Phase 2.5: The Hub (New)
+    journey: {
+        quickActions: [
+            { id: 'PROJECTS', title: "Projects", desc: "Case Studies & Code", icon: "Database" },
+            { id: 'SKILLS', title: "Tech Stack", desc: "Skills & Tools", icon: "Cpu" },
+            { id: 'ABOUT', title: "About Me", desc: "Bio & Philosophy", icon: "User" },
+            { id: 'RESUME', title: "Resume", desc: "Download PDF", icon: "FileText" }
+        ]
+    },
+
     // Phase 3: The Dashboard (Hero)
     hero: {
         name: "ADITYA CHAVAN",
