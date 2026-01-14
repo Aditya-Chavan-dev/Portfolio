@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from '../../services/firebase';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { ref, onValue, off } from 'firebase/database';
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 // --- UTILS for Human Readability ---
 const timeAgo = (timestamp) => {
@@ -35,6 +37,56 @@ const getEventColor = (evt) => {
     if (evt === 'session_start') return '#fff';
     if (evt === 'connection_test_result' && evt.error) return '#ff5555'; // Red (Error)
     return '#8892b0'; // Muted Blue/Grey
+};
+
+// --- VIRTUALIZED ROWS ---
+const SessionRow = ({ index, style, data }) => {
+    const { items, selectedId, onSelect } = data;
+    const s = items[index];
+    const eventCount = s.events ? Object.keys(s.events).length : 0;
+    const isSelected = selectedId === s.id;
+
+    return (
+        <div style={style}>
+            <div
+                className={`session-item ${isSelected ? 'active' : ''}`}
+                onClick={() => onSelect(s.id)}
+            >
+                <span className="sess-id">VISITOR #{s.id.substr(5, 4).toUpperCase()}</span>
+                <div className="sess-meta">
+                    <span>{timeAgo(s.last_active)}</span>
+                    <span>{eventCount} Acts</span>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const TimelineRow = ({ index, style, data }) => {
+    const { events, startTimestamp } = data;
+    const evt = events[index];
+    const label = EVENT_LABELS[evt.event] || evt.event.toUpperCase();
+    const color = getEventColor(evt.event);
+    const isLast = index === events.length - 1;
+
+    return (
+        <div style={style}>
+            <div className="timeline-item">
+                <div className="t-dot" style={{ borderColor: color, backgroundColor: isLast ? color : '#0a192f' }}></div>
+                {/* Vertical Line Connection (Manual CSS approach since virtualized items are absolute) */}
+                {!isLast && <div style={{
+                    position: 'absolute', left: '6px', top: '20px', bottom: '-40px', width: '1px', background: '#233554', zIndex: 1
+                }} />}
+
+                <div className="t-content">
+                    <div className="t-time">{new Date(evt.timestamp).toLocaleTimeString()} (+{index > 0 ? formatDuration(evt.timestamp - startTimestamp) : '0s'})</div>
+                    <div className="t-title" style={{ color: color }}>{label}</div>
+                    {evt.screen && <div className="t-details">OS: {evt.userAgent?.split(')')[0]}) | Screen: {evt.screen}</div>}
+                    {evt.status && <div className="t-details">Status: {evt.status} {evt.error && `(${evt.error})`}</div>}
+                </div>
+            </div>
+        </div>
+    );
 };
 
 function MetricConsole() {
@@ -95,6 +147,7 @@ function MetricConsole() {
                     display: flex;
                     flex-direction: column;
                     background: #020c1b;
+                    height: 100%;
                 }
                 .sidebar-header {
                     padding: 1.5rem;
@@ -102,19 +155,25 @@ function MetricConsole() {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    height: 80px;
+                    flex-shrink: 0;
                 }
                 .sidebar-header h2 { font-size: 14px; letter-spacing: 1px; color: #64ffda; margin: 0; }
                 .logout-btn { background: none; border: 1px solid #64ffda; color: #64ffda; padding: 4px 12px; font-size: 10px; cursor: pointer; }
                 
-                .session-list {
+                .session-list-container {
                     flex: 1;
-                    overflow-y: auto;
+                    /* AutoSizer needs a container with dimensions */
                 }
                 .session-item {
                     padding: 1rem 1.5rem;
                     border-bottom: 1px solid #112240;
                     cursor: pointer;
                     transition: background 0.2s;
+                    height: 100%; /* For virtual row */
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
                 }
                 .session-item:hover { background: #112240; }
                 .session-item.active { background: #112240; border-left: 3px solid #64ffda; }
@@ -127,7 +186,7 @@ function MetricConsole() {
                     display: flex;
                     flex-direction: column;
                     height: 100dvh;
-                    overflow-y: auto;
+                    overflow-y: hidden; /* Virtual list handles scroll */
                     background: #0a192f;
                 }
                 
@@ -147,15 +206,19 @@ function MetricConsole() {
                     padding: 2rem;
                     background: #112240;
                     border-bottom: 1px solid #233554;
+                    flex-shrink: 0;
+                    min-height: 120px;
                 }
                 .metric-box { text-align: center; }
                 .metric-val { font-size: 24px; color: #e6f1ff; font-weight: 600; }
                 .metric-label { font-size: 11px; color: #64ffda; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
 
                 /* TIMELINE */
-                .timeline-container {
-                    padding: 2rem;
+                .timeline-wrapper {
+                    padding: 2rem 0;
                     flex: 1;
+                    display: flex;
+                    flex-direction: column;
                 }
                 .timeline-header {
                     font-size: 13px;
@@ -165,23 +228,25 @@ function MetricConsole() {
                     margin-bottom: 1.5rem;
                     padding-bottom: 0.5rem;
                     border-bottom: 1px solid #233554;
+                    margin-left: 2rem;
+                    margin-right: 2rem;
+                    flex-shrink: 0;
                 }
                 
+                .timeline-list-container {
+                    flex: 1;
+                    padding-left: 2rem; 
+                }
+
                 .timeline-item {
                     display: flex;
                     gap: 1rem;
-                    margin-bottom: 1.5rem;
                     position: relative;
+                    padding-bottom: 1.5rem; /* Simulate margin */
+                    height: 100%;
                 }
-                .timeline-item:not(:last-child)::after {
-                    content: '';
-                    position: absolute;
-                    left: 6px;
-                    top: 20px;
-                    bottom: -20px;
-                    width: 1px;
-                    background: #233554;
-                }
+                /* Vertical line handled in Row component */
+                
                 .t-dot {
                     width: 13px;
                     height: 13px;
@@ -190,6 +255,7 @@ function MetricConsole() {
                     border: 2px solid #64ffda;
                     margin-top: 4px;
                     z-index: 2;
+                    flex-shrink: 0;
                 }
                 .t-content { flex: 1; }
                 .t-time { font-family: monospace; font-size: 11px; color: #64ffda; margin-bottom: 4px; }
@@ -204,24 +270,20 @@ function MetricConsole() {
                     <h2>LIVE TRAFFIC ({sessionList.length})</h2>
                     <button onClick={() => signOut(auth)} className="logout-btn">EXIT</button>
                 </div>
-                <div className="session-list">
-                    {sessionList.map(s => {
-                        const eventCount = s.events ? Object.keys(s.events).length : 0;
-                        const isSelected = activeSession && activeSession.id === s.id;
-                        return (
-                            <div
-                                key={s.id}
-                                className={`session-item ${isSelected ? 'active' : ''}`}
-                                onClick={() => setSelectedId(s.id)}
+                <div className="session-list-container">
+                    <AutoSizer>
+                        {({ height, width }) => (
+                            <List
+                                height={height}
+                                width={width}
+                                itemCount={sessionList.length}
+                                itemSize={72} /* Adjusted for padding */
+                                itemData={{ items: sessionList, selectedId, onSelect: setSelectedId }}
                             >
-                                <span className="sess-id">VISITOR #{s.id.substr(5, 4).toUpperCase()}</span>
-                                <div className="sess-meta">
-                                    <span>{timeAgo(s.last_active)}</span>
-                                    <span>{eventCount} Acts</span>
-                                </div>
-                            </div>
-                        );
-                    })}
+                                {SessionRow}
+                            </List>
+                        )}
+                    </AutoSizer>
                 </div>
             </div>
 
@@ -269,23 +331,23 @@ function SessionDetail({ session }) {
                 </div>
             </div>
 
-            <div className="timeline-container">
+            <div className="timeline-wrapper">
                 <div className="timeline-header">Forensic Timeline</div>
-                {events.map((evt, idx) => {
-                    const label = EVENT_LABELS[evt.event] || evt.event.toUpperCase();
-                    const color = getEventColor(evt.event);
-                    return (
-                        <div key={idx} className="timeline-item">
-                            <div className="t-dot" style={{ borderColor: color, backgroundColor: idx === events.length - 1 ? color : '#0a192f' }}></div>
-                            <div className="t-content">
-                                <div className="t-time">{new Date(evt.timestamp).toLocaleTimeString()} (+{idx > 0 ? formatDuration(evt.timestamp - events[0].timestamp) : '0s'})</div>
-                                <div className="t-title" style={{ color: color }}>{label}</div>
-                                {evt.screen && <div className="t-details">OS: {evt.userAgent?.split(')')[0]}) | Screen: {evt.screen}</div>}
-                                {evt.status && <div className="t-details">Status: {evt.status} {evt.error && `(${evt.error})`}</div>}
-                            </div>
-                        </div>
-                    );
-                })}
+                <div className="timeline-list-container">
+                    <AutoSizer>
+                        {({ height, width }) => (
+                            <List
+                                height={height}
+                                width={width}
+                                itemCount={events.length}
+                                itemSize={80} /* Approximate size, might need adjustment for multi-line details but FixedSizeList is fastest */
+                                itemData={{ events, startTimestamp: start.timestamp }}
+                            >
+                                {TimelineRow}
+                            </List>
+                        )}
+                    </AutoSizer>
+                </div>
             </div>
         </>
     );

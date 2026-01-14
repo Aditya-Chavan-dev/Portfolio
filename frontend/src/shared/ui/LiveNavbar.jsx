@@ -2,27 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Linkedin, FileText, Clock } from 'lucide-react';
 import { fetchMetrics } from '../../services/tracking';
+import { useSWR } from '../../services/useSWR';
 import CountUp from './CountUp';
 
 const LiveNavbar = ({ compactMode = false }) => {
-    const [stats, setStats] = useState(null);
-    const [time, setTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" }));
-
-    const loadStats = async () => {
-        const data = await fetchMetrics();
-        if (data?.visitorStats) {
-            setStats(data.visitorStats);
-        }
-    };
+    // Gold Standard #10: Zombie Check (SWR)
+    const { data } = useSWR('metrics', fetchMetrics);
+    const stats = data?.visitorStats || null;
 
     useEffect(() => {
-        loadStats();
-        const interval = setInterval(loadStats, 60000); // Poll Every Minute
         const clockInterval = setInterval(() => setTime(new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" })), 1000);
-        return () => {
-            clearInterval(interval);
-            clearInterval(clockInterval);
-        };
+        return () => clearInterval(clockInterval);
     }, []);
 
     const totalViewers = stats ? (stats.linkedin + stats.resume + stats.anonymous) : 0;
