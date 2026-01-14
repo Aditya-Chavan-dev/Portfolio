@@ -484,3 +484,21 @@ We have introduced a suite of "Defensive Programming" utilities to ensure the ap
 
 ### Final Summary
 We are preparing for Scale. By implementing `SafeZone` and `CircuitBreaker`, we have moved from a "Happy Path" prototype to a "Production Grade" system that anticipates and handles failure gracefully.
+
+## Refactor: Logic Extraction & Cleanup
+
+### What is the new feature about?
+We have performed a massive cleanup of the codebase, removing over 10+ legacy components and extracting complex logic into dedicated custom hooks. This keeps our UI components purely focused on *rendering*, while the business logic lives in testable, isolated hooks.
+
+### How did we implement it?
+1.  **Custom Hooks:** Extracted logic from `HeroDashboard.jsx` into:
+    -   `useHeroSequence.js`: Manages the complex intro animation timeline.
+    -   `useRealtimeStats.js`: Handles Firebase listeners for visitor tracking.
+    -   `useAdminConsole.js`: Encapsulates authentication and data fetching for the admin view.
+2.  **Dead Code Removal:** Deleted the entire old `frontend/src/features/hero/components/Hero/` directory which contained deprecated components (`MetricCard`, `PortraitBlock`, etc.) that were superseded by the FSD architecture.
+
+### How is the user benefitted from it?
+**Performance & Stability.** By removing strict dependencies and unused code, the bundle size is smaller. Separating logic makes the application easier to debug—if the intro animation breaks, we know exactly where to look (`useHeroSequence`) without shifting through UI code.
+
+### Final Summary
+We have "paid down" our technical debt. The codebase is now lean, with a clear separation between "What things look like" (JSX) and "How things work" (Hooks). This is the hallmark of a mature React codebase.

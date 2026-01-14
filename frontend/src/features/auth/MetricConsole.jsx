@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { auth, db } from '../../services/firebase';
-import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
-import { ref, onValue, off } from 'firebase/database';
+import React, { useState } from 'react';
+import { useAdminConsole } from '../../hooks/useAdminConsole';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
@@ -90,36 +88,20 @@ const TimelineRow = ({ index, style, data }) => {
 };
 
 function MetricConsole() {
-    const [user, setUser] = useState(null);
+    const { user, sessions, error: authError, login, logout } = useAdminConsole();
+
+    // Local UI State
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
-    const [sessions, setSessions] = useState({});
     const [selectedId, setSelectedId] = useState(null);
-
-    // Auth & Data Listeners
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, setUser);
-        return () => unsubscribe();
-    }, []);
-
-    useEffect(() => {
-        if (!user) return;
-        const analyticsRef = ref(db, 'analytics/sessions');
-        const listener = onValue(analyticsRef, (snapshot) => {
-            setSessions(snapshot.exists() ? snapshot.val() : {});
-        });
-        return () => off(analyticsRef, 'value', listener);
-    }, [user]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        try { await signInWithEmailAndPassword(auth, email, password); }
-        catch (err) { setError("Access Denied: " + err.message); }
+        await login(email, password);
     };
 
     // --- VIEW LOGIC ---
-    if (!user) return <LoginScreen email={email} setEmail={setEmail} pass={password} setPass={setPassword} login={handleLogin} error={error} />;
+    if (!user) return <LoginScreen email={email} setEmail={setEmail} pass={password} setPass={setPassword} login={handleLogin} error={authError} />;
 
     const sessionList = Object.entries(sessions)
         .map(([id, data]) => ({ id, ...data }))
@@ -268,7 +250,7 @@ function MetricConsole() {
             <div className="sidebar">
                 <div className="sidebar-header">
                     <h2>LIVE TRAFFIC ({sessionList.length})</h2>
-                    <button onClick={() => signOut(auth)} className="logout-btn">EXIT</button>
+                    <button onClick={logout} className="logout-btn">EXIT</button>
                 </div>
                 <div className="session-list-container">
                     <AutoSizer>
