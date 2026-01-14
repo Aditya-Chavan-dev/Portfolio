@@ -28,7 +28,7 @@ const getTechIcon = (language) => {
 };
 
 
-const ProjectsView = ({ onBack }) => {
+const ProjectsView = ({ onBack, initialProjectId }) => {
     const [projects, setProjects] = useState([]);
     const [flagship, setFlagship] = useState(null);
     const [selectedProject, setSelectedProject] = useState(null);
@@ -54,11 +54,45 @@ const ProjectsView = ({ onBack }) => {
 
             setFlagship(foundFlagship);
             setProjects(others);
+
+            // Priority 1: Deep Linking / Props
+            if (initialProjectId) {
+                if (foundFlagship && foundFlagship.name === initialProjectId) {
+                    setSelectedProject(foundFlagship);
+                } else {
+                    const found = others.find(p => p.name === initialProjectId);
+                    if (found) setSelectedProject(found);
+                }
+            }
+            // Priority 2: Persistence
+            else {
+                const lastProject = localStorage.getItem('LAST_PROJECT_V2');
+                if (lastProject) {
+                    if (foundFlagship && foundFlagship.name === lastProject) {
+                        setSelectedProject(foundFlagship);
+                    } else {
+                        const found = others.find(p => p.name === lastProject);
+                        if (found) setSelectedProject(found);
+                    }
+                }
+            }
+
             setLoading(false);
         };
 
         fetchProjects();
-    }, []);
+    }, [initialProjectId]);
+
+    // Persist Selection - Only after loading is complete to avoid race condition
+    useEffect(() => {
+        if (loading) return;
+
+        if (selectedProject) {
+            localStorage.setItem('LAST_PROJECT_V2', selectedProject.name);
+        } else {
+            localStorage.removeItem('LAST_PROJECT_V2');
+        }
+    }, [selectedProject, loading]);
 
     // If a project is selected, show the full details page
     if (selectedProject) {

@@ -14,17 +14,22 @@ const SystemBreach = ({ onComplete }) => {
 
     useEffect(() => {
         let totalDelay = 0;
+        const timers = [];
 
         sequence.forEach((item, index) => {
-            setTimeout(() => {
+            const t = setTimeout(() => {
                 setStep(index);
             }, totalDelay);
+            timers.push(t);
             totalDelay += item.delay;
         });
 
-        setTimeout(() => {
+        const finalTimer = setTimeout(() => {
             onComplete();
         }, totalDelay + 1000);
+        timers.push(finalTimer);
+
+        return () => timers.forEach(clearTimeout);
 
     }, []);
 

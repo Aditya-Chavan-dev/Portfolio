@@ -1,31 +1,24 @@
-const CACHE_NAME = 'portfolio-v8.1';
-const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/manifest.json'
-];
+// KILL SWITCH SERVICE WORKER
+// This worker replaces the previous caching worker to force a clean slate.
 
-// 1. INSTALL: Cache Core Assets
+const CACHE_NAME = 'portfolio-kill-switch-v1';
+
 self.addEventListener('install', (event) => {
-    self.skipWaiting(); // Takeover immediately
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS_TO_CACHE);
-        })
-    );
+    // Activate immediately, displacing the old worker
+    self.skipWaiting();
 });
 
-// 2. ACTIVATE: Cleanup Old Caches
 self.addEventListener('activate', (event) => {
+    // Take control of all clients immediately
     event.waitUntil(
         Promise.all([
-            self.clients.claim(), // Control clients immediately
+            self.clients.claim(),
+            // DELETE ALL CACHES
             caches.keys().then((keys) => {
                 return Promise.all(
                     keys.map((key) => {
-                        if (key !== CACHE_NAME) {
-                            return caches.delete(key);
-                        }
+                        console.log('[SW] Deleting cache:', key);
+                        return caches.delete(key);
                     })
                 );
             })
@@ -33,49 +26,8 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// 3. FETCH: The "Network-First" Strategy (The Fix)
-// 3. FETCH: The "Network-First" Strategy (The Fix)
+// Pass through all requests to network (No Caching)
 self.addEventListener('fetch', (event) => {
-    // Only handle GET requests
-    if (event.request.method !== 'GET') return;
-
-    const url = new URL(event.request.url);
-
-    // A. Navigation Requests (HTML) -> NETWORK FIRST
-    if (event.request.mode === 'navigate') {
-        event.respondWith(
-            fetch(event.request)
-                .then((networkResponse) => {
-                    const responseToCache = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseToCache);
-                    });
-                    return networkResponse;
-                })
-                .catch(() => {
-                    return caches.match('/index.html');
-                })
-        );
-        return;
-    }
-
-    // B. Assets (JS, CSS, Images) -> STALE-WHILE-REVALIDATE
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            const fetchPromise = fetch(event.request).then((networkResponse) => {
-                // Check for valid response
-                if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-                    return networkResponse;
-                }
-
-                const responseToCache = networkResponse.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseToCache);
-                });
-                return networkResponse;
-            });
-
-            return cachedResponse || fetchPromise;
-        })
-    );
+    // Just simple fetch, no intercept logic
+    return;
 });

@@ -2,14 +2,14 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, AlertTriangle, Flame } from 'lucide-react';
 
-const ExpandableFailure = ({ index, title, summary, failure, solution, outcome, isExpanded, onToggle }) => {
+const ExpandableFailure = ({ index, title, summary, failure, solution, outcome, isExpanded, onToggle, className = '' }) => {
     return (
         <motion.div
             layout
             className={`relative bg-[#0A0A0A] border rounded-xl overflow-hidden transition-all duration-300 group ${isExpanded
-                    ? 'border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.15)]'
-                    : 'border-white/5 hover:border-red-500/30'
-                }`}
+                ? 'border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.15)]'
+                : 'border-white/5 hover:border-red-500/30'
+                } ${className}`}
         >
             {/* Glow effect when expanded */}
             <AnimatePresence>
@@ -24,28 +24,24 @@ const ExpandableFailure = ({ index, title, summary, failure, solution, outcome, 
             </AnimatePresence>
 
             {/* Main Content Container (Title + Summary always visible-ish, details hidden) */}
-            <div className={`p-6 md:p-8 ${isExpanded ? 'pb-8' : 'pb-6 md:pb-8'}`}>
+            <div className={`p-4 ${isExpanded ? 'pb-5' : 'pb-4'}`}>
 
                 {/* Header Row */}
-                <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 space-y-2">
+                <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 space-y-1.5 min-w-0">
                         {/* Meta Label */}
-                        <div className="flex items-center gap-2 text-red-500/70 font-mono text-xs uppercase tracking-widest">
+                        <div className="flex items-center gap-2 text-red-500/70 font-mono text-xs uppercase tracking-widest shrink-0">
                             <AlertTriangle size={12} />
                             <span>Critical Failure #{index + 1}</span>
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-bold text-white leading-tight group-hover:text-red-400 transition-colors">
+                        <h3 className="text-base md:text-lg font-bold text-white leading-tight group-hover:text-red-400 transition-colors break-words">
                             {title}
                         </h3>
 
-                        {/* 1-Line Summary (Visible primarily when collapsed, or always? User said "Below ... write in 1 line ... when expanded show all". 
-                           Let's keep summary visible always for context, or hide it when expanded? 
-                           "When expanded we show all the description". 
-                           I'll keep the summary as the "intro" always visible, simpler for mental model.) 
-                        */}
-                        <p className="text-gray-400/80 text-sm font-light border-l-2 border-red-500/30 pl-3 line-clamp-2 md:line-clamp-1">
+                        {/* 1-Line Summary */}
+                        <p className="text-gray-400/80 text-sm font-light border-l-2 border-red-500/30 pl-2 line-clamp-1 break-all">
                             {summary}
                         </p>
                     </div>
@@ -53,14 +49,14 @@ const ExpandableFailure = ({ index, title, summary, failure, solution, outcome, 
                     {/* Arrow Button */}
                     <button
                         onClick={onToggle}
-                        className="flex-shrink-0 mt-1 p-2 rounded-lg bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/30 transition-all"
+                        className="flex-shrink-0 mt-0.5 p-1.5 rounded-md bg-white/5 hover:bg-red-500/10 border border-white/5 hover:border-red-500/30 transition-all"
                         aria-label={isExpanded ? 'Collapse' : 'Expand'}
                     >
                         <motion.div
                             animate={{ rotate: isExpanded ? 180 : 0 }}
                             transition={{ duration: 0.25, ease: 'easeOut' }}
                         >
-                            <ChevronDown size={20} className="text-gray-400 group-hover:text-red-400 transition-colors" />
+                            <ChevronDown size={16} className="text-gray-400 group-hover:text-red-400 transition-colors" />
                         </motion.div>
                     </button>
                 </div>
@@ -75,29 +71,29 @@ const ExpandableFailure = ({ index, title, summary, failure, solution, outcome, 
                             transition={{ duration: 0.3, ease: 'easeOut' }}
                             className="overflow-hidden"
                         >
-                            <div className="pt-8 grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-white/5 mt-6">
+                            <div className="mt-3 pt-4 border-t border-white/5 grid grid-cols-1 gap-6">
                                 {/* Problem Details */}
-                                <div className="space-y-3">
+                                <div className="space-y-2">
                                     <div className="flex items-center gap-2 text-red-400/80">
                                         <Flame size={14} />
-                                        <span className="text-[10px] uppercase font-mono tracking-widest">Incident Report</span>
+                                        <span className="text-xs uppercase font-mono tracking-widest font-semibold">Incident Report</span>
                                     </div>
-                                    <p className="text-gray-300 leading-relaxed font-light text-sm">
+                                    <p className="text-gray-300 leading-relaxed font-light text-sm bg-white/[0.03] p-4 rounded border-l-2 border-red-500/30">
                                         "{failure}"
                                     </p>
                                 </div>
 
                                 {/* Solution & Outcome */}
-                                <div className="space-y-4">
-                                    <div className="space-y-3">
-                                        <span className="text-green-500/70 text-[10px] uppercase font-mono tracking-widest block">Patch Applied</span>
-                                        <p className="text-gray-300 leading-relaxed text-sm">
+                                <div className="space-y-3">
+                                    <div className="space-y-2">
+                                        <span className="text-green-500/70 text-xs uppercase font-mono tracking-widest block font-semibold">Patch Applied</span>
+                                        <p className="text-gray-400 leading-relaxed text-sm pl-3 border-l border-green-500/30">
                                             {solution}
                                         </p>
                                     </div>
 
-                                    <div className="p-3 rounded bg-green-500/5 border border-green-500/10">
-                                        <span className="text-green-400 text-xs font-medium block">
+                                    <div className="px-3 py-2 rounded bg-green-500/10 border border-green-500/20">
+                                        <span className="text-green-400 text-xs font-medium block uppercase tracking-wide">
                                             Outcome: {outcome}
                                         </span>
                                     </div>
