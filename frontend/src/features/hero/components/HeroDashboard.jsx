@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import config from '../../portfolio.config';
+import config from '../../../portfolio.config';
 import HolographicID from './HolographicID';
 import { Flame, GitCommit, Server, Play } from 'lucide-react';
 import MetricItem from './MetricItem';
-import TypewriterText from '../ui/TypewriterText';
-import NavigationMenu from '../ui/NavigationMenu';
+import TypewriterText from '../../../shared/ui/TypewriterText';
+import NavigationMenu from '../../../shared/ui/NavigationMenu';
 
 // --- CONSTANTS ---
 const STEP_INIT = 0;

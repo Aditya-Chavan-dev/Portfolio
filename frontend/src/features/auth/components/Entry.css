@@ -9,7 +9,7 @@
 
 .entry-gate-root {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     background-color: var(--entry-bg);
     display: flex;
     flex-direction: column;

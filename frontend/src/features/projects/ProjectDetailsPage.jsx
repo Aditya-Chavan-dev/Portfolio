@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ExternalLink, Calendar, CheckCircle, Flame, Layers, X, Github, Hexagon, Component, Activity, Terminal, ChevronRight, ArrowUpLeft } from 'lucide-react';
-import config from '../portfolio.config';
+import config from '../../portfolio.config';
 import ExpandableFeature from './ExpandableFeature';
 import ExpandableFailure from './ExpandableFailure';
 

@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import EntryGate from './components/EntryGate';
-import SessionHandshake from './components/SessionHandshake';
-import JourneyHub from './components/JourneyHub';
-import ProjectsView from './components/ProjectsView';
-import HeroDashboard from './components/hero/HeroDashboard';
+import EntryGate from './features/auth/EntryGate';
+import SessionHandshake from './features/auth/SessionHandshake';
+import JourneyHub from './features/journey/JourneyHub';
+import ProjectsView from './features/projects/ProjectsView';
+import HeroDashboard from './features/hero/components/HeroDashboard';
 
 import { initSession } from './services/tracking';
 import { GitHubService } from './services/github';
@@ -19,9 +19,9 @@ export const PHASE_STORY = 3;
 export const PHASE_DASHBOARD = 4;
 export const PHASE_PROJECTS = 5;
 
-import LiveNavbar from './components/ui/LiveNavbar';
-import TacticalHUD from './components/ui/TacticalHUD';
-import SystemCheck from './components/ui/SystemCheck';
+import LiveNavbar from './shared/ui/LiveNavbar';
+import TacticalHUD from './shared/ui/TacticalHUD';
+import SystemCheck from './shared/ui/SystemCheck';
 
 function App() {
     // Deep Linking Logic
@@ -37,7 +37,7 @@ function App() {
 
             // Persistence: Check LocalStorage V2
             const savedPhase = localStorage.getItem('APP_PHASE_V2');
-            console.log("Restoring Phase:", savedPhase);
+            if (import.meta.env.DEV) console.log("Restoring Phase:", savedPhase);
             if (savedPhase && savedPhase !== 'undefined' && savedPhase !== 'null') {
                 return parseInt(savedPhase, 10);
             }

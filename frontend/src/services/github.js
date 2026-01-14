@@ -11,7 +11,7 @@ export const GitHubService = {
      */
     async getRealStats() {
         try {
-            console.log("Fetching GitHub stats from Backend...");
+            if (import.meta.env.DEV) console.log("Fetching GitHub stats from Backend...");
 
             // Call our own backend API
             const response = await api.get('/github');
@@ -70,11 +70,11 @@ export const GitHubService = {
         const isFresh = cached && (Date.now() - cached.timestamp < CACHE_DURATION);
 
         if (isFresh) {
-            console.log("GitHub Stats: Cache is fresh. Using cached data.");
+            if (import.meta.env.DEV) console.log("GitHub Stats: Cache is fresh. Using cached data.");
             return cached;
         }
 
-        console.log("GitHub Stats: Cache is stale or missing. Fetching new data...");
+        if (import.meta.env.DEV) console.log("GitHub Stats: Cache is stale or missing. Fetching new data...");
         return this.getRealStats();
     },
 
@@ -92,13 +92,13 @@ export const GitHubService = {
             if (cached) {
                 const { timestamp, data } = JSON.parse(cached);
                 if (Date.now() - timestamp < REPO_CACHE_DURATION) {
-                    console.log("GitHub Repos: Cache is fresh.");
+                    if (import.meta.env.DEV) console.log("GitHub Repos: Cache is fresh.");
                     return data;
                 }
             }
 
             // 2. Fetch from GitHub API
-            console.log("GitHub Repos: Fetching from API...");
+            if (import.meta.env.DEV) console.log("GitHub Repos: Fetching from API...");
             const username = config.hero.githubUsername;
             const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
 
