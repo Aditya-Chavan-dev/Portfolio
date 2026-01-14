@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import EntryGate from './features/auth/EntryGate';
-import SessionHandshake from './features/auth/SessionHandshake';
-import JourneyHub from './features/journey/JourneyHub';
-import ProjectsView from './features/projects/ProjectsView';
-import HeroDashboard from './features/hero/components/HeroDashboard';
+const EntryGate = React.lazy(() => import('./features/auth/EntryGate'));
+const SessionHandshake = React.lazy(() => import('./features/auth/SessionHandshake'));
+const JourneyHub = React.lazy(() => import('./features/journey/JourneyHub'));
+const ProjectsView = React.lazy(() => import('./features/projects/ProjectsView'));
+const HeroDashboard = React.lazy(() => import('./features/hero/components/HeroDashboard'));
 
 import { initSession } from './services/tracking';
 import { GitHubService } from './services/github';
@@ -22,6 +22,9 @@ export const PHASE_PROJECTS = 5;
 import LiveNavbar from './shared/ui/LiveNavbar';
 import TacticalHUD from './shared/ui/TacticalHUD';
 import SystemCheck from './shared/ui/SystemCheck';
+
+import SafeZone from './shared/ui/SafeZone';
+import SystemLoader from './features/system/SystemLoader';
 
 function App() {
     // Deep Linking Logic
@@ -164,96 +167,104 @@ function App() {
 
             {/* 2. Main Content Area */}
             <div className="flex-1 relative w-full overflow-hidden">
-                <AnimatePresence mode="wait">
+                <React.Suspense fallback={<SystemLoader />}>
+                    <AnimatePresence mode="wait">
 
-                    {phase === PHASE_ENTRY && (
-                        <motion.div
-                            key="entry"
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.8 }}
-                            className="h-full w-full"
-                        >
-                            <EntryGate onUnlock={startSession} />
-                        </motion.div>
-                    )}
+                        {phase === PHASE_ENTRY && (
+                            <motion.div
+                                key="entry"
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.8 }}
+                                className="h-full w-full"
+                            >
+                                <EntryGate onUnlock={startSession} />
+                            </motion.div>
+                        )}
 
-                    {phase === PHASE_HANDSHAKE && (
-                        <motion.div
-                            key="handshake"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="h-full w-full"
-                        >
-                            <SessionHandshake onComplete={() => {
-                                localStorage.setItem('HAS_SEEN_INTRO', 'true');
-                                setShowSystemCheck(true);
-                            }} />
-                        </motion.div>
-                    )}
+                        {phase === PHASE_HANDSHAKE && (
+                            <motion.div
+                                key="handshake"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="h-full w-full"
+                            >
+                                <SessionHandshake onComplete={() => {
+                                    localStorage.setItem('HAS_SEEN_INTRO', 'true');
+                                    setShowSystemCheck(true);
+                                }} />
+                            </motion.div>
+                        )}
 
-                    {phase === PHASE_HUB && (
-                        <motion.div
-                            key="hub"
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 1.1 }}
-                            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                            className="h-full w-full"
-                        >
-                            <JourneyHub onSelection={handleHubSelection} />
-                        </motion.div>
-                    )}
+                        {phase === PHASE_HUB && (
+                            <motion.div
+                                key="hub"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 1.1 }}
+                                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                                className="h-full w-full"
+                            >
+                                <SafeZone componentName="Command Hub">
+                                    <JourneyHub onSelection={handleHubSelection} />
+                                </SafeZone>
+                            </motion.div>
+                        )}
 
-                    {phase === PHASE_STORY && (
-                        <motion.div
-                            key="story"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="h-full w-full flex items-center justify-center bg-black text-white"
-                        >
-                            {/* Placeholder for Story Mode */}
-                            <div className="text-center">
-                                <h1 className="text-4xl font-bold mb-4 uppercase tracking-tighter">Immersive Journey Initialized</h1>
-                                <p className="text-cyan-400 font-mono mb-8 animate-pulse">Loading narrative modules...</p>
-                                <button
-                                    onClick={() => setPhase(PHASE_HUB)}
-                                    className="px-8 py-3 border border-cyan-500/20 text-cyan-500 hover:bg-cyan-500/10 transition-colors uppercase font-mono text-xs tracking-widest"
-                                >
-                                    [ ABORT / RETURN TO HUB ]
-                                </button>
-                            </div>
-                        </motion.div>
-                    )}
+                        {phase === PHASE_STORY && (
+                            <motion.div
+                                key="story"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="h-full w-full flex items-center justify-center bg-black text-white"
+                            >
+                                {/* Placeholder for Story Mode */}
+                                <div className="text-center">
+                                    <h1 className="text-4xl font-bold mb-4 uppercase tracking-tighter">Immersive Journey Initialized</h1>
+                                    <p className="text-cyan-400 font-mono mb-8 animate-pulse">Loading narrative modules...</p>
+                                    <button
+                                        onClick={() => setPhase(PHASE_HUB)}
+                                        className="px-8 py-3 border border-cyan-500/20 text-cyan-500 hover:bg-cyan-500/10 transition-colors uppercase font-mono text-xs tracking-widest"
+                                    >
+                                        [ ABORT / RETURN TO HUB ]
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
 
-                    {phase === PHASE_DASHBOARD && (
-                        <motion.div
-                            key="dashboard"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="h-full w-full overflow-y-auto overflow-x-hidden bg-[var(--color-bg-deep)]"
-                        >
-                            <HeroDashboard onInitiate={() => { }} metrics={heroMetrics || {}} />
-                        </motion.div>
-                    )}
+                        {phase === PHASE_DASHBOARD && (
+                            <motion.div
+                                key="dashboard"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="h-full w-full overflow-y-auto overflow-x-hidden bg-[var(--color-bg-deep)]"
+                            >
+                                <SafeZone componentName="Hero Dashboard">
+                                    <HeroDashboard onInitiate={() => { }} metrics={heroMetrics || {}} />
+                                </SafeZone>
+                            </motion.div>
+                        )}
 
-                    {phase === PHASE_PROJECTS && (
-                        <motion.div
-                            key="projects"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.5 }}
-                            className="h-full w-full"
-                        >
-                            <ProjectsView
-                                onBack={() => setPhase(PHASE_HUB)}
-                                initialProjectId={initialProjectName}
-                            />
-                        </motion.div>
-                    )}
+                        {phase === PHASE_PROJECTS && (
+                            <motion.div
+                                key="projects"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.5 }}
+                                className="h-full w-full"
+                            >
+                                <SafeZone componentName="Projects System">
+                                    <ProjectsView
+                                        onBack={() => setPhase(PHASE_HUB)}
+                                        initialProjectId={initialProjectName}
+                                    />
+                                </SafeZone>
+                            </motion.div>
+                        )}
 
-                </AnimatePresence>
+                    </AnimatePresence>
+                </React.Suspense>
             </div>
         </div>
     );
