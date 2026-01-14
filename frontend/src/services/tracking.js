@@ -54,7 +54,7 @@ export const initSession = async () => {
 export const trackMetric = async (type, field) => {
     try {
         await api.post('/metrics/track', { type, field });
-        console.log(`[TRACKING] Sent ${type}/${field} to Guard.`);
+        if (import.meta.env.DEV) console.log(`[TRACKING] Sent ${type}/${field} to Guard.`);
     } catch (error) {
         console.warn("[TRACKING] Failed to send metric (AdBlocker?):", error);
         // Fail silently. Do not annoy the user.

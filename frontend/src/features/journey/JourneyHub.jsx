@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Database, Cpu, User, FileText, Users, PlayCircle, ArrowRight } from 'lucide-react';
-import { trackMetric } from '../services/tracking';
-import { RealtimeService } from '../services/realtime';
-import CountUp from './ui/CountUp';
+import { trackMetric } from '../../services/tracking';
+import { RealtimeService } from '../../services/realtime';
+import CountUp from '../../shared/ui/CountUp';
 
 const JourneyHub = ({ onSelection }) => {
     const [immersiveCount, setImmersiveCount] = useState(null);

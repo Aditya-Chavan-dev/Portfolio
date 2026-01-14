@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Database, Cpu, User, FileText, ChevronRight } from 'lucide-react';
-import config from '../portfolio.config';
+import config from '../../portfolio.config';
 
 const MODE_INTRO = 'INTRO';
 const MODE_HUB = 'HUB';

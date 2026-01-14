@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import config from '../portfolio.config';
+import config from '../../portfolio.config';
 import { Lock, ArrowRight, Zap } from 'lucide-react';
 
 const EntryGate = ({ onUnlock }) => {

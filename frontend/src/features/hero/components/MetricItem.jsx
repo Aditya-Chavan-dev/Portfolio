@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import CountUp from '../ui/CountUp';
+import CountUp from '../../../shared/ui/CountUp';
 
 const MetricItem = ({ label, icon, rawValue, formatter, delay, isUptime, uptimeStart, className, layoutId }) => {
     const [uptimeString, setUptimeString] = useState("");

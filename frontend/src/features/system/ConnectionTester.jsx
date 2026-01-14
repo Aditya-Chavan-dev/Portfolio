@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import api from '../services/api'
-import { db } from '../services/firebase'
-import { telemetry } from '../services/telemetry'
+import api from '../../services/api'
+import { db } from '../../services/firebase'
+import { telemetry } from '../../services/telemetry'
 import { ref, onValue } from 'firebase/database'
 
 /**

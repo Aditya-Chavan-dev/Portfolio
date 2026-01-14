@@ -1,5 +1,5 @@
 import React from 'react';
-import ConnectionTester from './ConnectionTester';
+import ConnectionTester from '../system/ConnectionTester';
 
 /**
  * FIRST PRINCIPLE: Progressive Disclosure

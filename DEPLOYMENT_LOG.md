@@ -416,3 +416,24 @@ Refreshing the page kept the user in the "Dashboard/Hub" state instead of resett
 
 ### Final Summary
 The application now correctly resets to the "Entry Gate" on every full refresh. This ensures every unique session experiences the intended cinematic introduction, maintaining the "Intrigue -> Handshake -> Dashboard" narrative flow.
+
+## Feature: Architecture Refactor (Feature-Sliced)
+
+### What is the new feature about?
+We performed a major architectural overhaul, migrating the frontend codebase from a flat structure to a **Feature-Sliced Architecture**. This reorganization improves scalability, maintainability, and code separation by modifying how components and logic are grouped.
+
+### How did we implement it?
+1.  **Directory Restructuring:** We created top-level `features` and `shared` directories.
+2.  **Shared Layer:** Moved generic, reusable UI components (Buttons, Cards, Inputs) and utilities into `src/shared/`.
+3.  **Feature Layer:** Grouped business-logic-heavy components (like `HeroDashboard`, `ProjectDetails`) into `src/features/`.
+4.  **Import Updates:** Systematically updated all import paths across the application to reflect the new structure.
+
+### How is the user benefitted from it?
+While there are no direct visual changes for the user, this refactor ensures the codebase remains robust and easy to extend as the portfolio grows. It reduces technical debt and makes future feature development significantly faster and less error-prone.
+
+### What concepts we used?
+-   **Feature-Sliced Design (FSD)** principles for folder structure.
+-   **Separation of Concerns:** Distinguishing between "dumb" UI components (Shared) and "smart" business features.
+
+### Final Summary
+We realized the flat `components` folder was becoming a bottleneck. To fix this, we adopted industry-standard Feature-Sliced Architecture. We separated the generic tools from the specific business features, creating a clean, scalable foundation that is ready for complex future additions.

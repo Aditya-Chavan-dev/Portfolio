@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Star, GitFork, ExternalLink, Code, ShieldCheck } from 'lucide-react';
 import ProjectDetailsPage from './ProjectDetailsPage';
-import { GitHubService } from '../services/github';
-import config from '../portfolio.config';
+import { GitHubService } from '../../services/github';
+import config from '../../portfolio.config';
 
 const getTechIcon = (language) => {
     if (!language) return null;

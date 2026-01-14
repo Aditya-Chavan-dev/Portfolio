@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { auth, db } from '../services/firebase';
+import { auth, db } from '../../services/firebase';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { ref, onValue, off } from 'firebase/database';
 
@@ -80,7 +80,7 @@ function MetricConsole() {
             <style>{`
                 /* DASHBOARD LAYOUT */
                 .dashboard-root {
-                    height: 100vh;
+                    height: 100dvh;
                     display: grid;
                     grid-template-columns: 350px 1fr;
                     background: #0a192f;
@@ -126,7 +126,7 @@ function MetricConsole() {
                 .main-panel {
                     display: flex;
                     flex-direction: column;
-                    height: 100vh;
+                    height: 100dvh;
                     overflow-y: auto;
                     background: #0a192f;
                 }
@@ -293,7 +293,7 @@ function SessionDetail({ session }) {
 
 function LoginScreen({ email, setEmail, pass, setPass, login, error }) {
     return (
-        <div style={{ background: '#020c1b', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64ffda', fontFamily: 'monospace' }}>
+        <div style={{ background: '#020c1b', height: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64ffda', fontFamily: 'monospace' }}>
             <div style={{ width: '300px', padding: '2rem', border: '1px solid #112240', background: '#0a192f' }}>
                 <h2 style={{ fontSize: '14px', letterSpacing: '2px', textAlign: 'center', marginBottom: '2rem' }}>RESTRICTED ACCESS</h2>
                 <form onSubmit={login}>
