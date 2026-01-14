@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Calendar, CheckCircle, Flame, Layers, X, Github, Hexagon, Component, Activity, Terminal } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, ExternalLink, Calendar, CheckCircle, Flame, Layers, X, Github, Hexagon, Component, Activity, Terminal, ChevronRight, ArrowUpLeft } from 'lucide-react';
 import config from '../portfolio.config';
 import ExpandableFeature from './ExpandableFeature';
 import ExpandableFailure from './ExpandableFailure';
@@ -48,178 +48,346 @@ const getTechIcon = (language) => {
 };
 
 const ProjectDetailsPage = ({ project, onClose }) => {
-    const metadata = config.projectDetails?.[project.name];
-    const [expandedFeatureIndex, setExpandedFeatureIndex] = useState(null);
-    const [expandedFailureIndex, setExpandedFailureIndex] = useState(null);
+    // Normalize helper for robust matching
+    const normalize = (str) => str ? str.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+
+    // Case-insensitive + symbol-agnostic lookup for metadata
+    const metadataKey = Object.keys(config.projectDetails || {}).find(
+        key => normalize(key) === normalize(project.name) || normalize(project.name).includes(normalize(key))
+    );
+    const metadata = config.projectDetails?.[metadataKey];
+
+    // Unified State for Master-Detail View
+    // activeItem: { type: 'feature' | 'failure', index: number } | null
+    const [activeItem, setActiveItem] = useState(null);
+
+    const features = metadata?.features || metadata?.flagshipFeatures || [];
+    const failures = metadata?.failures || [];
+
+    // Reset scroll when switching items
+    useEffect(() => {
+        const detailContainer = document.getElementById('detail-content-container');
+        if (detailContainer) detailContainer.scrollTop = 0;
+    }, [activeItem]);
 
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#02040a] text-white font-sans selection:bg-cyan-500/30 overflow-hidden flex flex-col"
+            className="fixed inset-0 z-[200] bg-[#02040a] text-white font-sans selection:bg-cyan-500/30 flex flex-col overflow-hidden"
+            style={{ height: '100dvh' }} // Use Dynamic Viewport Height for mobile browsers
         >
             <style>{`
                 .scrollbar-hide::-webkit-scrollbar { display: none; }
                 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-                .mask-fade-bottom { mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); }
+                .mask-fade-bottom { mask-image: linear-gradient(to bottom, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%); }
             `}</style>
 
             {/* Background Atmosphere */}
             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-950/20 via-[#02040a] to-[#02040a]" />
             <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
 
-            {/* Global Header (Minimal) */}
-            <div className="absolute top-0 left-0 right-0 h-16 flex items-center justify-between px-8 z-50 pointer-events-none">
-                <div className="pointer-events-auto cursor-default">
-                    {/* Placeholder for left header content if needed */}
-                </div>
+            {/* Global Header (Minimal - Close Button Only) */}
+            <div className="absolute top-0 right-0 p-4 md:p-6 z-50 pointer-events-none">
                 <button
                     onClick={onClose}
-                    className="pointer-events-auto p-2 rounded-full hover:bg-white/5 text-gray-500 hover:text-white transition-colors"
+                    className="pointer-events-auto p-3 md:p-2 rounded-full bg-black/20 md:bg-transparent backdrop-blur-md md:backdrop-blur-none hover:bg-white/10 text-gray-400 hover:text-white transition-all border border-white/5 md:border-transparent"
                 >
                     <X size={24} />
                 </button>
             </div>
 
-            {/* SEAMLESS 2x2 GRID */}
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 grid-rows-2 p-4 md:p-12 gap-8 md:gap-16 w-full max-w-[1920px] mx-auto">
+            {/* MAIN GRID LAYOUT */}
+            {/* Added proper padding-bottom for safe areas (pb-safe) via pb-20 on mobile */}
+            <div className="flex-1 w-full h-full max-w-[1920px] mx-auto relative z-10 p-4 pt-20 md:p-6 md:pt-28 lg:p-10 lg:pt-32 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 overflow-hidden pb-safe">
 
-                {/* === Q1: IDENTITY (Top Left) === */}
-                <div className="flex flex-col justify-center space-y-8 relative group">
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-3">
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-cyan-500/30 blur-lg rounded-full animate-pulse" />
-                                <Hexagon className="text-cyan-400 relative z-10" fill="currentColor" fillOpacity={0.1} size={32} />
-                            </div>
-                            <span className="text-xs font-mono uppercase tracking-[0.3em] text-cyan-500/80">Project Atlas // {metadata?.timeline?.[metadata.timeline.length - 1]?.year || '2025'}</span>
-                        </div>
-
-                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-gray-500">
-                            {metadata?.title || project.title}
-                        </h1>
-                        <p className="text-lg md:text-xl text-gray-400 font-light max-w-lg leading-relaxed">
-                            {metadata?.description || project.desc}
-                        </p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex flex-wrap gap-4">
-                        {metadata?.demoUrl && (
-                            <a href={metadata.demoUrl} target="_blank" rel="noopener noreferrer"
-                                className="px-6 py-3 bg-white text-black font-semibold tracking-wide rounded hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                                OPEN DEMO
-                            </a>
-                        )}
-                        <a href={project.html_url} target="_blank" rel="noopener noreferrer"
-                            className="px-6 py-3 bg-white/5 border border-white/10 text-white font-medium tracking-wide rounded hover:bg-white/10 transition-colors">
-                            SOURCE CODE
-                        </a>
-                    </div>
-                </div>
-
-
-                {/* === Q2: TECH STACK (Top Right) === */}
-                <div className="relative flex flex-col justify-center items-start md:items-end md:text-right space-y-6 min-h-0">
-                    <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Terminal size={100} className="text-gray-800/20 rotate-12" />
-                    </div>
-
-                    <div className="space-y-4 z-10">
-                        <h3 className="text-sm font-mono uppercase tracking-widest text-gray-500">Core Technologies</h3>
-                        <div className="flex flex-wrap justify-start md:justify-end gap-3 max-w-md">
-                            {config.projectDetails?.ATLAS?.stack?.map((tech, i) => (
-                                <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white/[0.03] backdrop-blur-md rounded-lg border border-white/5 hover:border-cyan-500/30 hover:bg-cyan-500/5 transition-all duration-300 group/icon cursor-default">
-                                    <img
-                                        src={getTechIcon(tech)}
-                                        alt={tech}
-                                        className="w-5 h-5 opacity-60 group-hover/icon:opacity-100 grayscale group-hover/icon:grayscale-0 transition-all"
-                                    />
-                                    <span className="text-sm text-gray-400 group-hover/icon:text-cyan-200 font-mono">{tech}</span>
+                {/* === LEFT COLUMN: IDENTITY (Span 4) === */}
+                {/* Mobile: Hidden when item is active (Focus Mode) */}
+                <div className={`lg:col-span-4 flex flex-col h-full overflow-y-auto scrollbar-hide pr-2 ${activeItem ? 'hidden lg:flex' : 'flex'}`}>
+                    <div className="flex flex-col gap-6 md:gap-8 pb-10">
+                        {/* 1. Header & Title */}
+                        <div className="space-y-3 md:space-y-4">
+                            <div className="flex items-center gap-3">
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-cyan-500/30 blur-lg rounded-full animate-pulse" />
+                                    <Hexagon className="text-cyan-400 relative z-10" fill="currentColor" fillOpacity={0.1} size={32} />
                                 </div>
-                            ))}
+                                <span className="text-xs font-mono uppercase tracking-[0.3em] text-cyan-500/80">Project Atlas // {metadata?.timeline?.[metadata.timeline.length - 1]?.year || '2025'}</span>
+                            </div>
+
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-gray-500 leading-none">
+                                {metadata?.title || project.name}
+                            </h1>
                         </div>
-                    </div>
 
-                    {/* Timeline as minimal visuals */}
-                    <div className="flex items-center justify-end gap-1 mt-8 opacity-50 hover:opacity-100 transition-opacity">
-                        {metadata?.timeline?.map((item, i) => (
-                            <div key={i} className="h-1 w-8 rounded-full bg-white/20 hover:bg-cyan-400 transition-colors" title={`${item.year}: ${item.event}`} />
-                        ))}
-                    </div>
-                </div>
-
-
-                {/* === Q3: FEATURES (Bottom Left) === */}
-                <div className="relative flex flex-col overflow-hidden group min-h-0">
-                    <div className="flex items-center gap-3 mb-6">
-                        <Activity size={18} className="text-emerald-500" />
-                        <h3 className="text-sm font-mono uppercase tracking-widest text-gray-400">Flagship Capabilities</h3>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto scrollbar-hide mask-fade-bottom pb-12 pr-4 -mr-4">
-                        <div className="space-y-4">
-                            {(metadata?.features || metadata?.flagshipFeatures) ? (
-                                (metadata.features || metadata.flagshipFeatures).map((feature, index) => (
-                                    // Handle both object (new) and string (legacy) formats
-                                    typeof feature === 'string' ? (
-                                        <div key={index} className="p-4 bg-white/[0.03] border border-white/5 rounded text-gray-300 text-sm">
-                                            {feature}
-                                        </div>
-                                    ) : (
-                                        <ExpandableFeature
-                                            key={index}
-                                            title={feature.title}
-                                            what={feature.what}
-                                            tech={feature.tech}
-                                            security={feature.security}
-                                            tip={feature.tip}
-                                            isExpanded={expandedFeatureIndex === index}
-                                            onToggle={() => {
-                                                setExpandedFeatureIndex(
-                                                    expandedFeatureIndex === index ? null : index
-                                                );
-                                            }}
-                                        />
-                                    )
-                                ))
-                            ) : (
-                                <div className="p-4 border border-white/5 rounded text-gray-500">Loading Features...</div>
+                        {/* 2. Action Buttons */}
+                        <div className="flex items-center gap-3 flex-wrap">
+                            {metadata?.demoUrl && (
+                                <a href={metadata.demoUrl} target="_blank" rel="noopener noreferrer"
+                                    className="flex-1 md:flex-none flex justify-center items-center gap-2 px-6 py-3 md:py-2 bg-white text-black font-bold tracking-wide rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.1)] text-xs uppercase min-h-[44px]">
+                                    <ExternalLink size={14} /> Live Demo
+                                </a>
                             )}
+                            <a href={project.html_url} target="_blank" rel="noopener noreferrer"
+                                className="flex-1 md:flex-none flex justify-center items-center gap-2 px-6 py-3 md:py-2 bg-white/5 border border-white/10 text-white font-medium tracking-wide rounded-full hover:bg-white/10 transition-colors text-xs uppercase min-h-[44px]">
+                                <Github size={14} /> Source
+                            </a>
                         </div>
+
+                        {/* 3. Description (Collapsible on Mobile?) - Kept visible but Font Bumped */}
+                        <div className="space-y-2 pt-2">
+                            <h3 className="text-xs font-mono uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                <Activity size={14} /> Mission Brief
+                            </h3>
+                            <p className="text-gray-400 font-light leading-relaxed text-sm md:text-base selection:bg-cyan-500/20">
+                                {metadata?.description || project.description || "No description provided."}
+                            </p>
+                        </div>
+
+                        {/* 4. Timeline */}
+                        {metadata?.timeline && (
+                            <div className="space-y-3 pt-4 border-t border-white/5 hidden md:block">
+                                <h3 className="text-xs font-mono uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                    <Calendar size={14} /> Timeline
+                                </h3>
+                                <div className="space-y-4 pl-2 border-l border-white/10 ml-1">
+                                    {metadata.timeline.map((item, i) => (
+                                        <div key={i} className="relative pl-4 group">
+                                            <div className="absolute left-[-5px] top-1.5 w-2 h-2 rounded-full bg-cyan-900 border border-cyan-500/50 group-hover:bg-cyan-400 transition-colors" />
+                                            <span className="text-[10px] text-cyan-500/80 font-mono block mb-0.5">{item.year}</span>
+                                            <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{item.event}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
 
-                {/* === Q4: FAILURES (Bottom Right) === */}
-                <div className="relative flex flex-col overflow-hidden group min-h-0">
-                    <div className="flex items-center gap-3 mb-6">
-                        <Flame size={18} className="text-rose-500" />
-                        <h3 className="text-sm font-mono uppercase tracking-widest text-gray-400">Critical Incidents</h3>
-                    </div>
+                {/* === RIGHT COLUMN: DYNAMIC MASTER-DETAIL (Span 8) === */}
+                <div className={`lg:col-span-8 h-full relative overflow-hidden ${activeItem ? 'col-span-1' : ''}`}>
+                    <AnimatePresence mode="wait">
 
-                    <div className="flex-1 overflow-y-auto scrollbar-hide mask-fade-bottom pb-12 pr-4 -mr-4">
-                        <div className="space-y-4">
-                            {metadata?.failures?.map((f, i) => (
-                                <ExpandableFailure
-                                    key={i}
-                                    index={i}
-                                    title={f.title}
-                                    summary={f.summary || f.failure?.split('.')[0] + '.'}
-                                    failure={f.failure}
-                                    solution={f.solution}
-                                    outcome={f.outcome}
-                                    isExpanded={expandedFailureIndex === i}
-                                    onToggle={() => {
-                                        setExpandedFailureIndex(
-                                            expandedFailureIndex === i ? null : i
-                                        );
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    </div>
+                        {/* --- VIEW 1: OVERVIEW (Split Top/Bottom) --- */}
+                        {/* Mobile: Hidden when item is active */}
+                        {activeItem === null ? (
+                            <motion.div
+                                key="overview"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.3 }}
+                                className="flex flex-col h-full gap-4 md:gap-6 pb-20 md:pb-0" // Add padding bottom on mobile to avoid cut off
+                            >
+                                {/* TOP: FEATURES */}
+                                <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl p-4 md:p-5">
+                                    {/* Tech Stack Header */}
+                                    <div className="flex items-center gap-4 mb-4 overflow-x-auto scrollbar-hide pb-2 border-b border-white/5">
+                                        <div className="flex items-center gap-2 text-gray-500 shrink-0">
+                                            <Layers size={14} />
+                                            <span className="text-xs font-mono uppercase tracking-widest">Stack</span>
+                                        </div>
+                                        <div className="h-4 w-px bg-white/10 shrink-0" />
+                                        <div className="flex items-center gap-2">
+                                            {(metadata?.stack || config.projectDetails?.ATLAS?.stack)?.map((tech, i) => (
+                                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5 hover:border-cyan-500/30 transition-colors cursor-default whitespace-nowrap min-h-[32px]">
+                                                    <img src={getTechIcon(tech)} alt={tech} className="w-4 h-4" />
+                                                    <span className="text-xs text-gray-400 font-mono">{tech}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Features Grid */}
+                                    <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide mask-fade-bottom">
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2 mb-2 sticky top-0 bg-[#02040a]/0 backdrop-blur-sm z-10 py-1">
+                                                <Component size={14} className="text-emerald-500" />
+                                                <h3 className="text-xs font-mono uppercase tracking-widest text-emerald-500/80">Flagship Capabilities</h3>
+                                            </div>
+
+                                            <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))] gap-3">
+                                                {features.length > 0 ? features.map((feature, index) => (
+                                                    typeof feature === 'string' ? (
+                                                        <div key={index} className="p-4 bg-white/[0.03] border border-white/5 rounded text-gray-300 text-sm break-words">{feature}</div>
+                                                    ) : (
+                                                        <div key={index} onClick={() => setActiveItem({ type: 'feature', index })} className="cursor-pointer active:scale-[0.98] transition-transform min-w-0">
+                                                            <ExpandableFeature
+                                                                title={feature.title}
+                                                                what={feature.what}
+                                                                tech={feature.tech}
+                                                                security={feature.security}
+                                                                tip={feature.tip}
+                                                                isExpanded={false}
+                                                                onToggle={() => { }}
+                                                                className="hover:border-cyan-500/30 transition-colors h-full"
+                                                            />
+                                                        </div>
+                                                    )
+                                                )) : (
+                                                    <div className="p-4 text-gray-500 text-xs text-center border border-white/5 border-dashed rounded">Loading Features...</div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* BOTTOM: FAILURES */}
+                                <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl p-4 md:p-5">
+                                    <div className="flex items-center gap-2 mb-3 sticky top-0 z-10">
+                                        <Flame size={14} className="text-rose-500" />
+                                        <h3 className="text-xs font-mono uppercase tracking-widest text-rose-500/80">System Critical Events</h3>
+                                    </div>
+
+                                    <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide mask-fade-bottom">
+                                        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,350px),1fr))] gap-3 pb-8">
+                                            {failures.length > 0 ? failures.map((f, i) => (
+                                                <div key={i} onClick={() => setActiveItem({ type: 'failure', index: i })} className="cursor-pointer active:scale-[0.98] transition-transform min-w-0">
+                                                    <ExpandableFailure
+                                                        index={i}
+                                                        title={f.title}
+                                                        summary={f.summary || f.failure?.split('.')[0] + '.'}
+                                                        failure={f.failure}
+                                                        solution={f.solution}
+                                                        outcome={f.outcome}
+                                                        isExpanded={false}
+                                                        onToggle={() => { }}
+                                                        className="hover:border-red-500/30 transition-colors h-full"
+                                                    />
+                                                </div>
+                                            )) : (
+                                                <div className="col-span-full p-6 border border-white/5 border-dashed rounded text-gray-600 text-xs text-center italic">
+                                                    No critical system failures recorded for this module.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ) : (
+
+                            /* --- VIEW 2: MASTER-DETAIL (Side List + Full View) --- */
+                            <motion.div
+                                key="detail"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.3 }}
+                                className="grid grid-cols-1 md:grid-cols-12 h-full gap-4"
+                            >
+                                {/* MASTER: SIDEBAR LIST (Span 4) */}
+                                {/* Mobile: Hidden, only visible on Desktop/Tablet */}
+                                <div className="hidden md:flex md:col-span-4 flex-col h-full bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden">
+                                    {/* Back Button */}
+                                    <button
+                                        onClick={() => setActiveItem(null)}
+                                        className="flex items-center gap-2 p-4 text-xs font-mono uppercase tracking-widest text-gray-500 hover:text-white hover:bg-white/5 transition-colors border-b border-white/5"
+                                    >
+                                        <ArrowUpLeft size={14} /> Back to Overview
+                                    </button>
+
+                                    <div className="flex-1 overflow-y-auto p-3 space-y-6 scrollbar-hide">
+                                        {/* List Features */}
+                                        <div className="space-y-2">
+                                            <h3 className="text-xs font-mono uppercase tracking-widest text-emerald-500/60 px-2 flex items-center gap-2">
+                                                <Component size={12} /> Capabilities
+                                            </h3>
+                                            <div className="space-y-1">
+                                                {features.map((f, i) => {
+                                                    const isActive = activeItem.type === 'feature' && activeItem.index === i;
+                                                    return (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => setActiveItem({ type: 'feature', index: i })}
+                                                            className={`w-full text-left p-3 rounded text-xs transition-all ${isActive
+                                                                ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
+                                                                : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border border-transparent'
+                                                                }`}
+                                                        >
+                                                            {typeof f === 'string' ? f : f.title}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        {/* List Failures */}
+                                        {failures.length > 0 && (
+                                            <div className="space-y-2">
+                                                <h3 className="text-xs font-mono uppercase tracking-widest text-rose-500/60 px-2 flex items-center gap-2">
+                                                    <Flame size={12} /> Critical Events
+                                                </h3>
+                                                <div className="space-y-1">
+                                                    {failures.map((f, i) => {
+                                                        const isActive = activeItem.type === 'failure' && activeItem.index === i;
+                                                        return (
+                                                            <button
+                                                                key={i}
+                                                                onClick={() => setActiveItem({ type: 'failure', index: i })}
+                                                                className={`w-full text-left p-3 rounded text-xs transition-all ${isActive
+                                                                    ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                                                                    : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border border-transparent'
+                                                                    }`}
+                                                            >
+                                                                {f.title}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* DETAIL: FULL CONTENT (Span 8) */}
+                                {/* Mobile: Takes Full Width/Height */}
+                                <div className="col-span-1 md:col-span-8 h-full bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden flex flex-col relative pb-safe">
+                                    <div id="detail-content-container" className="flex-1 overflow-y-auto p-1 scrollbar-hide pb-24 md:pb-1">
+                                        {activeItem.type === 'feature' && features[activeItem.index] && (
+                                            typeof features[activeItem.index] === 'string' ? (
+                                                <div className="p-6 text-gray-300 text-base leading-relaxed">{features[activeItem.index]}</div>
+                                            ) : (
+                                                <ExpandableFeature
+                                                    {...features[activeItem.index]}
+                                                    isExpanded={true}
+                                                    onToggle={() => { }}
+                                                    className="h-full border-none bg-transparent !p-5 md:!p-8"
+                                                />
+                                            )
+                                        )}
+
+                                        {activeItem.type === 'failure' && failures[activeItem.index] && (
+                                            <ExpandableFailure
+                                                index={activeItem.index}
+                                                {...failures[activeItem.index]}
+                                                summary={failures[activeItem.index].summary || failures[activeItem.index].failure?.split('.')[0] + '.'}
+                                                isExpanded={true}
+                                                onToggle={() => { }}
+                                                className="h-full border-none bg-transparent !p-5 md:!p-8"
+                                            />
+                                        )}
+                                    </div>
+
+                                    {/* Bottom Fade Mask */}
+                                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#02040a] via-[#02040a]/80 to-transparent pointer-events-none md:hidden" />
+
+                                    {/* MOBILE STICKY BOTTOM BAR */}
+                                    {/* Only visible on mobile in detail view */}
+                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 md:hidden w-full px-6 pb-safe">
+                                        <button
+                                            onClick={() => setActiveItem(null)}
+                                            className="w-full flex items-center justify-center gap-2 py-4 bg-white text-black font-bold uppercase tracking-widest text-sm rounded-full shadow-[0_0_30px_rgba(255,255,255,0.15)] active:scale-95 transition-transform"
+                                        >
+                                            <ArrowUpLeft size={16} /> Back to Overview
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
             </div>

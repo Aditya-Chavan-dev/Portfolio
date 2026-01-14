@@ -24,7 +24,36 @@ import TacticalHUD from './components/ui/TacticalHUD';
 import SystemCheck from './components/ui/SystemCheck';
 
 function App() {
-    const [phase, setPhase] = useState(PHASE_ENTRY);
+    // Deep Linking Logic
+    const [initialProjectName] = useState(() => {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('project');
+    });
+
+    const [phase, setPhase] = useState(() => {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('project')) return PHASE_PROJECTS;
+
+            // Persistence: Check LocalStorage V2
+            const savedPhase = localStorage.getItem('APP_PHASE_V2');
+            console.log("Restoring Phase:", savedPhase);
+            if (savedPhase && savedPhase !== 'undefined' && savedPhase !== 'null') {
+                return parseInt(savedPhase, 10);
+            }
+        } catch (e) {
+            console.error("State Restore Error:", e);
+        }
+        return PHASE_ENTRY;
+    });
+
+    // Persist Phase Changes
+    useEffect(() => {
+        try {
+            localStorage.setItem('APP_PHASE_V2', phase);
+        } catch (e) { console.error("Persist Error:", e); }
+    }, [phase]);
+
     const [sessionId, setSessionId] = useState(null);
     const [heroMetrics, setHeroMetrics] = useState({
         loc: config.hero.metrics.loc.value,
@@ -217,7 +246,10 @@ function App() {
                             transition={{ duration: 0.5 }}
                             className="h-full w-full"
                         >
-                            <ProjectsView onBack={() => setPhase(PHASE_HUB)} />
+                            <ProjectsView
+                                onBack={() => setPhase(PHASE_HUB)}
+                                initialProjectId={initialProjectName}
+                            />
                         </motion.div>
                     )}
 

@@ -231,3 +231,18 @@ body::after {
     transform: translateY(100%);
   }
 }
+
+/* --- AUDIT ENFORCEMENT PROTOCOLS --- */
+
+/* Safe Area Utility */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 2rem);
+}
+
+/* Mandatory Mobile Animation Throttle (Section F) */
+@media (max-width: 768px) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
