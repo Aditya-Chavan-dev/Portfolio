@@ -649,3 +649,13 @@ Transformed the Feature Card into a "Full Bleed Panel" that occupies the entire 
 
 ### Final Summary
 The interface has shifted from a "Card in a View" to a dedicated "Dashboard Panel" aesthetic, maximizing the content area and immersion.
+
+## Refinement: Typography Polish (Phase 18)
+
+### What is the new feature about?
+Enhanced readability by increasing font sizes and optimizing whitespace for a "neatly arranged" editorial look.
+
+### How did we implement it?
+1.  **Typography**: Increased primary body text to `text-lg` and secondary details to `text-base`.
+2.  **Spacing**: Expanded vertical gaps (`gap-8`) and internal margin (`mb-3`) to let the larger text breathe.
+3.  **Result**: The content is now effortlessly readable and feels structured and authoritative, filling the panel comfortably.
