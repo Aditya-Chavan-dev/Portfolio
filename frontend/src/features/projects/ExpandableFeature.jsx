@@ -6,9 +6,9 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
     return (
         <motion.div
             layout
-            className={`relative bg-[#0A0A0A] border rounded-lg p-3 transition-all duration-300 ${isExpanded
-                ? 'border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.15)]'
-                : 'border-white/5 hover:border-white/10'
+            className={`relative border rounded-lg p-4 transition-all duration-500 ${isExpanded
+                ? 'bg-cyan-900/20 border-cyan-500/50 shadow-[0_0_30px_rgba(6,182,212,0.1)]'
+                : 'bg-[#0A0A0A] border-white/5 hover:border-white/10'
                 } ${className}`}
         >
             {/* Glow effect when expanded */}

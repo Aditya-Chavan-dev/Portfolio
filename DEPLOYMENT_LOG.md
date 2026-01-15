@@ -614,3 +614,15 @@ Achieved maximum clarity and openness by removing navigational artifacts (arrows
 
 ### Final Summary
 The interface is now completely fluid. It uses the full canvas, reads comfortably at a distance, and feels indistinguishable from a native app dashboard.
+
+## Refinement: Unified Aqua Theme (Phase 15)
+
+### What is the new feature about?
+Created a seamless "Single Box" experience by unifying the background color.
+
+### How did we implement it?
+1.  **Global Aqua Tint:** Changed the card background from static black to a deep Aqua tint (`bg-cyan-900/20`) when expanded.
+2.  **Single Container:** Removed the distinction between the "card" and the "content area". The entire expandable element is now one cohesive distinct block.
+
+### Final Summary
+The Feature Cards now feel like holographic projections—single, glowing panes of information that dominate the view when active.
