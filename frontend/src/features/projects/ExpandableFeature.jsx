@@ -7,7 +7,7 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
         <motion.div
             layout
             className={`relative border rounded-lg p-4 transition-all duration-500 ${isExpanded
-                ? 'bg-cyan-900/20 border-cyan-500/50 shadow-[0_0_30px_rgba(6,182,212,0.1)]'
+                ? 'bg-cyan-900/30 border-cyan-500/0 shadow-[0_0_30px_rgba(6,182,212,0.15)]'
                 : 'bg-[#0A0A0A] border-white/5 hover:border-white/10'
                 } ${className}`}
         >
