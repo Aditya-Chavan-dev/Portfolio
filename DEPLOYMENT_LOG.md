@@ -660,15 +660,13 @@ Enhanced readability by increasing font sizes and optimizing whitespace for a "n
 2.  **Spacing**: Expanded vertical gaps (`gap-8`) and internal margin (`mb-3`) to let the larger text breathe.
 3.  **Result**: The content is now effortlessly readable and feels structured and authoritative, filling the panel comfortably.
 
-## Refinement: Internal Card Layout (Phase 19)
+## Refinement: Internal Card Design (Phase 19)
 
 ### What is the new feature about?
-Organized the detailed content into distinct "Inner Cards" to reduce cognitive load and improve visual hierarchy.
+Organized the detailed content into distinct "Inner Cards" to reduce cognitive load and improve scan-ability.
 
 ### How did we implement it?
-1.  **Card Structure**: Wrapped Mission, Tech, and Security sections in `bg-black/40` containers with `rounded-xl` and `border-white/5`.
-2.  **Breathing Space**: Applied `p-6` padding to *each* inner card, ensuring text never feels crowded against the edges.
-3.  **War Story Highlight**: Styled the War Story in a distinct `bg-yellow-900/10` box to separate "Insights" from "Specs".
-
-### Visual Result
-The "Full Bleed" panel now acts as a canvas for these floating data modules, creating a sophisticated dashboard feel where every piece of information has its designated "home".
+1.  **Containerization**: Wrapped Mission, Tech, Security, and Story sections in loose, semi-transparent cards (`bg-black/20`, `rounded-xl`).
+2.  **Breathing Space**: Added `p-6` padding inside each card and `gap-6` between them.
+3.  **Visual Hierarchy**: The "War Story" gets a distinct `yellow-900/5` tint to separate it as a "pro-tip" element.
+4.  **Result**: A "Dashboard within a Dashboard" feel. The user is not overwhelmed by text; instead, they see 4 clear data points.
