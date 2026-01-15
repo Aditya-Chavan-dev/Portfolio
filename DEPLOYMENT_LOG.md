@@ -546,3 +546,19 @@ We have completely overhauled the copy and layout for the ATLAS project details.
 
 ### Final Summary
 The "Project Details" page now reads like a case study rather than a spec sheet. The "List View" removes navigation friction, allowing the user to simply scroll down and absorb the "Engineering Wins" one by one.
+
+## Refinement: Layout Phase 11.5 (Restore Master-Detail)
+
+### What is the new feature about?
+Restored the "Master-Detail" interaction model (Side-by-Side View) for project details. The previous "Vertical List" was replaced with a persistent 3-column layout on desktop:
+1.  **Identity Column:** Left sidebar with project info.
+2.  **Navigation Column:** Middle list of Features/Failures.
+3.  **Detail Column:** Right content pane displaying the selected item.
+
+### How did we implement it?
+1.  **Layout Split:** Divided the main content area (Span 8) into a `flex-row` containing a fixed-width Navigation List (33%) and a flexible Detail Pane (67%).
+2.  **State Logic:** Re-introduced `activeItem` state, defaulting to `index 0` (First Feature) so the view is never empty.
+3.  **Interaction:** Clicking an item in the middle column instantly updates the right column without page transitions.
+
+### Final Summary
+This layout provides a more "Dashboard-like" feel, allowing users to rapidly switch between features while keeping the context (list) always visible. It reduces scrolling fatigue compared to the long vertical list.

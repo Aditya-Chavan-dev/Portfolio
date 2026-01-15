@@ -58,8 +58,9 @@ const ProjectDetailsPage = ({ project, onClose }) => {
     const metadata = config.projectDetails?.[metadataKey];
 
     // Unified State for Master-Detail View
-    // activeItem: { type: 'feature' | 'failure', index: number } | null
-    const [activeItem, setActiveItem] = useState(null);
+    // activeItem: { type: 'feature' | 'failure', index: number }
+    // Initialize with the first feature selected by default
+    const [activeItem, setActiveItem] = useState({ type: 'feature', index: 0 });
 
     const features = metadata?.features || metadata?.flagshipFeatures || [];
     const failures = metadata?.failures || [];
@@ -236,65 +237,106 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                 </div>
 
 
-                {/* === RIGHT COLUMN: VERTICAL LIST (Span 8) === */}
-                <div className="lg:col-span-8 h-full relative overflow-y-auto scrollbar-hide pb-0 mask-fade-bottom pr-2">
-                    <div className="flex flex-col gap-8 pb-20">
+                {/* === RIGHT COLUMN: MASTER-DETAIL INTERFACE (Span 8) === */}
+                <div className="lg:col-span-8 flex flex-col md:flex-row h-full overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl relative">
 
-                        {/* --- LIST: FEATURES --- */}
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2 mb-2 sticky top-0 bg-[#02040a]/90 backdrop-blur-md z-20 py-3 border-b border-white/5">
-                                <Component size={14} className="text-emerald-500" />
-                                <h3 className="text-xs font-mono uppercase tracking-widest text-emerald-500/80">Flagship Capabilities</h3>
+                    {/* --- COLUMN 2: NAVIGATION LIST (W-1/3) --- */}
+                    <div className="w-full md:w-1/3 flex flex-col border-b md:border-b-0 md:border-r border-white/5 bg-white/[0.01]">
+                        <div className="flex-1 overflow-y-auto p-2 md:p-3 space-y-6 scrollbar-hide">
+
+                            {/* List Features */}
+                            <div className="space-y-2">
+                                <h3 className="text-[10px] font-mono uppercase tracking-widest text-emerald-500/60 px-3 py-2 flex items-center gap-2 sticky top-0 bg-[#02040a]/95 backdrop-blur z-10">
+                                    <Component size={12} /> Capabilities
+                                </h3>
+                                <div className="space-y-1 px-1">
+                                    {features.map((f, i) => {
+                                        const isActive = activeItem?.type === 'feature' && activeItem?.index === i;
+                                        return (
+                                            <button
+                                                key={i}
+                                                onClick={() => setActiveItem({ type: 'feature', index: i })}
+                                                className={`w-full text-left p-3 rounded-lg text-xs transition-all duration-200 border ${isActive
+                                                    ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_10px_rgba(6,182,212,0.1)]'
+                                                    : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-transparent'
+                                                    }`}
+                                            >
+                                                <div className="font-medium truncate">{typeof f === 'string' ? f : f.title}</div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
-                            <div className="flex flex-col gap-4">
-                                {features.length > 0 ? features.map((feature, index) => (
-                                    <div key={index} className="min-w-0">
-                                        {typeof feature === 'string' ? (
-                                            <div className="p-4 bg-white/[0.03] border border-white/5 rounded text-gray-300 text-sm break-words">{feature}</div>
-                                        ) : (
-                                            <ExpandableFeature
-                                                {...feature}
-                                                isExpanded={activeItem?.type === 'feature' && activeItem?.index === index}
-                                                onToggle={() => setActiveItem(prev => (prev?.type === 'feature' && prev?.index === index) ? null : { type: 'feature', index })}
-                                                className="w-full"
-                                            />
-                                        )}
+                            {/* List Failures */}
+                            {failures.length > 0 && (
+                                <div className="space-y-2">
+                                    <h3 className="text-[10px] font-mono uppercase tracking-widest text-rose-500/60 px-3 py-2 flex items-center gap-2 sticky top-0 bg-[#02040a]/95 backdrop-blur z-10">
+                                        <Flame size={12} /> Critical Events
+                                    </h3>
+                                    <div className="space-y-1 px-1">
+                                        {failures.map((f, i) => {
+                                            const isActive = activeItem?.type === 'failure' && activeItem?.index === i;
+                                            return (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => setActiveItem({ type: 'failure', index: i })}
+                                                    className={`w-full text-left p-3 rounded-lg text-xs transition-all duration-200 border ${isActive
+                                                        ? 'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-[0_0_10px_rgba(239,68,68,0.1)]'
+                                                        : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-transparent'
+                                                        }`}
+                                                >
+                                                    <div className="font-medium truncate">{f.title}</div>
+                                                </button>
+                                            );
+                                        })}
                                     </div>
-                                )) : (
-                                    <div className="p-4 text-gray-500 text-xs text-center border border-white/5 border-dashed rounded">Loading Features...</div>
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </div>
-
-                        {/* --- LIST: FAILURES --- */}
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2 mb-2 sticky top-0 bg-[#02040a]/90 backdrop-blur-md z-20 py-3 border-b border-white/5">
-                                <Flame size={14} className="text-rose-500" />
-                                <h3 className="text-xs font-mono uppercase tracking-widest text-rose-500/80">System Critical Events</h3>
-                            </div>
-
-                            <div className="flex flex-col gap-4">
-                                {failures.length > 0 ? failures.map((f, i) => (
-                                    <div key={i} className="min-w-0">
-                                        <ExpandableFailure
-                                            index={i}
-                                            {...f}
-                                            summary={f.summary || f.failure?.split('.')[0] + '.'}
-                                            isExpanded={activeItem?.type === 'failure' && activeItem?.index === i}
-                                            onToggle={() => setActiveItem(prev => (prev?.type === 'failure' && prev?.index === i) ? null : { type: 'failure', index: i })}
-                                            className="w-full"
-                                        />
-                                    </div>
-                                )) : (
-                                    <div className="p-6 border border-white/5 border-dashed rounded text-gray-600 text-xs text-center italic">
-                                        No critical system failures recorded for this module.
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
                     </div>
+
+                    {/* --- COLUMN 3: DETAIL VIEW (Flex-1) --- */}
+                    <div className="flex-1 relative overflow-hidden bg-white/[0.01]">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={`${activeItem?.type}-${activeItem?.index}`}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute inset-0 overflow-y-auto scrollbar-hide p-4 md:p-6 lg:p-8"
+                            >
+                                {activeItem?.type === 'feature' && features[activeItem.index] && (
+                                    typeof features[activeItem.index] === 'string' ? (
+                                        <div className="text-gray-300 text-base leading-relaxed bg-white/5 p-6 rounded-xl border border-white/5">{features[activeItem.index]}</div>
+                                    ) : (
+                                        <ExpandableFeature
+                                            {...features[activeItem.index]}
+                                            isExpanded={true}
+                                            onToggle={() => { }}
+                                            className="h-full border-none bg-transparent !p-0 shadow-none"
+                                        />
+                                    )
+                                )}
+
+                                {activeItem?.type === 'failure' && failures[activeItem.index] && (
+                                    <ExpandableFailure
+                                        index={activeItem.index}
+                                        {...failures[activeItem.index]}
+                                        summary={failures[activeItem.index].summary || failures[activeItem.index].failure?.split('.')[0] + '.'}
+                                        isExpanded={true}
+                                        onToggle={() => { }}
+                                        className="h-full border-none bg-transparent !p-0 shadow-none"
+                                    />
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* Bottom fade for scrolling indication */}
+                        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#02040a] to-transparent pointer-events-none" />
+                    </div>
+
                 </div>
 
             </div>
