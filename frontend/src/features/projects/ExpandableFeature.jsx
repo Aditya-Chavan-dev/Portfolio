@@ -28,50 +28,50 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                         transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="overflow-hidden"
                     >
-                        <div className="mt-6 flex flex-col gap-8">
-                            {/* Mission Objective (Full) */}
-                            <div>
-                                <div className="flex items-center gap-2 mb-3 text-cyan-400/90">
-                                    <Lightbulb size={16} className="" />
+                        <div className="mt-8 flex flex-col gap-6">
+                            {/* Mission Objective Card */}
+                            <div className="bg-black/40 rounded-xl p-6 border border-white/5">
+                                <div className="flex items-center gap-2 mb-4 text-cyan-400">
+                                    <Lightbulb size={18} />
                                     <span className="text-sm uppercase font-mono tracking-widest font-bold">Mission Objective</span>
                                 </div>
-                                <p className="text-gray-300 text-lg leading-relaxed pl-1">
+                                <p className="text-gray-300 text-lg leading-relaxed">
                                     {what}
                                 </p>
                             </div>
 
-                            {/* Grid for Tech & Security */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                {/* Tech Used */}
-                                <div>
-                                    <div className="flex items-center gap-2 mb-3 text-purple-400/90">
-                                        <Code size={16} className="" />
+                            {/* Tech & Security Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Tech Card */}
+                                <div className="bg-black/40 rounded-xl p-6 border border-white/5">
+                                    <div className="flex items-center gap-2 mb-4 text-purple-400">
+                                        <Code size={18} />
                                         <span className="text-sm uppercase font-mono tracking-widest font-bold">Tech Matrix</span>
                                     </div>
-                                    <p className="text-gray-400 text-base leading-relaxed pl-1">
+                                    <p className="text-gray-400 text-base leading-relaxed">
                                         {tech}
                                     </p>
                                 </div>
 
-                                {/* Security */}
-                                <div>
-                                    <div className="flex items-center gap-2 mb-3 text-rose-400/90">
-                                        <Shield size={16} className="" />
+                                {/* Security Card */}
+                                <div className="bg-black/40 rounded-xl p-6 border border-white/5">
+                                    <div className="flex items-center gap-2 mb-4 text-rose-400">
+                                        <Shield size={18} />
                                         <span className="text-sm uppercase font-mono tracking-widest font-bold">Security Protocol</span>
                                     </div>
-                                    <p className="text-gray-400 text-base leading-relaxed pl-1">
+                                    <p className="text-gray-400 text-base leading-relaxed">
                                         {security}
                                     </p>
                                 </div>
                             </div>
 
-                            {/* War Story Tip (Bottom Pinned, No Divider) */}
+                            {/* War Story Card (Distinct Highlight) */}
                             {tip && (
-                                <div className="mt-4">
+                                <div className="bg-yellow-900/10 rounded-xl p-6 border border-yellow-500/10">
                                     <div className="flex items-start gap-4">
-                                        <div className="mt-1 text-yellow-500/80 text-lg">💡</div>
-                                        <div className="flex-1">
-                                            <span className="text-yellow-500/50 text-xs uppercase font-mono tracking-widest block mb-1">
+                                        <div className="mt-1 text-yellow-500/80 text-xl">💡</div>
+                                        <div>
+                                            <span className="text-yellow-500/50 text-xs uppercase font-mono tracking-widest block mb-2">
                                                 War Story
                                             </span>
                                             <p className="text-yellow-100/90 text-base font-light italic leading-relaxed">
