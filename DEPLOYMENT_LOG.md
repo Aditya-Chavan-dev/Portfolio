@@ -700,3 +700,14 @@ Calibrated the layout to the "Goldilocks Zone" where content fills the box neatl
 2.  **Typography**: Increased Mission Objective to `text-sm` for better readability and volume fill.
 3.  **Spacing**: Balanced gaps (`gap-4`) to distribute elements evenly across the available height.
 4.  **Result**: The "Perfect Box Fill" — zero scroll, zero wasted space.
+
+## Refinement: Precision Font Calibration (Phase 23)
+
+### What is the new feature about?
+Calibrated font sizes to fill 85-95% of the container vertical space, maximizing visual density without overflow.
+
+### How did we implement it?
+1.  **Mission Objective**: Increased to `text-base` (1rem) for optimal visual weight.
+2.  **Tech/Security**: Increased to `text-sm` (0.875rem) for balanced readability.
+3.  **War Story**: Increased to `text-sm` to fill remaining vertical space evenly.
+4.  **Result**: Consistent visual density across both primary content boxes.
