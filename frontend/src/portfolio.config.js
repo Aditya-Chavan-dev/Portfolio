@@ -105,97 +105,15 @@ This portfolio updates itself. I tried telling it to chill. It didn’t listen �
     // NOTE: This data is verified against Conversation History (ATLAS Work Logs)
     // NOTE: This data is verified against User-Provided Engineering Logs (Jan 12, 2026)
     projectDetails: {
-        "ATLAS": {
-            // "Short and Summarized"
-            // description: "A decentralized Attendance Platform that eliminates the 'Memory Trap' of manual tracking by replacing Excel sheets with cryptographic self-assertion. It features 'Logic Hooks' for automated leave calculations and Atomic Transactions to guarantee 100% ledger integrity. The architecture shifts the executive role from data-entry scribe to strategic judge, reducing daily administrative cognitive load to zero.",
-            // coreIdea: "A Smart Attendance Platform that eliminates the 'Memory Trap' of manual tracking. It replaces the CEO's reliance on memory and Excel sheets with a decentralized, GPS-tagged system where employees mark their own presence, requiring only simple approval.",
+        import { ATLAS_DATA } from './data/projects/atlas';
 
-            // "Highlight these things"
-            tech: {
-                frontend: [TECH.REACT, TECH.VITE, "TanStack Query", TECH.TAILWIND], // Changed TECH.QUERY to explicit string or ensure TECH.QUERY is "TanStack Query" (It is)
-                backend: ["Firebase Cloud Functions", TECH.NODE],
-                database: [TECH.RTDB], // Removed WebSockets suffix & Firestore
-                versionControl: ["Git", "GitHub"] // Removed Actions
-            },
-            stack: [TECH.REACT, TECH.FIREBASE, TECH.NODE, TECH.TAILWIND, TECH.VITE], // Flattened for UI Badges
+        // ... (existing config)
 
-            // "Highlight these things: Failures, solutions"
-            // failures: [
-            //     {
-            //         id: "f1",
-            //         title: "The 30x Speedup (Serial vs Parallel)",
-            //         summary: "Legacy code fetched data day-by-day (serial), causing a 6-second load time.",
-            //         failure: "The 'My History' tab took ~6 seconds to load because the legacy code was fetching attendance data one day at a time (Serial Fetching). 30 days x 200ms latency = 6000ms wait time.",
-            //         solution: "Refactored to Parallel Request Aggregation using Promise.all(). We now fire all 30 requests simultaneously.",
-            //         outcome: "Load time dropped from 6s to ~0.3s. The wait time is now just the speed of one request, not thirty combined."
-            //     },
-            //     {
-            //         id: "f2",
-            //         title: "The 'Sunday Rule' Race Condition",
-            //         summary: "Concurrent leave approvals caused data corruption when users worked on holidays.",
-            //         failure: "Leave balances were getting corrupted when two approvals happened simultaneously. If a user worked on a Sunday (+1 credit) while taking leave elsewhere, the system would miscount due to a Race Condition.",
-            //         solution: "Implemented Atomic Transactions (firebaser.runTransaction). This forces the database to process one update at a time, locking the document during the read-write cycle.",
-            //         outcome: "Achieved 100% Data Integrity. The system guarantees the math is always perfect, regardless of concurrency."
-            //     },
-            //     {
-            //         id: "f3",
-            //         title: "The Ad-Blocker Blackout (ERR_BLOCKED)",
-            //         summary: "Corporate firewalls blocked REST APIs, causing a 10-15% check-in failure rate.",
-            //         failure: "Corporate firewalls and browser extensions were blocking standard REST API calls, causing 10-15% of users to fail at marking attendance even with internet connection.",
-            //         solution: "Implemented Protocol Switching. We moved critical checks to use WebSockets via Firebase Realtime Database, which tunnels through standard blockers.",
-            //         outcome: "100% Availability. The app now acknowledges user input instantly (0ms perceived latency) thanks to Optimistic UI patterns."
-            //     },
-            //     {
-            //         id: "f4",
-            //         title: "The White Screen of Death (Cache Rot)",
-            //         summary: "Stale Service Workers caused app crashes for returning users after breaking changes.",
-            //         failure: "Users with cached versions of the app experienced white-screen crashes because the new 'Visitor Stats' feature relied on data that didn't exist in their old local storage schema.",
-            //         solution: "Implemented 'Smart Hydration' and a Service Worker Kill-Switch. The app now detects schema mismatches and auto-wipes stale cache before React mounts.",
-            //         outcome: "Zero crash reports on deployment. The system self-heals legacy state without requiring the user to manually clear browser data."
-            //     }
-            // ],
-
-            // "Short and Summarized"
-            timeline: [
-                { year: "2026", event: "Work In Progress (WIP)" },
-                { year: "2025", event: "Dec 6: Project Start" },
-            ],
-
-            // New: Demo Link
-            demoUrl: "#", // Placeholder for actual demo link
-
-            // New: Flagship Features (Expandable)
-            // features: [
-            //     {
-            //         title: "The 'Cognitive Load' Assassin",
-            //         what: "The old way was a memory game. The MD had to mentally track attendance for each employee over 10+ sites or the office. If it was forgotten, then it was lost—or we had to rely on the employee's claim. I killed the guessing game. I built a system that shifts the burden from the MD’s brain to the Employee’s pocket. The employee opens the app, clicks 'Mark In,' and the system instantly locks in their declaration vs the server time.",
-            //         tech: "Role: UX // Tech: Semantic State Interface, Real-time Timestamping",
-            //         security: "The Server captures the truth. We don't rely on client-side time; the timestamp is cryptographically verified against the server clock.",
-            //         tip: "The Smart Move: We automated the 'boring' parts. The user doesn’t type the date (often wrong) or the time (often faked). The interface provides an instant, dopamine-hitting 'Success' card. Zero anxiety. Zero cognitive load."
-            //     },
-            //     {
-            //         title: "The 'Executive Pivot' Engine",
-            //         what: "Before this, the MD was a glorious data-entry clerk. He dragged himself through 30 days of Excel cells, manually filling in 'Present' or 'Absent.' He was working for the data. I flipped the script. I built an 'Approval Queue' architecture. The data now flows UP. The MD opens his dashboard and sees a clean, pre-sorted list of claims. Employee says 'I was at Site B' -> MD clicks [Confirm] or [Reject].",
-            //         tech: "Role: Business Intelligence // Tech: Async State Management, Bulk Actions",
-            //         security: "Role-Based Access Control ensures only the MD has the authority to 'Judge' the claims. The employee's input is merely a proposal.",
-            //         tip: "The Smart Move: We turned a 3-day data entry nightmare into a 15-minute executive review. The MD is no longer the scribe; he is now the Judge."
-            //     },
-            //     {
-            //         title: "The 'Smart Contract' Logic",
-            //         what: "In the old system, 'Compensatory Offs' were a handshake deal. 'I worked Sunday, give me a day off next week.' These deals were forgotten, leading to disputes. I codified the handshake. I wrote a 'Logic Hook' into the approval flow. The system detects an employee working on a holiday. When the MD tries to click 'Approve', it halts and warns: 'Careful. This is a Holiday. Approving this will instantly credit 1 Paid Leave.'",
-            //         tech: "Role: Developer Reliability // Tech: Transactional Integrity, Conditional Auto-Triggers",
-            //         security: "Atomic Transactions ensure the credit is deposited in the exact same millisecond the attendance is approved, preventing ledger drift.",
-            //         tip: "The Smart Move: It’s a Double-Check mechanism that protects both sides. The MD can't accidentally give away free days, and the employee never has to beg for what they earned. It is fair, transparent, and mathematically enforced."
-            //     },
-            //     {
-            //         title: "The 'Ghost Protocol' Security",
-            //         what: "An Excel sheet has no walls. Anyone with the file owns the company records. I built a digital fortress with a unique twist: Invisibility. Most apps let attackers knock on the door (Login Screen). I removed the door. We implemented a 'Whitelist-First' architecture. When a user logs in, the system checks an internal 'Whitelist'. Unauthorized? The account is instantly destroyed.",
-            //         tech: "Role: Critical Security // Tech: Whitelist-First Auth, Cloud Function Triggers",
-            //         security: "If you aren't on the list, you don't get an 'Access Denied' message—your account is programmatically annihilated within 200ms. Access is binary, and security is absolute.",
-            //         tip: "The Smart Move: To an outsider, the system simply doesn't exist. It is the ultimate form of accountability."
-            //     }
-            // ]
-        }
+        // Phase 5: Deep Project Metadata (Curated)
+        projectDetails: {
+            "ATLAS": ATLAS_DATA,
+            // Future projects will be imported here
+        },
     },
 
     // Global Configuration
