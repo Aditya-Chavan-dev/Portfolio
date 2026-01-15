@@ -669,3 +669,14 @@ Optimized the layout density to ensure all details fit within the single-view "b
 1.  **Rebalancing**: Reverted body text to `text-base` and details to `text-sm` to recover vertical space.
 2.  **Compaction**: Reduced layout gaps (`gap-8` -> `gap-5`) and grid spacing (`gap-10` -> `gap-6`) to pack information efficiently.
 3.  **Result**: A "dense yet breathable" layout that displays the Mission, Tech, Security, and War Story simultaneously in the viewport.
+
+## Refinement: Aggressive Compaction (Phase 20)
+
+### What is the new feature about?
+Achieved "Zero Scroll" layout by aggressively compacting typography and spacing to create a high-density "HUD" interface.
+
+### How did we implement it?
+1.  **Micro-Typography**: Reduced Body text to `text-sm` and Details/Stories to `text-xs`.
+2.  **Density**: Tightened vertical rhythm to `gap-3` and grid spacing to `gap-4`.
+3.  **Edge Maximization**: Reduced container padding to `p-5` to gain every available pixel.
+4.  **Result**: A guaranteed single-view experience where scrolling is rendered obsolete for standard content.
