@@ -29,58 +29,7 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                         className="overflow-hidden"
                     >
                         <div className="mt-5 flex flex-col gap-7">
-                            {/* Mission Objective (Full) */}
-                            <div>
-                                <div className="flex items-center gap-2 mb-2 text-cyan-400/90">
-                                    <Lightbulb size={16} className="" />
-                                    <span className="text-sm uppercase font-mono tracking-widest font-bold">Mission Objective</span>
-                                </div>
-                                <p className="text-gray-300 text-[18.2px] leading-[30px] pl-1">
-                                    {what}
-                                </p>
-                            </div>
-
-                            {/* Grid for Tech & Security */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-                                {/* Tech Used */}
-                                <div>
-                                    <div className="flex items-center gap-2 mb-2 text-purple-400/90">
-                                        <Code size={16} className="" />
-                                        <span className="text-sm uppercase font-mono tracking-widest font-bold">Tech Matrix</span>
-                                    </div>
-                                    <p className="text-gray-400 text-[18.2px] leading-[30px] pl-1">
-                                        {tech}
-                                    </p>
-                                </div>
-
-                                {/* Security */}
-                                <div>
-                                    <div className="flex items-center gap-2 mb-2 text-rose-400/90">
-                                        <Shield size={16} className="" />
-                                        <span className="text-sm uppercase font-mono tracking-widest font-bold">Security Protocol</span>
-                                    </div>
-                                    <p className="text-gray-400 text-[18.2px] leading-[30px] pl-1">
-                                        {security}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* War Story Tip (Bottom Pinned, No Divider) */}
-                            {tip && (
-                                <div className="mt-4">
-                                    <div className="flex items-start gap-4">
-                                        <div className="mt-0.5 text-yellow-500/80 text-[20px]">💡</div>
-                                        <div className="flex-1">
-                                            <span className="text-yellow-500/50 text-xs uppercase font-mono tracking-widest block mb-1.5">
-                                                War Story
-                                            </span>
-                                            <p className="text-yellow-100/90 text-[18.2px] font-light italic leading-[30px]">
-                                                {tip}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                            {/* Text Content Removed by User Request */}
                         </div>
                     </motion.div>
                 )}
