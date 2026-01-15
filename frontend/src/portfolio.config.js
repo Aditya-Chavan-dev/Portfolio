@@ -114,7 +114,7 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
                 frontend: [TECH.REACT, TECH.VITE, TECH.QUERY, TECH.TAILWIND],
                 backend: ["Firebase Cloud Functions", TECH.NODE],
                 database: [TECH.RTDB + " (WebSockets)", TECH.FIRESTORE],
-                infrastructure: ["Firebase Hosting", TECH.ACTIONS]
+                versionControl: ["Git", "GitHub Actions", "GitHub"]
             },
             stack: [TECH.REACT, TECH.FIREBASE, TECH.NODE, TECH.TAILWIND, TECH.VITE], // Flattened for UI Badges
 
@@ -143,6 +143,14 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
                     failure: "Corporate firewalls and browser extensions were blocking standard REST API calls, causing 10-15% of users to fail at marking attendance even with internet connection.",
                     solution: "Implemented Protocol Switching. We moved critical checks to use WebSockets via Firebase Realtime Database, which tunnels through standard blockers.",
                     outcome: "100% Availability. The app now acknowledges user input instantly (0ms perceived latency) thanks to Optimistic UI patterns."
+                },
+                {
+                    id: "f4",
+                    title: "The White Screen of Death (Cache Rot)",
+                    summary: "Stale Service Workers caused app crashes for returning users after breaking changes.",
+                    failure: "Users with cached versions of the app experienced white-screen crashes because the new 'Visitor Stats' feature relied on data that didn't exist in their old local storage schema.",
+                    solution: "Implemented 'Smart Hydration' and a Service Worker Kill-Switch. The app now detects schema mismatches and auto-wipes stale cache before React mounts.",
+                    outcome: "Zero crash reports on deployment. The system self-heals legacy state without requiring the user to manually clear browser data."
                 }
             ],
 

@@ -502,3 +502,33 @@ We have performed a massive cleanup of the codebase, removing over 10+ legacy co
 
 ### Final Summary
 We have "paid down" our technical debt. The codebase is now lean, with a clear separation between "What things look like" (JSX) and "How things work" (Hooks). This is the hallmark of a mature React codebase.
+
+## Refinement: Layout & Content Balance (Phase 9)
+
+### What is the new feature about?
+We refined the "Project Details" view to eliminate in-box scrolling and ensure a perfect 2x2 grid layout for both Flagship Features and Critical Failures.
+
+### How did we implement it?
+1.  **Strict Grid Layout**: Enforced `grid-cols-2` on desktop for both Features and Failures, ensuring 4 items always form a balanced square.
+2.  **Vertical Shift**: Reduced top padding by 32px to shift the entire content block upwards, utilizing more screen space.
+3.  **Data Parity**: Added a 4th Critical Failure ("The White Screen of Death") to match the 4 Flagship Features, creating visual symmetry.
+4.  **Compact Spacing**: Reduced internal gaps and padding to fit all content within the viewport without needing a scrollbar.
+
+### Final Summary
+The Project Details view is now a clean, symmetrical "Dashboard". Users see 4 major features and 4 major failures at a glance, arranged in a perfect grid, without any distracting scrolling or uneven whitespace.
+
+## Refinement: Layout Phase 10 (Tech Stack Relocation)
+
+### What is the new feature about?
+We have optimized the "Project Details" layout by relocating the Tech Stack and fixing content sizing issues.
+1.  **Sidebar Tech Stack:** The stack has moved from the main content area to the Sidebar, clearing space for the Flagship Features.
+2.  **Strict Categorization:** The stack is now grouped into 4 distinct categories: Frontend, Backend, Database, and Version Control.
+3.  **No Scrollbars:** Critical Failure cards have been resized and compacted to ensure they fit fully within the view without requiring annoying internal scrollbars.
+
+### How did we implement it?
+1.  **Config Update:** Updated `portfolio.config.js` to structure the tech stack logic.
+2.  **Layout Refactor:** Modified `ProjectDetailsPage.jsx` to render the "System Specs" in the left sidebar using a dense icon grid.
+3.  **Visual Polish:** Reduced padding and font sizes in `ExpandableFailure` to maximize content visibility in a smaller footprint.
+
+### Final Summary
+The interface is now strictly organized. The "Context" (Tech Stack, Timeline) lives in the Sidebar, while the "Content" (Features, Failures) dominates the Main View. This separation allows the user to references the tech stack without it fighting for attention with the main narrative.

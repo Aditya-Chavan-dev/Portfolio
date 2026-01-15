@@ -9,6 +9,7 @@ const LiveNavbar = ({ compactMode = false }) => {
     // Gold Standard #10: Zombie Check (SWR)
     const { data } = useSWR('metrics', fetchMetrics);
     const stats = data?.visitorStats || null;
+    const [time, setTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" }));
 
     useEffect(() => {
         const clockInterval = setInterval(() => setTime(new Date().toLocaleTimeString('en-US', { hour12: false, hour: "2-digit", minute: "2-digit" })), 1000);
