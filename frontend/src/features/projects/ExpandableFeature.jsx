@@ -29,7 +29,25 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                         className="overflow-hidden"
                     >
                         <div className="mt-5 flex flex-col gap-7">
-                            {/* Text Content Removed by User Request */}
+                            {/* Box 1: Full Width */}
+                            <div className="w-full h-32 border border-white/10 rounded-lg bg-white/5 flex items-center justify-center">
+                                <span className="text-white/20 font-mono text-sm">Box 1</span>
+                            </div>
+
+                            {/* Middle Row: Box 2 & Box 3 */}
+                            <div className="grid grid-cols-2 gap-7">
+                                <div className="h-32 border border-white/10 rounded-lg bg-white/5 flex items-center justify-center">
+                                    <span className="text-white/20 font-mono text-sm">Box 2</span>
+                                </div>
+                                <div className="h-32 border border-white/10 rounded-lg bg-white/5 flex items-center justify-center">
+                                    <span className="text-white/20 font-mono text-sm">Box 3</span>
+                                </div>
+                            </div>
+
+                            {/* Box 4: Full Width */}
+                            <div className="w-full h-32 border border-white/10 rounded-lg bg-white/5 flex items-center justify-center">
+                                <span className="text-white/20 font-mono text-sm">Box 4</span>
+                            </div>
                         </div>
                     </motion.div>
                 )}
