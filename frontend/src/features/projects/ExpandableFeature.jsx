@@ -55,53 +55,59 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                         transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="overflow-hidden"
                     >
-                        <div className="mt-2 pt-3 border-t border-white/5 flex flex-col gap-2">
+                        <div className="mt-2 pt-3 border-t border-white/5 flex flex-col gap-3">
                             {/* Row 1: Mission Objective (Full) */}
-                            <div>
-                                <div className="flex items-center gap-2 text-cyan-400 mb-1">
-                                    <Lightbulb size={12} />
-                                    <span className="text-[10px] uppercase font-mono tracking-widest font-semibold opacity-80">Mission Objective</span>
+                            <div className="bg-cyan-950/[0.1] rounded-lg border border-cyan-500/10 overflow-hidden">
+                                <div className="bg-cyan-500/10 px-3 py-1.5 flex items-center gap-2 border-b border-cyan-500/10">
+                                    <Lightbulb size={12} className="text-cyan-400" />
+                                    <span className="text-[10px] uppercase font-mono tracking-widest font-bold text-cyan-200/80">Mission Objective</span>
                                 </div>
-                                <p className="text-gray-300 text-sm leading-snug bg-white/[0.03] p-3 rounded border-l-2 border-cyan-500/30">
-                                    {what}
-                                </p>
+                                <div className="p-3">
+                                    <p className="text-gray-300 text-sm leading-relaxed">
+                                        {what}
+                                    </p>
+                                </div>
                             </div>
 
                             {/* Row 2: Grid for Tech & Security */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {/* Tech Used */}
-                                <div>
-                                    <div className="flex items-center gap-2 text-purple-400 mb-1">
-                                        <Code size={12} />
-                                        <span className="text-[10px] uppercase font-mono tracking-widest font-semibold opacity-80">Tech Matrix</span>
+                                <div className="bg-purple-950/[0.1] rounded-lg border border-purple-500/10 overflow-hidden flex flex-col">
+                                    <div className="bg-purple-500/10 px-3 py-1.5 flex items-center gap-2 border-b border-purple-500/10">
+                                        <Code size={12} className="text-purple-400" />
+                                        <span className="text-[10px] uppercase font-mono tracking-widest font-bold text-purple-200/80">Tech Matrix</span>
                                     </div>
-                                    <p className="text-gray-400 text-xs leading-snug bg-white/[0.03] p-2.5 rounded border-l-2 border-purple-500/30 h-full flex items-center">
-                                        {tech}
-                                    </p>
+                                    <div className="p-3 flex-1 flex items-center">
+                                        <p className="text-gray-300 text-xs leading-relaxed">
+                                            {tech}
+                                        </p>
+                                    </div>
                                 </div>
 
                                 {/* Security */}
-                                <div>
-                                    <div className="flex items-center gap-2 text-red-400 mb-1">
-                                        <Shield size={12} />
-                                        <span className="text-[10px] uppercase font-mono tracking-widest font-semibold opacity-80">Security Protocol</span>
+                                <div className="bg-rose-950/[0.1] rounded-lg border border-rose-500/10 overflow-hidden flex flex-col">
+                                    <div className="bg-rose-500/10 px-3 py-1.5 flex items-center gap-2 border-b border-rose-500/10">
+                                        <Shield size={12} className="text-rose-400" />
+                                        <span className="text-[10px] uppercase font-mono tracking-widest font-bold text-rose-200/80">Security Protocol</span>
                                     </div>
-                                    <p className="text-gray-400 text-xs leading-snug bg-white/[0.03] p-2.5 rounded border-l-2 border-red-500/30 h-full flex items-center">
-                                        {security}
-                                    </p>
+                                    <div className="p-3 flex-1 flex items-center">
+                                        <p className="text-gray-300 text-xs leading-relaxed">
+                                            {security}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Row 3: War Story Tip (Bottom Pinned) */}
                             {tip && (
-                                <div className="mt-1 p-2.5 rounded bg-yellow-500/5 border border-yellow-500/20">
-                                    <div className="flex items-start gap-2">
+                                <div className="mt-0 rounded-lg bg-yellow-500/5 border border-yellow-500/20 p-2.5">
+                                    <div className="flex items-start gap-2.5">
                                         <div className="mt-0.5 text-yellow-500 text-xs">💡</div>
                                         <div className="flex-1">
-                                            <span className="text-yellow-500/70 text-[10px] uppercase font-mono tracking-widest block mb-0.5">
+                                            <span className="text-yellow-500/60 text-[10px] uppercase font-mono tracking-widest block mb-1">
                                                 War Story
                                             </span>
-                                            <p className="text-yellow-200/90 text-xs font-light italic leading-snug">
+                                            <p className="text-yellow-100/90 text-xs font-normal italic leading-relaxed">
                                                 {tip}
                                             </p>
                                         </div>
