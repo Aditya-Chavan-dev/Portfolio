@@ -100,7 +100,7 @@ const ProjectDetailsPage = ({ project, onClose }) => {
 
             {/* MAIN GRID LAYOUT */}
             {/* Added proper padding-bottom for safe areas (pb-safe) via pb-20 on mobile */}
-            <div className="flex-1 w-full h-full max-w-[1920px] mx-auto relative z-10 p-4 pt-20 md:p-6 md:pt-28 lg:p-10 lg:pt-32 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 overflow-hidden pb-safe">
+            <div className="flex-1 w-full h-full max-w-[1920px] mx-auto relative z-10 p-4 pt-16 md:p-6 md:pt-20 lg:p-10 lg:pt-24 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 overflow-hidden pb-safe">
 
                 {/* === LEFT COLUMN: IDENTITY (Span 4) === */}
                 {/* Mobile: Hidden when item is active (Focus Mode) */}
@@ -162,6 +162,77 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                                 </div>
                             </div>
                         )}
+
+                        {/* 5. System Specs (Tech Stack) - Moved from Right Column */}
+                        {metadata?.tech && (
+                            <div className="space-y-3 pt-4 border-t border-white/5 hidden md:block">
+                                <h3 className="text-xs font-mono uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                    <Layers size={14} /> System Specs
+                                </h3>
+
+                                <div className="space-y-4">
+                                    {/* Frontend */}
+                                    {metadata.tech.frontend && (
+                                        <div className="space-y-2">
+                                            <span className="text-[10px] text-cyan-500/60 font-mono uppercase tracking-wider block">Frontend</span>
+                                            <div className="flex flex-wrap gap-2">
+                                                {metadata.tech.frontend.map((t, i) => (
+                                                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 bg-white/[0.03] rounded border border-white/5" title={t}>
+                                                        <img src={getTechIcon(t)} alt={t} className="w-3.5 h-3.5" />
+                                                        <span className="text-[10px] text-gray-400 font-mono">{t}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Backend */}
+                                    {metadata.tech.backend && (
+                                        <div className="space-y-2">
+                                            <span className="text-[10px] text-purple-500/60 font-mono uppercase tracking-wider block">Backend</span>
+                                            <div className="flex flex-wrap gap-2">
+                                                {metadata.tech.backend.map((t, i) => (
+                                                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 bg-white/[0.03] rounded border border-white/5" title={t}>
+                                                        <img src={getTechIcon(t)} alt={t} className="w-3.5 h-3.5" />
+                                                        <span className="text-[10px] text-gray-400 font-mono">{t}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Database */}
+                                    {metadata.tech.database && (
+                                        <div className="space-y-2">
+                                            <span className="text-[10px] text-emerald-500/60 font-mono uppercase tracking-wider block">Database</span>
+                                            <div className="flex flex-wrap gap-2">
+                                                {metadata.tech.database.map((t, i) => (
+                                                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 bg-white/[0.03] rounded border border-white/5" title={t}>
+                                                        <img src={getTechIcon(t)} alt={t} className="w-3.5 h-3.5" />
+                                                        <span className="text-[10px] text-gray-400 font-mono">{t}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Version Control */}
+                                    {(metadata.tech.versionControl || metadata.tech.infrastructure) && (
+                                        <div className="space-y-2">
+                                            <span className="text-[10px] text-orange-500/60 font-mono uppercase tracking-wider block">Version Control</span>
+                                            <div className="flex flex-wrap gap-2">
+                                                {(metadata.tech.versionControl || metadata.tech.infrastructure).map((t, i) => (
+                                                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 bg-white/[0.03] rounded border border-white/5" title={t}>
+                                                        <img src={getTechIcon(t)} alt={t} className="w-3.5 h-3.5" />
+                                                        <span className="text-[10px] text-gray-400 font-mono">{t}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -179,36 +250,20 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -20 }}
                                 transition={{ duration: 0.3 }}
-                                className="flex flex-col h-full gap-4 md:gap-6 pb-20 md:pb-0" // Add padding bottom on mobile to avoid cut off
+                                className="flex flex-col h-full gap-4 pb-20 md:pb-0" // Add padding bottom on mobile to avoid cut off
                             >
                                 {/* TOP: FEATURES */}
-                                <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl p-4 md:p-5">
-                                    {/* Tech Stack Header */}
-                                    <div className="flex items-center gap-4 mb-4 overflow-x-auto scrollbar-hide pb-2 border-b border-white/5">
-                                        <div className="flex items-center gap-2 text-gray-500 shrink-0">
-                                            <Layers size={14} />
-                                            <span className="text-xs font-mono uppercase tracking-widest">Stack</span>
-                                        </div>
-                                        <div className="h-4 w-px bg-white/10 shrink-0" />
-                                        <div className="flex items-center gap-2">
-                                            {(metadata?.stack || config.projectDetails?.ATLAS?.stack)?.map((tech, i) => (
-                                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5 hover:border-cyan-500/30 transition-colors cursor-default whitespace-nowrap min-h-[32px]">
-                                                    <img src={getTechIcon(tech)} alt={tech} className="w-4 h-4" />
-                                                    <span className="text-xs text-gray-400 font-mono">{tech}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl p-4">
 
                                     {/* Features Grid */}
                                     <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide mask-fade-bottom">
-                                        <div className="space-y-4">
+                                        <div className="space-y-3">
                                             <div className="flex items-center gap-2 mb-2 sticky top-0 bg-[#02040a]/0 backdrop-blur-sm z-10 py-1">
                                                 <Component size={14} className="text-emerald-500" />
                                                 <h3 className="text-xs font-mono uppercase tracking-widest text-emerald-500/80">Flagship Capabilities</h3>
                                             </div>
 
-                                            <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,300px),1fr))] gap-3">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                                 {features.length > 0 ? features.map((feature, index) => (
                                                     typeof feature === 'string' ? (
                                                         <div key={index} className="p-4 bg-white/[0.03] border border-white/5 rounded text-gray-300 text-sm break-words">{feature}</div>
@@ -235,14 +290,14 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                                 </div>
 
                                 {/* BOTTOM: FAILURES */}
-                                <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl p-4 md:p-5">
+                                <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl p-4">
                                     <div className="flex items-center gap-2 mb-3 sticky top-0 z-10">
                                         <Flame size={14} className="text-rose-500" />
                                         <h3 className="text-xs font-mono uppercase tracking-widest text-rose-500/80">System Critical Events</h3>
                                     </div>
 
                                     <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide mask-fade-bottom">
-                                        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,350px),1fr))] gap-3 pb-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-2">
                                             {failures.length > 0 ? failures.map((f, i) => (
                                                 <div key={i} onClick={() => setActiveItem({ type: 'failure', index: i })} className="cursor-pointer active:scale-[0.98] transition-transform min-w-0">
                                                     <ExpandableFailure
