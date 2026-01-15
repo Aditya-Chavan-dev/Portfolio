@@ -9,36 +9,6 @@ import path from 'path'
 export default defineConfig({
     plugins: [
         react(),
-        VitePWA({
-            registerType: 'autoUpdate',
-            manifest: {
-                name: "Aditya Chavan | Portfolio",
-                short_name: "Aditya",
-                start_url: "/",
-                display: "standalone",
-                background_color: "#000000",
-                theme_color: "#000000",
-                description: "Interactive System Portfolio",
-                icons: [
-                    {
-                        src: "/icon-192.png",
-                        sizes: "192x192",
-                        type: "image/png",
-                        purpose: "any maskable"
-                    },
-                    {
-                        src: "/icon-512.png",
-                        sizes: "512x512",
-                        type: "image/png",
-                        purpose: "any maskable"
-                    }
-                ]
-            },
-            workbox: {
-                // Determine what to cache
-                globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-            }
-        }),
     ],
     envDir: '../', // Tell Vite to look for .env in the root directory
     resolve: {
