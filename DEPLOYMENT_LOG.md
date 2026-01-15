@@ -626,3 +626,13 @@ Created a seamless "Single Box" experience by unifying the background color.
 
 ### Final Summary
 The Feature Cards now feel like holographic projections—single, glowing panes of information that dominate the view when active.
+
+## Refinement: True Borderless (Phase 16)
+
+### What is the new feature about?
+Achieved a "Perfect" borderless liquid look for the feature cards.
+
+### How did we implement it?
+1.  **Invisible Borders:** Set the border color to transparent (`border-cyan-500/0`) in the expanded state to maintain layout stability while removing the visible stroke.
+2.  **Enhanced Fill:** Increased background opacity to `bg-cyan-900/30` to define the card volume purely through color and shadow.
+3.  **Visual Result:** The card appears to be a floating block of Aqua glass, with no "wireframe" outline.
