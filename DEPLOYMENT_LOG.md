@@ -562,3 +562,16 @@ Restored the "Master-Detail" interaction model (Side-by-Side View) for project d
 
 ### Final Summary
 This layout provides a more "Dashboard-like" feel, allowing users to rapidly switch between features while keeping the context (list) always visible. It reduces scrolling fatigue compared to the long vertical list.
+
+## Refinement: Layout Phase 12 (Single Box Optimization)
+
+### What is the new feature about?
+Optimized the "Detail View" content to fit entirely within the viewport without requiring internal scrolling. The goal was to eliminate vertical overflow for the feature narratives while maintaining legibility.
+
+### How did we implement it?
+1.  **Dense Grid Layout:** Refactored `ExpandableFeature.jsx` to use a CSS Grid structure.
+2.  **Side-by-Side Metadata:** Placed "Tech Matrix" and "Security Protocol" sections in a `grid-cols-2` row to save vertical space.
+3.  **Visual Compactness:** Reduced padding, font sizes (to `text-xs`/`text-sm`), and vertical gaps (`gap-2`) to maximize information density without congestion.
+
+### Final Summary
+The "War Stories" now present as a unified "Card" that sits perfectly in the detail pane, requiring zero scrolling to read the full context. This creates a cleaner, more app-like experience.

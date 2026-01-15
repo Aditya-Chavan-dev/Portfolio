@@ -55,50 +55,53 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                         transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="overflow-hidden"
                     >
-                        <div className="mt-3 pt-4 border-t border-white/5 space-y-4">
-                            {/* What is it */}
+                        <div className="mt-2 pt-3 border-t border-white/5 flex flex-col gap-2">
+                            {/* Row 1: Mission Objective (Full) */}
                             <div>
-                                <div className="flex items-center gap-2 text-cyan-400 mb-2">
-                                    <Lightbulb size={14} />
-                                    <span className="text-xs uppercase font-mono tracking-widest font-semibold">Mission Objective</span>
+                                <div className="flex items-center gap-2 text-cyan-400 mb-1">
+                                    <Lightbulb size={12} />
+                                    <span className="text-[10px] uppercase font-mono tracking-widest font-semibold opacity-80">Mission Objective</span>
                                 </div>
-                                <p className="text-gray-300 text-sm leading-relaxed bg-white/[0.03] p-4 rounded border-l-2 border-cyan-500/30">
+                                <p className="text-gray-300 text-sm leading-snug bg-white/[0.03] p-3 rounded border-l-2 border-cyan-500/30">
                                     {what}
                                 </p>
                             </div>
 
-                            {/* Tech Used */}
-                            <div>
-                                <div className="flex items-center gap-2 text-purple-400 mb-2">
-                                    <Code size={14} />
-                                    <span className="text-xs uppercase font-mono tracking-widest font-semibold">Tech Matrix</span>
+                            {/* Row 2: Grid for Tech & Security */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                {/* Tech Used */}
+                                <div>
+                                    <div className="flex items-center gap-2 text-purple-400 mb-1">
+                                        <Code size={12} />
+                                        <span className="text-[10px] uppercase font-mono tracking-widest font-semibold opacity-80">Tech Matrix</span>
+                                    </div>
+                                    <p className="text-gray-400 text-xs leading-snug bg-white/[0.03] p-2.5 rounded border-l-2 border-purple-500/30 h-full flex items-center">
+                                        {tech}
+                                    </p>
                                 </div>
-                                <p className="text-gray-400 text-sm leading-relaxed bg-white/[0.03] p-4 rounded border-l-2 border-purple-500/30">
-                                    {tech}
-                                </p>
+
+                                {/* Security */}
+                                <div>
+                                    <div className="flex items-center gap-2 text-red-400 mb-1">
+                                        <Shield size={12} />
+                                        <span className="text-[10px] uppercase font-mono tracking-widest font-semibold opacity-80">Security Protocol</span>
+                                    </div>
+                                    <p className="text-gray-400 text-xs leading-snug bg-white/[0.03] p-2.5 rounded border-l-2 border-red-500/30 h-full flex items-center">
+                                        {security}
+                                    </p>
+                                </div>
                             </div>
 
-                            {/* Security */}
-                            <div>
-                                <div className="flex items-center gap-2 text-red-400 mb-2">
-                                    <Shield size={14} />
-                                    <span className="text-xs uppercase font-mono tracking-widest font-semibold">Security Protocol</span>
-                                </div>
-                                <p className="text-gray-400 text-sm leading-relaxed bg-white/[0.03] p-4 rounded border-l-2 border-red-500/30">
-                                    {security}
-                                </p>
-                            </div>
-
-                            {/* War Story Tip */}
+                            {/* Row 3: War Story Tip (Bottom Pinned) */}
                             {tip && (
-                                <div className="mt-2 p-4 rounded bg-yellow-500/5 border border-yellow-500/20">
-                                    <div className="flex items-start gap-3">
-                                        <div className="mt-0.5 text-yellow-500 text-sm">💡</div>
+                                <div className="mt-1 p-2.5 rounded bg-yellow-500/5 border border-yellow-500/20">
+                                    <div className="flex items-start gap-2">
+                                        <div className="mt-0.5 text-yellow-500 text-xs">💡</div>
                                         <div className="flex-1">
-                                            <span className="text-yellow-500/70 text-[10px] uppercase font-mono tracking-widest block mb-1">
+                                            <span className="text-yellow-500/70 text-[10px] uppercase font-mono tracking-widest block mb-0.5">
                                                 War Story
                                             </span>
-                                            <p className="text-yellow-200/90 text-sm font-light italic leading-relaxed">
+                                            <p className="text-yellow-200/90 text-xs font-light italic leading-snug">
                                                 {tip}
                                             </p>
                                         </div>
