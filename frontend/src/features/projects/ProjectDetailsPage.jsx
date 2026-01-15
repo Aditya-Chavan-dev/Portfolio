@@ -305,17 +305,17 @@ const ProjectDetailsPage = ({ project, onClose }) => {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute inset-0 overflow-y-auto scrollbar-hide p-4 md:p-6 lg:p-8"
+                                className="absolute inset-0 overflow-y-auto scrollbar-hide"
                             >
                                 {activeItem?.type === 'feature' && features[activeItem.index] && (
                                     typeof features[activeItem.index] === 'string' ? (
-                                        <div className="text-gray-300 text-base leading-relaxed bg-white/5 p-6 rounded-xl border border-white/5">{features[activeItem.index]}</div>
+                                        <div className="text-gray-300 text-base leading-relaxed bg-white/5 p-6 rounded-xl border border-white/5 m-6">{features[activeItem.index]}</div>
                                     ) : (
                                         <ExpandableFeature
                                             {...features[activeItem.index]}
                                             isExpanded={true}
                                             onToggle={() => { }}
-                                            className="h-full border-none bg-transparent !p-0 shadow-none"
+                                            className="min-h-full border-none shadow-none rounded-none"
                                         />
                                     )
                                 )}

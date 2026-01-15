@@ -636,3 +636,16 @@ Achieved a "Perfect" borderless liquid look for the feature cards.
 1.  **Invisible Borders:** Set the border color to transparent (`border-cyan-500/0`) in the expanded state to maintain layout stability while removing the visible stroke.
 2.  **Enhanced Fill:** Increased background opacity to `bg-cyan-900/30` to define the card volume purely through color and shadow.
 3.  **Visual Result:** The card appears to be a floating block of Aqua glass, with no "wireframe" outline.
+
+## Refinement: Full Bleed Panel (Phase 17)
+
+### What is the new feature about?
+Transformed the Feature Card into a "Full Bleed Panel" that occupies the entire detail view.
+
+### How did we implement it?
+1.  **Architecture:** Removed `rounded-lg` and all border/shadow properties from the component, converting it into a strict rectangular pane.
+2.  **Layout:** Removed parent container padding (`p-4 md:p-6`) in `ProjectDetailsPage.jsx` to allow the panel to touch the edges (Full Bleed).
+3.  **Overrides:** Removed `bg-transparent` overrides, allowing the component's own `bg-cyan-900/20` to fill the available space entirely.
+
+### Final Summary
+The interface has shifted from a "Card in a View" to a dedicated "Dashboard Panel" aesthetic, maximizing the content area and immersion.
