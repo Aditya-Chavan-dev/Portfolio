@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 const EntryGate = React.lazy(() => import('./features/auth/EntryGate'));
-const SessionHandshake = React.lazy(() => import('./features/auth/SessionHandshake'));
+const CinematicIntro = React.lazy(() => import('./features/auth/CinematicIntro'));
 const JourneyHub = React.lazy(() => import('./features/journey/JourneyHub'));
 const ProjectsView = React.lazy(() => import('./features/projects/ProjectsView'));
 const HeroDashboard = React.lazy(() => import('./features/hero/components/HeroDashboard'));
@@ -189,7 +189,7 @@ function App() {
                                 exit={{ opacity: 0 }}
                                 className="h-full w-full"
                             >
-                                <SessionHandshake onComplete={() => {
+                                <CinematicIntro onComplete={() => {
                                     localStorage.setItem('HAS_SEEN_INTRO', 'true');
                                     setShowSystemCheck(true);
                                 }} />

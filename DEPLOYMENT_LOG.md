@@ -711,3 +711,27 @@ Calibrated font sizes to fill 85-95% of the container vertical space, maximizing
 2.  **Tech/Security**: Increased to `text-sm` (0.875rem) for balanced readability.
 3.  **War Story**: Increased to `text-sm` to fill remaining vertical space evenly.
 4.  **Result**: Consistent visual density across both primary content boxes.
+
+## Feature: The Universal Project Template & Cinematic Evolution (Phase 56-63)
+
+### What is the new feature about?
+We have fundamentally re-architected how project details are rendered and how the system introduces itself. 
+1.  **Universal Template:** We moved from hardcoded project pages to a single `ProjectTemplate.jsx` "Engine". This engine accepts raw data and renders a standardized, high-fidelity "Master-Detail" interface with a 1-2-1 wireframe grid for features.
+2.  **GitHub Brain:** The system now "thinks" in Git. Timelines, Links, and Project Names are no longer hardcoded configs; they are auto-hydrated from the GitHub API data (Created Date, Push Date, Repo URL).
+3.  **Cinematic Intro:** We replaced the technical "Handshake" with a philosophical "Cinematic Quote" sequence ("It's not how I write code underneath..."), creating a stronger emotional hook before the technical showcase.
+
+### How did we implement it?
+1.  **Component Extraction:** We isolated the "Left Column (Metadata)" and "Right Column (Master-Detail)" logic into a pure functional component (`ProjectTemplate`).
+2.  **The Controller Pattern:** We refactored `ProjectDetailsPage.jsx` to act purely as a "Controller". It fetches the `project` object, normalizes the data (handling missing fields with robust fallbacks/placeholders), formats the dates (`created_at` -> `pushed_at`), and passes clean props to the View.
+3.  **Flexbox Architecture:** To solve the "Scroll vs. Fit" dilemma in the Feature Wireframes, we utilized `flex-col` with `flex-1` children. This forces the browser to calculate the exact available viewport height and distribute it evenly among the 4 boxes, ensuring a perfect "full-bleed" fit without scrollbars on any screen size.
+4.  **Quote Sequencer:** We built `CinematicIntro.jsx` using `framer-motion` and `setTimeout` chains to choreograph a multi-stage text fade-in/out sequence that transitions seamlessly into the main Hub.
+
+### How the user is benefitted from it?
+*   **For Me (The Developer):** I never have to write UI code for a new project again. I simply create a Repo, push code, and the portfolio automatically generates a generic "Skeleton" page with correct timelines and links. I only fill in the "Content" in the config when I'm ready.
+*   **For the Recruiter:** They see a polished, consistent interface for every project. The Cinematic Intro sets a tone of "Thought Leadership" and "Artistry" rather than just raw technical utility, distinguishing the portfolio as a "Creator's Work".
+
+### What concepts we used?
+*   **Separation of Concerns:** View (`ProjectTemplate`) vs. Controller (`ProjectDetailsPage`).
+*   **Data Hydration:** Merging Static Config + Dynamic API Data.
+*   **CSS Flexbox Algorithms:** `min-height` vs `flex-1` for responsive vertical scaling.
+*   **Emotional Design:** Using timing and typography (Cinematic Quotes) to control user pacing.
