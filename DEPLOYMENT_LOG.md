@@ -734,4 +734,24 @@ We have fundamentally re-architected how project details are rendered and how th
 *   **Separation of Concerns:** View (`ProjectTemplate`) vs. Controller (`ProjectDetailsPage`).
 *   **Data Hydration:** Merging Static Config + Dynamic API Data.
 *   **CSS Flexbox Algorithms:** `min-height` vs `flex-1` for responsive vertical scaling.
+### What concepts we used?
+*   **Separation of Concerns:** View (`ProjectTemplate`) vs. Controller (`ProjectDetailsPage`).
+*   **Data Hydration:** Merging Static Config + Dynamic API Data.
+*   **CSS Flexbox Algorithms:** `min-height` vs `flex-1` for responsive vertical scaling.
 *   **Emotional Design:** Using timing and typography (Cinematic Quotes) to control user pacing.
+
+## Refactor: Component-Based Architecture (Phase 64-67)
+
+### What is the new feature about?
+We moved from a "Config-Driven" approach to a "Component-Driven" approach for Project Details.
+Instead of a massive JSON object in `portfolio.config.js`, each project now has its own dedicated React Component (e.g., `AtlasProject.jsx`).
+
+### How did we implement it?
+1.  **Dedicated Files:** Created `frontend/src/features/projects/items/AtlasProject.jsx`. This file contains both the *Content* (Description, Features) and the *Render Logic* (using `ProjectTemplate`).
+2.  **Router Logic:** Refactored `ProjectDetailsPage.jsx` to act as a Router. It detects the project name (e.g., "ATLAS") and dynamically loads the specific component `<AtlasProject />` instead of the generic template.
+3.  **Content Hydration:** Populated ATLAS with the first "Cognitive Load Assassin" feature using the "Maximum Message / Minimum Words" strategy.
+
+### Why is this better?
+*   **Scalability:** Each project is isolated. Editing ATLAS doesn't risk breaking the Config file.
+*   **Flexibility:** If a project needs a completely unique layout in the future, we just edit its Component code without fighting the generic Template.
+*   **Clean Code:** Separates "Data/Content" from "Global Configuration".
