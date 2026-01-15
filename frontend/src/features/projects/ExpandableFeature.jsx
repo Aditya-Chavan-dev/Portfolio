@@ -6,7 +6,7 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
     return (
         <motion.div
             layout
-            className={`relative p-5 transition-all duration-500 ${isExpanded
+            className={`relative p-6 transition-all duration-500 ${isExpanded
                 ? 'bg-cyan-900/20'
                 : 'bg-[#0A0A0A] hover:bg-white/[0.02]'
                 } ${className}`}
@@ -28,20 +28,20 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                         transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="overflow-hidden"
                     >
-                        <div className="mt-4 flex flex-col gap-3">
+                        <div className="mt-4 flex flex-col gap-4">
                             {/* Mission Objective (Full) */}
                             <div>
                                 <div className="flex items-center gap-2 mb-1 text-cyan-400/90">
                                     <Lightbulb size={14} className="" />
                                     <span className="text-xs uppercase font-mono tracking-widest font-bold">Mission Objective</span>
                                 </div>
-                                <p className="text-gray-300 text-xs leading-relaxed pl-1">
+                                <p className="text-gray-300 text-sm leading-relaxed pl-1">
                                     {what}
                                 </p>
                             </div>
 
                             {/* Grid for Tech & Security */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 {/* Tech Used */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-1 text-purple-400/90">
