@@ -166,32 +166,32 @@ This portfolio updates itself. I tried telling it to chill. It didn’t listen �
             // New: Flagship Features (Expandable)
             features: [
                 {
-                    title: "GPS-Fenced Attendance",
-                    what: "Verifies employee presence using the Geolocation API, validating coordinates against a defined geofence radius before allowing check-in.",
-                    tech: "HTML5 Geolocation API, Haversine Formula, Firebase Cloud Functions",
-                    security: "Prevents location spoofing by cross-referencing IP-based location (when available) and rejecting high-accuracy discrepancies.",
-                    tip: "Users tried spoofing GPS on Android. We added a server-side distance check that auto-flags 'impossibly fast' travel."
+                    title: "The 'Cognitive Load' Assassin",
+                    what: "The old way was a memory game. The MD had to mentally track attendance for each employee over 10+ sites or the office. If it was forgotten, then it was lost—or we had to rely on the employee's claim. I killed the guessing game. I built a system that shifts the burden from the MD’s brain to the Employee’s pocket. The employee opens the app, clicks 'Mark In,' and the system instantly locks in their declaration vs the server time.",
+                    tech: "Role: UX // Tech: Semantic State Interface, Real-time Timestamping",
+                    security: "The Server captures the truth. We don't rely on client-side time; the timestamp is cryptographically verified against the server clock.",
+                    tip: "The Smart Move: We automated the 'boring' parts. The user doesn’t type the date (often wrong) or the time (often faked). The interface provides an instant, dopamine-hitting 'Success' card. Zero anxiety. Zero cognitive load."
                 },
                 {
-                    title: "Offline-First Architecture",
-                    what: "Allows full app functionality without internet. Attendance logs are queued locally in IndexedDB and background-synced when connectivity returns.",
-                    tech: "Service Workers (Workbox), IndexedDB, Background Sync API",
-                    security: "Local data is encrypted. Timestamps are server-validated upon sync to prevent local time manipulation.",
-                    tip: "The hardest part wasn't storing data, it was resolving merge conflicts when a user modified their state on two offline devices."
+                    title: "The 'Executive Pivot' Engine",
+                    what: "Before this, the MD was a glorious data-entry clerk. He dragged himself through 30 days of Excel cells, manually filling in 'Present' or 'Absent.' He was working for the data. I flipped the script. I built an 'Approval Queue' architecture. The data now flows UP. The MD opens his dashboard and sees a clean, pre-sorted list of claims. Employee says 'I was at Site B' -> MD clicks [Confirm] or [Reject].",
+                    tech: "Role: Business Intelligence // Tech: Async State Management, Bulk Actions",
+                    security: "Role-Based Access Control ensures only the MD has the authority to 'Judge' the claims. The employee's input is merely a proposal.",
+                    tip: "The Smart Move: We turned a 3-day data entry nightmare into a 15-minute executive review. The MD is no longer the scribe; he is now the Judge."
                 },
                 {
-                    title: "Protocol Switching (Anti-Blocker)",
-                    what: "Detects 'ERR_BLOCKED' on REST endpoints (common in corporate firewalls) and instantly tunnels traffic via WebSockets (Firebase RTDB) instead.",
-                    tech: "Axios Interceptors, Firebase Realtime Database SDK",
-                    security: "Maintains full SSL/TLS encryption regardless of the transport layer used.",
-                    tip: "Corporate firewalls love blocking POST requests to unknown APIs, but they almost never block port 443 WebSockets."
+                    title: "The 'Smart Contract' Logic",
+                    what: "In the old system, 'Compensatory Offs' were a handshake deal. 'I worked Sunday, give me a day off next week.' These deals were forgotten, leading to disputes. I codified the handshake. I wrote a 'Logic Hook' into the approval flow. The system detects an employee working on a holiday. When the MD tries to click 'Approve', it halts and warns: 'Careful. This is a Holiday. Approving this will instantly credit 1 Paid Leave.'",
+                    tech: "Role: Developer Reliability // Tech: Transactional Integrity, Conditional Auto-Triggers",
+                    security: "Atomic Transactions ensure the credit is deposited in the exact same millisecond the attendance is approved, preventing ledger drift.",
+                    tip: "The Smart Move: It’s a Double-Check mechanism that protects both sides. The MD can't accidentally give away free days, and the employee never has to beg for what they earned. It is fair, transparent, and mathematically enforced."
                 },
                 {
-                    title: "One-Tap Check-in",
-                    what: "Delivers 0ms perceived latency using Optimistic UI. The UI confirms the action immediately while the backend processes the transaction asynchronously.",
-                    tech: "React Query (TanStack Query) Optimistic Updates",
-                    security: "Rate limiting prevents button mashing. Rollback UI handles rare server rejections gracefully.",
-                    tip: "We reduced 'Did it work?' support tickets by 90% just by making the button turn green instantly."
+                    title: "The 'Ghost Protocol' Security",
+                    what: "An Excel sheet has no walls. Anyone with the file owns the company records. I built a digital fortress with a unique twist: Invisibility. Most apps let attackers knock on the door (Login Screen). I removed the door. We implemented a 'Whitelist-First' architecture. When a user logs in, the system checks an internal 'Whitelist'. Unauthorized? The account is instantly destroyed.",
+                    tech: "Role: Critical Security // Tech: Whitelist-First Auth, Cloud Function Triggers",
+                    security: "If you aren't on the list, you don't get an 'Access Denied' message—your account is programmatically annihilated within 200ms. Access is binary, and security is absolute.",
+                    tip: "The Smart Move: To an outsider, the system simply doesn't exist. It is the ultimate form of accountability."
                 }
             ]
         }

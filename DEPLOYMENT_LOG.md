@@ -532,3 +532,17 @@ We have optimized the "Project Details" layout by relocating the Tech Stack and 
 
 ### Final Summary
 The interface is now strictly organized. The "Context" (Tech Stack, Timeline) lives in the Sidebar, while the "Content" (Features, Failures) dominates the Main View. This separation allows the user to references the tech stack without it fighting for attention with the main narrative.
+
+## Refinement: Feature Content & List Layout (Phase 11)
+
+### What is the new feature about?
+We have completely overhauled the copy and layout for the ATLAS project details.
+1.  **Storytelling Content:** Replaced generic features with 4 high-impact "War Stories": "The Cognitive Load Assassin", "The Executive Pivot Engine", "The Smart Contract Logic", and "Ghost Protocol Security".
+2.  **List View Layout:** Removed the "Master-Detail" (Sidebar + Pane) navigation in favor of a simpler, high-readability Vertical List View. All content is accessible via scrolling, with an "Accordion" interaction for expanding details.
+
+### How did we implement it?
+1.  **Content Injection:** Updated `portfolio.config.js` with the detailed narratives, mapping identifying roles and technologies to the `tech` prop.
+2.  **UI Refactor:** Stripped out the complex conditional rendering in `ProjectDetailsPage.jsx`. The Features and Failures are now rendered as a simple vertical stack (`flex-col`), using local state to manage which card is expanded.
+
+### Final Summary
+The "Project Details" page now reads like a case study rather than a spec sheet. The "List View" removes navigation friction, allowing the user to simply scroll down and absorb the "Engineering Wins" one by one.
