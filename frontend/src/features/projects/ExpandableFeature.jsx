@@ -23,26 +23,10 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                 )}
             </AnimatePresence>
 
-            {/* Header with Title and Arrow */}
-            <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 shrink-0" />
-                    <span className="text-gray-300 font-mono text-sm md:text-base break-words">{title}</span>
-                </div>
-
-                {/* Arrow Button */}
-                <button
-                    onClick={onToggle}
-                    className="p-2 rounded-lg bg-white/5 hover:bg-cyan-500/10 border border-white/5 hover:border-cyan-500/30 transition-all group"
-                    aria-label={isExpanded ? 'Collapse' : 'Expand'}
-                >
-                    <motion.div
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.25, ease: 'easeOut' }}
-                    >
-                        <ChevronDown size={16} className="text-gray-400 group-hover:text-cyan-400 transition-colors" />
-                    </motion.div>
-                </button>
+            {/* Header with Title (No Arrow) */}
+            <div className="flex items-center gap-3">
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 shrink-0" />
+                <span className="text-gray-300 font-mono text-base md:text-lg break-words">{title}</span>
             </div>
 
             {/* Expandable Content */}
@@ -55,27 +39,27 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                         transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="overflow-hidden"
                     >
-                        <div className="mt-2 pt-2 border-t border-white/5 flex flex-col gap-4">
+                        <div className="mt-4 flex flex-col gap-6">
                             {/* Mission Objective (Full) */}
                             <div>
                                 <div className="flex items-center gap-2 mb-2 text-cyan-400/90">
-                                    <Lightbulb size={12} className="" />
-                                    <span className="text-[10px] uppercase font-mono tracking-widest font-bold">Mission Objective</span>
+                                    <Lightbulb size={14} className="" />
+                                    <span className="text-xs uppercase font-mono tracking-widest font-bold">Mission Objective</span>
                                 </div>
-                                <p className="text-gray-300 text-sm leading-relaxed pl-1">
+                                <p className="text-gray-300 text-base leading-relaxed pl-1">
                                     {what}
                                 </p>
                             </div>
 
                             {/* Grid for Tech & Security */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Tech Used */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-2 text-purple-400/90">
-                                        <Code size={12} className="" />
-                                        <span className="text-[10px] uppercase font-mono tracking-widest font-bold">Tech Matrix</span>
+                                        <Code size={14} className="" />
+                                        <span className="text-xs uppercase font-mono tracking-widest font-bold">Tech Matrix</span>
                                     </div>
-                                    <p className="text-gray-400 text-xs leading-relaxed pl-1">
+                                    <p className="text-gray-400 text-sm leading-relaxed pl-1">
                                         {tech}
                                     </p>
                                 </div>
@@ -83,25 +67,25 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                 {/* Security */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-2 text-rose-400/90">
-                                        <Shield size={12} className="" />
-                                        <span className="text-[10px] uppercase font-mono tracking-widest font-bold">Security Protocol</span>
+                                        <Shield size={14} className="" />
+                                        <span className="text-xs uppercase font-mono tracking-widest font-bold">Security Protocol</span>
                                     </div>
-                                    <p className="text-gray-400 text-xs leading-relaxed pl-1">
+                                    <p className="text-gray-400 text-sm leading-relaxed pl-1">
                                         {security}
                                     </p>
                                 </div>
                             </div>
 
-                            {/* War Story Tip (Bottom Pinned, Subtle Divider) */}
+                            {/* War Story Tip (Bottom Pinned, No Divider) */}
                             {tip && (
-                                <div className="pt-3 border-t border-white/5 mt-1">
+                                <div className="mt-2">
                                     <div className="flex items-start gap-3">
-                                        <div className="mt-0.5 text-yellow-500/80 text-sm">💡</div>
+                                        <div className="mt-0.5 text-yellow-500/80 text-base">💡</div>
                                         <div className="flex-1">
                                             <span className="text-yellow-500/50 text-[10px] uppercase font-mono tracking-widest block mb-1">
                                                 War Story
                                             </span>
-                                            <p className="text-yellow-100/80 text-xs font-light italic leading-relaxed">
+                                            <p className="text-yellow-100/90 text-sm font-light italic leading-relaxed">
                                                 {tip}
                                             </p>
                                         </div>
