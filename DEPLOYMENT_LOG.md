@@ -588,3 +588,16 @@ Enhanced the visual hierarchy of the "Detail View" to solve the "congested" feel
 
 ### Final Summary
 The detail view now looks professional and structured. The information is dense but not crowded, with clear visual cues guiding the eye between distinct data points.
+
+## Refinement: Layout Phase 13 (Full Space Utilization)
+
+### What is the new feature about?
+Removed the "Card-in-Card" nesting to fully utilize the available space in the Detail Pane. The goal was to create a more "Open Layout" where content flows freely without feeling boxed in.
+
+### How did we implement it?
+1.  **Removed Enclosures:** Stripped `bg`, `border`, and `rounded` classes from individual sections.
+2.  **Open Typography:** Used simple, colored headers (Icon + Label) to define zones without physical barriers.
+3.  **Maximized Width:** Content now extends to the edges of the parent container `p-3` padding, making the text feel significantly less congested.
+
+### Final Summary
+The layout is now "borderless" internally. It feels cleaner and larger, relying on whitespace and typography for separation rather than lines.
