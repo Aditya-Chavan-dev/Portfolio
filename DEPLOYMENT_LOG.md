@@ -575,3 +575,16 @@ Optimized the "Detail View" content to fit entirely within the viewport without 
 
 ### Final Summary
 The "War Stories" now present as a unified "Card" that sits perfectly in the detail pane, requiring zero scrolling to read the full context. This creates a cleaner, more app-like experience.
+
+## Refinement: Visual Polish (Phase 12.5)
+
+### What is the new feature about?
+Enhanced the visual hierarchy of the "Detail View" to solve the "congested" feel. We introduced distinct "Zones" for each section (Mission, Tech, Security) to make scanning effortless.
+
+### How did we implement it?
+1.  **Card-in-Card Design:** Replaced simple borders with distinct, tinted container blocks for each section (`bg-cyan-950/[0.1]`, etc.).
+2.  **Explicit Headers:** Added solid-background header bars for "Mission Objective", "Tech Matrix", and "Security Protocol" to clearly separate content.
+3.  **Typographic Breathing Room:** Increased `leading` (line-height) to `relaxed` and adjusted padding to ensure text reads comfortably despite the dense layout.
+
+### Final Summary
+The detail view now looks professional and structured. The information is dense but not crowded, with clear visual cues guiding the eye between distinct data points.
