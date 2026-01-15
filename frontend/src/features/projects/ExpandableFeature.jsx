@@ -35,7 +35,7 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                     <Lightbulb size={14} className="" />
                                     <span className="text-xs uppercase font-mono tracking-widest font-bold">Mission Objective</span>
                                 </div>
-                                <p className="text-gray-300 text-sm leading-relaxed pl-1">
+                                <p className="text-gray-300 text-xs leading-relaxed pl-1">
                                     {what}
                                 </p>
                             </div>
