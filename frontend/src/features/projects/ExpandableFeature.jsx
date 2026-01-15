@@ -35,7 +35,7 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                     <Lightbulb size={16} className="" />
                                     <span className="text-sm uppercase font-mono tracking-widest font-bold">Mission Objective</span>
                                 </div>
-                                <p className="text-gray-300 text-[18.5px] leading-relaxed pl-1">
+                                <p className="text-gray-300 text-[17.5px] leading-8 pl-1">
                                     {what}
                                 </p>
                             </div>
@@ -48,7 +48,7 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                         <Code size={16} className="" />
                                         <span className="text-sm uppercase font-mono tracking-widest font-bold">Tech Matrix</span>
                                     </div>
-                                    <p className="text-gray-400 text-[18.5px] leading-relaxed pl-1">
+                                    <p className="text-gray-400 text-[17.5px] leading-8 pl-1">
                                         {tech}
                                     </p>
                                 </div>
@@ -59,7 +59,7 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                         <Shield size={16} className="" />
                                         <span className="text-sm uppercase font-mono tracking-widest font-bold">Security Protocol</span>
                                     </div>
-                                    <p className="text-gray-400 text-[18.5px] leading-relaxed pl-1">
+                                    <p className="text-gray-400 text-[17.5px] leading-8 pl-1">
                                         {security}
                                     </p>
                                 </div>
@@ -74,7 +74,7 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                             <span className="text-yellow-500/50 text-xs uppercase font-mono tracking-widest block mb-1.5">
                                                 War Story
                                             </span>
-                                            <p className="text-yellow-100/90 text-[18.5px] font-light italic leading-relaxed">
+                                            <p className="text-yellow-100/90 text-[17.5px] font-light italic leading-8">
                                                 {tip}
                                             </p>
                                         </div>
