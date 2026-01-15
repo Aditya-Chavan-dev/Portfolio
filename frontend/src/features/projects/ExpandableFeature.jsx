@@ -28,11 +28,11 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                         transition={{ duration: 0.3, ease: 'easeOut' }}
                         className="overflow-hidden"
                     >
-                        <div className="mt-8 flex flex-col gap-6">
-                            {/* Mission Objective Card */}
-                            <div className="bg-black/40 rounded-xl p-6 border border-white/5">
-                                <div className="flex items-center gap-2 mb-4 text-cyan-400">
-                                    <Lightbulb size={18} />
+                        <div className="mt-6 flex flex-col gap-6">
+                            {/* Mission Objective (Full Width Card) */}
+                            <div className="bg-black/20 border border-white/5 rounded-xl p-6 transition-colors hover:bg-black/30">
+                                <div className="flex items-center gap-2 mb-4 text-cyan-400/90">
+                                    <Lightbulb size={16} className="" />
                                     <span className="text-sm uppercase font-mono tracking-widest font-bold">Mission Objective</span>
                                 </div>
                                 <p className="text-gray-300 text-lg leading-relaxed">
@@ -40,12 +40,12 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                 </p>
                             </div>
 
-                            {/* Tech & Security Grid */}
+                            {/* Grid for Tech & Security */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {/* Tech Card */}
-                                <div className="bg-black/40 rounded-xl p-6 border border-white/5">
-                                    <div className="flex items-center gap-2 mb-4 text-purple-400">
-                                        <Code size={18} />
+                                {/* Tech Used (Card) */}
+                                <div className="bg-black/20 border border-white/5 rounded-xl p-6 transition-colors hover:bg-black/30">
+                                    <div className="flex items-center gap-2 mb-4 text-purple-400/90">
+                                        <Code size={16} className="" />
                                         <span className="text-sm uppercase font-mono tracking-widest font-bold">Tech Matrix</span>
                                     </div>
                                     <p className="text-gray-400 text-base leading-relaxed">
@@ -53,10 +53,10 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                     </p>
                                 </div>
 
-                                {/* Security Card */}
-                                <div className="bg-black/40 rounded-xl p-6 border border-white/5">
-                                    <div className="flex items-center gap-2 mb-4 text-rose-400">
-                                        <Shield size={18} />
+                                {/* Security (Card) */}
+                                <div className="bg-black/20 border border-white/5 rounded-xl p-6 transition-colors hover:bg-black/30">
+                                    <div className="flex items-center gap-2 mb-4 text-rose-400/90">
+                                        <Shield size={16} className="" />
                                         <span className="text-sm uppercase font-mono tracking-widest font-bold">Security Protocol</span>
                                     </div>
                                     <p className="text-gray-400 text-base leading-relaxed">
@@ -65,12 +65,15 @@ const ExpandableFeature = ({ title, what, tech, security, tip, isExpanded, onTog
                                 </div>
                             </div>
 
-                            {/* War Story Card (Distinct Highlight) */}
+                            {/* War Story Tip (Distinct Highlight Card) */}
                             {tip && (
-                                <div className="bg-yellow-900/10 rounded-xl p-6 border border-yellow-500/10">
-                                    <div className="flex items-start gap-4">
-                                        <div className="mt-1 text-yellow-500/80 text-xl">💡</div>
-                                        <div>
+                                <div className="bg-yellow-900/5 border border-yellow-500/10 rounded-xl p-6 relative overflow-hidden group hover:border-yellow-500/20 transition-colors">
+                                    {/* Subtle background glow for war story */}
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+                                    <div className="relative flex items-start gap-4">
+                                        <div className="mt-1 text-yellow-500/80 text-lg">💡</div>
+                                        <div className="flex-1">
                                             <span className="text-yellow-500/50 text-xs uppercase font-mono tracking-widest block mb-2">
                                                 War Story
                                             </span>
