@@ -21,7 +21,8 @@ const LiveNavbar = ({ compactMode = false }) => {
     return (
         <motion.nav
             layout
-            className={`fixed top-0 right-0 z-[100] flex items-center justify-end transition-all duration-700 ${compactMode ? 'w-auto p-3 md:p-6' : 'w-full h-24 bg-[#050505]/90 backdrop-blur-md border-b border-white/10 shadow-2xl'}`}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            className={`fixed top-0 right-0 z-[100] flex items-center justify-end ${compactMode ? 'w-auto p-3 md:p-6' : 'w-full h-24 bg-[#050505]/90 backdrop-blur-md border-b border-white/10 shadow-2xl'}`}
         >
             <div className={`flex items-center justify-between ${compactMode ? 'gap-2 md:gap-6' : 'w-full max-w-[1600px] mx-auto px-6 md:px-12'}`}>
 
