@@ -39,7 +39,7 @@ const Button = ({
             disabled={disabled || loading}
             className={`
                 relative flex items-center justify-center gap-2 
-                font-mono uppercase tracking-widest font-bold transition-all duration-300 rounded-sm
+                font-mono uppercase tracking-widest font-bold rounded-sm
                 disabled:opacity-50 disabled:cursor-not-allowed
                 ${variants[variant]}
                 ${size === 'sm' ? 'px-4 py-2 text-xs' : 'px-8 py-4 text-sm'}
