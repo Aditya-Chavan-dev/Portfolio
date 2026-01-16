@@ -33,6 +33,13 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
     const [flagship, setFlagship] = useState(null);
     const [selectedProject, setSelectedProject] = useState(null);
     const [loading, setLoading] = useState(true);
+    // PERF: Wait for Navbar transition (350ms) before rendering heavy list
+    const [isInteractionReady, setInteractionReady] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setInteractionReady(true), 350);
+        return () => clearTimeout(timer);
+    }, []);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -122,10 +129,12 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
 
             <div className="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 flex flex-col gap-8 md:gap-12">
 
-                {loading ? (
+                {loading || !isInteractionReady ? (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="w-12 h-12 border-2 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin mb-4" />
-                        <span className="text-cyan-500 font-mono text-sm animate-pulse">Retrieving Repository Data...</span>
+                        <span className="text-cyan-500 font-mono text-sm animate-pulse">
+                            {!isInteractionReady ? 'Initializing Interface...' : 'Retrieving Repository Data...'}
+                        </span>
                     </div>
                 ) : (
                     <>

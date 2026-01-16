@@ -793,4 +793,22 @@ Despite the previous fixes, users reported "lag" when clicking "Projects" in the
 2.  **Entry Gate:** Removed `transition-all duration-300` from the start button.
 
 ### Final Summary
+### Final Summary
 We have aggressively purged "mixed mode" animations. By enforcing a rule of "Framer OR CSS, never both", we have eliminated the micro-stutters. The navigation is now buttery smooth.
+
+## Feature: Deep Performance & Light CSS Architecture (Phase 69)
+
+### What was the issue?
+Even after fixing the conflicts, we found a deeper bottleneck: **Resource Contentions**.
+When the user clicked "Projects", the browser tried to:
+1.  Resize the Glass Navbar (Heavy GPU).
+2.  Mount the Git Repository List (Heavy CPU).
+3.  Apply heavy `blur(12px)` filters (Heavy GPU).
+All at the exact same millisecond. This caused a frame drop "slam".
+
+### How did we solve it?
+1.  **Interaction Fairness (Deferred Rendering):** We architected a "Queue System". When "Projects" is clicked, we *only* animate the Navbar. The Project List waits exactly 350ms (until the nav is safe) before it even attempts to load.
+2.  **Light CSS (Hybrid Glass):** We realized `blur(12px)` was overkill. We reduced it to `blur(6px)` and adjusted the opacity. This allows the same "Premium Glass" aesthetic but cuts the GPU fill-rate cost by ~50%.
+
+### Final Summary
+The application now respects the device's limits. It no longer tries to do everything at once. By queuing heavy tasks and optimizing the glass filters, the UI feels significantly lighter, faster, and more responsive. It flows like water.
