@@ -6,12 +6,9 @@ const ExpandableFailure = ({ index, title, summary, failure, solution, outcome, 
     return (
         <motion.div
             layout
-            className={`relative bg-[#0A0A0A] border rounded-xl overflow-hidden transition-all duration-300 group ${isExpanded
-                ? 'border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.15)]'
-                : 'border-white/5 hover:border-red-500/30'
-                } ${className}`}
+            className={`relative bg-[#0A0A0A] border-b border-white/5 overflow-hidden group ${className}`}
         >
-            {/* Glow effect when expanded */}
+            {/* Glow effect only via Framer if needed, removed CSS hover transitions on layout elements */}
             <AnimatePresence>
                 {isExpanded && (
                     <motion.div
@@ -71,28 +68,30 @@ const ExpandableFailure = ({ index, title, summary, failure, solution, outcome, 
                             transition={{ duration: 0.3, ease: 'easeOut' }}
                             className="overflow-hidden"
                         >
-                            <div className="mt-2 pt-3 border-t border-white/5 grid grid-cols-1 gap-4">
+                            <div className="mt-4 pt-4 border-t border-white/5 flex flex-col gap-6 pl-10">
                                 {/* Problem Details */}
-                                <div className="space-y-1.5">
+                                <div className="space-y-2 relative">
+                                    <div className="absolute -left-4 top-1 w-1 h-full bg-red-500/20" />
                                     <div className="flex items-center gap-2 text-red-400/80">
                                         <Flame size={12} />
                                         <span className="text-[10px] uppercase font-mono tracking-widest font-semibold">Incident Report</span>
                                     </div>
-                                    <p className="text-gray-300 leading-relaxed font-light text-xs md:text-sm bg-white/[0.03] p-3 rounded border-l-2 border-red-500/30">
+                                    <p className="text-gray-300 leading-relaxed font-light text-sm">
                                         "{failure}"
                                     </p>
                                 </div>
 
                                 {/* Solution & Outcome */}
-                                <div className="space-y-2">
+                                <div className="space-y-2 relative">
+                                    <div className="absolute -left-4 top-1 w-1 h-full bg-green-500/20" />
                                     <div className="space-y-1.5">
                                         <span className="text-green-500/70 text-[10px] uppercase font-mono tracking-widest block font-semibold">Patch Applied</span>
-                                        <p className="text-gray-400 leading-relaxed text-xs md:text-sm pl-3 border-l border-green-500/30">
+                                        <p className="text-gray-400 leading-relaxed text-sm">
                                             {solution}
                                         </p>
                                     </div>
 
-                                    <div className="px-3 py-1.5 rounded bg-green-500/10 border border-green-500/20">
+                                    <div className="mt-3">
                                         <span className="text-green-400 text-[10px] font-medium block uppercase tracking-wide">
                                             Outcome: {outcome}
                                         </span>

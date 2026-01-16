@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import CountUp from '../../../shared/ui/CountUp';
 
-const MetricItem = ({ label, icon, rawValue, formatter, delay, isUptime, uptimeStart, className, layoutId }) => {
+const MetricValue = ({ isUptime, uptimeStart, rawValue, formatter }) => {
     const [uptimeString, setUptimeString] = useState("");
 
     useEffect(() => {
@@ -21,19 +21,26 @@ const MetricItem = ({ label, icon, rawValue, formatter, delay, isUptime, uptimeS
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const minutes = Math.floor((diff / 1000 / 60) % 60);
-            // const seconds = Math.floor((diff / 1000) % 60); // unused in display format below
 
             setUptimeString(
                 `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`
             );
         };
 
-        const interval = setInterval(updateTimer, 1000); // Precise ticking
-        updateTimer(); // Initial call
+        const interval = setInterval(updateTimer, 1000);
+        updateTimer();
 
         return () => clearInterval(interval);
     }, [isUptime, uptimeStart]);
 
+    return (
+        <span className="tabular-nums">
+            {isUptime ? uptimeString : <CountUp end={rawValue} duration={2500} formatter={formatter} />}
+        </span>
+    );
+};
+
+const MetricItem = ({ label, icon, rawValue, formatter, delay, isUptime, uptimeStart, className, layoutId }) => {
     // --- RENDER ---
     return (
         <motion.div
@@ -52,9 +59,9 @@ const MetricItem = ({ label, icon, rawValue, formatter, delay, isUptime, uptimeS
             transition={{
                 delay,
                 duration: 0.7,
-                ease: [0.16, 1, 0.3, 1] // Custom cubic-bezier for smooth deceleration
+                ease: [0.16, 1, 0.3, 1]
             }}
-            className={`glass-panel p-4 md:p-6 rounded-2xl min-w-[140px] relative overflow-hidden group hover:bg-[rgba(255,255,255,0.05)] transition-colors duration-300 flex flex-col justify-center h-full ${className}`}
+            className={`glass-panel p-4 md:p-6 rounded-2xl min-w-[140px] relative overflow-hidden group hover:bg-[rgba(255,255,255,0.05)] flex flex-col justify-center h-full ${className}`}
             style={{
                 boxShadow: "0 0 20px rgba(0, 255, 255, 0.1)"
             }}
@@ -77,8 +84,13 @@ const MetricItem = ({ label, icon, rawValue, formatter, delay, isUptime, uptimeS
                 </div>
             </motion.div>
 
-            <div className={`text-4xl md:text-5xl font-display font-bold text-white tracking-tight tabular-nums`}>
-                {isUptime ? uptimeString : <CountUp end={rawValue} duration={2500} formatter={formatter} />}
+            <div className={`text-4xl md:text-5xl font-display font-bold text-white tracking-tight`}>
+                <MetricValue
+                    isUptime={isUptime}
+                    uptimeStart={uptimeStart}
+                    rawValue={rawValue}
+                    formatter={formatter}
+                />
             </div>
         </motion.div>
     );

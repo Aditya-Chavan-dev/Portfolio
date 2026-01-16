@@ -221,10 +221,11 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
                                     <motion.button
                                         onClick={() => setSelectedProject(repo)}
                                         key={repo.id}
+                                        layout
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.1 * Math.min(idx, 10) }}
-                                        className="group w-full flex flex-col md:flex-row md:items-center justify-between p-4 md:p-6 bg-[#0A0A0A] border border-white/5 rounded-xl hover:border-white/20 hover:bg-white/[0.02] transition-all duration-300 text-left"
+                                        transition={{ delay: 0.1 * Math.min(idx, 10), duration: 0.3 }}
+                                        className="group w-full flex flex-col md:flex-row md:items-center justify-between p-4 md:p-6 bg-[#0A0A0A] border border-white/5 rounded-xl hover:border-white/20 hover:bg-white/[0.02] text-left"
                                     >
                                         <div className="flex-1 mb-4 md:mb-0">
                                             <div className="flex items-center gap-3 mb-2">

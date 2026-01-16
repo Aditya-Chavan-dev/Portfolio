@@ -1,4 +1,6 @@
 
+import { ATLAS_DATA } from './data/projects/atlas';
+
 const TECH = {
     REACT: "React 18",
     NODE: "Node.js",
@@ -105,15 +107,7 @@ This portfolio updates itself. I tried telling it to chill. It didnâ€™t listen ð
     // NOTE: This data is verified against Conversation History (ATLAS Work Logs)
     // NOTE: This data is verified against User-Provided Engineering Logs (Jan 12, 2026)
     projectDetails: {
-        import { ATLAS_DATA } from './data/projects/atlas';
-
-        // ... (existing config)
-
-        // Phase 5: Deep Project Metadata (Curated)
-        projectDetails: {
-            "ATLAS": ATLAS_DATA,
-            // Future projects will be imported here
-        },
+        "ATLAS": ATLAS_DATA
     },
 
     // Global Configuration
