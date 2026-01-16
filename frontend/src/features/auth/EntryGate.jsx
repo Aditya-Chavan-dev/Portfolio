@@ -53,7 +53,7 @@ const EntryGate = ({ onUnlock }) => {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={onUnlock}
-                        className="group relative mt-8 md:mt-16 mx-auto w-full max-w-xs md:max-w-none px-6 md:px-10 py-5 bg-transparent overflow-hidden rounded-sm transition-all duration-300 cursor-pointer"
+                        className="group relative mt-8 md:mt-16 mx-auto w-full max-w-xs md:max-w-none px-6 md:px-10 py-5 bg-transparent overflow-hidden rounded-sm cursor-pointer"
                     >
                         {/* Glowing Borders */}
                         <div className="absolute inset-0 border border-[var(--color-accent-blue)] opacity-30 group-hover:opacity-100 group-hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-500 rounded-sm"></div>

@@ -778,4 +778,19 @@ We performed a critical "Polish & Performance" pass to eliminate UI jitter ("The
 -   **Visual Hierarchy:** Using whitespace and typography instead of boxes to organize data.
 
 ### Final Summary
+### Final Summary
 We realized that adding more features often degrades performance. To fix this, we stopped adding and started refining. We stripped away conflicting code and redundant borders, resulting in an interface that feels lighter, faster, and significantly more "Premium". It now behaves like a native application, not a web page.
+
+## Fix: Navbar & Entry Conflicts (Phase 68.1)
+
+### What was the issue?
+Despite the previous fixes, users reported "lag" when clicking "Projects" in the Quick Navigation, and "jitter" on the Entry Gate button.
+1.  **Navbar Lag:** The `LiveNavbar` was trying to animate its width using both Framer Motion (`layout`) and Tailwind CSS (`transition-all`). This caused a CPU race condition.
+2.  **Entry Jitter:** The `EntryGate` button had a similar conflict between `whileHover` (Framer) and `transition-all` (CSS), causing it to vibrate on hover.
+
+### How did we solve it?
+1.  **Navbar:** Removed `transition-all duration-700` from `LiveNavbar.jsx`. Added an explicit `transition={{ type: "spring" }}` prop to `motion.nav` to give Framer full control over the resize physics.
+2.  **Entry Gate:** Removed `transition-all duration-300` from the start button.
+
+### Final Summary
+We have aggressively purged "mixed mode" animations. By enforcing a rule of "Framer OR CSS, never both", we have eliminated the micro-stutters. The navigation is now buttery smooth.
