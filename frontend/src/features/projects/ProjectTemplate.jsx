@@ -230,7 +230,7 @@ const ProjectTemplate = ({
                 <div className="lg:col-span-8 flex flex-col md:flex-row h-full overflow-hidden bg-white/[0.02] border border-white/5 rounded-2xl relative">
 
                     {/* --- NAVIGATION LIST (W-1/3) --- */}
-                    <div className="w-full md:w-1/3 flex flex-col border-b md:border-b-0 md:border-r border-white/5 bg-white/[0.01]">
+                    <div className="w-full md:w-[40%] flex flex-col border-b md:border-b-0 md:border-r border-white/5 bg-white/[0.01]">
                         <div className="flex-1 overflow-y-auto p-2 md:p-3 space-y-6 scrollbar-hide">
 
                             {/* Features List */}
@@ -250,7 +250,7 @@ const ProjectTemplate = ({
                                                     : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-transparent'
                                                     }`}
                                             >
-                                                <div className="font-medium truncate">{typeof f === 'string' ? f : f.title}</div>
+                                                <div className="font-medium">{typeof f === 'string' ? f : f.title}</div>
                                             </button>
                                         );
                                     })}
@@ -275,7 +275,7 @@ const ProjectTemplate = ({
                                                         : 'text-gray-400 hover:bg-white/5 hover:text-gray-200 border-transparent'
                                                         }`}
                                                 >
-                                                    <div className="font-medium truncate">{f.title.split('(')[0].trim()}</div>
+                                                    <div className="font-medium">{f.title.split('(')[0].trim()}</div>
                                                 </button>
                                             );
                                         })}
@@ -315,13 +315,14 @@ const ProjectTemplate = ({
 
                                 {/* FAILURE RENDER */}
                                 {activeItem.type === 'failure' && failures[activeItem.index] && (
-                                    <div className="flex-1 w-full p-6 pb-10 flex flex-col gap-4">
-                                        {['Box 1', 'Box 2', 'Box 3', 'Box 4'].map((box, i) => (
-                                            <div key={i} className="flex-1 w-full border border-white/10 rounded-lg bg-white/5 flex items-center justify-center">
-                                                <span className="text-white/20 font-mono text-sm">{box}</span>
-                                            </div>
-                                        ))}
-                                    </div>
+                                    <ExpandableFeature
+                                        title={failures[activeItem.index].title}
+                                        overview={failures[activeItem.index].summary}
+                                        problem={failures[activeItem.index].failure}
+                                        solution={failures[activeItem.index].solution}
+                                        impact={failures[activeItem.index].outcome}
+                                        className="flex-1 w-full border-none shadow-none rounded-none pb-6"
+                                    />
                                 )}
                             </motion.div>
                         </AnimatePresence>
