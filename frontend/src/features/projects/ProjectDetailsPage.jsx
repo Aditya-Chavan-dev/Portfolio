@@ -1,76 +1,82 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import config from '../../portfolio.config';
 import ProjectTemplate from './ProjectTemplate';
 import AtlasProject from './items/AtlasProject'; // Static Import
 
-const ProjectDetailsPage = ({ project, onClose }) => {
-    // 1. Normalize Helper
-    const normalize = (str) => str ? str.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
-    const normalizedName = normalize(project.name);
+const ProjectDetailsPage = ({ project, onClose, onTechClick }) => {
+    // 1. Normalize Helper (Memoized to avoid re-creation)
+    const normalizedName = useMemo(() => {
+        return project.name ? project.name.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
+    }, [project.name]);
 
-    console.log("[ProjectDetailsPage] Opening:", project.name);
-
-    // 2. ROUTER: Check if we have a Dedicated Component file for this project
+    // 2. ROUTER: Check if we have a Dedicated Component file
     if (normalizedName.includes('atlas')) {
-        console.log("[ProjectDetailsPage] Rendering AtlasProject (Static)...");
-        return <AtlasProject onClose={onClose} />;
+        return <AtlasProject onClose={onClose} onTechClick={onTechClick} />;
     }
 
     // --- FALLBACK GENERIC TEMPLATE ---
-    // If no dedicated file exists, use the "Auto-Hydration" engine (GitHub Data + Config)
+    // Use useMemo for all derived data to prevent recalculation on parent re-renders
+    const templateData = useMemo(() => {
+        // ... (Memoized data logic remains unchanged)
+        // Lookup Metadata
+        const metadataKey = Object.keys(config.projectDetails || {}).find(
+            key => {
+                const normalizedKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+                return normalizedKey === normalizedName || normalizedName.includes(normalizedKey);
+            }
+        );
+        const metadata = config.projectDetails?.[metadataKey] || {};
 
-    // Lookup Metadata from Config (Legacy/Generic Support)
-    const metadataKey = Object.keys(config.projectDetails || {}).find(
-        key => normalize(key) === normalizedName || normalizedName.includes(normalize(key))
-    );
-    const metadata = config.projectDetails?.[metadataKey] || {};
+        // Prepare Data
+        const title = project.name || metadata?.title || "Untitled Project";
+        const description = metadata?.description || project.description || "This project is currently under active development.";
 
-    // Prepare Data
-    const title = project.name || metadata?.title || "Untitled Project";
-    const description = metadata?.description || project.description || "This project is currently under active development.";
+        // Timeline
+        const formatDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        };
+        const timeline = (project.created_at && project.pushed_at)
+            ? `${formatDate(project.created_at)} - ${formatDate(project.pushed_at)}`
+            : "Timeline Unavailable";
 
-    // Timeline
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-    };
-    const timeline = (project.created_at && project.pushed_at)
-        ? `${formatDate(project.created_at)} - ${formatDate(project.pushed_at)}`
-        : "Timeline Unavailable";
+        const links = {
+            demo: project.homepage || metadata?.demoUrl || '#',
+            source: project.html_url || metadata?.repoUrl || '#'
+        };
 
-    const links = {
-        demo: project.homepage || metadata?.demoUrl || '#',
-        source: project.html_url || metadata?.repoUrl || '#'
-    };
+        const techStack = metadata?.tech || {
+            frontend: ['React', 'Vite'],
+            backend: [],
+            database: [],
+            versionControl: ['Git']
+        };
 
-    const techStack = metadata?.tech || {
-        frontend: ['React', 'Vite'],
-        backend: [],
-        database: [],
-        versionControl: ['Git']
-    };
+        const features = metadata?.features || [
+            { title: "Feature 01 (Pending)" }, { title: "Feature 02 (Pending)" },
+            { title: "Feature 03 (Pending)" }, { title: "Feature 04 (Pending)" }
+        ];
 
-    const features = metadata?.features || [
-        { title: "Feature 01 (Pending)" }, { title: "Feature 02 (Pending)" },
-        { title: "Feature 03 (Pending)" }, { title: "Feature 04 (Pending)" }
-    ];
+        const failures = metadata?.failures || [
+            { title: "Failure 01 (Pending)" }, { title: "Failure 02 (Pending)" },
+            { title: "Failure 03 (Pending)" }, { title: "Failure 04 (Pending)" }
+        ];
 
-    const failures = metadata?.failures || [
-        { title: "Failure 01 (Pending)" }, { title: "Failure 02 (Pending)" },
-        { title: "Failure 03 (Pending)" }, { title: "Failure 04 (Pending)" }
-    ];
+        return { title, description, timeline, links, techStack, features, failures };
+    }, [project, normalizedName]);
 
     return (
         <ProjectTemplate
-            title={title}
-            description={description}
-            timeline={timeline}
-            links={links}
-            techStack={techStack}
-            features={features}
-            failures={failures}
+            title={templateData.title}
+            description={templateData.description}
+            timeline={templateData.timeline}
+            links={templateData.links}
+            techStack={templateData.techStack}
+            features={templateData.features}
+            failures={templateData.failures}
             onClose={onClose}
+            onTechClick={onTechClick}
         />
     );
 };
