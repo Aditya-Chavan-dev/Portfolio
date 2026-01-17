@@ -79,6 +79,7 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
                     project={selectedProject}
                     onClose={() => setSelectedProject(null)}
                     onTechClick={handleTechClick}
+                    onHub={onBack}
                 />
                 {/* Tech Nexus Overlay (Accessible from Details too) */}
                 <TechNexus
@@ -86,6 +87,7 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
                     techName={selectedTech}
                     allProjects={[...(flagship ? [flagship] : []), ...projects]}
                     onClose={() => setSelectedTech(null)}
+                    onHub={onBack}
                 />
             </AnimatePresence>
         );
@@ -100,6 +102,7 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
                 techName={selectedTech}
                 allProjects={[...(flagship ? [flagship] : []), ...projects]}
                 onClose={() => setSelectedTech(null)}
+                onHub={onBack}
             />
 
             {/* Background Circuit Pattern (Cleaner implementation via CSS or lighter opacity) */}

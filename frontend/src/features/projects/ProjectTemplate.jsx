@@ -13,7 +13,8 @@ const ProjectTemplate = ({
     features = [],
     failures = [],
     onClose,
-    onTechClick
+    onTechClick,
+    onHub
 }) => {
     // Local UI State for Navigation
     const [activeItem, setActiveItem] = useState({ type: 'feature', index: 0 });
@@ -47,6 +48,17 @@ const ProjectTemplate = ({
                                     <ArrowLeft size={18} />
                                 </div>
                                 <span className="text-sm font-medium tracking-wide">BACK</span>
+                            </button>
+
+                            {/* HUB SHORTCUT */}
+                            <button
+                                onClick={onClose && onHub ? onHub : undefined}
+                                className="group flex items-center gap-2 text-gray-500 hover:text-cyan-400 transition-colors"
+                            >
+                                <div className="p-2 rounded-full border border-white/10 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/30 transition-colors">
+                                    <Component size={18} />
+                                </div>
+                                <span className="text-sm font-medium tracking-wide">HUB</span>
                             </button>
                         </div>
 

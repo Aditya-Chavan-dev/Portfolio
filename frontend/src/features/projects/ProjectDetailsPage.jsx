@@ -3,7 +3,7 @@ import config from '../../portfolio.config';
 import ProjectTemplate from './ProjectTemplate';
 import AtlasProject from './items/AtlasProject'; // Static Import
 
-const ProjectDetailsPage = ({ project, onClose, onTechClick }) => {
+const ProjectDetailsPage = ({ project, onClose, onTechClick, onHub }) => {
     // 1. Normalize Helper (Memoized to avoid re-creation)
     const normalizedName = useMemo(() => {
         return project.name ? project.name.toLowerCase().replace(/[^a-z0-9]/g, '') : '';
@@ -11,7 +11,7 @@ const ProjectDetailsPage = ({ project, onClose, onTechClick }) => {
 
     // 2. ROUTER: Check if we have a Dedicated Component file
     if (normalizedName.includes('atlas')) {
-        return <AtlasProject onClose={onClose} onTechClick={onTechClick} />;
+        return <AtlasProject onClose={onClose} onTechClick={onTechClick} onHub={onHub} />;
     }
 
     // --- FALLBACK GENERIC TEMPLATE ---
@@ -77,6 +77,7 @@ const ProjectDetailsPage = ({ project, onClose, onTechClick }) => {
             failures={templateData.failures}
             onClose={onClose}
             onTechClick={onTechClick}
+            onHub={onHub}
         />
     );
 };
