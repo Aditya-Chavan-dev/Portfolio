@@ -6,6 +6,7 @@ const CinematicIntro = React.lazy(() => import('./features/auth/CinematicIntro')
 const JourneyHub = React.lazy(() => import('./features/journey/JourneyHub'));
 const ProjectsView = React.lazy(() => import('./features/projects/ProjectsView'));
 const HeroDashboard = React.lazy(() => import('./features/hero/components/HeroDashboard'));
+const TechNexus = React.lazy(() => import('./features/projects/TechNexus')); // Lazy Load Global Overlay
 
 import { initSession } from './services/tracking';
 import { GitHubService } from './services/github';
@@ -66,6 +67,8 @@ function App() {
     });
     const [showSystemCheck, setShowSystemCheck] = useState(false);
 
+    const [projects, setProjects] = useState([]); // Global Project Data
+
     useEffect(() => {
         // Initialize Session on App Mount
         const { sessionId } = initSession();
@@ -78,20 +81,21 @@ function App() {
             // 3. GitHub Stats (Smart Cache)
             const ghStats = await GitHubService.getSmartStats();
 
-            setHeroMetrics(prev => {
-                const newState = {
-                    ...prev,
-                    ...ghStats,
-                    loc: ghStats?.loc,
-                    repos: ghStats?.repos,
-                    streak: ghStats?.streak,
-                    stack: ghStats?.stack || config.hero.stack
-                };
+            setHeroMetrics(prev => ({
+                ...prev,
+                ...ghStats,
+                loc: ghStats?.loc,
+                repos: ghStats?.repos,
+                streak: ghStats?.streak,
+                stack: ghStats?.stack || config.hero.stack
+            }));
 
-                // 5. CACHE: Update the local truth
-                localStorage.setItem('METRICS_CACHE_V3', JSON.stringify(newState));
-                return newState;
-            });
+            // 4. Fetch Projects Globally (for TechNexus & ProjectsView)
+            const repoData = await GitHubService.getRepositories();
+            setProjects(repoData || []);
+
+            // 5. CACHE: Update the local truth
+            localStorage.setItem('METRICS_CACHE_V3', JSON.stringify(ghStats));
         };
 
         // Initial Fetch
@@ -139,10 +143,90 @@ function App() {
         setPhase(PHASE_DASHBOARD);
     };
 
+    const [selectedTech, setSelectedTech] = useState(null);
+
+    const handleTechClick = (techName) => {
+        setSelectedTech(techName);
+    };
+
     return (
         <div className="text-[var(--color-text-primary)] font-sans h-screen flex flex-col overflow-hidden bg-black font-hitmarker relative">
             {/* Global Scanlines */}
             <div className="fixed inset-0 pointer-events-none z-[150] bg-scanlines opacity-[0.03]" />
+
+            {/* GLOBAL TECH NEXUS OVERLAY */}
+            {/* Rendered at root level to ensure z-index dominance over all phases */}
+            <React.Suspense fallback={null}>
+                {selectedTech && (
+                    <div className="fixed inset-0 z-[300] pointer-events-auto">
+                        {/* We dynamically import TechNexus here to avoid circular dep issues if any, or just use the lazy component if we define it */}
+                        {/* For now, assuming TechNexus isn't lazy loaded in App yet. Let's lazily load it or import it.
+                            Review imports: TechNexus not imported in App.jsx. Adding import.
+                         */}
+                        <TechNexus
+                            isOpen={!!selectedTech}
+                            techName={selectedTech}
+                        // We need to pass allProjects. Ideally App doesn't hold project data yet.
+                        // Quick fix: TechNexus usually fetches or filters.
+                        // WAIT: TechNexus needs `allProjects`. 
+                        // App.jsx doesn't have `projects`. logic problem.
+                        // Solution: TechNexus Option A scans *config* mostly, but looked at `allProjects` prop.
+                        // Let's refactor TechNexus to be self-sufficient OR pass data up?
+                        // Passing data up is hard.
+                        // Better: Have TechNexus use the GitHubService cache or re-fetch?
+                        // Actually, let's keep it simple: Pass `onTechClick` down, but `TechNexus` stays in `ProjectsView`?
+                        // NO, user said "Stacking issue". Global is best.
+                        // WE WILL IMPORT JSON DATA IN TECHNEXUS DIRECTLY if possible, or fetch in App.
+                        />
+                    </div>
+                )}
+            </React.Suspense>
+
+    // ... wait, I need to check how to get `allProjects` in App.jsx.
+            // GitHubService.getSmartStats() is there.
+            // GitHubService.getRepositories() is what ProjectsView uses.
+            // I should fetch projects in App.jsx or make TechNexus smart.
+            // Let's make TechNexus smart? No, it takes `allProjects`.
+            // Let's Load projects in App.jsx?
+            // It might be better to just fix the z-index in ProjectsView if possible?
+            // User requested "Fix the issue".
+            // "Hero Display" issue: The overlay is inside ProjectsView, but maybe the user sees the *Dashboard* Hero?
+            // If user clicks a tech stack in *ProjectsView*, they shouldn't see Dashboard.
+            // Unless... `selectedTech` is clicked, but the view switches?
+            // Ah, if I click "React" in `HeroDashboard` (if it had links), it would need global state.
+            // `ProjectsView` has the data.
+
+            // REVALIDATING PLAN:
+            // If I move TechNexus to App.jsx, App.jsx needs the project list.
+            // I can fetch it in App.jsx (since we arguably want it cached/global anyway).
+
+            // MODIFYING PLAN IN FLIGHT:
+            // 1. Add `allProjects` state to App.jsx.
+            // 2. Fetch repos in App.jsx (cached).
+            // 3. Pass `projects` to ProjectsView (avoid double fetch).
+            // 4. Render TechNexus in App.jsx.
+
+            // Let's do the easy parts first: Add imports.
+
+
+            {/* GLOBAL TECH NEXUS OVERLAY */}
+            {/* Rendered at root level to ensure z-index dominance over all phases */}
+            <React.Suspense fallback={null}>
+                {selectedTech && (
+                    <div className="fixed inset-0 z-[300] pointer-events-auto">
+                        <TechNexus
+                            isOpen={!!selectedTech}
+                            techName={selectedTech}
+                            allProjects={projects}
+                            onClose={() => setSelectedTech(null)}
+                            onHub={() => {
+                                setSelectedTech(null);
+                                setPhase(PHASE_HUB);
+                            }}
+                        />
+                    </div>
+                )}
+            </React.Suspense>
 
             {/* Tactical HUD Layers */}
             {phase >= PHASE_HUB && <TacticalHUD />}
@@ -268,6 +352,8 @@ function App() {
                                     <ProjectsView
                                         onBack={() => setPhase(PHASE_HUB)}
                                         initialProjectId={initialProjectName}
+                                        onTechClick={handleTechClick}
+                                        projects={projects} // Pass cached projects
                                     />
                                 </SafeZone>
                             </motion.div>

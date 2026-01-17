@@ -6,15 +6,15 @@ import { GitHubService } from '../../services/github';
 import config from '../../portfolio.config';
 import { getTechIcon } from '../../utils/techIcons';
 
-import TechNexus from './TechNexus';
-
-const ProjectsView = ({ onBack, initialProjectId }) => {
-    const [projects, setProjects] = useState([]);
+const ProjectsView = ({ onBack, initialProjectId, onTechClick, projects: globalProjects }) => {
+    const [localProjects, setLocalProjects] = useState([]); // Fallback state
     const [flagship, setFlagship] = useState(null);
     const [selectedProject, setSelectedProject] = useState(null);
-    const [selectedTech, setSelectedTech] = useState(null); // Tech Nexus State
     const [loading, setLoading] = useState(true);
     const [isInteractionReady, setInteractionReady] = useState(false);
+
+    // Use global projects if available, otherwise local
+    const displayProjects = globalProjects && globalProjects.length > 0 ? globalProjects : localProjects;
 
     useEffect(() => {
         // Reduced artificial delay from 350ms to 100ms for snappier feel
@@ -24,7 +24,17 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
 
     useEffect(() => {
         const fetchProjects = async () => {
-            const data = await GitHubService.getRepositories();
+            // Optimize: If we have global projects, just filter flagship.
+            // But we need to separate Flagship from Others.
+            // Let's assume globalProjects contains ALL repos.
+            let data = globalProjects;
+
+            if (!data || data.length === 0) {
+                // Fallback fetch
+                data = await GitHubService.getRepositories();
+                setLocalProjects(data);
+            }
+
             const flagshipName = config.projects.flagshipRepository;
             const foundFlagship = data.find(repo => repo.name === flagshipName);
             const others = data
@@ -33,7 +43,11 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
                 .filter(repo => !config.projects.others.excludeArchived || !repo.archived);
 
             setFlagship(foundFlagship);
-            setProjects(others);
+            // We only need to set 'projects' state if we were doing local rendering calculation here.
+            // But we display 'displayProjects'. Wait, displayProjects is ALL.
+            // Local state 'projects' in previous code was 'others'.
+            // Let's fix this naming.
+            setLocalProjects(others); // Actually we should use a state for 'others'.
 
             if (initialProjectId) {
                 if (foundFlagship && foundFlagship.name === initialProjectId) {
@@ -56,7 +70,7 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
             setLoading(false);
         };
         fetchProjects();
-    }, [initialProjectId]);
+    }, [initialProjectId, globalProjects]); // Re-run if global projects load later
 
     useEffect(() => {
         if (loading) return;
@@ -67,26 +81,13 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
         }
     }, [selectedProject, loading]);
 
-    // Handler for Tech Clicks
-    const handleTechClick = (techName) => {
-        setSelectedTech(techName);
-    };
-
     if (selectedProject) {
         return (
             <AnimatePresence mode="wait">
                 <ProjectDetailsPage
                     project={selectedProject}
                     onClose={() => setSelectedProject(null)}
-                    onTechClick={handleTechClick}
-                    onHub={onBack}
-                />
-                {/* Tech Nexus Overlay (Accessible from Details too) */}
-                <TechNexus
-                    isOpen={!!selectedTech}
-                    techName={selectedTech}
-                    allProjects={[...(flagship ? [flagship] : []), ...projects]}
-                    onClose={() => setSelectedTech(null)}
+                    onTechClick={onTechClick}
                     onHub={onBack}
                 />
             </AnimatePresence>
@@ -95,15 +96,6 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
 
     return (
         <div className="relative w-full h-screen bg-[#050505] overflow-x-hidden text-white flex flex-col">
-
-            {/* Tech Nexus Overlay */}
-            <TechNexus
-                isOpen={!!selectedTech}
-                techName={selectedTech}
-                allProjects={[...(flagship ? [flagship] : []), ...projects]}
-                onClose={() => setSelectedTech(null)}
-                onHub={onBack}
-            />
 
             {/* Background Circuit Pattern (Cleaner implementation via CSS or lighter opacity) */}
             <div className="fixed top-0 right-0 w-1/2 h-1/2 opacity-[0.03] pointer-events-none bg-circuit-pattern" />
@@ -173,7 +165,7 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
                                                 {['JavaScript', 'React', 'Node.js', 'Firebase', 'Tailwind'].map(tech => (
                                                     <button
                                                         key={tech}
-                                                        onClick={(e) => { e.stopPropagation(); handleTechClick(tech); }}
+                                                        onClick={(e) => { e.stopPropagation(); onTechClick(tech); }}
                                                         className="px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs font-mono text-gray-300 hover:bg-cyan-500/10 hover:text-cyan-400 hover:border-cyan-500/30 transition-all"
                                                     >
                                                         {tech}
@@ -192,7 +184,7 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2, duration: 0.5 }}
                             >
-                                {projects.map((repo, idx) => (
+                                {localProjects.map((repo, idx) => (
                                     <div
                                         key={repo.id}
                                         className="relative group"
@@ -224,8 +216,9 @@ const ProjectsView = ({ onBack, initialProjectId }) => {
                                                             <p className="text-xs font-mono text-gray-600 flex items-center gap-2">
                                                                 <span className="text-cyan-500">TECH:</span>
                                                                 <button
-                                                                    onClick={(e) => { e.stopPropagation(); handleTechClick(repo.language); }}
+                                                                    onClick={(e) => { e.stopPropagation(); onTechClick(repo.language); }}
                                                                     className="flex items-center gap-1 hover:text-white transition-colors"
+                                                                    title="View Tech Nexus"
                                                                 >
                                                                     <img src={getTechIcon(repo.language)} alt={repo.language} className="w-3 h-3 grayscale group-hover:grayscale-0 transition-all" />
                                                                     {repo.language}
