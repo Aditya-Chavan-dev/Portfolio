@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Activity, Layers, Flame, Component, CheckCircle, Github, Hexagon, Terminal, ChevronRight, ArrowUpLeft } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Activity, Layers, Flame, Component, CheckCircle, Github, Hexagon, Terminal, ChevronRight, ArrowUpLeft, Home } from 'lucide-react';
 import ExpandableFeature from './ExpandableFeature';
 import { getTechIcon } from '../../utils/techIcons';
 
@@ -52,11 +52,12 @@ const ProjectTemplate = ({
 
                             {/* HUB SHORTCUT */}
                             <button
-                                onClick={onClose && onHub ? onHub : undefined}
+                                onClick={onHub}
                                 className="group flex items-center gap-2 text-gray-500 hover:text-cyan-400 transition-colors"
+                                title="Return to Hub"
                             >
                                 <div className="p-2 rounded-full border border-white/10 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/30 transition-colors">
-                                    <Component size={18} />
+                                    <Home size={18} />
                                 </div>
                                 <span className="text-sm font-medium tracking-wide">HUB</span>
                             </button>
