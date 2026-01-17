@@ -833,3 +833,21 @@ It proves "Depth & Breadth" simultaneously. If a recruiter sees "React" on one p
 ### Final Summary
 We realized that a list of technologies is just a claim. To prove it, we built the "Tech Nexus". This system automatically aggregates evidence of every skill, creating a "live resume" matrix that shows exactly where and how each tool was used across the entire career history.
 
+
+## Feature: Hub Navigation Quick-Access (Phase 71)
+
+### What is the new feature about?
+We introduced a direct "Ejection Seat" mechanism. Users can now instantly return to the main Command Hub from deep within the Project or Tech Nexus views without navigating backward through the history stack.
+
+### How did we implement it?
+1.  **Prop Threading:** Wired a top-level \onBack\ handler (which sets the app phase to \PHASE_HUB\) down through \ProjectsView\ -> \ProjectDetailsPage\ -> \ProjectTemplate\ / \TechNexus\.
+2.  **UI Integration:**
+    *   **Project Header:** Added a \HUB\ button next to the existing \BACK\ button.
+    *   **Tech Nexus:** Added a "Return to Command Hub" footer action.
+
+### How is the user benefitted from it?
+It eliminates "navigation fatigue". Exploring deep into a project or tech stack no longer feels like a one-way trip. The user feels in control, knowing they can reset to the main menu instantly.
+
+### Final Summary
+We recognized that our "immersive" views could sometimes feel like "traps". By adding these "Escape Hatches", we maintained the immersion while restoring user agency, making the exploration loop (Hub -> Project -> Hub) much tighter and friendlier.
+

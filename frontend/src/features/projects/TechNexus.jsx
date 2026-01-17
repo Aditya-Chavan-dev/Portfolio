@@ -4,7 +4,7 @@ import { X, ExternalLink, ArrowRight, Layers, Database, Globe, Cpu } from 'lucid
 import config from '../../portfolio.config';
 import { getTechIcon } from '../../utils/techIcons';
 
-const TechNexus = ({ isOpen, techName, allProjects, onClose }) => {
+const TechNexus = ({ isOpen, techName, allProjects, onClose, onHub }) => {
 
     // Auto-Filter Logic (Option A: "Automated")
     // Scans all projects and configuration to find usage of this tech
@@ -132,9 +132,16 @@ const TechNexus = ({ isOpen, techName, allProjects, onClose }) => {
 
                         {/* Footer decorative */}
                         <div className="p-6 border-t border-white/5 bg-black/40 text-center">
-                            <p className="text-[10px] text-gray-600 font-mono uppercase tracking-widest">
+                            <p className="text-[10px] text-gray-600 font-mono uppercase tracking-widest mb-4">
                                 Engineering DNA // Verified
                             </p>
+                            <button
+                                onClick={onHub}
+                                className="w-full py-3 bg-white/5 hover:bg-cyan-500/10 border border-white/10 hover:border-cyan-500/30 rounded-lg text-xs font-mono uppercase tracking-widest text-gray-400 hover:text-cyan-400 transition-all flex items-center justify-center gap-2"
+                            >
+                                <ArrowRight size={14} className="rotate-180" />
+                                <span>Return to Command Hub</span>
+                            </button>
                         </div>
                     </motion.div>
                 </>
