@@ -852,3 +852,4 @@ It eliminates "navigation fatigue". Exploring deep into a project or tech stack 
 We recognized that our "immersive" views could sometimes feel like "traps". By adding these "Escape Hatches", we maintained the immersion while restoring user agency, making the exploration loop (Hub -> Project -> Hub) much tighter and friendlier.
 
 - **Fix (Phase 71.1):** Resolved visibility on the 'Back to Hub' button by replacing conditional logic with direct event binding and switching to the standard \Home\ icon.
+- **Fix (Phase 72):** Lifted 'Tech Nexus' state to global \App.jsx\ scope to resolve Z-Index stacking context issues where the overlay would be successfully created but hidden behind other 3D elements.
