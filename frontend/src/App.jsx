@@ -354,6 +354,7 @@ function App() {
                                         initialProjectId={initialProjectName}
                                         onTechClick={handleTechClick}
                                         projects={projects} // Pass cached projects
+                                        setProjects={setProjects} // Allow child to update global cache
                                     />
                                 </SafeZone>
                             </motion.div>

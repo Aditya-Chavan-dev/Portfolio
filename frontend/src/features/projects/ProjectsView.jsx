@@ -6,7 +6,7 @@ import { GitHubService } from '../../services/github';
 import config from '../../portfolio.config';
 import { getTechIcon } from '../../utils/techIcons';
 
-const ProjectsView = ({ onBack, initialProjectId, onTechClick, projects: globalProjects }) => {
+const ProjectsView = ({ onBack, initialProjectId, onTechClick, projects: globalProjects, setProjects: setGlobalProjects }) => {
     const [localProjects, setLocalProjects] = useState([]); // Fallback state
     const [flagship, setFlagship] = useState(null);
     const [selectedProject, setSelectedProject] = useState(null);
@@ -33,6 +33,10 @@ const ProjectsView = ({ onBack, initialProjectId, onTechClick, projects: globalP
                 // Fallback fetch
                 data = await GitHubService.getRepositories();
                 setLocalProjects(data);
+                // CRITICAL: Sync back to App.jsx so TechNexus has data
+                if (setGlobalProjects && data && data.length > 0) {
+                    setGlobalProjects(data);
+                }
             }
 
             const flagshipName = config.projects.flagshipRepository;
