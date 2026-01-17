@@ -13,12 +13,14 @@ const JourneyHub = ({ onSelection }) => {
     return (
         <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#050505] overflow-hidden selection:bg-cyan-500/30 pt-16">
 
-            {/* Subtle Gradient Background */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div
-                    className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] bg-[radial-gradient(circle,rgba(34,211,238,0.03)_0%,transparent_60%)]"
-                />
-            </div>
+            {/* Subtle Gradient Background - Optimized for Performance */}
+            <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                    background: 'radial-gradient(circle at 50% -20%, rgba(34,211,238,0.03) 0%, transparent 40%)',
+                    willChange: 'transform' // Hint for GPU composition
+                }}
+            />
 
             <div className="relative z-10 w-full max-w-[1200px] px-8 md:px-12 flex flex-col justify-center items-center h-full gap-6 md:gap-8">
 

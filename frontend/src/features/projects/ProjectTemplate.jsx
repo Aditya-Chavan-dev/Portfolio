@@ -1,53 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ExternalLink, Activity, Layers, Flame, Component, CheckCircle, Github, Hexagon, Terminal, ChevronRight, ArrowUpLeft } from 'lucide-react';
 import ExpandableFeature from './ExpandableFeature';
-
-// --- Icon Helper ---
-const getTechIcon = (language) => {
-    if (!language) return null;
-    if (language === 'TanStack Query') return 'https://raw.githubusercontent.com/TanStack/query/main/media/logo.svg';
-
-    const map = {
-        'JavaScript': 'javascript/javascript-original',
-        'TypeScript': 'typescript/typescript-original',
-        'Python': 'python/python-original',
-        'Java': 'java/java-original',
-        'C#': 'csharp/csharp-original',
-        'C++': 'cplusplus/cplusplus-original',
-        'HTML': 'html5/html5-original',
-        'CSS': 'css3/css3-original',
-        'Vue': 'vuejs/vuejs-original',
-        'React': 'react/react-original',
-        'Dart': 'dart/dart-original',
-        'Go': 'go/go-original-wordmark',
-        'Shell': 'bash/bash-original',
-        'Files': 'file-icons/file-icons-original',
-        'Node.js': 'nodejs/nodejs-original',
-        'Express': 'express/express-original',
-        'Redis': 'redis/redis-original',
-        'Postgres': 'postgresql/postgresql-original',
-        'Firebase': 'firebase/firebase-plain',
-        'Google Cloud': 'googlecloud/googlecloud-original',
-        'Vite': 'vitejs/vitejs-original',
-        'Tailwind': 'tailwindcss/tailwindcss-original',
-        'Sass': 'sass/sass-original',
-        'Less': 'less/less-plain-wordmark',
-        'Redux': 'redux/redux-original',
-        'Git': 'git/git-original',
-        'Docker': 'docker/docker-original',
-        'Kubernetes': 'kubernetes/kubernetes-plain',
-        'AWS': 'amazonwebservices/amazonwebservices-original-wordmark',
-        'Azure': 'azure/azure-original',
-        'Nginx': 'nginx/nginx-original',
-        'Linux': 'linux/linux-original',
-    };
-
-    const key = Object.keys(map).find(k => language.includes(k));
-    const slug = key ? map[key] : null;
-    if (!slug) return null;
-    return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${slug}.svg`;
-};
+import { getTechIcon } from '../../utils/techIcons';
 
 const ProjectTemplate = ({
     title,
@@ -57,16 +12,15 @@ const ProjectTemplate = ({
     techStack = {},
     features = [],
     failures = [],
-    onClose
+    onClose,
+    onTechClick
 }) => {
     // Local UI State for Navigation
     const [activeItem, setActiveItem] = useState({ type: 'feature', index: 0 });
 
-    // Ensure scroll reset
-    useEffect(() => {
-        const detailContainer = document.getElementById('template-detail-content');
-        if (detailContainer) detailContainer.scrollTop = 0;
-    }, [activeItem]);
+    // ... (rest of hook logic)
+
+    // ... (render logic)
 
     return (
         <motion.div
@@ -76,16 +30,10 @@ const ProjectTemplate = ({
             className="fixed inset-0 z-[200] bg-[#02040a] text-white font-sans selection:bg-cyan-500/30 flex flex-col overflow-hidden"
             style={{ height: '100dvh' }}
         >
-            <style>{`
-                .scrollbar-hide::-webkit-scrollbar { display: none; }
-                .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-                .mask-fade-bottom { mask-image: linear-gradient(to bottom, black 90%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%); }
-            `}</style>
-
             <div className="flex-1 max-w-[1800px] w-full mx-auto p-4 md:p-6 lg:p-8 flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-8 overflow-hidden h-full">
 
                 {/* === LEFT COLUMN: METADATA (Span 4) === */}
-                <div className="lg:col-span-4 flex flex-col gap-6 lg:h-full lg:overflow-y-auto scrollbar-hide">
+                <div className="lg:col-span-4 flex flex-col gap-6 lg:h-full lg:overflow-y-auto no-scrollbar">
 
                     {/* 1. Project Name & Actions */}
                     <div className="space-y-4">
@@ -147,7 +95,7 @@ const ProjectTemplate = ({
                         </div>
                     </div>
 
-                    {/* 2. Description - "A little less" font size */}
+                    {/* 2. Description */}
                     <div className="space-y-2 pt-2">
                         <h3 className="text-xs font-mono uppercase tracking-widest text-gray-500 flex items-center gap-2">
                             <Activity size={14} /> Mission Brief
@@ -157,7 +105,7 @@ const ProjectTemplate = ({
                         </p>
                     </div>
 
-                    {/* 3. Tech Stack - "A little bigger" font size */}
+                    {/* 3. Tech Stack */}
                     {Object.keys(techStack).length > 0 && (
                         <div className="space-y-3 pt-4 border-t border-white/5 hidden md:block">
                             <h3 className="text-xs font-mono uppercase tracking-widest text-gray-500 flex items-center gap-2">
@@ -171,10 +119,15 @@ const ProjectTemplate = ({
                                         <span className="text-xs text-cyan-500/60 font-mono uppercase tracking-wider block">Frontend</span>
                                         <div className="flex flex-wrap gap-2">
                                             {techStack.frontend.map((t, i) => (
-                                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5" title={t}>
-                                                    <img src={getTechIcon(t)} alt={t} className="w-4 h-4" />
-                                                    <span className="text-xs text-gray-400 font-mono">{t}</span>
-                                                </div>
+                                                <button
+                                                    key={i}
+                                                    onClick={() => onTechClick && onTechClick(t)}
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5 hover:bg-cyan-500/10 hover:border-cyan-500/30 hover:text-cyan-400 transition-all cursor-pointer"
+                                                    title={t}
+                                                >
+                                                    <img src={getTechIcon(t)} alt={t} className="w-4 h-4 grayscale group-hover:grayscale-0" />
+                                                    <span className="text-xs text-gray-400 font-mono group-hover:text-cyan-400">{t}</span>
+                                                </button>
                                             ))}
                                         </div>
                                     </div>
@@ -185,10 +138,15 @@ const ProjectTemplate = ({
                                         <span className="text-xs text-purple-500/60 font-mono uppercase tracking-wider block">Backend</span>
                                         <div className="flex flex-wrap gap-2">
                                             {techStack.backend.map((t, i) => (
-                                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5" title={t}>
-                                                    <img src={getTechIcon(t)} alt={t} className="w-4 h-4" />
-                                                    <span className="text-xs text-gray-400 font-mono">{t}</span>
-                                                </div>
+                                                <button
+                                                    key={i}
+                                                    onClick={() => onTechClick && onTechClick(t)}
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5 hover:bg-purple-500/10 hover:border-purple-500/30 hover:text-purple-400 transition-all cursor-pointer"
+                                                    title={t}
+                                                >
+                                                    <img src={getTechIcon(t)} alt={t} className="w-4 h-4 grayscale group-hover:grayscale-0" />
+                                                    <span className="text-xs text-gray-400 font-mono group-hover:text-purple-400">{t}</span>
+                                                </button>
                                             ))}
                                         </div>
                                     </div>
@@ -199,10 +157,15 @@ const ProjectTemplate = ({
                                         <span className="text-xs text-emerald-500/60 font-mono uppercase tracking-wider block">Database</span>
                                         <div className="flex flex-wrap gap-2">
                                             {techStack.database.map((t, i) => (
-                                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5" title={t}>
-                                                    <img src={getTechIcon(t)} alt={t} className="w-4 h-4" />
-                                                    <span className="text-xs text-gray-400 font-mono">{t}</span>
-                                                </div>
+                                                <button
+                                                    key={i}
+                                                    onClick={() => onTechClick && onTechClick(t)}
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5 hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-400 transition-all cursor-pointer"
+                                                    title={t}
+                                                >
+                                                    <img src={getTechIcon(t)} alt={t} className="w-4 h-4 grayscale group-hover:grayscale-0" />
+                                                    <span className="text-xs text-gray-400 font-mono group-hover:text-emerald-400">{t}</span>
+                                                </button>
                                             ))}
                                         </div>
                                     </div>
@@ -213,10 +176,15 @@ const ProjectTemplate = ({
                                         <span className="text-xs text-orange-500/60 font-mono uppercase tracking-wider block">Version Control</span>
                                         <div className="flex flex-wrap gap-2">
                                             {techStack.versionControl.map((t, i) => (
-                                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5" title={t}>
-                                                    <img src={getTechIcon(t)} alt={t} className="w-4 h-4" />
-                                                    <span className="text-xs text-gray-400 font-mono">{t}</span>
-                                                </div>
+                                                <button
+                                                    key={i}
+                                                    onClick={() => onTechClick && onTechClick(t)}
+                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.03] rounded border border-white/5 hover:bg-orange-500/10 hover:border-orange-500/30 hover:text-orange-400 transition-all cursor-pointer"
+                                                    title={t}
+                                                >
+                                                    <img src={getTechIcon(t)} alt={t} className="w-4 h-4 grayscale group-hover:grayscale-0" />
+                                                    <span className="text-xs text-gray-400 font-mono group-hover:text-orange-400">{t}</span>
+                                                </button>
                                             ))}
                                         </div>
                                     </div>
@@ -231,7 +199,7 @@ const ProjectTemplate = ({
 
                     {/* --- NAVIGATION LIST (W-1/3) --- */}
                     <div className="w-full md:w-[40%] flex flex-col border-b md:border-b-0 md:border-r border-white/5 bg-white/[0.01]">
-                        <div className="flex-1 overflow-y-auto p-2 md:p-3 space-y-6 scrollbar-hide">
+                        <div className="flex-1 overflow-y-auto p-2 md:p-3 space-y-6 no-scrollbar">
 
                             {/* Features List */}
                             <div className="space-y-2">
@@ -287,7 +255,7 @@ const ProjectTemplate = ({
                     </div>
 
                     {/* --- DETAIL VIEW (Flex-1) --- */}
-                    <div className="flex-1 relative overflow-hidden bg-white/[0.01]" id="template-detail-content">
+                    <div className="flex-1 relative overflow-hidden bg-white/[0.01]" ref={detailContainerRef}>
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={`${activeItem.type}-${activeItem.index}`}
@@ -295,7 +263,7 @@ const ProjectTemplate = ({
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute inset-0 overflow-y-auto scrollbar-hide flex flex-col"
+                                className="absolute inset-0 overflow-y-auto no-scrollbar flex flex-col"
                             >
                                 {/* FEATURE RENDER */}
                                 {activeItem.type === 'feature' && features[activeItem.index] && (

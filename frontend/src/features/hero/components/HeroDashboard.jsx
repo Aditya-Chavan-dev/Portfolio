@@ -169,22 +169,53 @@ const HeroDashboard = ({ onInitiate, metrics }) => {
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{
-                    opacity: introStep === STEP_COMPLETE ? 1 : 0,
-                    y: introStep === STEP_COMPLETE ? 0 : 50,
+                    opacity: introStep >= STEP_LOC ? 1 : 0, // Show earlier
+                    y: introStep >= STEP_LOC ? 0 : 50,
                 }}
                 className="relative z-40 flex items-center justify-center mt-12"
             >
-                <motion.button
-                    onClick={onInitiate}
-                    disabled={introStep !== STEP_COMPLETE}
-                    className="group relative px-12 py-5 bg-white text-black font-bold text-lg md:text-xl tracking-widest uppercase overflow-hidden hover:scale-105 transition-transform duration-300"
+                <div
+                    className="relative group"
+                    onClick={() => {
+                        // Secret Fast Forward: If clicked before complete, set flag to skip next time
+                        if (introStep !== STEP_COMPLETE) {
+                            localStorage.setItem('HAS_SEEN_HERO', 'true');
+                            // Could potentially force a re-mount or state update here if we want instant skip,
+                            // but for now we just register the intent for next reload or simply let them wait this one time
+                            // but showing it's "Charging" is better UX than hiding it.
+                        }
+                    }}
                 >
-                    <span className="relative z-10 flex items-center gap-3">
-                        <Play size={24} fill="currentColor" />
-                        Initiate System
-                    </span>
-                    <div className="absolute inset-0 bg-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 mix-blend-difference" />
-                </motion.button>
+                    <motion.button
+                        onClick={onInitiate}
+                        disabled={introStep !== STEP_COMPLETE}
+                        className={`
+                            group relative px-12 py-5 font-bold text-lg md:text-xl tracking-widest uppercase overflow-hidden transition-all duration-300
+                            ${introStep === STEP_COMPLETE
+                                ? 'bg-white text-black hover:scale-105 cursor-pointer'
+                                : 'bg-gray-800 text-gray-500 cursor-wait border border-gray-700'}
+                        `}
+                    >
+                        <span className="relative z-10 flex items-center gap-3">
+                            {introStep === STEP_COMPLETE ? <Play size={24} fill="currentColor" /> : <div className="w-4 h-4 rounded-full border-2 border-t-transparent border-gray-500 animate-spin" />}
+                            {introStep === STEP_COMPLETE ? "Initiate System" : "Initializing..."}
+                        </span>
+
+                        {introStep === STEP_COMPLETE && (
+                            <div className="absolute inset-0 bg-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 mix-blend-difference" />
+                        )}
+
+                        {/* Charging Progress Bar */}
+                        {introStep < STEP_COMPLETE && (
+                            <motion.div
+                                className="absolute bottom-0 left-0 h-1 bg-cyan-500"
+                                initial={{ width: "0%" }}
+                                animate={{ width: "100%" }}
+                                transition={{ duration: 12, ease: "linear" }}
+                            />
+                        )}
+                    </motion.button>
+                </div>
             </motion.div>
 
         </div >

@@ -812,3 +812,24 @@ All at the exact same millisecond. This caused a frame drop "slam".
 
 ### Final Summary
 The application now respects the device's limits. It no longer tries to do everything at once. By queuing heavy tasks and optimizing the glass filters, the UI feels significantly lighter, faster, and more responsive. It flows like water.
+## Feature: Cross-Project Reference System (Tech Nexus) (Phase 70)
+
+### What is the new feature about?
+We have transformed the static "Tech Stack" badges into an interactive cross-reference system. Now, clicking on any technology (e.g., "React", "Node.js") instantly reveals a "Nexus" panel that lists every other project in the portfolio that uses that same technology.
+
+### How did we implement it?
+1.  **Automated Matrix Logic:** Built \TechNexus.jsx\ to scan the entire project registry in real-time. It filters projects by checking both their GitHub Primary Language and their \portfolio.config.js\ metadata.
+2.  **Contextual Integration:** Updated \ProjectsView.jsx\ and \ProjectTemplate.jsx\ to pass click handlers deep into the component tree. Clicking a badge in the "Flagship" project or a "Grid" item triggers the same global overlay.
+3.  **Glassmorphic Sidebar:** Designed a non-intrusive slide-over panel that presents the data without navigating the user away from their current view.
+
+### How is the user benefitted from it?
+It proves "Depth & Breadth" simultaneously. If a recruiter sees "React" on one project, they can click it to see 5 other projects using React. It turns isolated project cards into a connected web of skills, validating expertise through volume.
+
+### What concepts we used?
+-   **Inverted Indexing:** Dynamically mapping "Tech -> Projects" from a "Project -> Tech" data set.
+-   **Global State Management:** Lifting state to control a portfolio-wide UI overlay.
+-   **Drill-Down UX:** Allowing users to pivot from "Project View" to "Skill View" instantly.
+
+### Final Summary
+We realized that a list of technologies is just a claim. To prove it, we built the "Tech Nexus". This system automatically aggregates evidence of every skill, creating a "live resume" matrix that shows exactly where and how each tool was used across the entire career history.
+

@@ -111,12 +111,22 @@ function App() {
 
 
         if (selection === 'RESUME') {
+            // UX Feedback: User needs to know something is happening
+            const btn = document.activeElement;
+            const originalText = btn ? btn.innerText : '';
+            if (btn) btn.innerText = 'DOWNLOADING...';
+
             const link = document.createElement('a');
             link.href = '/resume.pdf';
             link.download = 'Aditya_Chavan_Resume.pdf';
             document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+
+            // Artificial delay to ensure user sees the "Downloading" state
+            setTimeout(() => {
+                link.click();
+                document.body.removeChild(link);
+                if (btn) btn.innerText = originalText;
+            }, 800);
             return;
         }
 

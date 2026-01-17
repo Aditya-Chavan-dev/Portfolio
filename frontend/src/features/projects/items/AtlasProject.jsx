@@ -3,7 +3,7 @@ import ProjectTemplate from '../ProjectTemplate';
 
 import { ATLAS_DATA } from '../../../data/projects/atlas';
 
-const AtlasProject = ({ onClose }) => {
+const AtlasProject = ({ onClose, onTechClick }) => {
     return (
         <ProjectTemplate
             title={ATLAS_DATA.title}
@@ -14,6 +14,7 @@ const AtlasProject = ({ onClose }) => {
             features={ATLAS_DATA.features}
             failures={ATLAS_DATA.failures}
             onClose={onClose}
+            onTechClick={onTechClick}
         />
     );
 };
