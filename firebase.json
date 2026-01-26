@@ -1,4 +1,7 @@
 {
+  "functions": {
+    "source": "functions"
+  },
   "hosting": {
     "public": "frontend/dist",
     "ignore": [
@@ -7,6 +10,10 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+      {
+        "source": "/dynamic-test",
+        "function": "app"
+      },
       {
         "source": "**",
         "destination": "/index.html"
