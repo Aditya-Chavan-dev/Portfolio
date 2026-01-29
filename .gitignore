@@ -1,19 +1,30 @@
+# Environment variables
+.env
+*.env
+.env.*
+
+# Node dependencies
 node_modules/
 dist/
 build/
-.env
-.DS_Store
-firebase-debug.log
-ui-debug.log
+.cache/
+
+# Firebase
 .firebase/
+firebaserc
 
+# Logs
+*.log
 
-# Security
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
 serviceAccountKey.json
-# Ignore other likely secret keys
-*-credentials.json
-# Allow config files
-!package.json
-!firebase.json
-!database.rules.json
-!firestore.indexes.json
