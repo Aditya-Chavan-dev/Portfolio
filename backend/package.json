@@ -1,22 +1,12 @@
 {
-  "name": "portfolio-backend",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Backend API for Portfolio",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "axios": "^1.13.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "firebase-admin": "^12.1.0",
-    "ua-parser-js": "^2.0.7"
-  },
-  "engines": {
-    "node": ">=18"
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
