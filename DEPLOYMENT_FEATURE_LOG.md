@@ -20,7 +20,7 @@ The system now has a functional root entry point (`frontend/dist/index.html`) an
 
 ---
 
-## [2026-01-29 | 09:40:00] - Commit: PENDING
+## [2026-01-29 | 09:40:00] - Commit: 0c13bcd
 
 ### Description of the feature or capability introduced or changed
 Implemented the **Global Commit-Coupled Documentation Governance Workflow**. This introduces a mandatory, bound relationship between code changes and three core documentation artifacts.
