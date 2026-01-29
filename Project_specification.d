@@ -24,18 +24,16 @@ The system exhibits real-time behaviors using the following logic:
 ## ⚙️ 3. Technical Implementation State
 The system is currently implemented with the following architecture:
 
-- **Frontend Environment**: 
-    - React 19 (Vite) with Feature-Sliced Design (FSD) layering.
-    - Tailwind CSS v4 for styling.
-    - TypeScript for type safety.
+- **Frontend Architecture**: Split-Stack (Mobile/Desktop Isolated Applications).
+- **Environment**: 
+    - React 19 (Vite).
+    - Tailwind CSS v4.
+    - TypeScript.
 - **Log Layers**:
-    - `app/`: Global providers and entry point.
-    - `pages/`: Route-level composition.
-    - `widgets/`: Complex UI modules.
-    - `features/`: Isolated business logic.
-    - `entities/`: Domain data models.
-    - `shared/`: Generic utilities and UI primitives.
-- **State Management**: Zustand (Client state) and TanStack Query (Server state).
+    - `src/desktop/`: Desktop-specific FSD (Features, Widgets, Entities).
+    - `src/mobile/`: Mobile-specific FSD.
+    - `src/shared-core/`: Pure Logic (No UI).
+    - `src/main.tsx`: Binary Device Classifier (Bootstrapper).
 - **Security Protocols**: 
     - Environment-variable based secret management.
     - Root-level file exclusion (`.gitignore`) for sensitive configuration files.
@@ -45,6 +43,8 @@ The system is currently implemented with the following architecture:
 ### A. Narrative & Experience
 - **Experience Days Counter**: Logic to calculate and display duration since career inception.
 - **Academic Records**: Display of degrees and achievements.
+- **Desktop Landing Page**: Cinematic hero section with "Cyberpunk" aesthetic, proof anchors, and dynamic entrance calculations.
+- **Mobile Landing Page**: Vertical-optimized hero section with touch-first interactions and stacked typography.
 
 ### B. Project Showcase
 - **Case Study Model**: Markdown-based rendering of technical narratives including feature lists and technical challenges.
