@@ -235,3 +235,23 @@ To improve readability and visual elegance. The user feedback explicitly cited i
 
 ---
 
+
+## [2026-01-30 | 09:25:00] - Commit: TYPOGRAPHY_FINAL_POLISH
+
+### Description of the feature or capability introduced or changed
+Applied final typography polish and implemented typewriter sequence extension.
+1.  **Typography Refining**: Downscaled Mobile Hero headline to 'text-2xl' for a more professional, less 'broad' appearance. Adjusted sub-headline to 'text-lg font-medium'.
+2.  **Disclaimer Animation**: Converted the static/fade-in disclaimer text to a full 'typewriter' sequence, chained to the end of the subtitle animation.
+
+### The problem or limitation that existed before the change
+The previous 'text-3xl' commit was still perceived as 'too big and wide' by the stakeholder. The disclaimer was a static element that broke the 'living system' narrative flow initiated by the typewriter headlines.
+
+### The reason the change was necessary
+To achieve the 'subtle and professional' aesthetic requested, and to unify the animation strategy so that *every* piece of text enters the screen via the same mechanism.
+
+### The resulting behavioral difference after the change
+**Professional Aesthetics**: The text is now more restrained and elegant.
+**Unified Flow**: The site loads with a continuous stream of typing: Title -> Subtitle -> Disclaimer.
+
+---
+
