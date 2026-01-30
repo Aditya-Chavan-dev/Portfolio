@@ -21,20 +21,19 @@ The system exhibits real-time behaviors using the following logic:
     - Post-intro fade-in for primary and secondary calls to action.
 - **Suggestive Navigation**: Contextual prompts (nudges) appear based on user scroll position and dwell time.
 
-## ⚙️ 3. Technical Implementation State
-The system is currently implemented with the following architecture:
-
-- **Frontend Architecture**: Split-Stack (Mobile/Desktop Isolated Applications).
+- **Frontend Architecture**: Flat Feature-Based Architecture (Consolidated Logic).
 - **Environment**: 
     - React 19 (Vite).
     - Tailwind CSS v4.
     - TypeScript.
     - Typography: Inter (Google Fonts) with strict weight hierarchy.
-- **Log Layers**:
-    - `src/desktop/`: Desktop-specific FSD (Features, Widgets, Entities).
-    - `src/mobile/`: Mobile-specific FSD.
-    - `src/shared-core/`: Pure Logic (No UI).
-    - `src/main.tsx`: Binary Device Classifier (Bootstrapper).
+- **Project Structure**:
+    - `src/LandingPage/`: Unified entry for initial user experience (Desktop/Mobile).
+    - `src/HeroSection/`: Main interface with "Immersive Journey" and "Quick Navigation" gateways.
+    - `src/QuickNavigation/`: Modular repository for primary content pillars (About Me, Projects, Experience, Certifications).
+    - `src/Background/`: Real-time interactive canvas environments (Particle and Neural systems).
+    - `src/shared/`: Global hooks (`useTypewriter`), utilities (`math`, `device`), and cross-feature components.
+    - `src/main.tsx`: Unified entry point with internal dynamic serving.
 - **Security Protocols**: 
     - Environment-variable based secret management.
     - Root-level file exclusion (`.gitignore`) for sensitive configuration files.
