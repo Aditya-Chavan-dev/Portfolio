@@ -29,6 +29,7 @@ The system is currently implemented with the following architecture:
     - React 19 (Vite).
     - Tailwind CSS v4.
     - TypeScript.
+    - Typography: Inter (Google Fonts) with strict weight hierarchy.
 - **Log Layers**:
     - `src/desktop/`: Desktop-specific FSD (Features, Widgets, Entities).
     - `src/mobile/`: Mobile-specific FSD.

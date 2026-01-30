@@ -114,5 +114,124 @@ To confirm the "Iron Wall" is real. Senior engineering requires evidence, not ju
 ### The resulting behavioral difference after the change
 **System Certified**: The codebase is now proven to have zero cross-dependencies. The project serves two completely isolated applications from a single repository, fulfilling the core architectural mandate.
 
+---
 
+## [2026-01-29 | 20:00:00] - Commit: DEPLOY_V1
+
+### Description of the feature or capability introduced or changed
+Deployed the certified Split-Stack Architecture to production (Firebase Hosting) and pushed the source code to GitHub.
+
+### The problem or limitation that existed before the change
+The code existed only locally. There was no live URL for stakeholders to verify the "Iron Wall" behavior on actual devices.
+
+### The reason the change was necessary
+To move from "Development" to "Production".
+
+### The resulting behavioral difference after the change
+**Live URL**: `https://portfolio0110.web.app`
+- **Desktop**: Loads the Cinematic Cyberpunk Landing Page.
+- **Mobile**: Loads the Vertical Optimized Interface.
+- **Codebase**: Securely backed up on GitHub with no leaked secrets.
+
+---
+
+## [2026-01-29 | 20:15:00] - Commit: HOTFIX_DESKTOP_UX
+
+### Description of the feature or capability introduced or changed
+Removed the `HookRenderer` (Intro Sequence) from the Desktop entry point. Desktop now loads the **Cinematic Landing Page** immediately, mirroring the instant-access behavior of the Mobile app.
+
+### The problem or limitation that existed before the change
+The Desktop version was gating the main content behind an interactive hook, causing a discrepancy where Mobile users saw the "Dialogue" (Hero Copy) instantly, but Desktop users did not. This violated the "Unified UI Intent" rule.
+
+### The reason the change was necessary
+To ensure that the "Dialogue" ("It's not how I write code...") is the absolute first thing seen on *all* devices, regardless of interaction.
+
+### The resulting behavioral difference after the change
+**Unified Entry**: Both Desktop and Mobile now boot directly into their respective `HeroSection` widgets. The intro sequence is bypassed.
+
+---
+
+## [2026-01-29 | 20:30:00] - Commit: UI_POLISH_V1
+
+### Description of the feature or capability introduced or changed
+Refined the **Hero Section UI** on both Desktop and Mobile.
+1.  **Metric Removal**: Removed the "Proof Anchors" (2 Isolated Apps, etc.) from the visual interface to declutter the cinematic experience.
+2.  **Disclaimer Repositioning**: Moved the strict typing disclaimer from the bottom-right footer to a central position immediately below the main dialogue.
+
+### The problem or limitation that existed before the change
+The footer disclaimer was too subtle and felt disconnected from the main narrative. The technical metrics ("Proof Anchors") were visually distracting and competed with the core message ("How I Think").
+
+### The reason the change was necessary
+To adhere to the specific request for a cleaner, narrative-focused opening where the "Strictly Typed" disclaimer serves as the punchline to the "How I think" statement.
+
+### The resulting behavioral difference after the change
+**Visual Update**: The Hero section is now purely typographic and cinematic. The disclaimer reads as part of the main copy flow.
+
+---
+
+## [2026-01-29 | 20:45:00] - Commit: UI_POLISH_V2
+
+### Description of the feature or capability introduced or changed
+Enhanced the typography of the **Disclaimer**:
+1.  **Desktop**: Increased font size from `10px` to `text-sm` (14px).
+2.  **Mobile**: Increased font size from `9px` to `text-xs` (12px).
+3.  **Color Grade**: Adjusted contrast from `slate-600` to `slate-500` for better legibility against the dark background.
+
+### The problem or limitation that existed before the change
+The disclaimer text was too small and difficult to read without effort, which contradicted the goal of making it a key part of the narrative punchline.
+
+### The reason the change was necessary
+User feedback indicated that the text required "effort" to read. The goal is "neat visibility" without strain.
+
+### The resulting behavioral difference after the change
+**Improved Readability**: The disclaimer is now prominent enough to be read at a glance while still remaining secondary to the main headline.
+
+---
+
+## [2026-01-29 | 22:30:00] - Commit: PHASE_5_NEURAL_GRID
+
+### Description of the feature or capability introduced or changed
+Implemented the **Live Ambient Background ("The Neural Grid")** and **Cinematic Typography Sequence**.
+1.  **Background**: Replaced static image with a real-time HTML5 Canvas animation. 
+    - **Desktop**: 60-node interactive grid (mouse repulsion).
+    - **Mobile**: 30-node optimized grid (battery efficient).
+2.  **Typography**: Enforced a strict narrative sequence:
+    - Main Headline ("IT'S NOT...") types out first.
+    - Subtitle ("BUT HOW I THINK...") types out *only* after headline completes.
+    - Disclaimer fades in *only* after subtitle completes.
+
+### The problem or limitation that existed before the change
+The static background lacked the "Living System" feel. The text animations were overlapping or disjointed, failing to tell a coherent timed story.
+
+### The reason the change was necessary
+To elevate the first impression from "Static Website" to "Living Digital Organism" and ensure the user reads the message in the exact intended order.
+
+### The resulting behavioral difference after the change
+**Cinematic Opening**: The site now "boots up" with a sequential data stream. The background makes the site feel alive, while the text pacing guides the user's eye.
+
+
+
+
+
+
+
+
+
+## [2026-01-30 | 09:12:00] - Commit: TYPOGRAPHY_REFACTOR_V1
+
+### Description of the feature or capability introduced or changed
+Refined the **Typography System** across the application.
+1.  **Global Font**: Enforced 'Inter' via Google Fonts injection in index.html.
+2.  **Mobile Hero**: Reduced visual aggression by downscaling the main headline from 	ext-4xl to 	ext-3xl, reducing weight from Black to Bold, and relaxing letter spacing.
+
+### The problem or limitation that existed before the change
+The typography was described as 'too flashy', 'broad', and 'too big'. The 'Inter' font was specified in CSS but not actually imported, causing a fallback to system fonts. The heavy font weight and tight tracking created a dense, hard-to-read block of text.
+
+### The reason the change was necessary
+To improve readability and visual elegance. The user feedback explicitly cited inconvenience in reading and an overly aggressive aesthetic.
+
+### The resulting behavioral difference after the change
+**Refined Aesthetics**: The text is now cleaner, more legible, and properly rendered using the intended 'Inter' typeface. The Mobile Hero section feels less cramped and more professional.
+
+---
 
