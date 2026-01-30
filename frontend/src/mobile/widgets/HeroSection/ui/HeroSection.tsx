@@ -7,6 +7,7 @@ export const HeroSection = () => {
     const line2 = useTypewriter("HOW I WRITE", { speed: 50, enabled: line1.isComplete, delay: 200 });
     const line3 = useTypewriter("THE CODE", { speed: 50, enabled: line2.isComplete, delay: 200 });
     const subtitle = useTypewriter("BUT HOW I THINK\nTHAT DEFINES ME", { speed: 40, enabled: line3.isComplete, delay: 400 });
+    const disclaimer = useTypewriter("DISCLAIMER: This site is strictly typed. No estimated numbers, no marketing fluff, and zero hallucinations. If it’s here, it’s true.", { speed: 30, enabled: subtitle.isComplete, delay: 500 });
 
     return (
         <div className="relative w-full h-screen overflow-hidden bg-[#020617] text-white">
@@ -21,7 +22,7 @@ export const HeroSection = () => {
 
                 {/* Main Headline - Stacked for Verticality */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold tracking-tight leading-none">
+                    <h1 className="text-2xl font-bold tracking-tight leading-none">
                         <span className="block min-h-[1em] text-white">
                             {line1.displayText}
                             {!line1.isComplete && <span className="animate-pulse text-emerald-400">|</span>}
@@ -40,22 +41,22 @@ export const HeroSection = () => {
                 {/* Sub-headline */}
                 <div className="mb-12 min-h-[3em]">
                     {line3.isComplete && (
-                        <h2 className="text-xl font-light text-emerald-400 tracking-wide leading-tight whitespace-pre-wrap">
+                        <h2 className="text-lg font-medium text-emerald-400 tracking-wide leading-tight whitespace-pre-wrap">
                             {subtitle.displayText}
                             {!subtitle.isComplete && <span className="animate-pulse text-emerald-400">|</span>}
                         </h2>
                     )}
                 </div>
 
-                {/* Mobile Disclaimer - Moved below dialogue */}
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: subtitle.isComplete ? 1 : 0 }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
-                    className="mt-8 text-xs text-slate-500 font-mono text-center max-w-[280px] leading-relaxed mx-auto"
-                >
-                    DISCLAIMER: This site is strictly typed. No estimated numbers, no marketing fluff, and zero hallucinations. If it’s here, it’s true.
-                </motion.p>
+                {/* Mobile Disclaimer - Typewriter Effect */}
+                <div className="mt-8 min-h-[4em]">
+                    {subtitle.isComplete && (
+                        <p className="text-xs text-slate-500 font-mono text-center max-w-[280px] leading-relaxed mx-auto">
+                            {disclaimer.displayText}
+                            {!disclaimer.isComplete && <span className="animate-pulse text-emerald-400">|</span>}
+                        </p>
+                    )}
+                </div>
             </div>
         </div>
     );
