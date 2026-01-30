@@ -1,82 +1,57 @@
 import { motion } from 'framer-motion';
-import heroBg from '@/shared/assets/images/hero-bg.png';
+import { useTypewriter } from '@/features/interactive-hook/model/useTypewriter';
+import { AnimatedBackground } from './AnimatedBackground';
 
 export const HeroSection = () => {
+    // Sequential Typewriter Logic
+    const line1 = useTypewriter("IT'S NOT HOW I", { speed: 50, delay: 500 });
+    const line2 = useTypewriter("WRITE THE CODE", { speed: 50, enabled: line1.isComplete, delay: 200 });
+    const subtitle = useTypewriter("BUT HOW I THINK THAT DEFINES ME", { speed: 40, enabled: line2.isComplete, delay: 400 });
+
     return (
         <div className="relative w-full h-screen overflow-hidden bg-[#020617] text-white">
-            {/* Background Image Layer */}
-            <div
-                className="absolute inset-0 z-0 bg-cover bg-center"
-                style={{
-                    backgroundImage: `url(${heroBg})`,
-                    opacity: 0.6
-                }}
-            />
+            {/* Live Neural Grid Background */}
+            <AnimatedBackground />
 
             {/* Gradient Overlay for Readability */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#020617]/40 to-[#020617]" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#020617]/50 to-[#020617]" />
 
             {/* Cinematic Content Container */}
-            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-4">
+            <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-4 font-bold">
 
                 {/* Main Headline */}
-                <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.2 }}
-                    className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-4"
-                >
-                    <span className="block text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400">
-                        IT'S NOT HOW I
+                <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tighter mb-6 font-black">
+                    <span className="block min-h-[1.2em] text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400">
+                        {line1.displayText}
+                        {!line1.isComplete && <span className="animate-pulse text-emerald-400">|</span>}
                     </span>
-                    <span className="block text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400">
-                        WRITE THE CODE
+                    <span className="block min-h-[1.2em] text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400">
+                        {line2.displayText}
+                        {line1.isComplete && !line2.isComplete && <span className="animate-pulse text-emerald-400">|</span>}
                     </span>
-                </motion.h1>
+                </h1>
 
-                {/* Sub-headline */}
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 0.6 }}
-                    className="text-2xl md:text-4xl font-light text-emerald-400 tracking-wide mb-12"
-                >
-                    BUT HOW I <span className="font-bold">THINK</span> THAT DEFINES ME
-                </motion.h2>
+                {/* Sub-headline (Appears ONLY after Main Headline is complete) */}
+                <div className="min-h-[3em] flex items-center justify-center">
+                    {line2.isComplete && (
+                        <h2 className="text-2xl md:text-4xl font-light text-emerald-400 tracking-wide">
+                            {subtitle.displayText}
+                            {!subtitle.isComplete && <span className="animate-pulse text-emerald-400">|</span>}
+                        </h2>
+                    )}
+                </div>
 
-                {/* Proof Anchors */}
+                {/* Disclaimer - Fade in after Subtitle */}
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 1.2 }}
-                    className="flex flex-col md:flex-row gap-6 md:gap-12 mb-16 text-sm md:text-base font-mono text-slate-400"
+                    animate={{ opacity: subtitle.isComplete ? 1 : 0 }}
+                    transition={{ duration: 1, delay: 0.5 }}
+                    className="max-w-md mt-12 text-center"
                 >
-                    <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                        <span>2 ISOLATED APPS, 1 SHARED LOGIC CORE</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-blue-500 rounded-full" />
-                        <span>0 SHARED UI COMPONENTS</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 bg-purple-500 rounded-full" />
-                        <span>DELETION-TESTED ARCHITECTURE</span>
-                    </div>
-                </motion.div>
-
-                {/* Disclaimer */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 1.8 }}
-                    className="fixed bottom-8 right-8 max-w-xs text-right"
-                >
-                    <p className="text-[10px] text-slate-600 font-mono border-r-2 border-slate-800 pr-3">
+                    <p className="text-sm text-slate-500 font-mono leading-relaxed">
                         DISCLAIMER: This site is strictly typed. No estimated numbers, no marketing fluff, and zero hallucinations. If it’s here, it’s true.
                     </p>
                 </motion.div>
-
             </div>
         </div>
     );
