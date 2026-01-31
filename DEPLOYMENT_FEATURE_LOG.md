@@ -309,3 +309,41 @@ To achieve "Architectural Elasticity". By flattening the structure into feature-
 
 ### The resulting behavioral difference after the change
 The project structure is significantly cleaner. The landing page is now a single self-contained "Feature Folder". `main.tsx` is simplified to a single entry point, and the system is ready for the iterative migration of the remaining features.
+
+---
+
+## [2026-01-31 | 14:30:00] - Commit: STRUCT_ADMIN_V1
+
+### Description of the feature or capability introduced or changed
+Introduced a dedicated `src/Admin` directory structure and placeholder components for the internal Administration Dashboard.
+
+### The problem or limitation that existed before the change
+The system lacked a secure or isolated area for administrative functions. Any future admin features would have had to be mixed into the public-facing directory structure, violating separation of concerns.
+
+### The reason the change was necessary
+To establish a clean, isolated foundation for building internal tooling and content management workflows without polluting the user-centric `src/LandingPage` or `src/HeroSection` modules.
+
+### The resulting behavioral difference after the change
+**Codebase**: A new `src/Admin/AdminDashboard.tsx` exists.
+**Runtime**: No user-facing change. The admin route is not yet publicly wired up.
+
+---
+
+## [2026-01-31 | 18:37:06] - Commit: LANDING_PAGE_REFINEMENT_V2
+
+### Description of the feature or capability introduced or changed
+1. **Kinematic Layout Engine**: Implemented a physics-based Spring transition system for the Desktop Landing Page layout shifts.
+2. **Visual Center Uplift**: Shifted the entire layout assembly upwards (Dialog ends at 40% height) to improve visual balance and button accessibility.
+3. **Layout-Preserving Fades**: Implemented a transition system that fades elements (Cursors) without removing them from the DOM, preserving layout stability.
+
+### The problem or limitation that existed before the change
+The original layout transition was 'jerky' and 'laggy' due to linear interpolation fighting with sub-pixel rendering. The layout was also felt to be 'too low' by the user, and the cursor removal caused a 3px centering jump.
+
+### The reason the change was necessary
+To achieve the 'smooth' and 'premium' feel required by the specification. Standard CSS transitions were insufficient for the complex flex-box reflows involved.
+
+### The resulting behavioral difference after the change
+**Fluid Motion**: The layout now 'breathes' naturally using spring physics.
+**Visual Stability**: Elements fade in/out without causing neighbors to jump.
+**Ergonomic Layout**: The visual center is higher, placing the call-to-action button in a more prominent position.
+
