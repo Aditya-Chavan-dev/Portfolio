@@ -21,6 +21,18 @@ The system exhibits real-time behaviors using the following logic:
     - Post-intro fade-in for primary and secondary calls to action.
 - **Suggestive Navigation**: Contextual prompts (nudges) appear based on user scroll position and dwell time.
 
+## 🗺️ 3. Navigation Architecture (User Flow)
+Derived from the Master Workflow Diagram:
+1.  **Entry** (`Link Clicked`) -> **Landing Page 1** (Cinematic Intro).
+2.  **The Crossroads**: **Hero Section**.
+    *   *Path A*: **Immersive Journey** <==> **Full Portfolio**. (Bi-directional).
+    *   *Path B*: **Quick Navigation** (Hub).
+        *   -> **Certifications**
+        *   <==> **Experience**
+        *   <==> **Projects**
+        *   <==> **About Me**
+    *   *Note*: "Double Arrow" implies explicit "Back" or "Exit" capability returning to the hub.
+
 - **Frontend Architecture**: Flat Feature-Based Architecture (Consolidated Logic).
 - **Environment**: 
     - React 19 (Vite).
@@ -33,6 +45,7 @@ The system exhibits real-time behaviors using the following logic:
     - `src/QuickNavigation/`: Modular repository for primary content pillars (About Me, Projects, Experience, Certifications).
     - `src/ImmersiveJourney/`: Independent narrative storytelling module with unique design and logic.
     - `src/Background/`: Real-time interactive canvas environments (Particle and Neural systems).
+    - `src/Admin/`: Administration dashboard and internal tools.
 - **Security Protocols**: 
     - Environment-variable based secret management.
     - Root-level file exclusion (`.gitignore`) for sensitive configuration files.
@@ -42,8 +55,8 @@ The system exhibits real-time behaviors using the following logic:
 ### A. Narrative & Experience
 - **Experience Days Counter**: Logic to calculate and display duration since career inception.
 - **Academic Records**: Display of degrees and achievements.
-- **Desktop Landing Page**: Cinematic hero section with "Cyberpunk" aesthetic, proof anchors, and dynamic entrance calculations.
-- **Mobile Landing Page**: Vertical-optimized hero section with touch-first interactions and stacked typography.
+- **Landing Page Orchestrator**: A high-level gateway that performs binary device classification (Mobile vs Desktop) and serves distinct, isolated application bundles.
+- **Kinematic Layout Engine**: A physics-based animation system (Spring Physics) that manages fluid layout transitions without sub-pixel distortion, ensuring "breathing" UI adaptations.
 
 ### B. Project Showcase
 - **Case Study Model**: Markdown-based rendering of technical narratives including feature lists and technical challenges.

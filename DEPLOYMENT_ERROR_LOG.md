@@ -68,3 +68,29 @@ A clean reset and purge was the only way to satisfy GitHub's audit requirements 
 **Reason for irrelevance**: This commit is an architectural refactor and feature extension. No runtime defects or logical errors were encountered during the implementation of the new navigation options or the directory migration.
 **No change required for this commit.**
 **Reason for irrelevance**: This commit is an architectural refactor. While it broke temporary build aliases during the transition (which were resolved by updating `vite.config.ts`), no functional defects or runtime errors were encountered or resolved.
+
+---
+
+## [2026-01-31 | 14:30:00] - Commit: STRUCT_ADMIN_V1
+**No change required for this commit.**
+**Reason for irrelevance**: This commit is a structural addition of a new, isolated module. No existing code was modified in a way that could trigger regression, and no runtime errors were encountered during the folder creation.
+
+---
+
+## [2026-01-31 | 18:37:06] - Commit: LANDING_PAGE_REFINEMENT_V2
+
+### Description of the problem encountered
+**Scale Distortion Artifact**: Text elements appeared 'shaky', 'blurry', or 'jittery' during the layout expansion animation.
+
+### Root cause (logical, design, or assumption failure)
+**Optimization Logic Failure**: Framer Motion optimizes layout animations by applying a CSS \scale\ transform to the parent container. This is performant but causes child text elements to be stretched/squashed visually during the frame interpolation, resulting in a 'shaking' alias affect.
+
+### User or system impact
+The animation felt 'laggy' and 'low quality', directly undermining the 'State-of-the-art' claim of the portfolio.
+
+### Resolution applied
+**Inverse Scale Locking**: Applied the \layout\ prop directly to the text containers (children). This forces Framer Motion to recalculate the child's geometry frame-by-frame (Inverse Scale Correction) to counteract the parent's distortion.
+
+### Justification for why this solution was chosen over alternatives
+While slightly more expensive computationally, maintaining crisp text during animation is non-negotiable for a typography-centric design.
+
