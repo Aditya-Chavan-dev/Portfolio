@@ -1,5 +1,11 @@
 {
   "rules": {
+    "public": {
+      "metrics": {
+        ".read": true,
+        ".write": false
+      }
+    },
     "analytics": {
       ".read": true,
       ".write": false

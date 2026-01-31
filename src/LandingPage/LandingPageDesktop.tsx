@@ -96,15 +96,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
                             Nothing in this page is assumed or inflated. Every number you see is a deliberate decision made by the developer himself.
                         </p>
                         <p>
-                            This portfolio has a unique blend of creative thinking and great features with
-                            <motion.span
-                                initial={{ color: "#737373", textShadow: "0px 0px 0px rgba(0,0,0,0)" }}
-                                animate={{ color: "#22d3ee", textShadow: "0px 0px 20px rgba(34,211,238,0.5)" }}
-                                transition={{ duration: 1, delay: 1 }}
-                                className="block mt-2 font-bold tracking-wider"
-                            >
-                                state-of-the-art architecture.
-                            </motion.span>
+                            This portfolio has a unique blend of creative thinking and great features.
                         </p>
                     </motion.div>
                 )}
