@@ -1,4 +1,8 @@
-export const HeroSectionDesktop = () => {
+interface HeroSectionDesktopProps {
+    onStartJourney: () => void;
+}
+
+export const HeroSectionDesktop = ({ onStartJourney }: HeroSectionDesktopProps) => {
     return (
         <div className="relative w-full h-screen flex flex-col justify-center items-center bg-transparent z-20 text-white animate-fadeIn">
             <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
@@ -10,7 +14,10 @@ export const HeroSectionDesktop = () => {
 
             <div className="flex flex-col items-center gap-8">
                 {/* Immersive Journey Option */}
-                <button className="group relative px-8 py-4 bg-transparent border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300 rounded-full overflow-hidden">
+                <button
+                    onClick={onStartJourney}
+                    className="group relative px-8 py-4 bg-transparent border border-cyan-500/30 hover:border-cyan-400 transition-all duration-300 rounded-full overflow-hidden"
+                >
                     <span className="relative z-10 text-cyan-400 group-hover:text-white font-medium tracking-widest uppercase">
                         Immersive Journey
                     </span>

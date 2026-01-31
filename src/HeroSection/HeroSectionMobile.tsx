@@ -1,4 +1,8 @@
-export const HeroSectionMobile = () => {
+interface HeroSectionMobileProps {
+    onStartJourney: () => void;
+}
+
+export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) => {
     return (
         <div className="relative w-full h-screen flex flex-col justify-center items-center bg-[#020617] z-20 text-white animate-fadeIn px-6">
             <h1 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
@@ -10,7 +14,10 @@ export const HeroSectionMobile = () => {
 
             <div className="flex flex-col items-center gap-10 w-full">
                 {/* Immersive Journey Option */}
-                <button className="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+                <button
+                    onClick={onStartJourney}
+                    className="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl text-white font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+                >
                     Immersive Journey
                 </button>
 

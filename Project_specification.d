@@ -31,9 +31,8 @@ The system exhibits real-time behaviors using the following logic:
     - `src/LandingPage/`: Unified entry for initial user experience (Desktop/Mobile).
     - `src/HeroSection/`: Main interface with "Immersive Journey" and "Quick Navigation" gateways.
     - `src/QuickNavigation/`: Modular repository for primary content pillars (About Me, Projects, Experience, Certifications).
+    - `src/ImmersiveJourney/`: Independent narrative storytelling module with unique design and logic.
     - `src/Background/`: Real-time interactive canvas environments (Particle and Neural systems).
-    - `src/shared/`: Global hooks (`useTypewriter`), utilities (`math`, `device`), and cross-feature components.
-    - `src/main.tsx`: Unified entry point with internal dynamic serving.
 - **Security Protocols**: 
     - Environment-variable based secret management.
     - Root-level file exclusion (`.gitignore`) for sensitive configuration files.
