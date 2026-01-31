@@ -47,7 +47,8 @@ Derived from the Master Workflow Diagram:
     - `src/Background/`: Real-time interactive canvas environments (Particle and Neural systems).
     - `src/Admin/`: Administration dashboard and internal tools.
 - **Security Protocols**: 
-    - Environment-variable based secret management.
+    - Configuration managed via `import.meta.env` (Environment Variables).
+    - Secrets removed from source code.
     - Root-level file exclusion (`.gitignore`) for sensitive configuration files.
 
 ## 📂 4. Functional Components

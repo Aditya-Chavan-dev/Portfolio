@@ -347,3 +347,21 @@ To achieve the 'smooth' and 'premium' feel required by the specification. Standa
 **Visual Stability**: Elements fade in/out without causing neighbors to jump.
 **Ergonomic Layout**: The visual center is higher, placing the call-to-action button in a more prominent position.
 
+---
+
+## [2026-01-31 | 21:45:00] - Commit: SECURITY_SECRET_REMOVAL
+
+### Description of the feature or capability introduced or changed
+Removed hardcoded Firebase configuration secrets from the source code (`src/services/firebase.ts`) and enforced environment variable usage (`import.meta.env`). Added `API_Key_Rotation_Guide.md` for security procedures.
+
+### The problem or limitation that existed before the change
+Sensitive Firebase configuration details (API Key, Project ID, etc.) were hardcoded in the repository, posing a security risk if the code were exposed or checked into public version control without proper scrubbing.
+
+### The reason the change was necessary
+To adhere to security best practices (Twelve-Factor App) and prevent credential leakage. Hardcoded secrets are a critical vulnerability.
+
+### The resulting behavioral difference after the change
+**Behavioral Identity**: The application behaves identical to before, but now sources its configuration from the environment.
+**Security**: Source code no longer contains sensitive keys.
+
+

@@ -94,3 +94,25 @@ The animation felt 'laggy' and 'low quality', directly undermining the 'State-of
 ### Justification for why this solution was chosen over alternatives
 While slightly more expensive computationally, maintaining crisp text during animation is non-negotiable for a typography-centric design.
 
+---
+
+## [2026-01-31 | 21:45:00] - Commit: SECURITY_SECRET_REMOVAL
+### Description of the problem encountered
+**Security Incident**: Discovery of hardcoded sensitive credentials (Firebase API Keys and Project IDs) directly embedded within `src/services/firebase.ts`.
+
+### Root cause (logical, design, or assumption failure)
+**Process Failure**: The initial development phase lacked a strict "Secret Scanning" gate. Developers committed functional code without abstracting configuration into environment variables, assuming a private repo was sufficient protection (Security through Obscurity).
+
+### User or system impact
+**Critical Vulnerability**: If the repository were to be made public or accessed by an unauthorized party, they would immediately gain write-access to the Firebase instance.
+
+### Resolution applied
+1.  **Purge**: Removed all hardcoded strings and replaced them with `import.meta.env`.
+2.  **Rotation**: Generated new API Keys and advised Service Account rotation.
+3.  **Prevention**: Implemented a `scan:secrets` script and a strict `.env.example` template to prevent recurrence.
+4.  **Audit**: Conducted a deep regex scan of the entire codebase to certify it clean.
+
+### Justification for why this solution was chosen over alternatives
+Immediate removal and rotation is the only acceptable industry standard. Leaving "obfuscated" keys is insufficient; they must be completely removed from the source.
+
+
