@@ -1,27 +1,43 @@
 import React, { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { LandingPage } from './LandingPage';
-// Placeholder import for HeroSection - assuming it exists or will be created
-// import { HeroSection } from './HeroSection';
-
-const HeroSectionPlaceholder = () => (
-    <div className="h-screen w-full bg-neutral-900 text-white flex items-center justify-center">
-        <h1 className="text-4xl">Hero Section (Coming Soon)</h1>
-    </div>
-);
+import { HeroSection } from './HeroSection';
+import { TransitionLoader } from './components/TransitionLoader';
 
 const App: React.FC = () => {
     const [showHero, setShowHero] = useState(false);
+    const [showLoader, setShowLoader] = useState(false);
+
+    const handleStartJourney = () => {
+        console.log('Starting Immersive Journey...');
+        // TODO: Navigate to Immersive Journey section
+    };
+
+    const handleEnterFromLanding = () => {
+        setShowLoader(true);
+    };
+
+    const handleLoaderComplete = () => {
+        setShowLoader(false);
+        setShowHero(true);
+    };
 
     return (
         <main className="w-full min-h-screen">
-            {!showHero ? (
-                <LandingPage onEnter={() => setShowHero(true)} />
-            ) : (
-                <HeroSectionPlaceholder />
-                // <HeroSection />
-            )}
+            <AnimatePresence mode="wait">
+                {!showHero && !showLoader && (
+                    <LandingPage key="landing" onEnter={handleEnterFromLanding} />
+                )}
+                {showLoader && (
+                    <TransitionLoader key="loader" onComplete={handleLoaderComplete} />
+                )}
+                {showHero && !showLoader && (
+                    <HeroSection key="hero" onStartJourney={handleStartJourney} />
+                )}
+            </AnimatePresence>
         </main>
     );
 };
 
 export default App;
+
