@@ -260,7 +260,19 @@ To achieve the 'subtle and professional' aesthetic requested, and to unify the a
 
 ---
 
-## [2026-01-30 | 20:45:00] - Commit: RESTRUCT_QUICKNAV_V1
+## [2026-01-31 | 09:15:00] - Commit: RESTRUCT_IMMERSIVE_V1
+
+### Description of the feature or capability introduced or changed
+Executed **Phase 4 of Recursive Restructuring**: Configured the `src/ImmersiveJourney` module as a strictly independent narrative module. Implemented **State-Driven Mode Switching** in the `LandingPage`, triggered by the `HeroSection` gateway, ensuring a complete decoupling of the immersive experience from the standard scrollable view.
+
+### The problem or limitation that existed before the change
+The "Immersive Journey" was a inactive placeholder. There was no mechanism to switch between the standard navigation and the immersive content, and no dedicated space for independent immersive design.
+
+### The reason the change was necessary
+To establish the final core architectural pillars and fulfill the requirement for a unique, independent design for the storytelling experience that does not share structures with other sections.
+
+### The resulting behavioral difference after the change
+The "Immersive Journey" button is now functional. Upon selection, the entire `LandingPage` context is swapped for the `ImmersiveJourney` module (Skeletons for Desktop/Mobile), allowing for a completely custom visual and logical flow.
 
 ### Description of the feature or capability introduced or changed
 Executed **Phase 3 of Recursive Restructuring**: Configured the `src/QuickNavigation` module with strictly isolated sub-features (AboutMe, Project, ProfessionalExperience, Certifications). Implemented **Modular Skeleton Architecture** and unified **Landing Page Integration** ensuring functional hash-link navigation.
