@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { getDistance, randomRange, updatePoint, type Point } from '@/shared/utils/math';
+import { getDistance, randomRange, updatePoint, type Point } from '@/utils/math';
 
 const NODE_COUNT = 60;
 const CONNECTION_DISTANCE = 150;

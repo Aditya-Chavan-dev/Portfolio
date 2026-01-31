@@ -1,7 +1,8 @@
-import { isMobile } from '@/shared/utils/device';
+import { useDeviceType } from '@/hooks/useDeviceType';
 import { CertificationsDesktop } from './CertificationsDesktop';
 import { CertificationsMobile } from './CertificationsMobile';
 
 export const Certifications = () => {
-    return isMobile() ? <CertificationsMobile /> : <CertificationsDesktop />;
+    const { isMobile } = useDeviceType();
+    return isMobile ? <CertificationsMobile /> : <CertificationsDesktop />;
 };

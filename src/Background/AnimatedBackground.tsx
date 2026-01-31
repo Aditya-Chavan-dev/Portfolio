@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { getDistance } from '@/shared/utils/math';
+import { getDistance } from '@/utils/math';
 
 export const AnimatedBackground = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);

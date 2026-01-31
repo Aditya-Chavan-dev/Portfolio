@@ -1,4 +1,4 @@
-import { isMobile } from '@/shared/utils/device';
+import { useDeviceType } from '@/hooks/useDeviceType';
 import { HeroSectionDesktop } from './HeroSectionDesktop';
 import { HeroSectionMobile } from './HeroSectionMobile';
 
@@ -7,7 +7,8 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ onStartJourney }: HeroSectionProps) => {
-    return isMobile() ? (
+    const { isMobile } = useDeviceType();
+    return isMobile ? (
         <HeroSectionMobile onStartJourney={onStartJourney} />
     ) : (
         <HeroSectionDesktop onStartJourney={onStartJourney} />

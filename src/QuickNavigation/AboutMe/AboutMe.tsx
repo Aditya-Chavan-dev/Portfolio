@@ -1,7 +1,8 @@
-import { isMobile } from '@/shared/utils/device';
+import { useDeviceType } from '@/hooks/useDeviceType';
 import { AboutMeDesktop } from './AboutMeDesktop';
 import { AboutMeMobile } from './AboutMeMobile';
 
 export const AboutMe = () => {
-    return isMobile() ? <AboutMeMobile /> : <AboutMeDesktop />;
+    const { isMobile } = useDeviceType();
+    return isMobile ? <AboutMeMobile /> : <AboutMeDesktop />;
 };

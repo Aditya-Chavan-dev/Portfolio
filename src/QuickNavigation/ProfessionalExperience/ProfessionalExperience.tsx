@@ -1,7 +1,8 @@
-import { isMobile } from '@/shared/utils/device';
+import { useDeviceType } from '@/hooks/useDeviceType';
 import { ProfessionalExperienceDesktop } from './ProfessionalExperienceDesktop';
 import { ProfessionalExperienceMobile } from './ProfessionalExperienceMobile';
 
 export const ProfessionalExperience = () => {
-    return isMobile() ? <ProfessionalExperienceMobile /> : <ProfessionalExperienceDesktop />;
+    const { isMobile } = useDeviceType();
+    return isMobile ? <ProfessionalExperienceMobile /> : <ProfessionalExperienceDesktop />;
 };
