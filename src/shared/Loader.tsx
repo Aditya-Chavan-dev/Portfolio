@@ -126,7 +126,7 @@ export const Loader = ({ onComplete, message }: LoaderProps) => {
                             style={{
                                 top: '50%',
                                 left: '50%',
-                                transform: `rotate(${(progress * 3.6) - 90}deg) translateX(2.8rem) translateY(-50%)`
+                                transform: `rotate(${(progress * 3.6) - 90}deg) translateX(36px) translateY(-50%)`
                             }}
                             animate={{
                                 opacity: [0.7, 1, 0.7],
