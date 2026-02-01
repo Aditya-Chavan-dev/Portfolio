@@ -37,9 +37,9 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
     ];
 
     return (
-        <div className="relative w-full h-screen flex flex-col bg-obsidian text-primary overflow-hidden px-6">
+        <div className="relative w-full h-[100dvh] flex flex-col justify-between bg-obsidian text-primary overflow-hidden px-6 pb-8">
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
                 <div className="absolute inset-0" style={{
                     backgroundImage: 'linear-gradient(rgba(255, 215, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px)',
                     backgroundSize: '30px 30px'
@@ -51,7 +51,7 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6 }}
-                className="relative z-10 pt-4 pb-2"
+                className="relative z-10 pt-4 flex-none"
             >
                 {/* System Status */}
                 <div className="flex items-center justify-center gap-2 mb-2">
@@ -95,13 +95,13 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
                 </div>
             </motion.div>
 
-            {/* Center Content */}
-            <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
+            {/* Center Content - Flexible space but centered */}
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center min-h-0">
                 <motion.div
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.8 }}
-                    className="text-center w-full"
+                    className="text-center w-full py-4 text-balance"
                 >
                     <h1 className="text-5xl font-bold tracking-tight mb-2 text-primary leading-tight">
                         ADITYA<br />CHAVAN
@@ -126,12 +126,12 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
                 </motion.div>
             </div>
 
-            {/* Bottom Navigation - Compact HUD */}
+            {/* Bottom Navigation - Compact HUD - No Negative Margin */}
             <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7, duration: 0.6 }}
-                className="relative z-10 pb-48 -mt-24 w-full px-6"
+                className="relative z-10 w-full flex-none"
             >
                 <div className="grid grid-cols-2 gap-3 mx-auto max-w-xs">
                     {navigationItems.map((item, index) => (
@@ -142,9 +142,9 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.8 + index * 0.1 }}
                             whileTap={{ scale: 0.95 }}
-                            className="flex flex-col items-center justify-center gap-2 p-4 bg-surface/80 border border-white/10 rounded-xl active:border-gold-glow/50 active:bg-gold-glow/10 transition-all duration-200 backdrop-blur-md"
+                            className="flex flex-col items-center justify-center gap-2 p-3 bg-surface/80 border border-white/10 rounded-xl active:border-gold-glow/50 active:bg-gold-glow/10 transition-all duration-200 backdrop-blur-md"
                         >
-                            <span className="text-2xl text-secondary">
+                            <span className="text-xl text-secondary">
                                 {item.icon}
                             </span>
                             <span className="text-[10px] text-secondary font-medium uppercase tracking-wide leading-tight text-center">
