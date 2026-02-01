@@ -18,14 +18,14 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
     }, []);
 
     return (
-        <div className="relative w-full h-screen overflow-hidden bg-black text-white selection:bg-neutral-800 selection:text-white font-['Space_Grotesk'] flex flex-col">
+        <div className="relative w-full h-screen overflow-hidden bg-obsidian text-primary font-sans flex flex-col">
 
             {/* SECTION 1: Dialogue (Top 40%) */}
             <motion.div
                 layout
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                style={{ willChange: "transform" }}
-                className={`flex items-end justify-center w-full px-6 pb-6 text-center z-10 ${sequence.showDisclaimer ? 'flex-[0.4]' : 'flex-[0.5]'}`}
+                style={{ willChange: "transform", flex: sequence.showDisclaimer ? 0.4 : 0.5 }}
+                className={`flex items-end justify-center w-full px-6 pb-6 text-center z-10`}
             >
                 <motion.div layout className="flex flex-col gap-4 text-2xl md:text-5xl font-light tracking-wide leading-relaxed min-h-[140px]">
                     {/* Line 1 */}
@@ -48,7 +48,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
                                 {sequence.line2Part1Done && (
                                     <motion.span
                                         initial={{ color: "#ffffff" }}
-                                        animate={{ color: sequence.showDisclaimer ? "#22d3ee" : "#ffffff" }}
+                                        animate={{ color: sequence.showDisclaimer ? "#FFD700" : "#ffffff" }}
                                         transition={{ duration: 0.8, delay: 0.5 }}
                                         className="inline-block mx-3 font-bold"
                                     >
@@ -77,8 +77,8 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
             <motion.div
                 layout
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                style={{ willChange: "transform" }}
-                className={`flex items-start justify-center w-full px-6 pt-6 z-10 overflow-hidden ${sequence.showDisclaimer ? 'flex-[0.3]' : 'flex-[0]'}`}
+                style={{ willChange: "transform", flex: sequence.showDisclaimer ? 0.3 : 0 }}
+                className={`flex items-start justify-center w-full px-6 pt-6 z-10 overflow-hidden`}
             >
                 {/* Note: AnimatePresence not needed for layout transitions if element is always mounted but compressed.
                     But here we use sequence.showDisclaimer.
@@ -89,7 +89,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1.5, delay: 0.2 }}
-                        className="max-w-2xl text-sm md:text-lg text-neutral-400 border-l-2 border-white/20 pl-8 py-4 text-left space-y-4"
+                        className="max-w-2xl text-sm md:text-lg text-secondary border-l-2 border-gold-muted/30 pl-8 py-4 text-left space-y-4"
                     >
                         <p>
                             <strong className="text-white block mb-2 text-xs md:text-sm tracking-widest uppercase">System Protocol: Absolute Truth</strong>
@@ -106,8 +106,8 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
             <motion.div
                 layout
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                style={{ willChange: "transform" }}
-                className={`flex items-start justify-center w-full px-6 pt-14 z-10 overflow-hidden ${sequence.showDisclaimer ? 'flex-[0.3]' : 'flex-[0.5]'}`}
+                style={{ willChange: "transform", flex: sequence.showDisclaimer ? 0.3 : 0.5 }}
+                className={`flex items-start justify-center w-full px-6 pt-14 z-10 overflow-hidden`}
             >
                 {sequence.showDisclaimer && (
                     <motion.button
@@ -116,7 +116,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.5, duration: 0.5 }}
                         onClick={onEnter}
-                        className="group px-10 py-4 bg-white text-black border border-white hover:bg-neutral-200 rounded-sm uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-4 cursor-pointer text-sm md:text-base font-bold shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                        className="group px-10 py-4 bg-gold-glow text-black border border-gold-glow hover:bg-white rounded-sm uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-4 cursor-pointer text-sm md:text-base font-bold shadow-[0_0_20px_rgba(255,215,0,0.3)]"
                     >
                         <span>Let's Go</span>
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform text-black" />

@@ -39,7 +39,7 @@ export const TypewriterText = React.memo(({
     }, [started, charCount, text, onComplete]);
 
     return (
-        <span className={`font-['Space_Grotesk'] inline-block ${className}`}>
+        <span className={`font-sans inline-block ${className}`}>
             {text.slice(0, charCount)}
         </span>
     );
