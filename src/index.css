@@ -1,1 +1,141 @@
 @import "tailwindcss";
+
+@theme {
+    /* --- PREMIUM PALETTE (The DNA) --- */
+
+    /* Base Backgrounds */
+    --color-obsidian: #050505;
+    /* Deepest Black - The Global Background */
+    --color-surface: #121212;
+    /* Cards / Panels */
+    --color-surface-hover: #1A1A1A;
+    /* Interactive States */
+
+    /* Primary Accents (Gold) */
+    --color-gold-glow: #FFD700;
+    /* Primary Action / Highlight */
+    --color-gold-muted: #C5A000;
+    /* Secondary / Border */
+    --color-gold-dim: #8A7000;
+    /* Inactive / Background accents */
+
+    /* Text Colors */
+    --color-primary: #FFFFFF;
+    /* Main Headings */
+    --color-secondary: #A3A3A3;
+    /* Body Text (Neutral-400 equivalent) */
+    --color-tertiary: #525252;
+    /* Subtle Text */
+
+    /* Typography */
+    --font-sans: "Space Grotesk", sans-serif;
+    --font-body: "Inter", sans-serif;
+
+    /* Animations */
+    --animate-fade-in: fade-in 0.8s ease-out forwards;
+    --animate-slow-spin: spin 20s linear infinite;
+    --animate-float: float 6s ease-in-out infinite;
+    --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes pulse-glow {
+
+        0%,
+        100% {
+            opacity: 1;
+            filter: brightness(1);
+        }
+
+        50% {
+            opacity: 0.8;
+            filter: brightness(1.2);
+        }
+    }
+}
+
+/* --- GLOBAL DEFAULTS --- */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: var(--color-obsidian);
+        color: var(--color-primary);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+        /* Prevent horizontal scroll from animations */
+    }
+
+    /* Selection - Gold Logic */
+    ::selection {
+        background-color: var(--color-gold-glow);
+        color: black;
+    }
+}
+
+/* --- PREMIUM UTILITIES --- */
+@layer utilities {
+
+    /* Glassmorphism */
+    .glass-panel {
+        background: rgba(18, 18, 18, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-panel-gold {
+        background: rgba(255, 215, 0, 0.03);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 215, 0, 0.15);
+    }
+
+    /* Text Glows */
+    .text-glow-gold {
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    .text-glow-white {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Layout Primitives */
+    .flex-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .abs-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}

@@ -36,6 +36,7 @@ export const Loader = ({ onComplete, message }: LoaderProps) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
             className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden px-8"
+            style={{ width: '100vw', height: '100dvh' }}
         >
             {/* Main Content - Humor Line as Hero */}
             <div className="relative flex flex-col items-center max-w-4xl w-full">
@@ -71,7 +72,7 @@ export const Loader = ({ onComplete, message }: LoaderProps) => {
                 {/* Subtle Minimal Loader Below */}
                 <div className="relative flex flex-col items-center">
                     {/* Small Golden Ring */}
-                    <div className="relative w-20 h-20 mb-6">
+                    <div className="relative mb-6" style={{ width: '80px', height: '80px' }}>
                         {/* Subtle glow */}
                         <div className="absolute inset-0 rounded-full bg-amber-500/20 blur-lg" />
 

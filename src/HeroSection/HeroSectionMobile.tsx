@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { subscribeToMetrics, type PortfolioMetrics } from '@/services/metricsService';
+import { FolderGit2, User, Briefcase, Award, Users, Zap, Linkedin } from 'lucide-react';
+import { subscribeToMetrics } from '@/services/metricsService';
 
 interface HeroSectionMobileProps {
     onStartJourney: () => void;
+    onNavigate: (id: string) => void;
 }
 
-export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) => {
-    const [metrics, setMetrics] = useState<PortfolioMetrics>({
+export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJourney, onNavigate }) => {
+    const [metrics, setMetrics] = useState({
         totalVisitors: 0,
         activeUsers: 0,
         linkedinReferrals: 0
@@ -20,9 +23,6 @@ export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) =>
             if (data) {
                 setMetrics(data);
                 setIsLoading(false);
-            } else {
-                // No data in Firebase yet
-                setIsLoading(false);
             }
         });
 
@@ -30,18 +30,18 @@ export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) =>
     }, []);
 
     const navigationItems = [
-        { label: 'Projects', href: '#projects', icon: '📁' },
-        { label: 'About Me', href: '#about', icon: '👤' },
-        { label: 'Professional Experience', href: '#experience', icon: '💼' },
-        { label: 'Certification', href: '#certification', icon: '🏆' }
+        { label: 'Projects', id: 'projects', icon: <FolderGit2 className="w-8 h-8" /> },
+        { label: 'About Me', id: 'about', icon: <User className="w-8 h-8" /> },
+        { label: 'Experience', id: 'experience', icon: <Briefcase className="w-8 h-8" /> },
+        { label: 'Certification', id: 'certification', icon: <Award className="w-8 h-8" /> }
     ];
 
     return (
-        <div className="relative w-full h-screen flex flex-col bg-slate-950 text-white overflow-hidden px-6">
+        <div className="relative w-full h-screen flex flex-col bg-obsidian text-primary overflow-hidden px-6">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
                 <div className="absolute inset-0" style={{
-                    backgroundImage: 'linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px)',
+                    backgroundImage: 'linear-gradient(rgba(255, 215, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px)',
                     backgroundSize: '30px 30px'
                 }} />
             </div>
@@ -51,10 +51,10 @@ export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) =>
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6 }}
-                className="relative z-10 pt-6 pb-4"
+                className="relative z-10 pt-4 pb-2"
             >
                 {/* System Status */}
-                <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="flex items-center justify-center gap-2 mb-2">
                     <div className="relative">
                         <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                         <div className="absolute inset-0 w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-75" />
@@ -65,48 +65,33 @@ export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) =>
                 </div>
 
                 {/* Metrics Grid */}
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2 mt-2">
                     {/* Total Visitors */}
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="flex flex-col items-center gap-1 p-3 bg-slate-800/50 border border-slate-700/50 rounded-lg backdrop-blur-sm"
-                    >
-                        <span className="text-lg">👥</span>
-                        <span className="text-[10px] text-slate-400 text-center">Visitors</span>
-                        <span className="text-xs font-bold text-cyan-400">
+                    <div className="flex flex-col items-center gap-1 p-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm">
+                        <Users className="w-5 h-5 text-gold-glow" />
+                        <span className="text-[10px] text-slate-400 text-center uppercase tracking-wide">Visitors</span>
+                        <span className="text-xs font-bold text-white">
                             {isLoading ? '---' : metrics.totalVisitors.toLocaleString()}
                         </span>
-                    </motion.div>
+                    </div>
 
                     {/* Active Now */}
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="flex flex-col items-center gap-1 p-3 bg-slate-800/50 border border-slate-700/50 rounded-lg backdrop-blur-sm"
-                    >
-                        <span className="text-lg">⚡</span>
-                        <span className="text-[10px] text-slate-400 text-center">Active</span>
-                        <span className="text-xs font-bold text-emerald-400">
+                    <div className="flex flex-col items-center gap-1 p-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm">
+                        <Zap className="w-5 h-5 text-emerald-400" />
+                        <span className="text-[10px] text-slate-400 text-center uppercase tracking-wide">Active</span>
+                        <span className="text-xs font-bold text-white">
                             {isLoading ? '-' : metrics.activeUsers}
                         </span>
-                    </motion.div>
+                    </div>
 
                     {/* From LinkedIn */}
-                    <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.4 }}
-                        className="flex flex-col items-center gap-1 p-3 bg-slate-800/50 border border-slate-700/50 rounded-lg backdrop-blur-sm"
-                    >
-                        <span className="text-lg">💼</span>
-                        <span className="text-[10px] text-slate-400 text-center">LinkedIn</span>
-                        <span className="text-xs font-bold text-blue-400">
+                    <div className="flex flex-col items-center gap-1 p-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm">
+                        <Linkedin className="w-5 h-5 text-blue-400" />
+                        <span className="text-[10px] text-slate-400 text-center uppercase tracking-wide">LinkedIn</span>
+                        <span className="text-xs font-bold text-white">
                             {isLoading ? '--' : metrics.linkedinReferrals}
                         </span>
-                    </motion.div>
+                    </div>
                 </div>
             </motion.div>
 
@@ -118,10 +103,10 @@ export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) =>
                     transition={{ delay: 0.5, duration: 0.8 }}
                     className="text-center w-full"
                 >
-                    <h1 className="text-5xl font-bold tracking-tight mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-100 to-white leading-tight">
+                    <h1 className="text-5xl font-bold tracking-tight mb-2 text-primary leading-tight">
                         ADITYA<br />CHAVAN
                     </h1>
-                    <p className="text-sm text-cyan-400 tracking-[0.3em] uppercase font-light mb-8">
+                    <p className="text-sm text-gold-glow tracking-[0.3em] uppercase font-light mb-8">
                         Software Engineer
                     </p>
 
@@ -129,7 +114,7 @@ export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) =>
                     <motion.button
                         onClick={onStartJourney}
                         whileTap={{ scale: 0.95 }}
-                        className="w-full max-w-sm mx-auto px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg font-semibold text-white tracking-wider uppercase text-sm shadow-lg shadow-cyan-500/30 active:shadow-cyan-500/50 transition-all duration-300"
+                        className="w-full max-w-sm mx-auto px-8 py-4 bg-transparent border border-gold-glow rounded-sm font-semibold text-gold-glow tracking-wider uppercase text-sm shadow-[0_0_20px_rgba(255,215,0,0.1)] active:bg-gold-glow active:text-black transition-all duration-300"
                     >
                         <span className="flex items-center justify-center gap-2">
                             Immersive Journey
@@ -141,33 +126,31 @@ export const HeroSectionMobile = ({ onStartJourney }: HeroSectionMobileProps) =>
                 </motion.div>
             </div>
 
-            {/* Bottom Navigation */}
+            {/* Bottom Navigation - Compact HUD */}
             <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.7, duration: 0.6 }}
-                className="relative z-10 pb-8"
+                className="relative z-10 pb-48 -mt-24 w-full px-6"
             >
-                <p className="text-[10px] text-slate-500 uppercase tracking-widest mb-3 text-center">
-                    Quick Navigation
-                </p>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 mx-auto max-w-xs">
                     {navigationItems.map((item, index) => (
-                        <motion.a
+                        <motion.button
                             key={item.label}
-                            href={item.href}
+                            onClick={() => onNavigate(item.id)}
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.8 + index * 0.1 }}
-                            className="flex flex-col items-center gap-2 p-4 bg-slate-800/30 border border-slate-700/50 rounded-xl active:bg-slate-800/50 active:border-cyan-500/50 transition-all duration-200 backdrop-blur-sm"
+                            whileTap={{ scale: 0.95 }}
+                            className="flex flex-col items-center justify-center gap-2 p-4 bg-surface/80 border border-white/10 rounded-xl active:border-gold-glow/50 active:bg-gold-glow/10 transition-all duration-200 backdrop-blur-md"
                         >
-                            <span className="text-2xl">
+                            <span className="text-2xl text-secondary">
                                 {item.icon}
                             </span>
-                            <span className="text-[10px] text-slate-300 text-center leading-tight">
+                            <span className="text-[10px] text-secondary font-medium uppercase tracking-wide leading-tight text-center">
                                 {item.label}
                             </span>
-                        </motion.a>
+                        </motion.button>
                     ))}
                 </div>
             </motion.div>

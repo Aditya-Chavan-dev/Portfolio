@@ -57,6 +57,8 @@ Derived from the Master Workflow Diagram:
 - **Experience Days Counter**: Logic to calculate and display duration since career inception.
 - **Academic Records**: Display of degrees and achievements.
 - **Landing Page Orchestrator**: A high-level gateway that performs binary device classification (Mobile vs Desktop) and serves distinct, isolated application bundles.
+- **Split-Screen Layout Engine (Desktop)**: A realized two-column architecture that balances narrative density with quick-access navigation, eliminating negative space.
+- **Neural Grid Environment**: A 60-node interactive canvas background that responds to mouse movement, creating a "living system" atmosphere.
 - **Kinematic Layout Engine**: A physics-based animation system (Spring Physics) that manages fluid layout transitions without sub-pixel distortion, ensuring "breathing" UI adaptations.
 
 ### B. Project Showcase

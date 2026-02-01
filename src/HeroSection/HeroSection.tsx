@@ -4,13 +4,14 @@ import { HeroSectionMobile } from './HeroSectionMobile';
 
 interface HeroSectionProps {
     onStartJourney: () => void;
+    onNavigate: (section: string) => void;
 }
 
-export const HeroSection = ({ onStartJourney }: HeroSectionProps) => {
+export const HeroSection = ({ onStartJourney, onNavigate }: HeroSectionProps) => {
     const { isMobile } = useDeviceType();
     return isMobile ? (
-        <HeroSectionMobile onStartJourney={onStartJourney} />
+        <HeroSectionMobile onStartJourney={onStartJourney} onNavigate={onNavigate} />
     ) : (
-        <HeroSectionDesktop onStartJourney={onStartJourney} />
+        <HeroSectionDesktop onStartJourney={onStartJourney} onNavigate={onNavigate} />
     );
 };

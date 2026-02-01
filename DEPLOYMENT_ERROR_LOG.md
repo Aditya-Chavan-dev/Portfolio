@@ -4,6 +4,25 @@ This ledger records failures, defects, and logical errors and how they were reso
 
 ---
 
+## [2026-02-01 | 13:30:00] - Commit: UI_POLISH_FINAL_V1
+
+### Description of the problem encountered
+**Syntax Error: Unterminated Template Literal**. The build failed during the `HeroSection` refactor due to stray markdown backticks (```) accidentally left at the top of `HeroSectionDesktop.tsx` and `HeroSectionMobile.tsx`.
+
+### Root cause (logical, design, or assumption failure)
+**Agentic Output Error**. The AI agent (me) erroneously included markdown code block fencing within the actual file content during a `replace_file_content` operation, resulting in invalid TypeScript syntax at the file root.
+
+### User or system impact
+**Build Failure**. The application could not compile or run until the syntax error was resolved.
+
+### Resolution applied
+Manually stripped the invalid backticks from the files.
+
+### Justification for why this solution was chosen over alternatives
+Immediate correction of the file content was the only valid fix.
+
+---
+
 ## [2026-01-29 | 09:20:00] - Commit: 4628ef9
 
 ### Description of the problem encountered
