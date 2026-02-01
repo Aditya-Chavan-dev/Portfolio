@@ -134,4 +134,29 @@ While slightly more expensive computationally, maintaining crisp text during ani
 ### Justification for why this solution was chosen over alternatives
 Immediate removal and rotation is the only acceptable industry standard. Leaving "obfuscated" keys is insufficient; they must be completely removed from the source.
 
+---
+
+## [2026-02-01 | 13:45:00] - Commit: CSS_REGRESSION_FIX
+
+### Description of the problem encountered
+**Critical Production Visual Regression**.
+1. **Landing Page Collapse**: The "Typewriter Intro" text was pushed to the absolute top of the screen (0px y-axis) instead of centering vertically.
+2. **Loader SVG Explosion**: The loading ring rendered largely off-screen, breaking the viewport bounds.
+3. **Ghost UI Overlay**: User reported seeing legacy/fallback UI elements ("View My Work") likely due to invalid layout states triggering standard flow fallbacks.
+
+### Root cause (logical, design, or assumption failure)
+**Tailwind v4 Compilation / Flexbox Interpretation Failure**.
+The use of dynamic arbitrary value classes like `flex-[0.5]` was likely stripped or misinterpreted by the production build process, causing containers to collapse to zero height or default behavior. The `w-20` class on the Loader likely failed to constrain the `w-full` SVG in the specific `fixed` context of the production environment.
+
+### User or system impact
+**Broken User Experience**. The site looked "broken" and "amateurish" immediately upon load, negating the premium design intent.
+
+### Resolution applied
+1. **Explicit Style Overrides**: Replaced specific Tailwind utility classes with inline `style={{ flex: 0.X }}` and `style={{ width: '80px', height: '80px' }}` to guarantee browser compliance regardless of CSS compilation.
+2. **Viewport Enforcement**: Added `100dvh` (Dynamic Viewport Height) to the loader container to prevent mobile chrome shifts.
+
+### Justification for why this solution was chosen over alternatives
+Inline styles are immutable in the browser and bypass potential build-pipeline CSS purging or precedence issues. Given the critical nature of the "First Impression" (Landing/Loader), robustness is prioritized over purity.
+
+
 
