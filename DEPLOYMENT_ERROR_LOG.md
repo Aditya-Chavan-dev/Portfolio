@@ -44,6 +44,28 @@ A clean reset and purge was the only way to satisfy GitHub's audit requirements 
 
 ---
 
+## [2026-02-01 | 14:15:00] - Commit: MOBILE_LAYOUT_FIX_V2
+
+### Description of the problem encountered
+**Persistent Mobile Overlap**. Despite the V1 fix, some device aspect ratios (likely shorter viewports or those with large browser chrome) still caused the Navigation Grid to overlap the "Immersive Journey" button because `h-[100dvh]` forced content compression beyond the intrinsic size of the elements.
+
+### Root cause (logical, design, or assumption failure)
+**Assumption Failure (Height Availability)**. I assumed that `100dvh` would always provide enough vertical pixels to stack the Top, Middle, and Bottom sections without collision. This is false for small devices or when content is expanded.
+
+### User or system impact
+**Visual Collision**. The "Neatness" of the UI was compromised.
+
+### Resolution applied
+**Scrollable Safe Stack Architecture**.
+1.  **Structure**: Converted the container to `flex-col` with `gap-4` and `overflow-y-auto`.
+2.  **Behavior**: If the screen is tall enough, `justify-between` distributes space evenly (Full Screen App experience). If the screen is too short, the browser naturally allows scrolling (Web Page experience).
+3.  **Compacting**: Slightly reduced icon sizes and text scales to improve the "Fit Rate" on initial load without requiring scroll for most users.
+
+### Justification for why this solution was chosen over alternatives
+Guaranteed accessibility. It is better to have a scrollable neat interface than a fixed broken one.
+
+---
+
 ## [2026-01-29 | 09:40:00] - Commit: 0c13bcd
 **No change required for this commit.**
 **Reason for irrelevance**: This commit establishes the governance framework itself. No errors, defects, or logical failures were encountered during the implementation of these documentation files.
