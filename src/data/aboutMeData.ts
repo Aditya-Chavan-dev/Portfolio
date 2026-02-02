@@ -10,9 +10,7 @@ import {
     siFastapi,
     siTypescript,
     siTailwindcss,
-    siMongodb,
-    siPostgresql,
-    siDocker
+    siMysql
 } from 'simple-icons';
 
 export const ABOUT_ME_DATA = {
@@ -47,68 +45,71 @@ export const ABOUT_ME_DATA = {
             grade: "91.20%"
         }
     ],
-    techStack: [
-        {
-            name: "JavaScript",
-            iconPath: siJavascript.path,
-            color: siJavascript.hex
-        },
-        {
-            name: "TypeScript",
-            iconPath: siTypescript.path,
-            color: siTypescript.hex
-        },
-        {
-            name: "React",
-            iconPath: siReact.path,
-            color: siReact.hex
-        },
-        {
-            name: "Node.js",
-            iconPath: siNodedotjs.path,
-            color: siNodedotjs.hex
-        },
-        {
-            name: "Firebase",
-            iconPath: siFirebase.path,
-            color: siFirebase.hex
-        },
-        {
-            name: "Python",
-            iconPath: siPython.path,
-            color: siPython.hex
-        },
-        {
-            name: "Flask",
-            iconPath: siFlask.path,
-            color: siFlask.hex
-        },
-        {
-            name: "FastAPI",
-            iconPath: siFastapi.path,
-            color: siFastapi.hex
-        },
-        {
-            name: "TailwindCSS",
-            iconPath: siTailwindcss.path,
-            color: siTailwindcss.hex
-        },
-        {
-            name: "MongoDB",
-            iconPath: siMongodb.path,
-            color: siMongodb.hex
-        },
-        {
-            name: "PostgreSQL",
-            iconPath: siPostgresql.path,
-            color: siPostgresql.hex
-        },
-        {
-            name: "Docker",
-            iconPath: siDocker.path,
-            color: siDocker.hex
-        }
-    ]
+    techStack: {
+        frontend: [
+            {
+                name: "JavaScript",
+                iconPath: siJavascript.path,
+                color: siJavascript.hex
+            },
+            {
+                name: "TypeScript",
+                iconPath: siTypescript.path,
+                color: siTypescript.hex
+            },
+            {
+                name: "React",
+                iconPath: siReact.path,
+                color: siReact.hex
+            },
+            {
+                name: "TailwindCSS",
+                iconPath: siTailwindcss.path,
+                color: siTailwindcss.hex
+            }
+        ],
+        backend: [
+            {
+                name: "Node.js",
+                iconPath: siNodedotjs.path,
+                color: siNodedotjs.hex
+            },
+            {
+                name: "Python",
+                iconPath: siPython.path,
+                color: siPython.hex
+            },
+            {
+                name: "Flask",
+                iconPath: siFlask.path,
+                color: siFlask.hex
+            },
+            {
+                name: "FastAPI",
+                iconPath: siFastapi.path,
+                color: siFastapi.hex
+            }
+        ],
+        database: [
+            {
+                name: "MySQL",
+                iconPath: siMysql.path,
+                color: siMysql.hex
+            },
+            {
+                name: "Firebase RTDB",
+                iconPath: siFirebase.path,
+                color: siFirebase.hex
+            }
+        ],
+        other: [
+            {
+                name: "Firebase",
+                iconPath: siFirebase.path,
+                color: siFirebase.hex
+            }
+        ]
+    }
 };
 
 // Helper for Lucide icons since we can't store components directly in JSON if we move this later,

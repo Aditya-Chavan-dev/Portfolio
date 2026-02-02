@@ -1,303 +1,136 @@
-
-import { useEffect, useState } from 'react';
-import { Github, GitCommit, Zap, Layers } from 'lucide-react';
-import { githubService } from '@/services/githubService';
-import type { GithubUser, GithubContributionResponse } from '@/services/githubService';
+import { useState, useEffect } from 'react';
+import { Github } from 'lucide-react';
+import { getGitHubStats, getGitHubContributions } from '@/services/githubService';
 import { ABOUT_ME_DATA } from '@/data/aboutMeData';
-import { useDeviceType } from '@/hooks/useDeviceType';
 
 export const GithubStats = () => {
-    const { isMobile } = useDeviceType();
-    const [stats, setStats] = useState<GithubUser | null>(null);
-    const [contributions, setContributions] = useState<GithubContributionResponse | null>(null);
-    const [streak, setStreak] = useState<number>(0);
+    const [stats, setStats] = useState<any>(null);
+    const [contributions, setContributions] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadData = async () => {
+        const fetchData = async () => {
             try {
-                const username = ABOUT_ME_DATA.personal.github;
-                const [userStats, contributionData] = await Promise.all([
-                    githubService.fetchUserStats(username),
-                    githubService.fetchContributions(username)
+                const [githubStats, githubContribs] = await Promise.all([
+                    getGitHubStats(ABOUT_ME_DATA.personal.github),
+                    getGitHubContributions(ABOUT_ME_DATA.personal.github)
                 ]);
-
-                setStats(userStats);
-                setContributions(contributionData);
-
-                if (contributionData) {
-                    setStreak(githubService.calculateStreak(contributionData.contributions));
-                }
+                setStats(githubStats);
+                setContributions(githubContribs);
             } catch (error) {
-                console.error("Failed to load Github data", error);
+                console.error('Error fetching GitHub data:', error);
             } finally {
                 setLoading(false);
             }
         };
 
-        loadData();
+        fetchData();
     }, []);
 
-    if (loading) {
-        return <div className="animate-pulse h-64 bg-surface rounded-xl border border-white/5"></div>;
-    }
+    // Calculate current streak
+    const calculateStreak = () => {
+        if (!contributions?.contributions) return 0;
+        const days = contributions.contributions;
+        let streak = 0;
+        const today = new Date();
 
-    // Prepare contribution graph data - show full year for both devices
-    const days = contributions?.contributions || [];
+        for (let i = days.length - 1; i >= 0; i--) {
+            const day = days[i];
+            if (day.count > 0) streak++;
+            else break;
+        }
 
-    // Show 12 months with 4 weeks each = 48 weeks total
-    const weeksToShow = 48;
-    const daysToShow = weeksToShow * 7;
-    const meaningfulDays = days.slice(-daysToShow);
-
-    // Helper to check if a week starts a new month (every 4 weeks)
-    const startsNewMonth = (weekIndex: number): boolean => {
-        return weekIndex > 0 && weekIndex % 4 === 0;
+        return streak;
     };
 
-    // Generate month labels for 12 months
-    const monthLabels: { label: string; weekIndex: number }[] = [];
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    for (let i = 0; i < 12; i++) {
-        monthLabels.push({
-            label: monthNames[i],
-            weekIndex: i * 4
-        });
-    }
+    const streak = calculateStreak();
 
-    // Helper to determine color intensity - YELLOW/GOLD shades for streak
-    const getLevelColor = (level: number) => {
-        switch (level) {
-            case 0: return 'bg-white/10';
-            case 1: return 'bg-yellow-900/50';
-            case 2: return 'bg-yellow-600/70';
-            case 3: return 'bg-yellow-400/90';
-            case 4: return 'bg-yellow-300';
-            default: return 'bg-white/10';
-        }
+    const getContributionColor = (count: number) => {
+        if (count === 0) return 'bg-white/10';
+        if (count < 5) return 'bg-yellow-900/50';
+        if (count < 10) return 'bg-yellow-600/70';
+        if (count < 20) return 'bg-yellow-400/90';
+        return 'bg-yellow-300';
     };
 
     return (
-        <div className="glass-panel p-4 rounded-2xl border border-white/10 relative overflow-hidden">
+        <div className="glass-panel p-2.5 rounded-2xl border border-white/10 relative overflow-hidden hover:border-gold-dim/20 transition-all duration-300 group">
+            {/* Animated background glow */}
+            <div className="absolute inset-0 bg-gradient-to-bl from-gold-glow/0 via-gold-dim/5 to-gold-glow/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
             <div className="relative z-10">
-                <h3 className="text-base font-bold mb-3 flex items-center gap-2">
-                    <Github className="w-4 h-4 text-gold-muted" />
-                    <span>Github Activity <span className="text-secondary">(Realtime)</span></span>
+                <h3 className="text-xs font-bold mb-2 flex items-center gap-1.5">
+                    <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-gold-dim/20 to-gold-glow/10 border border-gold-dim/30 flex items-center justify-center">
+                        <Github className="w-4 h-4 text-gold-glow" />
+                    </div>
+                    <span className="bg-gradient-to-r from-white to-secondary bg-clip-text text-transparent">
+                        Github Activity <span className="text-gold-dim">(Realtime)</span>
+                    </span>
                 </h3>
 
                 {loading ? (
-                    <div className="flex items-center justify-center h-32">
+                    <div className="flex items-center justify-center h-24">
                         <div className="loader" />
                     </div>
                 ) : (
                     <>
                         {/* Stats Grid */}
-                        <div className="grid grid-cols-3 gap-3 mb-4">
-                            {/* Total Commits */}
-                            <div className="bg-white/5 rounded-xl p-3 border border-white/5 hover:border-gold-dim/30 transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <GitCommit className="w-4 h-4 text-gold-dim" />
-                                    <span className="text-xs text-secondary uppercase tracking-wide">Total Commits</span>
-                                </div>
-                                <p className="text-2xl font-bold text-white">{contributions?.total.lastYear || 0}</p>
+                        <div className="grid grid-cols-3 gap-2 mb-2">
+                            <div className="glass-panel p-2 rounded-xl border border-white/5 hover:border-gold-dim/30 transition-all cursor-pointer group/stat">
+                                <p className="text-[9px] text-secondary mb-0.5 uppercase tracking-wide">Total</p>
+                                <p className="text-xl font-bold bg-gradient-to-br from-white to-secondary bg-clip-text text-transparent group-hover/stat:from-gold-glow group-hover/stat:to-gold-muted transition-all">
+                                    {contributions?.total.lastYear || 0}
+                                </p>
+                                <p className="text-[8px] text-gold-muted uppercase">Commits</p>
                             </div>
-
-                            {/* Projects */}
-                            <div className="bg-white/5 rounded-xl p-3 border border-white/5 hover:border-gold-dim/30 transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Layers className="w-4 h-4 text-emerald-500" />
-                                    <span className="text-xs text-secondary uppercase tracking-wide">Projects</span>
-                                </div>
-                                <p className="text-2xl font-bold text-white">{stats?.public_repos || 0}</p>
+                            <div className="glass-panel p-2 rounded-xl border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer group/stat">
+                                <p className="text-[9px] text-secondary mb-0.5 uppercase tracking-wide">Projects</p>
+                                <p className="text-xl font-bold bg-gradient-to-br from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
+                                    {stats?.public_repos || 0}
+                                </p>
+                                <p className="text-[8px] text-emerald-400/70 uppercase">Active</p>
                             </div>
-
-                            {/* Live Streak */}
-                            <div className="bg-white/5 rounded-xl p-3 border border-white/5 hover:border-gold-dim/30 transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Zap className="w-4 h-4 text-gold-glow" />
-                                    <span className="text-xs text-secondary uppercase tracking-wide">Live Streak</span>
-                                </div>
-                                <p className="text-2xl font-bold text-gold-glow">{streak} Days</p>
+                            <div className="glass-panel p-2 rounded-xl border border-white/5 hover:border-blue-500/30 transition-all cursor-pointer group/stat">
+                                <p className="text-[9px] text-secondary mb-0.5 uppercase tracking-wide">Streak</p>
+                                <p className="text-xl font-bold bg-gradient-to-br from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                                    {streak}
+                                </p>
+                                <p className="text-[8px] text-blue-400/70 uppercase">Days</p>
                             </div>
                         </div>
 
-                        {/* Custom Contribution Graph - Full Calendar Grid */}
-                        <div className="w-full pb-1 overflow-hidden">
-                            {isMobile ? (
-                                // Mobile: Two rows of 6 months each
-                                <div className="flex flex-col gap-4">
-                                    {/* First Row - 6 months */}
-                                    <div className="flex gap-2">
-                                        <div className="flex flex-col justify-start pt-6 gap-[2px]">
-                                            <div className="h-[6px] text-[9px] text-white/30"></div>
-                                            <div className="h-[6px] text-[9px] text-white/30 flex items-center">Mon</div>
-                                            <div className="h-[6px] text-[9px] text-white/30"></div>
-                                            <div className="h-[6px] text-[9px] text-white/30 flex items-center">Wed</div>
-                                            <div className="h-[6px] text-[9px] text-white/30"></div>
-                                            <div className="h-[6px] text-[9px] text-white/30 flex items-center">Fri</div>
-                                            <div className="h-[6px] text-[9px] text-white/30"></div>
-                                        </div>
-                                        <div className="flex-1 max-w-full overflow-hidden">
-                                            <div className="relative h-5 mb-1 flex items-start">
-                                                {monthLabels.slice(0, 6).map((monthLabel, idx) => {
-                                                    const weekWidth = 8;
-                                                    const monthContentWidth = (weekWidth * 4) - 2;
-                                                    const monthGap = 10;
-                                                    const totalMonthWidth = monthContentWidth + monthGap;
-                                                    const position = idx === 0 ? 0 : (idx * totalMonthWidth);
-
-                                                    return (
-                                                        <div key={idx} className="absolute text-[10px] text-white/30" style={{ left: `${position}px` }}>
-                                                            {monthLabel.label}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                            <div className="flex gap-0 w-max max-w-full">
-                                                {Array.from({ length: 24 }).map((_, weekIndex) => {
-                                                    const weekStart = weekIndex * 7;
-                                                    const weekDays = meaningfulDays.slice(weekStart, weekStart + 7);
-                                                    const isMonthStart = startsNewMonth(weekIndex);
-
-                                                    return (
-                                                        <div key={weekIndex} className={`flex flex-col gap-[2px] ${isMonthStart ? 'ml-[10px]' : weekIndex === 0 ? '' : 'ml-[2px]'}`}>
-                                                            {weekDays.map((day, dayIndex) => (
-                                                                <div
-                                                                    key={weekStart + dayIndex}
-                                                                    className={`w-[6px] h-[6px] rounded-[1px] ${getLevelColor(day.level)} transition-all hover:scale-125 hover:z-10`}
-                                                                    title={`${day.date}: ${day.count} contributions`}
-                                                                />
-                                                            ))}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Second Row - 6 months */}
-                                    <div className="flex gap-2">
-                                        <div className="flex flex-col justify-start pt-6 gap-[2px]">
-                                            <div className="h-[6px] text-[9px] text-white/30"></div>
-                                            <div className="h-[6px] text-[9px] text-white/30 flex items-center">Mon</div>
-                                            <div className="h-[6px] text-[9px] text-white/30"></div>
-                                            <div className="h-[6px] text-[9px] text-white/30 flex items-center">Wed</div>
-                                            <div className="h-[6px] text-[9px] text-white/30"></div>
-                                            <div className="h-[6px] text-[9px] text-white/30 flex items-center">Fri</div>
-                                            <div className="h-[6px] text-[9px] text-white/30"></div>
-                                        </div>
-                                        <div className="flex-1 max-w-full overflow-hidden">
-                                            <div className="relative h-5 mb-1 flex items-start">
-                                                {monthLabels.slice(6, 12).map((monthLabel, idx) => {
-                                                    const weekWidth = 8;
-                                                    const monthContentWidth = (weekWidth * 4) - 2;
-                                                    const monthGap = 10;
-                                                    const totalMonthWidth = monthContentWidth + monthGap;
-                                                    const position = idx === 0 ? 0 : (idx * totalMonthWidth);
-
-                                                    return (
-                                                        <div key={idx + 6} className="absolute text-[10px] text-white/30" style={{ left: `${position}px` }}>
-                                                            {monthLabel.label}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                            <div className="flex gap-0 w-max max-w-full">
-                                                {Array.from({ length: 24 }).map((_, weekIndex) => {
-                                                    const actualWeekIndex = weekIndex + 24;
-                                                    const weekStart = actualWeekIndex * 7;
-                                                    const weekDays = meaningfulDays.slice(weekStart, weekStart + 7);
-                                                    const isMonthStart = startsNewMonth(actualWeekIndex);
-
-                                                    return (
-                                                        <div key={weekIndex} className={`flex flex-col gap-[2px] ${isMonthStart ? 'ml-[10px]' : weekIndex === 0 ? '' : 'ml-[2px]'}`}>
-                                                            {weekDays.map((day, dayIndex) => (
-                                                                <div
-                                                                    key={weekStart + dayIndex}
-                                                                    className={`w-[6px] h-[6px] rounded-[1px] ${getLevelColor(day.level)} transition-all hover:scale-125 hover:z-10`}
-                                                                    title={`${day.date}: ${day.count} contributions`}
-                                                                />
-                                                            ))}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                // Desktop: Single row with all 12 months
-                                <div className="flex gap-2 justify-center">
-                                    {/* Day Labels Column - Responsive */}
-                                    <div className="flex flex-col justify-start pt-6 gap-[2px]">
-                                        <div className="h-[6px] text-[9px] text-white/30"></div>
-                                        <div className="h-[6px] text-[9px] text-white/30 flex items-center">Mon</div>
-                                        <div className="h-[6px] text-[9px] text-white/30"></div>
-                                        <div className="h-[6px] text-[9px] text-white/30 flex items-center">Wed</div>
-                                        <div className="h-[6px] text-[9px] text-white/30"></div>
-                                        <div className="h-[6px] text-[9px] text-white/30 flex items-center">Fri</div>
-                                        <div className="h-[6px] text-[9px] text-white/30"></div>
-                                    </div>
-
-                                    {/* Graph Container */}
-                                    <div className="flex-1 max-w-full overflow-hidden">
-                                        {/* Month Labels - Perfectly aligned with 4-week groups */}
-                                        <div className="relative h-5 mb-1 flex items-start">
-                                            {monthLabels.map((monthLabel, idx) => {
-                                                const weekWidth = 8;
-                                                const monthContentWidth = (weekWidth * 4) - 2;
-                                                const monthGap = 10;
-                                                const totalMonthWidth = monthContentWidth + monthGap;
-                                                const position = idx === 0 ? 0 : (idx * totalMonthWidth);
-
-                                                return (
-                                                    <div
-                                                        key={idx}
-                                                        className="absolute text-[10px] md:text-[11px] text-white/30"
-                                                        style={{ left: `${position}px` }}
-                                                    >
-                                                        {monthLabel.label}
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-
-                                        {/* Contribution Grid - 12 months with 4 weeks each */}
-                                        <div className="flex gap-0 w-max max-w-full">
-                                            {Array.from({ length: weeksToShow }).map((_, weekIndex) => {
-                                                const weekStart = weekIndex * 7;
-                                                const weekDays = meaningfulDays.slice(weekStart, weekStart + 7);
-                                                const isMonthStart = startsNewMonth(weekIndex);
-
+                        {/* Contribution Heatmap - Compact */}
+                        <div className="glass-panel p-2 rounded-xl border border-white/5">
+                            <div className="space-y-0.5">
+                                {['Mon', 'Wed', 'Fri'].map((day, dayIndex) => (
+                                    <div key={day} className="flex items-center gap-1">
+                                        <span className="text-[8px] text-secondary w-6">{day}</span>
+                                        <div className="flex gap-0.5">
+                                            {Array.from({ length: 52 }, (_, weekIndex) => {
+                                                const contributions_data = contributions?.contributions || [];
+                                                const dayOffset = weekIndex * 7 + dayIndex * 2;
+                                                const contribution_count = contributions_data[dayOffset]?.count || 0;
                                                 return (
                                                     <div
                                                         key={weekIndex}
-                                                        className={`flex flex-col gap-[2px] ${isMonthStart ? 'ml-[10px]' : weekIndex === 0 ? '' : 'ml-[2px]'}`}
-                                                    >
-                                                        {weekDays.map((day, dayIndex) => (
-                                                            <div
-                                                                key={weekStart + dayIndex}
-                                                                className={`w-[6px] h-[6px] rounded-[1px] ${getLevelColor(day.level)} transition-all hover:scale-125 hover:z-10`}
-                                                                title={`${day.date}: ${day.count} contributions`}
-                                                            />
-                                                        ))}
-                                                    </div>
+                                                        className={`w-1.5 h-1.5 rounded-sm ${getContributionColor(contribution_count)} hover:ring-1 hover:ring-gold-glow transition-all cursor-pointer`}
+                                                        title={`${contribution_count} contributions`}
+                                                    />
                                                 );
                                             })}
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+                            <div className="flex items-center justify-end gap-1 mt-1.5">
+                                <span className="text-[8px] text-secondary">Less</span>
+                                <div className="flex gap-0.5">
+                                    {[0, 1, 2, 3, 4].map((level) => (
+                                        <div key={level} className={`w-1.5 h-1.5 rounded-sm ${getContributionColor(level * 5)}`} />
+                                    ))}
                                 </div>
-                            )}
-                        </div>
-
-                        <div className="mt-2 text-[10px] text-right text-white/20 flex justify-end gap-1 items-center">
-                            <span>Less</span>
-                            <div className="w-[6px] h-[6px] rounded-sm bg-white/10"></div>
-                            <div className="w-[6px] h-[6px] rounded-sm bg-yellow-900/50"></div>
-                            <div className="w-[6px] h-[6px] rounded-sm bg-yellow-600/70"></div>
-                            <div className="w-[6px] h-[6px] rounded-sm bg-yellow-400/90"></div>
-                            <div className="w-[6px] h-[6px] rounded-sm bg-yellow-300"></div>
-                            <span>More</span>
+                                <span className="text-[8px] text-secondary">More</span>
+                            </div>
                         </div>
                     </>
                 )}
