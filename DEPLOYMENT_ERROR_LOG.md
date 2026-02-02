@@ -137,6 +137,30 @@ While slightly more expensive computationally, maintaining crisp text during ani
 
 ---
 
+## [2026-02-02 | 19:25:00] - Commit: ABOUT_ME_V1_VALIDATION
+
+### Description of the problem encountered
+**Build Failure**. The TypeScript compiler rejected the build due to:
+1. **Implicit Any**: The dynamic year access on the Github contributions object was not type-safe.
+2. **Module Resolution**: `githubService` types were not imported using `import type` syntax as required by `verbatimModuleSyntax`.
+3. **Unused Imports**: `GraduationCap` and `User` icons were imported but not used, triggering lint errors treated as build failures.
+
+### Root cause (logical, design, or assumption failure)
+**Strict Type Safety Violation**. I attempted to access `contributions.total[year]` without verifying that `year` was a valid key of the `total` object. Additionally, I left unused imports during the refactoring process.
+
+### User or system impact
+**Deployment Block**. The application could not be built for production.
+
+### Resolution applied
+1. **Safe Access Pattern**: implemented `keyof typeof` casting to ensure the year index is valid.
+2. **Type-Only Imports**: Updated `GithubStats.tsx` to use `import type`.
+3. **Cleanup**: Removed all unused imports.
+
+### Justification for why this solution was chosen over alternatives
+Adhering to the strict TypeScript configuration is mandatory for long-term maintainability. Disabling linter rules was rejected as a solution.
+
+---
+
 ## [2026-01-31 | 21:45:00] - Commit: SECURITY_SECRET_REMOVAL
 ### Description of the problem encountered
 **Security Incident**: Discovery of hardcoded sensitive credentials (Firebase API Keys and Project IDs) directly embedded within `src/services/firebase.ts`.
@@ -181,4 +205,9 @@ The use of dynamic arbitrary value classes like `flex-[0.5]` was likely stripped
 Inline styles are immutable in the browser and bypass potential build-pipeline CSS purging or precedence issues. Given the critical nature of the "First Impression" (Landing/Loader), robustness is prioritized over purity.
 
 
+---
+
+## [2026-02-02 | 21:00:00] - Commit: ABOUT_ME_LAYOUT_OPTIMIZATION
+**No change required for this commit.**
+**Reason for irrelevance**: This commit is a UI/UX refinement focused on layout optimization and icon replacement. No functional errors, runtime defects, or logical failures were encountered during implementation.
 
