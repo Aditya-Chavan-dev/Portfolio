@@ -426,6 +426,38 @@ To provide social proof of engineering capability. The Github Contribution Graph
 
 ---
 
+## [2026-02-02 | 22:16:00] - Commit: PENDING
+
+### Description of the feature or capability introduced or changed
+
+Refined About Me section layout and fixed GitHub contribution heatmap to match authentic GitHub design.
+
+### The problem or limitation that existed before the change
+
+1. Academic Timeline section was redundant and taking up unnecessary space
+2. GitHub contribution heatmap displayed as horizontal rows instead of vertical columns
+3. Layout had spacing and alignment issues causing visual overlaps
+4. Heatmap didn't match the authentic GitHub contribution calendar appearance
+
+### The reason the change was necessary
+
+To create a cleaner, more professional About Me section that maximizes information density while maintaining readability. The GitHub heatmap needed to match the familiar GitHub UI to ensure users immediately recognize and understand it.
+
+### The resulting behavioral difference after the change
+
+1. **Layout Simplification**: Removed redundant Academic Timeline header, moved Education directly to top-left
+2. **Authentic GitHub Heatmap**: Changed from horizontal rows to vertical week-based columns (53 weeks × 7 days)
+3. **Proper Spacing**: Fixed all grid alignment issues with consistent 3px gaps between sections
+4. **Visual Accuracy**: Heatmap now uses 6px × 6px cells with 3px spacing, matching GitHub's exact design
+5. **Cleaner UI**: Strengths section spans full width at bottom, creating clear visual hierarchy
+
+**Files Modified:**
+- `AboutMeDesktop.tsx`: Removed timeline placeholder, simplified grid layout
+- `GithubStats.tsx`: Rebuilt heatmap with vertical column structure
+- `Strengths.tsx`: Horizontal 3-column layout for full-width display
+
+---
+
 ## [2026-02-02 | 21:00:00] - Commit: ABOUT_ME_LAYOUT_OPTIMIZATION
 
 ### Description of the feature or capability introduced or changed

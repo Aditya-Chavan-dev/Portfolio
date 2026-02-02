@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Github } from 'lucide-react';
-import { getGitHubStats, getGitHubContributions } from '@/services/githubService';
+import { githubService } from '@/services/githubService';
 import { ABOUT_ME_DATA } from '@/data/aboutMeData';
 
 export const GithubStats = () => {
@@ -12,8 +12,8 @@ export const GithubStats = () => {
         const fetchData = async () => {
             try {
                 const [githubStats, githubContribs] = await Promise.all([
-                    getGitHubStats(ABOUT_ME_DATA.personal.github),
-                    getGitHubContributions(ABOUT_ME_DATA.personal.github)
+                    githubService.fetchUserStats(ABOUT_ME_DATA.personal.github),
+                    githubService.fetchContributions(ABOUT_ME_DATA.personal.github)
                 ]);
                 setStats(githubStats);
                 setContributions(githubContribs);
@@ -27,23 +27,10 @@ export const GithubStats = () => {
         fetchData();
     }, []);
 
-    // Calculate current streak
-    const calculateStreak = () => {
-        if (!contributions?.contributions) return 0;
-        const days = contributions.contributions;
-        let streak = 0;
-        const today = new Date();
-
-        for (let i = days.length - 1; i >= 0; i--) {
-            const day = days[i];
-            if (day.count > 0) streak++;
-            else break;
-        }
-
-        return streak;
-    };
-
-    const streak = calculateStreak();
+    // Calculate current streak using the service method
+    const streak = contributions?.contributions
+        ? githubService.calculateStreak(contributions.contributions)
+        : 0;
 
     const getContributionColor = (count: number) => {
         if (count === 0) return 'bg-white/10';
@@ -54,11 +41,11 @@ export const GithubStats = () => {
     };
 
     return (
-        <div className="glass-panel p-2.5 rounded-2xl border border-white/10 relative overflow-hidden hover:border-gold-dim/20 transition-all duration-300 group">
+        <div className="glass-panel p-2.5 rounded-2xl border border-white/10 h-full relative overflow-hidden hover:border-gold-dim/20 transition-all duration-300 group">
             {/* Animated background glow */}
             <div className="absolute inset-0 bg-gradient-to-bl from-gold-glow/0 via-gold-dim/5 to-gold-glow/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative z-10">
+            <div className="relative z-10 h-full flex flex-col">
                 <h3 className="text-xs font-bold mb-2 flex items-center gap-1.5">
                     <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-gold-dim/20 to-gold-glow/10 border border-gold-dim/30 flex items-center justify-center">
                         <Github className="w-4 h-4 text-gold-glow" />
@@ -99,37 +86,47 @@ export const GithubStats = () => {
                             </div>
                         </div>
 
-                        {/* Contribution Heatmap - Compact */}
+                        {/* Contribution Heatmap - GitHub Style (Columns by Week) */}
                         <div className="glass-panel p-2 rounded-xl border border-white/5">
-                            <div className="space-y-0.5">
-                                {['Mon', 'Wed', 'Fri'].map((day, dayIndex) => (
-                                    <div key={day} className="flex items-center gap-1">
-                                        <span className="text-[8px] text-secondary w-6">{day}</span>
-                                        <div className="flex gap-0.5">
-                                            {Array.from({ length: 52 }, (_, weekIndex) => {
+                            <div className="flex gap-[3px]">
+                                {/* Day labels */}
+                                <div className="flex flex-col gap-[3px] justify-around mr-1">
+                                    {['', 'Mon', '', 'Wed', '', 'Fri', ''].map((day, i) => (
+                                        <div key={i} className="text-[7px] text-secondary h-[6px] flex items-center">
+                                            {day}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Week columns */}
+                                <div className="flex gap-[3px]">
+                                    {Array.from({ length: 53 }, (_, weekIndex) => (
+                                        <div key={weekIndex} className="flex flex-col gap-[3px]">
+                                            {Array.from({ length: 7 }, (_, dayIndex) => {
                                                 const contributions_data = contributions?.contributions || [];
-                                                const dayOffset = weekIndex * 7 + dayIndex * 2;
-                                                const contribution_count = contributions_data[dayOffset]?.count || 0;
+                                                const dataIndex = weekIndex * 7 + dayIndex;
+                                                const contribution_count = contributions_data[dataIndex]?.count || 0;
                                                 return (
                                                     <div
-                                                        key={weekIndex}
-                                                        className={`w-1.5 h-1.5 rounded-sm ${getContributionColor(contribution_count)} hover:ring-1 hover:ring-gold-glow transition-all cursor-pointer`}
+                                                        key={dayIndex}
+                                                        className={`w-[6px] h-[6px] rounded-[2px] ${getContributionColor(contribution_count)} hover:ring-1 hover:ring-gold-glow transition-all cursor-pointer`}
                                                         title={`${contribution_count} contributions`}
                                                     />
                                                 );
                                             })}
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="flex items-center justify-end gap-1 mt-1.5">
-                                <span className="text-[8px] text-secondary">Less</span>
-                                <div className="flex gap-0.5">
-                                    {[0, 1, 2, 3, 4].map((level) => (
-                                        <div key={level} className={`w-1.5 h-1.5 rounded-sm ${getContributionColor(level * 5)}`} />
                                     ))}
                                 </div>
-                                <span className="text-[8px] text-secondary">More</span>
+                            </div>
+
+                            <div className="flex items-center justify-end gap-1 mt-2">
+                                <span className="text-[7px] text-secondary">Less</span>
+                                <div className="flex gap-[3px]">
+                                    {[0, 1, 2, 3, 4].map((level) => (
+                                        <div key={level} className={`w-[6px] h-[6px] rounded-[2px] ${getContributionColor(level * 5)}`} />
+                                    ))}
+                                </div>
+                                <span className="text-[7px] text-secondary">More</span>
                             </div>
                         </div>
                     </>

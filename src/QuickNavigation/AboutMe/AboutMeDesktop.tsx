@@ -15,28 +15,27 @@ export const AboutMeDesktop = () => {
                 <div className="absolute top-[40%] left-[45%] w-[400px] h-[400px] bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-full blur-[100px]" />
             </div>
 
-            {/* Main Container - Left Sidebar Layout */}
-            <div className="max-w-[1400px] w-full h-full relative z-10 flex gap-3">
+            {/* Main Container */}
+            <div className="max-w-[1400px] w-full h-full relative z-10 flex flex-col gap-3">
 
-                {/* LEFT SIDEBAR: Education */}
-                <div className="w-[240px] flex-shrink-0">
-                    <div className="glass-panel p-3 rounded-2xl border border-white/10 h-full hover:border-gold-dim/20 transition-all duration-300 group relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-gold-dim/0 to-gold-dim/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        <div className="relative z-10 h-full">
-                            <Education />
+                {/* TOP ROW: Education + About Me Header */}
+                <div className="grid grid-cols-12 gap-3 h-[140px] flex-shrink-0">
+                    {/* Education (3 cols) */}
+                    <div className="col-span-3 h-full">
+                        <div className="glass-panel p-2.5 rounded-2xl border border-white/10 h-full hover:border-gold-dim/20 transition-all duration-300 group relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-gold-dim/0 to-gold-dim/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="relative z-10 h-full">
+                                <Education />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* RIGHT MAIN CONTENT */}
-                <div className="flex-1 flex flex-col gap-3 min-w-0">
-
-                    {/* TOP: Header with About Me + Contact */}
-                    <div className="flex-shrink-0">
-                        <div className="glass-panel p-3 rounded-2xl border border-white/10 relative overflow-hidden group hover:border-gold-dim/30 transition-all duration-300">
+                    {/* About Me Header (9 cols) */}
+                    <div className="col-span-9 h-full">
+                        <div className="glass-panel p-3 rounded-2xl border border-white/10 h-full relative overflow-hidden group hover:border-gold-dim/30 transition-all duration-300">
                             <div className="absolute inset-0 bg-gradient-to-r from-gold-dim/0 via-gold-dim/5 to-gold-dim/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                            <div className="relative z-10 flex items-start justify-between gap-6">
+                            <div className="relative z-10 flex items-start justify-between gap-6 h-full">
                                 {/* Left: Title and Summary */}
                                 <div className="flex-1">
                                     <h2 className="text-2xl font-bold mb-1.5 text-white bg-gradient-to-r from-white via-gold-glow to-white bg-clip-text">
@@ -70,20 +69,27 @@ export const AboutMeDesktop = () => {
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* MIDDLE: Tech Stack + GitHub/Strengths */}
-                    <div className="flex-1 grid grid-cols-12 gap-3 min-h-0">
-                        {/* Tech Stack - Takes 7 columns */}
-                        <div className="col-span-7 min-h-0">
-                            <TechStack />
-                        </div>
+                {/* MIDDLE ROW: Tech Stack + GitHub */}
+                <div className="grid grid-cols-12 gap-3 flex-1 min-h-0">
+                    {/* Empty space to align with Education (3 cols) */}
+                    <div className="col-span-3"></div>
 
-                        {/* GitHub + Strengths - Takes 5 columns */}
-                        <div className="col-span-5 min-h-0 flex flex-col gap-2.5">
-                            <GithubStats />
-                            <Strengths />
-                        </div>
+                    {/* Tech Stack (5 cols) */}
+                    <div className="col-span-5 h-full">
+                        <TechStack />
                     </div>
+
+                    {/* GitHub Stats (4 cols) */}
+                    <div className="col-span-4 h-full">
+                        <GithubStats />
+                    </div>
+                </div>
+
+                {/* BOTTOM ROW: Strengths (Full Width) */}
+                <div className="flex-shrink-0">
+                    <Strengths />
                 </div>
             </div>
         </div>
