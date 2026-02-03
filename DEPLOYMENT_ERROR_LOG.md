@@ -217,3 +217,22 @@ Inline styles are immutable in the browser and bypass potential build-pipeline C
 **No change required for this commit.**
 **Reason for irrelevance**: This commit is a UI/UX refinement focused on layout optimization and icon replacement. No functional errors, runtime defects, or logical failures were encountered during implementation.
 
+
+---
+
+## [2026-02-03 | 07:35:00] - Commit: HEATMAP_LAYOUT_FIX
+
+### Description of the problem encountered
+**UI Overflow / Scrollbar Appearance**. The GitHub heatmap component rendered a horizontal scrollbar and cut off data on the Desktop layout because the full year (53 weeks) grid was wider than the flexible parent container (`col-span-4`).
+
+### Root cause (logical, design, or assumption failure)
+**Layout Assumption Failure**. It was assumed that the heatmap should always show a "Full Year" like GitHub.com profiles. However, in a dashboard/widget context ("About Me"), space is constrained. Use of `overflow-x-auto` was a fallback, not a design intent for this specific "static view" requirement.
+
+### User or system impact
+**Visual Defect**: The component looked "unfinished" or "broken" due to the scrollbar overlap (even with `scrollbar-hide`) and lack of alignment with the box boundaries.
+
+### Resolution applied
+**Data Truncation**: Logic updated to calculate and render only the last `30` weeks of data dynamically, ensuring the pixel width of the grid (`30 * 13px ≈ 390px`) is always less than the container width (`~450px`).
+
+### Justification for why this solution was chosen over alternatives
+Reducing cell size further (e.g. to 4px) would hurt accessibility and aesthetics. Truncating the time range preserves the "Premium" look (8px cells) while solving the fit issue.
