@@ -2,7 +2,16 @@ import { useDeviceType } from '@/hooks/useDeviceType';
 import { AboutMeDesktop } from './AboutMeDesktop';
 import { AboutMeMobile } from './AboutMeMobile';
 
-export const AboutMe = () => {
+interface AboutMeProps {
+    onNavigate: (section: string) => void;
+}
+
+export const AboutMe = ({ onNavigate }: AboutMeProps) => {
     const { isMobile } = useDeviceType();
-    return isMobile ? <AboutMeMobile /> : <AboutMeDesktop />;
+    // For Mobile, we map the Back button to navigating to 'hero'
+    const handleMobileBack = () => onNavigate('hero');
+
+    return isMobile
+        ? <AboutMeMobile onBack={handleMobileBack} />
+        : <AboutMeDesktop onNavigate={onNavigate} />;
 };

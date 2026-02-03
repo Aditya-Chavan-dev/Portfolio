@@ -12,7 +12,7 @@ export const Education = () => {
                 <span className="bg-gradient-to-r from-white to-secondary bg-clip-text text-transparent">Academic Timeline</span>
             </h3>
 
-            <div className="relative border-l-2 border-white/10 ml-3 space-y-2 flex-1 overflow-y-auto pr-1" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(217, 179, 88, 0.3) transparent' }}>
+            <div className="relative border-l-2 border-white/10 ml-3 flex-1 flex flex-col justify-between py-1">
                 {ABOUT_ME_DATA.education.map((edu, i) => (
                     <div key={i} className="relative pl-4 group">
                         {/* Enhanced Timeline Node with glow effect */}
@@ -20,12 +20,12 @@ export const Education = () => {
                             <div className="absolute inset-0 rounded-full bg-gold-glow/50 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
 
-                        <div className="glass-panel p-2 rounded-xl border border-white/5 hover:border-gold-dim/30 hover:bg-white/5 transition-all duration-300 cursor-pointer">
-                            <span className="text-[9px] font-mono text-gold-glow block mb-0.5 font-semibold">{edu.year}</span>
-                            <h4 className="text-[11px] font-bold text-white leading-tight mb-0.5 group-hover:text-gold-glow transition-colors">{edu.degree}</h4>
-                            <p className="text-[9px] text-secondary leading-tight mb-1">{edu.institution}</p>
-                            <div className="inline-flex items-center px-1.5 py-0.5 bg-gradient-to-r from-white/5 to-white/10 rounded-lg text-[9px] text-white/80 font-medium border border-white/10">
-                                <span className="mr-0.5">📊</span>
+                        <div className="glass-panel p-2.5 rounded-xl border border-white/5 hover:border-gold-dim/30 hover:bg-white/5 transition-all duration-300 cursor-pointer">
+                            <span className="text-xs font-mono text-gold-glow block mb-0.5 font-semibold">{edu.year}</span>
+                            <h4 className="text-sm font-bold text-white leading-tight mb-0.5 group-hover:text-gold-glow transition-colors">{edu.degree}</h4>
+                            <p className="text-xs text-secondary leading-tight mb-1.5">{edu.institution}</p>
+                            <div className="inline-flex items-center px-2 py-0.5 bg-gradient-to-r from-white/5 to-white/10 rounded-lg text-sm text-white/90 font-bold border border-white/10">
+                                <span className="mr-1">📊</span>
                                 {edu.grade}
                             </div>
                         </div>

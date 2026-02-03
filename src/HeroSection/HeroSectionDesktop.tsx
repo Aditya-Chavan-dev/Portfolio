@@ -192,23 +192,37 @@ export const HeroSectionDesktop: React.FC<HeroSectionDesktopProps> = ({ onStartJ
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: 0.8 + index * 0.1 }}
                                 whileHover={{ y: -4, scale: 1.02 }}
-                                className="group relative flex flex-col justify-between p-6 h-48 bg-surface/50 border border-white/5 rounded-2xl hover:border-gold-glow/50 transition-all duration-300 backdrop-blur-md text-left overflow-hidden"
+                                layout="position"
+                                className="group relative flex flex-col justify-between p-6 h-48 text-left overflow-visible"
                             >
-                                {/* Hover Gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-gold-glow/0 via-gold-glow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                {/* Independent Background Layer - Fades out on exit without affecting Icon */}
+                                <motion.div
+                                    className="absolute inset-0 bg-surface/50 border border-white/5 rounded-2xl backdrop-blur-md transition-colors duration-300 group-hover:border-gold-glow/50"
+                                    exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                                >
+                                    {/* Hover Gradient inside background */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-gold-glow/0 via-gold-glow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+                                </motion.div>
 
-                                <span className="text-4xl text-secondary group-hover:text-gold-glow transition-colors duration-300">
+                                <motion.span
+                                    layoutId={`nav-icon-${item.id}`}
+                                    transition={{ type: "spring", stiffness: 50, damping: 20, mass: 1, duration: 1.0, delay: 0.1 }}
+                                    className="relative z-20 text-4xl text-secondary group-hover:text-gold-glow transition-colors duration-300 inline-block"
+                                >
                                     {item.icon}
-                                </span>
+                                </motion.span>
 
-                                <div className="relative z-10">
+                                <motion.div
+                                    className="relative z-10"
+                                    exit={{ opacity: 0, y: 10, transition: { duration: 0.1 } }}
+                                >
                                     <h3 className="text-xl font-bold text-primary group-hover:text-gold-glow transition-colors mb-1">
                                         {item.label}
                                     </h3>
                                     <p className="text-xs text-slate-400 group-hover:text-primary/80 transition-colors uppercase tracking-wide leading-relaxed">
                                         {item.description}
                                     </p>
-                                </div>
+                                </motion.div>
 
                                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0 text-gold-glow">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

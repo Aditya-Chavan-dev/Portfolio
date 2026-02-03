@@ -20,7 +20,8 @@ export const ABOUT_ME_DATA = {
         summary: "I am a passionate developer who translates complex logic into elegant, interactive experiences. With a deep focus on performance and strictly typed systems, I build software that feels as good as it looks.",
         location: "Flexible to relocation",
         email: "satyagchavan3@gmail.com",
-        github: "Aditya-Chavan-dev"
+        github: "Aditya-Chavan-dev",
+        linkedin: "https://www.linkedin.com/in/aditya-chavan-dev/"
     },
     education: [
         {
