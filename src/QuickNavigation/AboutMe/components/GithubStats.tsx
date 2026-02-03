@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { Github } from 'lucide-react';
 import { githubService, type ContributionDay } from '@/services/githubService';
 import { ABOUT_ME_DATA } from '@/data/aboutMeData';
@@ -57,61 +57,76 @@ export const GithubStats = () => {
                 </h3>
 
                 {loading ? (
-                    <div className="flex items-center justify-center h-24">
+                    <div className="flex items-center justify-center h-full">
                         <div className="loader" />
                     </div>
                 ) : (
-                    <>
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-3 gap-2 mb-2">
-                            <div className="glass-panel p-2 rounded-xl border border-white/5 hover:border-gold-dim/30 transition-all cursor-pointer group/stat">
-                                <p className="text-[9px] text-secondary mb-0.5 uppercase tracking-wide">Total</p>
-                                <p className="text-xl font-bold bg-gradient-to-br from-white to-secondary bg-clip-text text-transparent group-hover/stat:from-gold-glow group-hover/stat:to-gold-muted transition-all">
-                                    {contributions?.total.lastYear || 0}
-                                </p>
-                                <p className="text-[8px] text-gold-muted uppercase">Commits</p>
+                    <div className="flex items-center gap-8 h-full px-4 pt-10">
+                        {/* Left: Stats Column - Distinct Cards */}
+                        <div className="w-56 flex-shrink-0 flex flex-col gap-3 justify-center">
+                            <div className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-gold-dim/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
+                                <div>
+                                    <p className="text-[10px] text-secondary mb-1 uppercase tracking-wide opacity-70">Total Commits</p>
+                                    <p className="text-2xl font-bold text-white group-hover/stat:text-gold-glow transition-colors leading-none">
+                                        {contributions?.total.lastYear || 0}
+                                    </p>
+                                </div>
+                                <div className="w-8 h-8 rounded-lg bg-gold-dim/10 flex items-center justify-center">
+                                    <span className="text-sm">🔥</span>
+                                </div>
                             </div>
-                            <div className="glass-panel p-2 rounded-xl border border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer group/stat">
-                                <p className="text-[9px] text-secondary mb-0.5 uppercase tracking-wide">Projects</p>
-                                <p className="text-xl font-bold bg-gradient-to-br from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
-                                    {stats?.public_repos || 0}
-                                </p>
-                                <p className="text-[8px] text-emerald-400/70 uppercase">Active</p>
+                            <div className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
+                                <div>
+                                    <p className="text-[10px] text-secondary mb-1 uppercase tracking-wide opacity-70">Active Projects</p>
+                                    <p className="text-2xl font-bold text-white group-hover/stat:text-emerald-400 transition-colors leading-none">
+                                        {stats?.public_repos || 0}
+                                    </p>
+                                </div>
+                                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                    <span className="text-sm">🚀</span>
+                                </div>
                             </div>
-                            <div className="glass-panel p-2 rounded-xl border border-white/5 hover:border-blue-500/30 transition-all cursor-pointer group/stat">
-                                <p className="text-[9px] text-secondary mb-0.5 uppercase tracking-wide">Streak</p>
-                                <p className="text-xl font-bold bg-gradient-to-br from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                                    {streak}
-                                </p>
-                                <p className="text-[8px] text-blue-400/70 uppercase">Days</p>
+                            <div className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-blue-500/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
+                                <div>
+                                    <p className="text-[10px] text-secondary mb-1 uppercase tracking-wide opacity-70">Current Streak</p>
+                                    <p className="text-2xl font-bold text-white group-hover/stat:text-blue-400 transition-colors leading-none">
+                                        {streak}
+                                    </p>
+                                </div>
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                    <span className="text-sm">⚡</span>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Contribution Heatmap - GitHub Style */}
-                        <div className="glass-panel p-5 rounded-2xl border border-white/5 w-full overflow-hidden">
-                            <div className="flex flex-col gap-3">
+                        {/* Vertical Divider */}
+                        <div className="w-px h-2/3 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+
+                        {/* Right: Contribution Heatmap */}
+                        <div className="flex-1 min-w-0 h-full flex items-center justify-start pl-6">
+                            <div className="w-full overflow-hidden flex justify-start">
                                 {/* Scrollable container with fixed day labels */}
-                                <div className="flex gap-4 w-full">
+                                <div className="flex gap-4">
                                     {/* Fixed Day labels column */}
                                     <div className="flex flex-col gap-[3px] pt-6 flex-shrink-0">
                                         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, i) => (
-                                            <div key={i} className="text-[10px] text-secondary/50 h-[10px] flex items-center">
+                                            <div key={i} className="text-[9px] text-secondary/50 h-[10px] flex items-center leading-none">
                                                 {i % 2 === 1 ? day : ''}
                                             </div>
                                         ))}
                                     </div>
 
                                     {/* Scrollable Month labels and Grid */}
-                                    <div className="flex-1 overflow-x-auto scrollbar-hide">
+                                    <div className="overflow-visible">
                                         {(() => {
                                             const contributions_data = contributions?.contributions || [];
                                             if (contributions_data.length === 0) return null;
 
                                             // Organize contributions into weeks
-                                            // We want to show the last 30 weeks to fit the container (~6-7 months)
-                                            const TOTAL_WEEKS_TO_SHOW = 30;
+                                            // Show last 52 weeks (1 year)
+                                            const TOTAL_WEEKS_TO_SHOW = 52;
 
-                                            // Calculate start date: Go back 30 weeks from the last contribution date
+                                            // Calculate start date: Go back 52 weeks from the last contribution date
                                             const lastContribDate = new Date(contributions_data[contributions_data.length - 1]?.date);
                                             const startDate = new Date(lastContribDate);
                                             startDate.setDate(startDate.getDate() - (TOTAL_WEEKS_TO_SHOW * 7));
@@ -124,7 +139,6 @@ export const GithubStats = () => {
                                                 contributions_data.map((c: ContributionDay) => [c.date, c.count])
                                             );
 
-                                            // Generate weeks of data with month tracking
                                             const weeks: Array<{
                                                 days: Array<{ date: Date; count: number }>;
                                                 monthLabel?: string;
@@ -158,26 +172,26 @@ export const GithubStats = () => {
                                             }
 
                                             return (
-                                                <div className="min-w-max">
-                                                    {/* Month labels row */}
-                                                    <div className="flex gap-[3px] mb-2 h-4 relative">
-                                                        {weeks.map((week, idx) => (
-                                                            <div key={idx} className="relative" style={{ width: '10px' }}>
-                                                                {week.monthLabel && (
-                                                                    <span className="absolute top-0 left-0 text-[10px] text-secondary/80 font-medium whitespace-nowrap">
-                                                                        {week.monthLabel}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                        ))}
-                                                    </div>
+                                                <div className="flex flex-wrap md:flex-nowrap gap-1">
+                                                    {weeks.map((week, idx) => (
+                                                        <Fragment key={idx}>
+                                                            {/* Forced break for mobile after 26 weeks (6 months) */}
+                                                            {idx === 26 && (
+                                                                <div className="basis-full h-8 md:hidden" key="mobile-break" />
+                                                            )}
 
-                                                    {/* Contribution grid */}
-                                                    <div className="flex gap-[3px]">
-                                                        {/* Week columns */}
-                                                        <div className="flex gap-[3px]">
-                                                            {weeks.map((week, weekIndex) => (
-                                                                <div key={weekIndex} className="flex flex-col gap-[3px]">
+                                                            <div className="flex flex-col gap-1">
+                                                                {/* Month Label container */}
+                                                                <div className="h-4 relative w-3.5 mb-2">
+                                                                    {week.monthLabel && (
+                                                                        <span className="absolute top-0 left-0 text-[10px] text-secondary/80 font-medium whitespace-nowrap">
+                                                                            {week.monthLabel}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+
+                                                                {/* Days Column */}
+                                                                <div className="flex flex-col gap-1">
                                                                     {week.days.map((day, dayIndex) => {
                                                                         const dateStr = day.date.toLocaleDateString('en-US', {
                                                                             year: 'numeric',
@@ -187,37 +201,23 @@ export const GithubStats = () => {
                                                                         return (
                                                                             <div
                                                                                 key={dayIndex}
-                                                                                className={`w-[10px] h-[10px] rounded-[2px] ${getContributionColor(day.count)} border border-black/10 hover:ring-1 hover:ring-white/50 transition-all cursor-pointer`}
+                                                                                className={`w-3.5 h-3.5 rounded-sm ${getContributionColor(day.count)} border border-black/10 hover:ring-1 hover:ring-white/50 transition-all cursor-pointer`}
                                                                                 title={`${dateStr}: ${day.count} contributions`}
                                                                             />
                                                                         );
                                                                     })}
                                                                 </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
+                                                            </div>
+                                                        </Fragment>
+                                                    ))}
                                                 </div>
                                             );
                                         })()}
                                     </div>
                                 </div>
-
-                                {/* Legend */}
-                                <div className="flex items-center justify-end gap-1.5 mt-2 px-1">
-                                    <span className="text-[10px] text-secondary/70">Less</span>
-                                    <div className="flex gap-[3px]">
-                                        {[0, 1, 2, 3, 4].map((level) => (
-                                            <div
-                                                key={level}
-                                                className={`w-[10px] h-[10px] rounded-[2px] ${getContributionColor(level * 5)} border border-black/10`}
-                                            />
-                                        ))}
-                                    </div>
-                                    <span className="text-[10px] text-secondary/70">More</span>
-                                </div>
                             </div>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         </div >

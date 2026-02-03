@@ -498,4 +498,249 @@ To ensure the "About Me" section remains a "Quick Navigation" element that provi
 ### The resulting behavioral difference after the change
 **Perfect Fit**: The heatmap now fits perfectly within its parent container.
 **Focused Data**: Users see the most relevant recent activity (7 months) immediately.
-**Clean UI**: No scrollbars or clipped content.
+## [2026-02-03 | 17:55:00] - Commit: GITHUB_STREAK_RESPONSIVE_V1
+
+### Description of the feature or capability introduced or changed
+Re-engineered the **Github Contribution Heatmap** to support a full 52-week (1 Year) visualization with device-specific layouts.
+1. **Desktop**: Renders as a continuous straight line (52 columns).
+2. **Mobile**: Renders as a Split-Stack layout (2 rows x 26 columns), strictly enforcing the "6 months above, 6 months below" visual requirement.
+
+### The problem or limitation that existed before the change
+The previous iteration truncated data to 30 weeks to avoid overflow, failing to show the full year of activity. The layout was not optimized for mobile, potentially leading to scrolling or compression issues.
+
+### The reason the change was necessary
+To meet the specific requirement of visible "All 12 months" while maintaining a "neat" layout on both devices. The split-stack approach allows full data density on mobile screens without horizontal scrolling.
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 18:20:00] - Commit: ABOUT_ME_BENTO_GRID_V1
+
+### Description of the feature or capability introduced or changed
+Implemented a strict **Bento Grid Layout** for the About Me Desktop section, based on pixel-perfect user sketch alignment.
+1. **Sidebar Navigation**: Added a fixed-width left vertical sidebar with navigation icons (`Home`, `User`, `Briefcase`).
+2. **Back Button**: Implemented a floating 'Back' button in the top-right corner using absolute positioning.
+3. **Grid Refactor**:
+   - **Left Column**: Stacked `Timeline` (Top), `Tech Arsenal` (Middle), and `Github` (Bottom) in a single vertical flex container (8 cols).
+   - **Right Column**: Full-height `About Me Profile` card (4 cols) containing Bio, Location, and Contact links.
+4. **Component Removal**: Removed the `Strengths` section as it was absent from the authoritative source sketch.
+
+### The problem or limitation that existed before the change
+The previous layout (Education timeline on top, split columns below) did not match the user's specific hand-drawn conceptualization. The user explicitly requested an "Exact" match to a provided sketch which featured a distinct sidebar and vertical-stack-vs-full-column architecture.
+
+### The reason the change was necessary
+To satisfy the user's requirement for "No different layout. Exactly as per the image". Visual fidelity to the sketch was the primary directive.
+
+### The resulting behavioral difference after the change
+**Visual Parity**: The interface now structurally mirrors the user's drawing.
+**Navigation**: Users have explicit 'Back' and sidebar navigation options.
+## [2026-02-03 | 18:35:00] - Commit: NAVIGATION_CONTEXT_FIX_V1
+
+### Description of the feature or capability introduced or changed
+Refactored the navigation architecture for the **About Me** module to use explicit `onBack` prop delegation instead of `react-router-dom` hooks, and unified the "Back" button implementation across Desktop and Mobile.
+1. **Desktop**: Replaced `useNavigate()` with `onBack()` callback.
+2. **Mobile**: Added a dedicated Back button to the header section (previously relied on the global wrapper).
+3. **App Shell**: Removed the redundant global "Back" button wrapper from the `ABOUT` view state to prevent UI conflicts with the new internal buttons.
+
+### The problem or limitation that existed before the change
+The `AboutMeDesktop` component utilized `useNavigate()`, causing a runtime crash because the application does not use a `BrowserRouter` context. Additionally, the App shell was rendering a fixed "Back" button that overlapped/conflicted with the new design intent.
+
+### The reason the change was necessary
+To resolve the `Uncaught Error: useNavigate() may be used only in the context of a <Router> component` crash and ensure a clean, conflict-free UI.
+
+### The resulting behavioral difference after the change
+**Stable Navigation**: The "Back" button now functions correctly without crashing, triggering the state transition back to the Hero section.
+## [2026-02-03 | 18:40:00] - Commit: NAVIGATION_SIDEBAR_DOCK_V1
+
+### Description of the feature or capability introduced or changed
+Transformed the static left Sidebar in "About Me" into a fully functional **Navigation Dock**.
+1. **Interactive Icons**: Added active state navigation icons for `Home` (Hub), `Projects`, `About Me`, `Experience`, and `Certifications`.
+2. **Context Switching**: Implemented `handleNavigate` prop threading to allow direct section-to-section jumping without returning to the Hub.
+3. **Viewport Constraint**: Enforced strict `flex-col min-h-0` layout hierarchy to ensure the Bento Grid fits perfectly within the viewport without body scrolling.
+
+### The problem or limitation that existed before the change
+The Sidebar was decorative only. Users had to navigate Back -> Hub -> Section to switch contexts. Additionally, the layout had potential overflow issues.
+
+### The reason the change was necessary
+To reduce friction in navigation and satisfy the user's request for a "dock-like" sidebar where icons Morph into a persistent navigation rail.
+
+### The resulting behavioral difference after the change
+**Direct Navigation**: Users can click the Briefcase icon to go straight to Experience from About Me.
+## [2026-02-03 | 18:50:00] - Commit: NAVIGATION_MORPH_ANIMATION_V1
+
+### Description of the feature or capability introduced or changed
+Implemented **Shared Layout Animations** (Morphing) for the Quick Navigation system using `framer-motion`.
+1. **Layout Grouping**: Wrapped the entire application shell in `<LayoutGroup>` to enable cross-component layout context sharing.
+2. **Transition Mode**: Switched `AnimatePresence` mode to `popLayout` to allow simultaneous exit/entry rendering, enabling the visual "flight" of elements.
+3. **Hero Integration**: Assigned unique `layoutId`s (e.g., `nav-item-projects`) to the large navigation cards in the Hub.
+4. **Sidebar Integration**: Assigned matching `layoutId`s to the corresponding icons in the unified Sidebar Dock.
+
+### The problem or limitation that existed before the change
+Navigation transitions were standard fade-outs/fade-ins. The user specifically requested a dynamic transition where items "move from their place to the sidebar".
+
+### The reason the change was necessary
+To achieve the high-fidelity "premium" motion design requested by the user, enhancing the feeling of continuity and spatial awareness in the application.
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 19:00:00] - Commit: VIEW_STATE_PERSISTENCE_V1
+
+### Description of the feature or capability introduced or changed
+Implemented **State Persistence** for the application's view router.
+1. **LocalStorage Integration**: The `App.tsx` component now initializes its `view` state by checking `localStorage.getItem('portfolio_view_state')`.
+2. **Auto-Save**: A `useEffect` hook automatically commits every view change (Navigating to About, Projects, etc.) to local storage.
+
+### The problem or limitation that existed before the change
+Refreshing the browser would reset the application context back to the `LANDING` page, forcing the user to re-navigate through the entrance animation to get back to where they were.
+
+### The reason the change was necessary
+To improve user experience by respecting their session context. "When I refresh it doesn't load again. It stays on the same page."
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 19:10:00] - Commit: NAVIGATION_MORPH_ICONS_ONLY_V1
+
+### Description of the feature or capability introduced or changed
+Refined the Navigation Animation from "Card Morph" to **"Icon Morph"**.
+1. **Targeted Transitions**: Moved the `layoutId` from the navigation card container to the specific Icon element.
+2. **Exit Orchestration**: configured the Hero navigation cards to fade out their content (title/description) and backgrounds immediately upon exit, leaving only the floating icons to traverse the screen.
+3. **Sidebar Alignment**: Updated the `SidebarNav` to receive the morphing icons into its button structures.
+
+### The problem or limitation that existed before the change
+The previous "Container Morph" squashed the card text content during the transition, which looked unpolished. The user requested that "Everything except those icons must disappear".
+
+### The reason the change was necessary
+To strictly adhere to the visual direction: "Icons float to their new place, everything else fades away."
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 19:20:00] - Commit: NAVIGATION_SIDEBAR_BACK_BUTTON_V1
+
+### Description of the feature or capability introduced or changed
+Replaced the ambiguous "Home" icon in the Sidebar Dock with a dedicated **"Back to Hub"** Arrow button.
+1. **Iconography Update**: Swapped `Home` (House) for `ArrowLeft` (Chevron/Arrow) to explicitly communicate "Go Back" functionality.
+2. **Labeling**: Updated the tooltip label to "Back to Hub" for clarity.
+
+### The problem or limitation that existed before the change
+The user requested "give me a back button so that i can go abck ton hub". The "Home" icon, while functional, was not explicit enough as a "Back" action in the context of the user's mental model.
+
+### The reason the change was necessary
+To reduce cognitive load and provide an unmistakeable exit path to the main dashboard.
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 19:30:00] - Commit: NAVIGATION_MORPH_FIX_V2
+
+### Description of the feature or capability introduced or changed
+Fixed the **Icon Morph Animation** by aligning the `layoutId` structure across components.
+1. **ID Synchronization**: Standardized the shared layout ID to `nav-icon-{id}` in both `HeroSection` and `SidebarNav`.
+2. **Structural Alignment**: Ensured both components apply the ID to a `motion.span` wrapper around the Icon, rather than mixing Button and Span elements.
+
+### The problem or limitation that existed before the change
+The user reported "Animation doesn't work". The root cause was a mismatch in `layoutId` prefixes (`nav-item` vs `nav-icon`) and element types, preventing Framer Motion from identifying the shared elements.
+
+### The reason the change was necessary
+To fulfill the requirement: "Icons will physically move from their current position to the sidebar position smoothly".
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 19:50:00] - Commit: ANIMATION_PHYSICS_REFACTOR_V1
+
+### Description of the feature or capability introduced or changed
+Implemented **Independent Component Layering** for the navigation cards to solve animation conflicts.
+1. **Background Decoupling**: Refactored `HeroSectionDesktop` buttons to move visual styles (`bg`, `border`) into an independent `motion.div` layer *behind* the content.
+2. **Asynchronous Exit**: This allows the card background and text to fade out **instantly** (0.2s) while the Icon persists fully opaque.
+3. **Flight Delay**: Added a `0.1s` delay to the Icon's layout transition, creating a "Wait, then Fly" effect that feels more deliberate and "premium".
+
+### The problem or limitation that existed before the change
+Previously, the Icon was a child of the fading button. When the button faded out (`opacity: 0`), the Icon also faded, causing a "weird" semi-transparent ghosting effect during the morph. The user requested "Very slight delay... everything behind disappears... smoothly go".
+
+### The reason the change was necessary
+To achieve the specific visual choreography where the container vanishes *before* the icon significant movement occurs.
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 20:00:00] - Commit: ANIMATION_SEAMLESS_FLOW_V1
+
+### Description of the feature or capability introduced or changed
+Implemented **"Seamless Cross-Dissolve"** logic to eliminate the "Blank/Rough" feel of the navigation transition.
+1.  **Overlapping States**: Configured entrance animations to start (at **0.3s**) *before* the exit animations complete.
+2.  **Soft Exit**: Extended the Hero card exit duration to **0.5s** to provide a lingering context.
+3.  **Continuous Thread**: Maintained the Icon flight duration at **1.0s**, allowing it to travel *through* the cross-fade.
+
+### The problem or limitation that existed before the change
+The user felt the "Blank Slate" transition (Fade Out -> Void -> Fade In) was "rough". Removing the visual context completely before showing the new one caused a jarring user experience.
+
+### The reason the change was necessary
+To create a "Liquid" interaction where the new interface appears to morph organically from the old one, rather than replacing it after a hard reset.
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 20:10:00] - Commit: LAYOUT_BENTO_GRID_V1
+
+### Description of the feature or capability introduced or changed
+Refactored the `About Me` section into a **Bento Grid Layout** to match the user's design reference.
+1.  **Grid Structure**: Implemented a 12-column, 6-row layout.
+2.  **New Components**:
+    *   `Connect`: Extracted contact info into a dedicated "Socials" card.
+    *   `StatsStrip`: Added a comprehensive footer strip for project metrics.
+3.  **Component Realignment**:
+    *   **Timeline**: Occupies the full-height Left column.
+    *   **Bio & Tech**: Occupies the Center stack.
+    *   **Connect & Github**: Occupies the Right stack.
+
+### The problem or limitation that existed before the change
+The previous layout was functional but generic (Split Screen). The user requested a specific "Bento" arrangement to better organize the dense information.
+
+### The reason the change was necessary
+To align the UI with the user's visual requirements ("This is the way I want my layout").
+
+### The resulting behavioral difference after the change
+## [2026-02-03 | 20:20:00] - Commit: CONTENT_REFINEMENT_V1
+
+### Description of the feature or capability introduced or changed
+Refined "About Me" content to be more unique and visually optimized.
+1.  **Tech Arsenal**: Converted categorical lists into a **Unified Visual Grid** (Large Icons, Minimal Text) for impact.
+2.  **Github Heatmap**: Tuned cell physics (8px size, 2px gap) to render a **Full Year (52 Weeks)** within the constrained layout.
+3.  **Strengths Strip**: Replaced generic metrics with **"Unique Value Props"** (Agentic UX, Pixel Perfection, System Architecture).
+
+### The problem or limitation that existed before the change
+The previous content was standard (categorized lists, generic usage stats). The user wanted a more "Real" and "Unique" presentation that highlighted specific strengths.
+
+### The reason the change was necessary
+To elevate the portfolio from "Task Completions" to "Value Proposition".
+
+### The resulting behavioral difference after the change
+**Visual Impact**: The Tech Stack is now a visual wall of tools. The Footer now communicates *how* I work, not just *what* I did.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## [2026-02-03 | 21:45:00] - Commit: ABOUT_ME_STATS_MERGE_V1
+
+### Description of the feature or capability introduced or changed
+Merged **Github Stats (Commits, Projects, Streak)** directly into the **About Me Profile Card**.
+1. **Visual Integration**: Accessing "Live Stats" is now part of the user's identity card rather than a separate widget.
+2. **Layout Cleanup**: Removed the standalone Stats grid row, allowing the Profile to expand vertically (6 rows) and the layout to become a clean 2-column stack (Timeline vs Profile/Stack/Heatmap).
+3. **Mobile Simplification**: Unified the content flow by removing the discrete stats cards, presenting a single cohesive "About Me" block.
+
+### The problem or limitation that existed before the change
+The "Stats Cards" occupied a separate row in the Bento Grid, creating visual fragmentation. The user requested a "Vertical Alignment" strategy where the content is stacked neatly on the right, matching the height of the academic timeline.
+
+### The reason the change was necessary
+To achieve the specific "Stack" layout requested by the user and declutter the UI. Merging identity info (Bio) with "Proof of Work" (Stats) creates a stronger first impression.
+
+### The resulting behavioral difference after the change
+**Unified Identity**: The Profile card now tells the full story: "Who I am, Where I am, How to reach me, and What I'm doing correctly (Stats)".
+**Layout Harmony**: The Desktop grid is strictly aligned (12 rows Left vs 12 rows Right).

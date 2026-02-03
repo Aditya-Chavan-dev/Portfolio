@@ -4,6 +4,35 @@ This ledger records failures, defects, and logical errors and how they were reso
 
 ---
 
+## [2026-02-03 | 22:15:00] - Commit: ABOUT_ME_STATS_MERGE_V2
+
+### Description of the problem encountered
+**ReferenceError: StatsCards is not defined / SyntaxError: Unexpected token**. Initial integration of stats into ProfileHorizontal caused runtime crashes due to undefined components. Subsequently, syntax errors (mismatched divs) occurred during refactoring.
+
+### Root cause (logical, design, or assumption failure)
+1.  **Component Reference Error**: Removed `StatsCards` import but component reference remained in JSX.
+2.  **Syntax Error**: Premature closing of `glass-panel` div left subsequent elements orphaned.
+3.  **Tailwind v4 Syntax Conflict**: `@theme` block containing CSS rules was not compliant with Tailwind v4's new compilation process.
+
+### User or system impact
+**Application Crash**. The application crashed on load (500 Internal Server Error in Vite).
+
+### Resolution applied
+1.  Removed all legacy component references.
+2.  Rewrote `ProfileHorizontal.tsx` to fix nesting.
+3.  Refactored `index.css` to move custom animations to `@layer utilities`, compliant with Tailwind v4.
+
+### Justification for why this solution was chosen over alternatives
+Ensures stable build and correct rendering of the new stats layout.
+
+---
+
+## [2026-02-03 | 22:16:00] - Commit: PENDING
+
+**No errors encountered** during the About Me layout refinements and GitHub heatmap improvements. All changes implemented cleanly without build failures or runtime issues.
+
+---
+
 ## [2026-02-02 | 22:16:00] - Commit: PENDING
 
 **No errors encountered** during the About Me layout refinements and GitHub heatmap improvements. All changes implemented cleanly without build failures or runtime issues.
@@ -236,3 +265,60 @@ Inline styles are immutable in the browser and bypass potential build-pipeline C
 
 ### Justification for why this solution was chosen over alternatives
 Reducing cell size further (e.g. to 4px) would hurt accessibility and aesthetics. Truncating the time range preserves the "Premium" look (8px cells) while solving the fit issue.
+
+---
+
+## [2026-02-03 | 17:55:00] - Commit: GITHUB_STREAK_RESPONSIVE_V1
+**No change required for this commit.**
+## [2026-02-03 | 18:20:00] - Commit: ABOUT_ME_BENTO_GRID_V1
+**No change required for this commit.**
+## [2026-02-03 | 18:35:00] - Commit: NAVIGATION_CONTEXT_FIX_V1
+### Description of the problem encountered
+**Runtime Crash (White Screen)**. The application threw an `Invariant Violation: useNavigate() may be used only in the context of a <Router> component`.
+
+### Root cause (logical, design, or assumption failure)
+**Architecture Mismatch**. I assumed the application was wrapped in a Router provider (Standard React Pattern), but it actually uses a custom State-Based View Switcher (`useState<ViewState>`).
+
+### User or system impact
+**Critical Failure**. The "About Me" section rendered as a blank screen or error boundary trace, blocking user access.
+
+### Resolution applied
+**Prop Drilling**: Replaced the router hook dependency with a direct `onBack` callback prop passed down from the parent `App` component.
+
+## [2026-02-03 | 18:40:00] - Commit: NAVIGATION_SIDEBAR_DOCK_V1
+**No change required for this commit.**
+## [2026-02-03 | 18:50:00] - Commit: NAVIGATION_MORPH_ANIMATION_V1
+**No change required for this commit.**
+## [2026-02-03 | 19:00:00] - Commit: VIEW_STATE_PERSISTENCE_V1
+**No change required for this commit.**
+## [2026-02-03 | 19:10:00] - Commit: NAVIGATION_MORPH_ICONS_ONLY_V1
+**No change required for this commit.**
+## [2026-02-03 | 19:20:00] - Commit: NAVIGATION_SIDEBAR_BACK_BUTTON_V1
+**No change required for this commit.**
+## [2026-02-03 | 19:30:00] - Commit: NAVIGATION_MORPH_FIX_V2
+**No change required for this commit.**
+## [2026-02-03 | 19:40:00] - Commit: ANIMATION_TIMING_POLISH_V1
+**No change required for this commit.**
+## [2026-02-03 | 19:50:00] - Commit: ANIMATION_PHYSICS_REFACTOR_V1
+**No change required for this commit.**
+## [2026-02-03 | 20:00:00] - Commit: ANIMATION_SEAMLESS_FLOW_V1
+**No change required for this commit.**
+## [2026-02-03 | 20:10:00] - Commit: LAYOUT_BENTO_GRID_V1
+**No change required for this commit.**
+## [2026-02-03 | 20:20:00] - Commit: CONTENT_REFINEMENT_V1
+**No change required for this commit.**
+**Reason for irrelevance**: This commit is a content and style tuning update.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

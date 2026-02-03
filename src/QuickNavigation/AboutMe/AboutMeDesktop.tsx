@@ -1,96 +1,66 @@
-import { Mail, MapPin } from 'lucide-react';
-import { ABOUT_ME_DATA } from '@/data/aboutMeData';
 import { Education } from './components/Education';
+import { motion } from 'framer-motion';
 import { TechStack } from './components/TechStack';
-import { GithubStats } from './components/GithubStats';
-import { Strengths } from './components/Strengths';
+import { GithubHeatmap } from './components/GithubHeatmap';
+import { SidebarNav } from './components/SidebarNav';
+import { ProfileHorizontal } from './components/ProfileHorizontal';
 
-export const AboutMeDesktop = () => {
+interface AboutMeDesktopProps {
+    onNavigate: (section: string) => void;
+}
+
+export const AboutMeDesktop = ({ onNavigate }: AboutMeDesktopProps) => {
     return (
-        <div className="h-screen w-full flex items-center justify-center px-8 pt-16 pb-6 relative overflow-hidden">
+        <div className="h-screen w-full flex flex-col p-6 relative overflow-hidden bg-obsidian text-white font-sans selection:bg-gold-dim/30">
             {/* Enhanced Ambient Background Effects */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 <div className="absolute top-[5%] right-[10%] w-[600px] h-[600px] bg-gradient-to-br from-gold-dim/10 to-gold-glow/5 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
                 <div className="absolute bottom-[10%] left-[5%] w-[550px] h-[550px] bg-gradient-to-tr from-emerald-500/10 to-emerald-400/5 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s' }} />
-                <div className="absolute top-[40%] left-[45%] w-[400px] h-[400px] bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-full blur-[100px]" />
             </div>
 
-            {/* Main Container */}
-            <div className="max-w-[1400px] w-full h-full relative z-10 flex flex-col gap-3">
+            {/* Main Layout Grid - Adjusted for strict viewport fit */}
+            <div className="flex-1 w-full h-full max-w-[1600px] mx-auto grid grid-cols-[auto_1fr] gap-4 relative z-10">
 
-                {/* TOP ROW: Education + About Me Header */}
-                <div className="grid grid-cols-12 gap-3 h-[140px] flex-shrink-0">
-                    {/* Education (3 cols) */}
-                    <div className="col-span-3 h-full">
-                        <div className="glass-panel p-2.5 rounded-2xl border border-white/10 h-full hover:border-gold-dim/20 transition-all duration-300 group relative overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-br from-gold-dim/0 to-gold-dim/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <div className="relative z-10 h-full">
+                {/* Column 1: Sidebar Nav Dock (Fixed Width) */}
+                <div className="w-16 h-full pt-4 pb-4">
+                    <SidebarNav onNavigate={onNavigate} activeSection="about" />
+                </div>
+
+                {/* Column 2: Content Area (Bento Grid) */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.0, duration: 0.5 }}
+                    className="flex-1 h-full pt-4 pb-4 flex flex-col min-h-0"
+                >
+                    {/* 12-Column BENTO GRID */}
+                    <div className="w-full flex-1 grid grid-cols-12 grid-rows-12 gap-4 min-h-0">
+
+                        {/* LEFT: Timeline (3 Cols, 12 Rows) - Full Height */}
+                        <div className="col-span-3 row-span-12 h-full min-h-0">
+                            <div className="glass-panel p-4 rounded-2xl border border-white/10 h-full hover:border-gold-dim/20 transition-all duration-300 group relative overflow-auto">
                                 <Education />
                             </div>
                         </div>
-                    </div>
 
-                    {/* About Me Header (9 cols) */}
-                    <div className="col-span-9 h-full">
-                        <div className="glass-panel p-3 rounded-2xl border border-white/10 h-full relative overflow-hidden group hover:border-gold-dim/30 transition-all duration-300">
-                            <div className="absolute inset-0 bg-gradient-to-r from-gold-dim/0 via-gold-dim/5 to-gold-dim/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                            <div className="relative z-10 flex items-start justify-between gap-6 h-full">
-                                {/* Left: Title and Summary */}
-                                <div className="flex-1">
-                                    <h2 className="text-2xl font-bold mb-1.5 text-white bg-gradient-to-r from-white via-gold-glow to-white bg-clip-text">
-                                        About <span className="text-gold-glow">Me</span>.
-                                    </h2>
-                                    <p className="text-xs text-secondary leading-relaxed">
-                                        {ABOUT_ME_DATA.personal.summary}
-                                    </p>
-                                </div>
-
-                                {/* Right: Contact Info */}
-                                <div className="flex flex-col gap-1.5 min-w-[260px]">
-                                    <div className="flex items-center gap-2.5 text-xs text-secondary hover:text-white transition-all duration-300 group/item cursor-pointer">
-                                        <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover/item:bg-gold-dim/10 group-hover/item:border-gold-dim/30 transition-all">
-                                            <MapPin className="w-3.5 h-3.5 text-gold-muted group-hover/item:text-gold-glow transition-colors" />
-                                        </div>
-                                        <span className="font-medium">{ABOUT_ME_DATA.personal.location}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2.5 text-xs text-secondary hover:text-white transition-all duration-300 group/item">
-                                        <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover/item:bg-gold-dim/10 group-hover/item:border-gold-dim/30 transition-all">
-                                            <Mail className="w-3.5 h-3.5 text-gold-muted group-hover/item:text-gold-glow transition-colors" />
-                                        </div>
-                                        <a
-                                            href={`mailto:${ABOUT_ME_DATA.personal.email}`}
-                                            className="hover:text-gold-glow transition-colors font-medium"
-                                        >
-                                            {ABOUT_ME_DATA.personal.email}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                        {/* TOP: Profile Horizontal (9 Cols, 6 Rows) - Expanded to include Stats */}
+                        <div className="col-span-9 row-span-6 h-full min-h-0">
+                            <ProfileHorizontal />
                         </div>
+
+                        {/* MID: Tech Stack (9 Cols, 2 Rows) */}
+                        <div className="col-span-9 row-span-2 h-full min-h-0">
+                            <TechStack />
+                        </div>
+
+                        {/* BOTTOM: Github Heatmap (9 Cols, 4 Rows) */}
+                        <div className="col-span-9 row-span-4 h-full min-h-0">
+                            <GithubHeatmap />
+                        </div>
+
                     </div>
-                </div>
+                </motion.div>
 
-                {/* MIDDLE ROW: Tech Stack + GitHub */}
-                <div className="grid grid-cols-12 gap-3 flex-1 min-h-0">
-                    {/* Empty space to align with Education (3 cols) */}
-                    <div className="col-span-3"></div>
-
-                    {/* Tech Stack (5 cols) */}
-                    <div className="col-span-5 h-full">
-                        <TechStack />
-                    </div>
-
-                    {/* GitHub Stats (4 cols) */}
-                    <div className="col-span-4 h-full">
-                        <GithubStats />
-                    </div>
-                </div>
-
-                {/* BOTTOM ROW: Strengths (Full Width) */}
-                <div className="flex-shrink-0">
-                    <Strengths />
-                </div>
             </div>
         </div>
     );

@@ -101,6 +101,21 @@
 /* --- PREMIUM UTILITIES --- */
 @layer utilities {
 
+    /* Marquee Animation */
+    @keyframes marquee {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-marquee {
+        animation: marquee 20s linear infinite;
+    }
+
     /* Glassmorphism */
     .glass-panel {
         background: rgba(18, 18, 18, 0.6);

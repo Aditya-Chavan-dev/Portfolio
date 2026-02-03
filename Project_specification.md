@@ -60,7 +60,7 @@ Derived from the Master Workflow Diagram:
 - **Split-Screen Layout Engine (Desktop)**: A realized two-column architecture that balances narrative density with quick-access navigation, eliminating negative space.
 - **Neural Grid Environment**: A 60-node interactive canvas background that responds to mouse movement, creating a "living system" atmosphere.
 - **Kinematic Layout Engine**: A physics-based animation system (Spring Physics) that manages fluid layout transitions without sub-pixel distortion, ensuring "breathing" UI adaptations.
-- **Github Visualization Engine**: A specific sub-system within the "About Me" module that fetches, parses, and renders live contribution data from GitHub APIs into a custom-styled heatmap, bypassing standard iframe limitations for full aesthetic control.
+- **Github Visualization Engine**: A specific sub-system within the "About Me" module that fetches, parses, and renders live contribution data from GitHub APIs. Includes a **Merged Stats Integration** within the User Profile, a custom-styled **Heatmap (52-week Responsive Grid)** ending on the current day, and an interactive **Tech Arsenal Marquee** with pause-on-hover/click capability.
 
 ### B. Project Showcase
 - **Case Study Model**: Markdown-based rendering of technical narratives including feature lists and technical challenges.
