@@ -478,3 +478,24 @@ To maintain design consistency with the "no-scroll, premium viewport" aesthetic 
 **Brand Authenticity**: Tech stack displays official brand colors and SVG paths, increasing visual credibility.
 **Information Density**: Maximized data-to-pixel ratio while maintaining readability through micro-typography (10-14px range).
 
+
+---
+
+## [2026-02-03 | 07:35:00] - Commit: HEATMAP_LAYOUT_FIX
+
+### Description of the feature or capability introduced or changed
+Refined the **GitHub Contribution Heatmap Layout** to strictly fit within the "About Me" desktop grid column (~450px) without scrolling.
+1. **Range Limitation**: Capped the contribution display to the last 30 weeks (~7 months) instead of the full year.
+2. **Fixed Labels**: Moved Day Labels (Mon, Wed, Fri) to a locked left column to ensure visibility during any potential overflow.
+3. **Layout Polish**: Added symmetric breathing space and corrected the month label alignment to match the exact column start.
+
+### The problem or limitation that existed before the change
+The previous implementation (showing 53 weeks) forced a horizontal scrollbar on standard desktop viewports because the grid width (~700px) exceeded the available column width (~450px). The user explicitly requested the component to stay "in that box only" without scrolling.
+
+### The reason the change was necessary
+To ensure the "About Me" section remains a "Quick Navigation" element that provides information at a glance (Viewport Fit) without requiring user interaction (scrolling) to see recent data.
+
+### The resulting behavioral difference after the change
+**Perfect Fit**: The heatmap now fits perfectly within its parent container.
+**Focused Data**: Users see the most relevant recent activity (7 months) immediately.
+**Clean UI**: No scrollbars or clipped content.
