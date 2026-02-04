@@ -21,7 +21,8 @@ export const ABOUT_ME_DATA = {
         location: "Flexible to relocation",
         email: "satyagchavan3@gmail.com",
         github: "Aditya-Chavan-dev",
-        linkedin: "https://www.linkedin.com/in/aditya-chavan-dev/"
+        linkedin: "https://www.linkedin.com/in/aditya-chavan-dev/",
+        flagshipProject: "ATLAS"
     },
     education: [
         {

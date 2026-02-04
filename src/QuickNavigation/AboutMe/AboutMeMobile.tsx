@@ -1,9 +1,8 @@
-import { ABOUT_ME_DATA } from '@/data/aboutMeData';
 import { Education } from './components/Education';
 import { TechStack } from './components/TechStack';
 import { GithubHeatmap } from './components/GithubHeatmap'; // Fixed Import
 import { ProfileHorizontal } from './components/ProfileHorizontal'; // Ensuring we use the new profile
-import { MapPin, Mail, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface AboutMeMobileProps {
     onBack?: () => void;

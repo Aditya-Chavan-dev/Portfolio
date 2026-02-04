@@ -14,7 +14,8 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
     });
 
     useEffect(() => {
-        console.log("Serving Desktop Bundle");
+        // Initialize based on device type
+
     }, []);
 
     return (

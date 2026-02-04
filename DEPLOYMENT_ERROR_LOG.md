@@ -322,3 +322,25 @@ Reducing cell size further (e.g. to 4px) would hurt accessibility and aesthetics
 
 
 
+
+---
+
+## [2026-02-04 | 22:50:00] - Commit: PROJECT_IMPL_V1
+
+### Description of the problem encountered
+**Vite Build Failure (Export Error)**. The build system threw `SyntaxError: The requested module cannot provide an export named 'GithubRepo'`.
+**React Hook Invariant Violation**. "Rendered more hooks than during the previous render".
+
+### Root cause (logical, design, or assumption failure)
+1. **Type Import Failure**: `GithubRepo` was imported as a value instead of a type in `ProjectDesktop.tsx`, causing Vite's HMR to fail circular dependency checks or tree-shaking.
+2. **Hook Instability**: The `useGithubProjects` hook usage or import structure caused re-render inconsistencies during HMR updates.
+
+### User or system impact
+**Crash Loop**. The application would not load in dev mode, showing a white screen.
+
+### Resolution applied
+1. **Strict Type Imports**: Converted all interface imports to `import { type GithubRepo }`.
+2. **Hook Stabilization**: Ensured consistent hook execution order and removed generic hook dependencies (`useScroll`).
+
+### Justification for why this solution was chosen over alternatives
+Strict typing is the correct implementations for TypeScript/Vite environments.
