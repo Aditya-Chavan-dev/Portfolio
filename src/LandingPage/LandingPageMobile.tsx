@@ -14,7 +14,8 @@ export const LandingPageMobile: React.FC<{ onEnter: () => void }> = ({ onEnter }
     });
 
     useEffect(() => {
-        console.log("Serving Mobile Bundle");
+        // Initialize based on device type
+
     }, []);
 
     return (

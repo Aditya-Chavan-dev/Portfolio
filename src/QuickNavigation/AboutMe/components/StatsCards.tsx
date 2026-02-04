@@ -1,7 +1,7 @@
 import { useGithubData } from '../hooks/useGithubData';
 
 export const StatsCards = () => {
-    const { stats, contributions, streak, loading } = useGithubData();
+    const { stats, totalContributions, streak, loading } = useGithubData();
 
     if (loading) {
         return (
@@ -19,7 +19,7 @@ export const StatsCards = () => {
                     <span className="text-xl">🔥</span>
                 </div>
                 <p className="text-2xl font-bold text-white group-hover:text-gold-glow transition-colors leading-none mb-1">
-                    {contributions?.total.lastYear || 0}
+                    {totalContributions || 0}
                 </p>
                 <p className="text-[10px] text-secondary uppercase tracking-wider font-medium">Total Commits</p>
             </div>

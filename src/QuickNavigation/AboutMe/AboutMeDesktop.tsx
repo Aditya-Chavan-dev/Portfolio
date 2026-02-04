@@ -4,6 +4,7 @@ import { TechStack } from './components/TechStack';
 import { GithubHeatmap } from './components/GithubHeatmap';
 import { SidebarNav } from './components/SidebarNav';
 import { ProfileHorizontal } from './components/ProfileHorizontal';
+import { AboutMeProfile } from './components/AboutMeProfile';
 
 interface AboutMeDesktopProps {
     onNavigate: (section: string) => void;
@@ -26,36 +27,46 @@ export const AboutMeDesktop = ({ onNavigate }: AboutMeDesktopProps) => {
                     <SidebarNav onNavigate={onNavigate} activeSection="about" />
                 </div>
 
-                {/* Column 2: Content Area (Bento Grid) */}
+                {/* Column 2: Content Area (Main) */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 1.0, duration: 0.5 }}
-                    className="flex-1 h-full pt-4 pb-4 flex flex-col min-h-0"
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="flex-1 h-full pt-2 pb-4 flex flex-col gap-3 min-h-0"
                 >
-                    {/* 12-Column BENTO GRID */}
-                    <div className="w-full flex-1 grid grid-cols-12 grid-rows-12 gap-4 min-h-0">
+                    {/* TOP ROW: Profile Header (Full Width) */}
+                    <div className="w-full shrink-0 h-20">
+                        <ProfileHorizontal />
+                    </div>
 
-                        {/* LEFT: Timeline (3 Cols, 12 Rows) - Full Height */}
-                        <div className="col-span-3 row-span-12 h-full min-h-0">
-                            <div className="glass-panel p-4 rounded-2xl border border-white/10 h-full hover:border-gold-dim/20 transition-all duration-300 group relative overflow-auto">
-                                <Education />
+                    {/* BOTTOM ROW: Split Content */}
+                    <div className="flex-1 grid grid-cols-12 gap-4 min-h-0">
+
+                        {/* LEFT COLUMN: About, Tech, Heatmap (Wider) */}
+                        <div className="col-span-9 flex flex-col gap-3 h-full overflow-hidden">
+
+                            {/* 2. About Me Card (Bio + Stats) - Reduced Height (35%) */}
+                            <div className="w-full h-[35%] min-h-0">
+                                <AboutMeProfile />
+                            </div>
+
+                            {/* 3. Tech Arsenal Strip - Compact Fixed Height */}
+                            <div className="w-full shrink-0 h-16">
+                                <TechStack />
+                            </div>
+
+                            {/* 4. Github Heatmap - Expanded Height (Flex Remainder) */}
+                            <div className="w-full flex-1 min-h-0">
+                                <GithubHeatmap />
                             </div>
                         </div>
 
-                        {/* TOP: Profile Horizontal (9 Cols, 6 Rows) - Expanded to include Stats */}
-                        <div className="col-span-9 row-span-6 h-full min-h-0">
-                            <ProfileHorizontal />
-                        </div>
 
-                        {/* MID: Tech Stack (9 Cols, 2 Rows) */}
-                        <div className="col-span-9 row-span-2 h-full min-h-0">
-                            <TechStack />
-                        </div>
-
-                        {/* BOTTOM: Github Heatmap (9 Cols, 4 Rows) */}
-                        <div className="col-span-9 row-span-4 h-full min-h-0">
-                            <GithubHeatmap />
+                        {/* RIGHT COLUMN: Education Timeline (Narrower) */}
+                        <div className="col-span-3 h-full min-h-0">
+                            <div className="glass-panel rounded-2xl border border-white/10 h-full overflow-hidden hover:border-gold-dim/20 transition-all duration-300">
+                                <Education />
+                            </div>
                         </div>
 
                     </div>
