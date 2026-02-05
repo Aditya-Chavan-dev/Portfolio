@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { TypewriterText, Cursor } from './components';
@@ -13,10 +13,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
         showDisclaimer: false
     });
 
-    useEffect(() => {
-        // Initialize based on device type
 
-    }, []);
 
     return (
         <div className="relative w-full h-screen overflow-hidden bg-obsidian text-primary font-sans flex flex-col">
@@ -81,9 +78,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
                 style={{ willChange: "transform", flex: sequence.showDisclaimer ? 0.3 : 0 }}
                 className={`flex items-start justify-center w-full px-6 pt-6 z-10 overflow-hidden`}
             >
-                {/* Note: AnimatePresence not needed for layout transitions if element is always mounted but compressed.
-                    But here we use sequence.showDisclaimer.
-                    Adding 'layout' to the inner content ensures it doesn't stretch during the flex growth. */}
+
                 {sequence.showDisclaimer && (
                     <motion.div
                         layout

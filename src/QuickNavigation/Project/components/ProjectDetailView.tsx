@@ -1,5 +1,6 @@
 import { githubService, type GithubRepo } from '@/services/githubService';
-import { ExternalLink, Github, Clock, ArrowLeft, History, GitCommit } from 'lucide-react';
+import { ExternalLink, Github, Clock, History, GitCommit, AlertTriangle, CheckCircle, X } from 'lucide-react';
+import { getProjectMetadata } from '@/data/projectsData';
 import { motion, type Variants } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
@@ -27,15 +28,19 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
     const [commits, setCommits] = useState<number | null>(null);
     const [loadingCommits, setLoadingCommits] = useState(false);
 
+    // Fetch standardized metadata
+    const metadata = getProjectMetadata(repo.name);
+
+    // Use official name if available, otherwise fallback to repo name
+    const displayName = metadata?.officialName || repo.name;
+    const displayDescription = metadata?.description || repo.description || "No description provided.";
+
     useEffect(() => {
         let isMounted = true;
         const fetchCommits = async () => {
             if (!repo.name) return;
             setLoadingCommits(true);
-            // Assuming owner is fixed to 'Aditya-Chavan-dev' or derived from repo url if needed.
-            // For now using the hardcoded username from data would be safer but passing it here is strict.
-            // We can extract owner from html_url or use a known constant.
-            // html_url: https://github.com/OWNER/REPO
+
             const owner = repo.html_url.split('/')[3];
             const count = await githubService.fetchCommitCount(owner, repo.name);
             if (isMounted) {
@@ -80,139 +85,151 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="flex-1 h-full overflow-y-auto bg-black/20 p-8 md:p-12 scrollbar-thin scrollbar-thumb-white/10"
+            className="flex-1 h-full flex flex-col bg-black/20 p-6 md:p-8 overflow-hidden"
         >
-            <div className="max-w-4xl mx-auto">
-                <motion.button
-                    variants={itemVariants}
-                    onClick={onClose}
-                    className="mb-8 flex items-center gap-2 text-secondary hover:text-white transition-colors group"
-                >
-                    <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                    <span>Back to Gallery</span>
-                </motion.button>
-
-                {/* Header */}
-                <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8 border-b border-white/10 pb-8">
+            {/* Header Area */}
+            <div className="flex-shrink-0 flex justify-between items-start mb-6 border-b border-white/10 pb-4 relative">
+                <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-                            {repo.name}
+                        <h1 className="text-3xl md:text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
+                            {displayName}
                         </h1>
-                        <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
                             {repo.language && (
-                                <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getLanguageColor(repo.language)}`}>
+                                <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLanguageColor(repo.language)}`}>
                                     {repo.language}
                                 </div>
                             )}
-                            {/* Topics/Tags */}
-                            {repo.topics && repo.topics.map(topic => (
-                                <span key={topic} className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/5 text-secondary border border-white/5">
+                            {repo.topics && repo.topics.slice(0, 3).map(topic => (
+                                <span key={topic} className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/5 text-secondary border border-white/5">
                                     #{topic}
                                 </span>
                             ))}
                         </div>
                     </div>
+                </div>
 
-                    <div className="flex gap-3">
-                        {repo.homepage && (
-                            <a
-                                href={repo.homepage}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-5 py-2.5 rounded-xl bg-gold-glow text-black font-bold hover:translate-y-[-2px] hover:shadow-lg hover:shadow-gold-glow/20 transition-all flex items-center gap-2"
-                            >
-                                <ExternalLink className="w-4 h-4" />
-                                <span>Live Demo</span>
-                            </a>
-                        )}
-                        <a
-                            href={repo.html_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2"
-                        >
-                            <Github className="w-4 h-4" />
-                            <span>Source Code</span>
+                <div className="flex gap-2 items-center">
+                    {repo.homepage && (
+                        <a href={repo.homepage} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-gold-glow text-black hover:scale-105 transition-transform">
+                            <ExternalLink className="w-4 h-4" />
                         </a>
+                    )}
+                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors">
+                        <Github className="w-4 h-4" />
+                    </a>
+
+                    {/* Close Button - Clean 'X' */}
+                    <button
+                        onClick={onClose}
+                        className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-secondary hover:text-white hover:bg-red-500/10 hover:border-red-500/20 transition-all ml-2"
+                        aria-label="Close details"
+                    >
+                        <X className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Dashboard Grid - Fills remaining height */}
+            <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-12 gap-6">
+
+                {/* Column 1: Stats & Overview (3 cols) */}
+                <motion.div variants={itemVariants} className="md:col-span-3 flex flex-col gap-4 h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+                    <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
+                        <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Project Stats</h3>
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-secondary flex items-center gap-2"><GitCommit className="w-4 h-4" /> Commits</span>
+                                <span className="text-white font-mono font-bold">
+                                    {loadingCommits ? "..." : commits?.toLocaleString() ?? "N/A"}
+                                </span>
+                            </div>
+                            <div className="h-px bg-white/5" />
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-secondary flex items-center gap-2"><History className="w-4 h-4" /> Created</span>
+                                <span className="text-white font-mono">{formatDate(repo.created_at)}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-secondary flex items-center gap-2"><Clock className="w-4 h-4" /> Updated</span>
+                                <span className="text-white font-mono">{formatDate(repo.updated_at)}</span>
+                            </div>
+                        </div>
                     </div>
                 </motion.div>
 
-                {/* Main Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2 space-y-8">
-                        {/* Description */}
-                        <motion.div variants={itemVariants} className="prose prose-invert max-w-none">
-                            <h3 className="text-xl font-bold text-white mb-4">About Project</h3>
-                            <p className="text-secondary/80 text-lg leading-relaxed">
-                                {repo.description || "No description provided for this repository."}
-                            </p>
-                        </motion.div>
-
-                        {/* Placeholder for future detailed content */}
-                        <motion.div variants={itemVariants} className="p-8 rounded-2xl bg-white/5 border border-white/10 border-dashed flex items-center justify-center min-h-[250px] relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                            <p className="text-secondary/50 italic relative z-10">Additional project details, screenshots, or README content would go here.</p>
-                        </motion.div>
+                {/* Column 2: Description & Tech Stack (5 cols) */}
+                <motion.div variants={itemVariants} className="md:col-span-5 flex flex-col gap-6 h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+                    <div className="prose prose-sm prose-invert max-w-none">
+                        <h3 className="text-lg font-bold text-white mb-2">About</h3>
+                        <p className="text-secondary/80 leading-relaxed">
+                            {displayDescription}
+                        </p>
                     </div>
 
-                    {/* Stats Sidebar */}
-                    <div className="space-y-6">
-                        <motion.div variants={itemVariants} className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors duration-300">
-                            <h3 className="text-sm font-bold text-white/50 uppercase tracking-wider mb-4">Project Stats</h3>
-
-                            <div className="space-y-6">
-                                {/* Total Commits */}
-                                <div className="flex items-center justify-between group">
-                                    <div className="flex items-center gap-3 text-secondary group-hover:text-gold-glow transition-colors">
-                                        <div className="p-2 rounded-lg bg-white/5 group-hover:bg-gold-glow/10 transition-colors">
-                                            <GitCommit className="w-5 h-5" />
+                    {metadata?.techStack && (
+                        <div className="space-y-4">
+                            <h3 className="text-md font-bold text-white">Tech Stack</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {metadata.techStack.flatMap(cat => cat.items).map((item, idx) => (
+                                    <div key={idx} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-secondary hover:text-white hover:border-white/20 transition-colors">
+                                        <div className="w-3.5 h-3.5" style={{ color: item.color ? `#${item.color}` : (item.icon?.hex ? `#${item.icon.hex}` : '#ffffff') }}>
+                                            {item.icon ? (
+                                                <svg role="img" viewBox="0 0 24 24" className="w-full h-full fill-current"><path d={item.icon.path} /></svg>
+                                            ) : (
+                                                <div className="w-full h-full bg-current rounded-full opacity-50" />
+                                            )}
                                         </div>
-                                        <span className="font-medium">Total Commits</span>
+                                        <span>{item.name}</span>
                                     </div>
-                                    <span className="font-mono text-white text-lg font-bold">
-                                        {loadingCommits ? (
-                                            <span className="animate-pulse text-white/40">...</span>
-                                        ) : commits !== null ? (
-                                            commits.toLocaleString()
-                                        ) : (
-                                            "N/A"
-                                        )}
-                                    </span>
-                                </div>
-
-                                {/* Timeline */}
-                                <div className="space-y-3 pt-4 border-t border-white/5">
-                                    <div className="flex items-center gap-2 text-secondary mb-2">
-                                        <History className="w-4 h-4" />
-                                        <span className="text-sm font-medium uppercase tracking-wider">Timeline</span>
-                                    </div>
-
-                                    <div className="flex items-center justify-between group">
-                                        <div className="flex flex-col">
-                                            <span className="text-xs text-secondary/60">Started</span>
-                                            <span className="text-white font-mono">{formatDate(repo.created_at)}</span>
-                                        </div>
-                                        <div className="h-px w-8 bg-white/10 group-hover:bg-gold-glow/50 transition-colors" />
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-xs text-secondary/60">Last Update</span>
-                                            <span className="text-white font-mono">{formatDate(repo.updated_at)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center justify-between group pt-4 border-t border-white/5">
-                                    <div className="flex items-center gap-2 text-secondary group-hover:text-green-400 transition-colors">
-                                        <Clock className="w-4 h-4" />
-                                        <span>Last Active</span>
-                                    </div>
-                                    <span className="font-mono text-white text-sm">
-                                        {new Date(repo.updated_at).toLocaleDateString()}
-                                    </span>
-                                </div>
+                                ))}
                             </div>
-                        </motion.div>
-                    </div>
-                </div>
+                        </div>
+                    )}
+                </motion.div>
+
+                {/* Column 3: Features & Challenges (4 cols) */}
+                <motion.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-4 h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+                    {metadata ? (
+                        <>
+                            {(metadata.topFeatures && metadata.topFeatures.length > 0) && (
+                                <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                                    <div className="flex items-center gap-2 mb-3 text-emerald-400">
+                                        <CheckCircle className="w-4 h-4" />
+                                        <h3 className="font-bold text-sm">Top Features</h3>
+                                    </div>
+                                    <ul className="space-y-2">
+                                        {metadata.topFeatures.map((f, i) => (
+                                            <li key={i} className="text-xs text-secondary/90 leading-relaxed list-disc list-inside marker:text-emerald-500/50">
+                                                {f}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {(metadata.topFailures && metadata.topFailures.length > 0) && (
+                                <div className="p-4 rounded-xl bg-orange-500/5 border border-orange-500/10">
+                                    <div className="flex items-center gap-2 mb-3 text-orange-400">
+                                        <AlertTriangle className="w-4 h-4" />
+                                        <h3 className="font-bold text-sm">Challenges</h3>
+                                    </div>
+                                    <ul className="space-y-2">
+                                        {metadata.topFailures.map((f, i) => (
+                                            <li key={i} className="text-xs text-secondary/90 leading-relaxed list-disc list-inside marker:text-orange-500/50">
+                                                {f}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <div className="p-6 rounded-xl bg-white/5 border border-white/10 border-dashed text-center">
+                            <p className="text-secondary/50 text-sm italic">Standard metadata not available for this project.</p>
+                        </div>
+                    )}
+                </motion.div>
+
             </div>
         </motion.div>
     );

@@ -63,11 +63,10 @@ Derived from the Master Workflow Diagram:
 - **Github Visualization Engine**: A specific sub-system within the "About Me" module that fetches, parses, and renders live contribution data from GitHub APIs. Includes a **Merged Stats Integration** within the User Profile, a custom-styled **Heatmap (52-week Responsive Grid)** ending on the current day, and an interactive **Tech Arsenal Marquee** with pause-on-hover/click capability.
 
 ### B. Project Showcase
-### B. Project Showcase
-- **Master-Detail Explorer**: A split-screen interface (Desktop) allowing users to browse a persistent project list while viewing detailed statistics and metadata in a main content pane.
-- **Flagship Highlighting**: Visual hierarchy logic that elevates specific repositories (e.g., "ATLAS") with distinct styling to guide recruiter attention.
-- **Real-Time Project Intelligence**: Direct integration with GitHub APIs to fetch and display "Total Commits" and "Last Updated" timestamps, providing live proof of activity.
-- **Showcase & Topics**: Support for "Topic" tags and deep-dive links, replacing generic "Stars/Forks" metrics with more relevant engineering data.
+- **Cinematic Project Deck**: A horizontal, snap-aligned "Showcase View" that presents projects as high-fidelity posters. Features "Center-Snap" physics and dynamic ambient background lighting based on the active project.
+- **Deep Dive Detail**: A master-detail transition where clicking a card expands it into a comprehensive statistic and metadata view.
+- **Flagship Highlighting**: The primary repository is pinned to the start of the deck with distinct visual treatment.
+- **Real-Time Project Intelligence**: Direct integration with GitHub APIs to fetch and display "Total Commits" and "Last Updated" timestamps.
 
 ### C. Feedback & Social Proof
 - **Testimonial Portal**: User-facing interface for leaving endorsements.

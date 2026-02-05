@@ -2,15 +2,15 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { githubService, type GithubRepo } from '@/services/githubService';
 import { ABOUT_ME_DATA } from '@/data/aboutMeData';
 
+const CACHE_KEY_PROJECTS = 'github_projects_v2';
+const CACHE_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
+
 export const useGithubProjects = () => {
     const [projects, setProjects] = useState<GithubRepo[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const [flagship, setFlagship] = useState<GithubRepo | null>(null);
-
-    const CACHE_KEY_PROJECTS = 'github_projects_v2';
-    const CACHE_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
 
     const isMounted = useRef(true);
 

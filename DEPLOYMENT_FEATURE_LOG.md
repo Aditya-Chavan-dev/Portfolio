@@ -762,6 +762,67 @@ The "Projects" section was a static placeholder or basic grid. Users could not e
 ### The reason the change was necessary
 To provide a "Deep Dive" experience. The user needs to showcase the complexity of their work (Commits, Timeline, Topics) without forcing the recruiter to navigate away to GitHub immediately.
 
+### 
+---
+
+## [2026-02-05 | 15:45:00] - Commit: PROJECT_DECK_V1
+
+### Description of the feature or capability introduced or changed
+Implemented the **Cinematic Project Deck**.
+1. **Showcase View**: Replaced the standard grid/sidebar with a horizontal, physics-based snap scrolling deck (`ProjectShowcase.tsx`).
+2. **Dynamic Focusing**: Implemented "Center-Snap" logic where the active project expands and glows, becoming the focal point.
+3. **Card Redesign**: Refactored `ProjectCard` into a high-fidelity "Poster" format with large typography and ambient lighting effects.
+4. **Legacy Removal**: Deleted the vertical `ProjectListSidebar` to force a purely immersive interaction model.
+
+### The problem or limitation that existed before the change
+The previous "Master-Detail" view was functional but generic. It relied on a text-heavy sidebar and a standard grid, which failed to deliver the "Premium/Creative" impact required for a high-end portfolio.
+
+### The reason the change was necessary
+To transform the "Projects" section from a simple list into an Experience. The goal is to make browsing projects feel like flipping through high-value trading cards or a streaming service carousel.
+
 ### The resulting behavioral difference after the change
-**Interactive Exploration**: Users can now click any project to open a seamless detail view.
-**Premium Aesthetics**: The Flagship project glows and sits at the top. The UI feels "app-like" with smooth transitions.
+**Immersive Interaction**: Users now swipe/scroll horizontally to browse.
+**Visual Hierarchy**: The active project demands full attention.
+**Simplified UX**: No sidebar distraction; just the content.
+
+---
+
+## [2026-02-05 | 22:20:00] - Commit: PROJECT_VIEW_FIXES_V1
+
+### Description of the feature or capability introduced or changed
+Implemented **Accessibility and Stability Hardening** for the Project View.
+1. **Keyboard Navigation**: `ProjectCard` is now fully focusable (`tabIndex={0}`) and operable via Enter/Space keys.
+2. **Screen Reader Support**: Added explicit `aria-label`s to all Showcase navigation buttons (Next, Prev, Pagination Dots).
+3. **Data Integrity**: Implemented defensive rendering for Tech Stack icons and Feature/Failure lists to prevent runtime crashes if metadata is missing.
+
+### The problem or limitation that existed before the change
+The "Project Deck" was visually polished but inaccessible to keyboard users/screen readers. Additionally, missing metadata fields (like icons or feature lists) for new projects could potentially crash the Detail View.
+
+### The reason the change was necessary
+To ensure the portfolio is inclusive (WCAG compliance) and robust against incomplete data states.
+
+### The resulting behavioral difference after the change
+**Universal Access**: Users can browse the deck using only a keyboard.
+**Safety**: The application degrades gracefully (shows defaults) instead of crashing when project data is partial.
+
+---
+
+## [2026-02-05 | 22:30:00] - Commit: PROJECT_VIEW_POLISH_V2
+
+### Description of the feature or capability introduced or changed
+1. **Performance Upgrade**: Removed `blur-[1px]` and added `backface-visibility: hidden` to Project Cards during scroll.
+2. **UI Modernization**: Replaced the "Back Arrow" navigation metaphor in `ProjectDetailView` with a contextual "Close (X)" action.
+3. **Visual Cleanliness**: Enforced `scrollbar-hide` on the Project Showcase list.
+
+### The problem or limitation that existed before the change
+1. **Lag**: CSS Blur filters are computationally expensive, causing frame drops on low-end devices during horizontal scroll.
+2. **UX Ambiguity**: The "Back" arrow implied navigation history (browser back) rather than modal dismissal.
+3. **Visual Noise**: Default browser scrollbars cluttered the cinematic deck view.
+
+### The reason the change was necessary
+To meet "premium" smoothness standards and clear up standard UI patterns.
+
+### The resulting behavioral difference after the change
+**Smoother Scroll**: Higher FPS on scroll.
+**Cleaner View**: No scrollbars.
+**Clearer Actions**: Explicit close button.
