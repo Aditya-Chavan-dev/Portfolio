@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 interface ProjectCardProps {
     repo: GithubRepo;
     index: number;
+    isActive?: boolean;
     onClick?: () => void;
 }
 
@@ -23,74 +24,100 @@ const getLanguageColor = (language: string | null) => {
     }
 };
 
-export const ProjectCard = ({ repo, index, onClick }: ProjectCardProps) => {
+export const ProjectCard = ({ repo, index, isActive = false, onClick }: ProjectCardProps) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05, duration: 0.4 }}
-            className="group relative flex flex-col h-full cursor-pointer"
+            className={`group relative flex flex-col h-full cursor-pointer transition-all duration-500 ${isActive ? 'scale-[1.02]' : 'hover:scale-[1.01]'}`}
             onClick={onClick}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onClick?.();
+                }
+            }}
         >
-            <div className="absolute inset-0 bg-gradient-to-br from-gold-glow/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            {/* Active Glow Effect */}
+            <div className={`absolute inset-0 bg-gradient-to-br from-gold-glow/10 to-transparent rounded-3xl transition-opacity duration-500 pointer-events-none ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'}`} />
 
-            <div className="glass-panel h-full flex flex-col p-5 rounded-2xl border border-white/10 group-hover:border-gold-dim/30 hover:shadow-lg hover:shadow-gold-glow/5 transition-all duration-300 relative z-10 overflow-hidden transform group-hover:-translate-y-1">
+            <div className={`glass-panel h-full flex flex-col p-8 rounded-3xl border transition-all duration-500 relative z-10 overflow-hidden ${isActive
+                ? 'border-gold-glow/40 bg-black/40 shadow-2xl shadow-gold-glow/10'
+                : 'border-white/10 bg-white/5 hover:border-white/20'
+                }`}>
 
                 {/* Header: Folder Icon + Links */}
-                <div className="flex justify-between items-start mb-4">
-                    <div className="p-2.5 rounded-xl bg-white/5 group-hover:bg-gold-glow/10 transition-colors text-gold-glow/80 group-hover:text-gold-glow">
-                        <Folder className="w-5 h-5" />
+                <div className="flex justify-between items-start mb-6">
+                    <div className={`p-4 rounded-2xl transition-all duration-500 ${isActive ? 'bg-gold-glow/20 text-gold-glow' : 'bg-white/5 text-gold-glow/60 group-hover:text-gold-glow'
+                        }`}>
+                        <Folder className={`w-8 h-8 ${isActive ? 'animate-pulse-slow' : ''}`} />
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className={`flex gap-3 transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
                         {repo.homepage && (
                             <a
                                 href={repo.homepage}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2 rounded-lg hover:bg-white/10 text-secondary hover:text-white transition-colors"
+                                className="p-3 rounded-xl bg-white/5 hover:bg-white/20 text-white transition-colors"
                                 title="Live Demo"
+                                onClick={(e) => e.stopPropagation()}
                             >
-                                <ExternalLink className="w-4.5 h-4.5" />
+                                <ExternalLink className="w-5 h-5" />
                             </a>
                         )}
                         <a
                             href={repo.html_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 rounded-lg hover:bg-white/10 text-secondary hover:text-white transition-colors"
+                            className="p-3 rounded-xl bg-white/5 hover:bg-white/20 text-white transition-colors"
                             title="View Code"
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <Github className="w-4.5 h-4.5" />
+                            <Github className="w-5 h-5" />
                         </a>
                     </div>
                 </div>
 
                 {/* Content: Title + Description */}
-                <div className="flex-1 mb-6">
-                    <h3 className="text-lg font-bold text-white mb-2 group-hover:text-gold-glow transition-colors tracking-tight line-clamp-1">
+                <div className="flex-1 flex flex-col justify-center mb-8">
+                    <h3 className={`font-black text-white mb-4 transition-all duration-300 ${isActive ? 'text-4xl md:text-5xl' : 'text-3xl'}`}>
                         {repo.name}
                     </h3>
-                    <p className="text-sm text-secondary/80 leading-relaxed line-clamp-3 h-[4.5em]">
+                    <p className={`text-secondary leading-relaxed transition-all duration-300 ${isActive ? 'text-lg line-clamp-none' : 'text-base line-clamp-4'}`}>
                         {repo.description || "A cool project doing cool things."}
                     </p>
+
+                    {/* Topics (Only visible when active/large) */}
+                    {isActive && repo.topics && repo.topics.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-6 animate-fade-in">
+                            {repo.topics.slice(0, 5).map(topic => (
+                                <span key={topic} className="px-3 py-1 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-secondary">
+                                    #{topic}
+                                </span>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Footer: Language + Stats */}
-                <div className="flex items-center justify-between mt-auto">
+                <div className="flex items-center justify-between mt-auto pt-6 border-t border-white/5">
                     {repo.language ? (
-                        <div className={`px-2.5 py-1 rounded-full text-xs font-medium ${getLanguageColor(repo.language)}`}>
+                        <div className={`px-4 py-1.5 rounded-full text-sm font-bold tracking-wide ${getLanguageColor(repo.language)}`}>
                             {repo.language}
                         </div>
                     ) : (<span></span>)}
 
-                    <div className="flex items-center gap-4 text-xs font-medium text-secondary">
-                        <div className="flex items-center gap-1.5 hover:text-white transition-colors">
-                            <Star className="w-3.5 h-3.5" />
+                    <div className="flex items-center gap-6 text-sm font-medium text-secondary">
+                        <div className="flex items-center gap-2">
+                            <Star className={`w-4 h-4 ${isActive ? 'text-yellow-400 fill-yellow-400' : ''}`} />
                             <span>{repo.stargazers_count}</span>
                         </div>
-                        <div className="flex items-center gap-1.5 hover:text-white transition-colors">
-                            <GitFork className="w-3.5 h-3.5" />
+                        <div className="flex items-center gap-2">
+                            <GitFork className="w-4 h-4" />
                             <span>{repo.forks_count}</span>
                         </div>
                     </div>

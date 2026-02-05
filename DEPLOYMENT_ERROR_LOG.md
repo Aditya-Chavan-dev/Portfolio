@@ -344,3 +344,96 @@ Reducing cell size further (e.g. to 4px) would hurt accessibility and aesthetics
 
 ### Justification for why this solution was chosen over alternatives
 Strict typing is the correct implementations for TypeScript/Vite environments.
+
+---
+
+## [2026-02-05 | 16:00:00] - Commit: LINT_FIX_HOOKS
+
+### Description of the problem encountered
+**Lint Warning (Exhaustive Deps)**. The linter flagged a react-hooks/exhaustive-deps warning in `useGithubProjects.ts` due to `CACHE_KEY_PROJECTS` and `CACHE_TIMEOUT` being defined inside the component/hook scope but used as dependencies in `useEffect`.
+
+### Root cause (logical, design, or assumption failure)
+**Scope Definition Failure**. Defining constants inside the hook body creates new references on every render, which technically invalidates the effect dependency graph, even if the values are primitive.
+
+### User or system impact
+**Potential Performance/Stability Risk**. While not crashing, this could theoretically lead to unnecessary re-executions or inconsistent hook behavior in strict mode.
+
+### Resolution applied
+**Scope Elevation**. Moved the constants outside the `useGithubProjects` function scope (Module Level), making them referentially stable constants that do not need to be tracked by `useEffect`.
+
+### Justification for why this solution was chosen over alternatives
+It is the standard pattern for constants. `useMemo` would be overkill for static strings.
+
+---
+
+## [2026-02-05 | 22:20:00] - Commit: PROJECT_VIEW_FIXES_V1
+
+### Description of the problem encountered
+1. **Accessibility Gap**: `ProjectCard` was not keyboard accessible.
+2. **Event Bubble Conflict**: Clicking the active card triggered `onSelect` twice (once from card, once from parent wrapper).
+3. **Runtime Risk**: Potential crash in `ProjectDetailView` when accessing `.map()` on undefined `topFeatures` or `icon` properties.
+4. **Data Error**: "Python" was incorrectly categorized as "Frontend".
+
+### Root cause (logical, design, or assumption failure)
+**Assumption Failure**:
+1. Assumed mouse-only interaction for the initial prototype.
+2. Failed to guard against event propagation in nested clickable elements.
+3. Assumed full data completeness for all projects.
+
+### User or system impact
+**UX Degradation**: Keyboard users were blocked. Double-events could cause state jitter. Missing data would cause a White Screen of Death (WSOD).
+
+### Resolution applied
+1. **A11y Patch**: Added `role="button"`, `tabIndex`, `onKeyDown`, and `aria-labels`.
+2. **Logic Fix**: Removed redundant `onClick` on the child card; relied on parent wrapper logic.
+3. **Defensive Coding**: Added `?` checks and default empty arrays `?? []` for all list renders.
+4. **Data Correction**: Moved Python to "Backend".
+
+### Justification for why this solution was chosen over alternatives
+Standard best practices for accessibility and robust React rendering.
+
+---
+
+## [2026-02-05 | 22:25:00] - Commit: HOTFIX_MOBILE_BUILD
+
+### Description of the problem encountered
+**Build Failure (Import Resolution)**. The mobile bundle failed to compile because `ProjectMobile.tsx` was still trying to import `FlagshipProjectCard`, which was deleted in the Desktop redesign.
+
+### Root cause (logical, design, or assumption failure)
+**Oversight in Refactoring**. When deleting the legacy `FlagshipProjectCard` component, I only updated the Desktop view (`ProjectDesktop.tsx`) and neglected to check the Mobile view for dependencies.
+
+### User or system impact
+**Crash**. The application could not be built or run.
+
+### Resolution applied
+**Refactor**: Updated `ProjectMobile.tsx` to remove the dead import and use the standard `ProjectCard` (with `isActive={true}`) to render the Flagship project.
+
+### Justification for why this solution was chosen over alternatives
+Restores build stability immediately while reusing the verified `ProjectCard` component.
+
+---
+
+## [2026-02-05 | 22:30:00] - Commit: PROJECT_VIEW_POLISH_V2
+
+### Description of the problem encountered
+1. **Performance Degredation**: "Grainy/Laggy" animations reported on project cards.
+2. **Visual Defect**: White scrollbar visible in the showcase list.
+3. **UX Confusion**: "Back" navigation metaphor was potentially confusing in a modal context.
+
+### Root cause (logical, design, or assumption failure)
+1. **Expensive Paint Operations**: The use of `backdrop-filter: blur` combined with `transform: scale` on listing items forced continuous heavy repaints during scroll.
+2. **CSS Mismatch**: Defined `scrollbar-none` in JSX but the utility class in `index.css` was named `scrollbar-hide`.
+3. **Design Choice**: `ArrowLeft` is for navigation stacks; Modals should use `X` (Dismiss).
+
+### User or system impact
+**Jank**: Low FPS on lower-end devices. **Visual Clutter**.
+
+### Resolution applied
+1. **Optimization**: Removed dynamic blur from cards; added `backface-visibility: hidden` (hardware acceleration).
+2. **Fix**: Renamed class to `scrollbar-hide`.
+3. **Refactor**: Replaced Back Arrow with standard Close (X) button.
+
+### Justification for why this solution was chosen over alternatives
+Prioritizing 60fps smoothness over the "frosted glass" aesthetic for the moving list elements. Static elements can keep the glass effect.
+
+

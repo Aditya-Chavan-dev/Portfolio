@@ -1,7 +1,6 @@
 import { useGithubProjects } from './hooks/useGithubProjects';
 
 import { ProjectCard } from './components/ProjectCard';
-import { FlagshipProjectCard } from './components/FlagshipProjectCard';
 
 export const ProjectMobile = () => {
     const { projects, flagship, loading, error } = useGithubProjects();
@@ -29,11 +28,11 @@ export const ProjectMobile = () => {
                 ) : (
                     <div className="flex flex-col gap-4">
                         {/* Flagship */}
-                        {flagship && <FlagshipProjectCard repo={flagship} />}
+                        {flagship && <ProjectCard repo={flagship} index={0} isActive={true} />}
 
                         {/* List */}
                         {projects.map((repo, index) => (
-                            <ProjectCard key={repo.id} repo={repo} index={index} />
+                            <ProjectCard key={repo.id} repo={repo} index={index + 1} />
                         ))}
                     </div>
                 )}
