@@ -63,7 +63,7 @@ Derived from the Master Workflow Diagram:
 - **Github Visualization Engine**: A specific sub-system within the "About Me" module that fetches, parses, and renders live contribution data from GitHub APIs. Includes a **Merged Stats Integration** within the User Profile, a custom-styled **Heatmap (52-week Responsive Grid)** ending on the current day, and an interactive **Tech Arsenal Marquee** with pause-on-hover/click capability.
 
 ### B. Project Showcase
-- **Cinematic Project Deck**: A horizontal, snap-aligned "Showcase View" that presents projects as high-fidelity posters. Features "Center-Snap" physics and dynamic ambient background lighting based on the active project.
+- **Cinematic Project Deck**: A horizontal, snap-aligned "Showcase View" that presents projects as high-fidelity posters. Features "Center-Snap" physics, **Arrow Key Navigation (Left/Right)**, and dynamic ambient background lighting based on the active project.
 - **Deep Dive Detail**: A master-detail transition where clicking a card expands it into a comprehensive statistic and metadata view.
 - **Flagship Highlighting**: The primary repository is pinned to the start of the deck with distinct visual treatment.
 - **Real-Time Project Intelligence**: Direct integration with GitHub APIs to fetch and display "Total Commits" and "Last Updated" timestamps.
@@ -76,5 +76,12 @@ Derived from the Master Workflow Diagram:
 - **Assets**: Image delivery via WebP/AVIF formats.
 - **Layout**: CSS aspect-ratio stabilizers to prevent Cumulative Layout Shift (CLS).
 - **Benchmarks**: Target of 100/100 across all Lighthouse metrics.
+
+### D. Advanced Visual Effects (Cyberpunk Enhancements)
+- **Decrypted Text Reveal**: A custom hook that "hacks" text into existence by cycling random characters before resolving to the final string. Used on Project Titles.
+- **Holographic Parallax Engine**:
+    - **Desktop**: Mouse-driven multi-layer depth effect where content floats above the card background.
+    - **Mobile**: Gyroscope-driven (Tilt) depth effect allowing users to "look around" the card by physically tilting their device.
+- **Conical Power Core**: A rotating golden gradient border effect that simulates a powered engine core on active elements.
 
 ---

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { type GithubRepo } from '@/services/githubService';
 import { ProjectCard } from './ProjectCard';
 import { motion } from 'framer-motion';
@@ -47,6 +47,19 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
         }
     };
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowLeft') {
+                scrollTo(Math.max(0, activeIndex - 1));
+            } else if (e.key === 'ArrowRight') {
+                scrollTo(Math.min(projects.length - 1, activeIndex + 1));
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [activeIndex, projects.length]);
+
     return (
         <div className="relative w-full h-full flex flex-col justify-center">
 
@@ -90,7 +103,7 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
             </div>
 
             {/* Navigation Dots / Controls */}
-            <div className="absolute bottom-12 left-0 right-0 flex justify-center items-center gap-3 z-20">
+            <div className="absolute bottom-24 left-0 right-0 flex justify-center items-center gap-3 z-20">
                 <button
                     onClick={() => scrollTo(Math.max(0, activeIndex - 1))}
                     disabled={activeIndex === 0}
@@ -122,10 +135,24 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
                 </button>
             </div>
 
+            {/* Keyboard Hint */}
+            <div className="absolute bottom-8 left-0 right-0 flex justify-center z-20 pointer-events-none">
+                <div className="bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-3 animate-pulse">
+                    <span className="text-xs text-white/80 font-mono">←</span>
+                    <span className="text-[10px] text-white/90 uppercase tracking-widest font-medium">Use Arrow Keys</span>
+                    <span className="text-xs text-white/80 font-mono">→</span>
+                </div>
+            </div>
+
             {/* Active Project Title Reflection (Optional Cinematic Touch) */}
             <div className="absolute top-12 left-0 right-0 text-center z-0 opacity-10 pointer-events-none">
                 <h1 className="text-[12vw] font-black uppercase text-white tracking-widest leading-none truncate px-4">
-                    {projects[activeIndex]?.name}
+                    {(() => {
+                        const name = projects[activeIndex]?.name || '';
+                        return name.length > 20
+                            ? name.split(/[-_ ]+/).map(word => word.charAt(0).toUpperCase()).join('')
+                            : name;
+                    })()}
                 </h1>
             </div>
 

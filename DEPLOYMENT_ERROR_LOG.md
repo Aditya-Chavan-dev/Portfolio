@@ -437,3 +437,55 @@ Restores build stability immediately while reusing the verified `ProjectCard` co
 Prioritizing 60fps smoothness over the "frosted glass" aesthetic for the moving list elements. Static elements can keep the glass effect.
 
 
+
+## [2026-02-06 | 20:55:00] - Commit: PROJECT_KEYBOARD_NAV
+
+No change required for this commit.
+
+### Reason
+This feature implementation was purely additive and did not involve resolving any existing failures, defects, or logical errors.
+
+## [2026-02-06 | 21:00:00] - Commit: HOTFIX_useEffect_IMPORT
+
+### Description of the problem encountered
+**Runtime ReferenceError: useEffect is not defined**. The application crashed immediately upon navigating to the Project Showcase view.
+
+### Root cause (logical, design, or assumption failure)
+**Implementation Oversight**: The `useEffect` hook was added to the component logic to handle keyboard events, but I failed to add it to the import statement from the 'react' package.
+
+### User or system impact
+**Crash**. The component failed to render, breaking the Project View functionality.
+
+### Resolution applied
+**Import Correction**: Added `useEffect` to the named imports list in `ProjectShowcase.tsx`.
+
+### Justification for why this solution was chosen over alternatives
+Mandatory syntax correction.
+
+## [2026-02-06 | 21:10:00] - Commit: NAV_HINT_UI
+
+No change required for this commit.
+
+### Reason
+This change was a UI enhancement for feature discoverability and did not involve fixing any errors or defects.
+
+## [2026-02-06 | 21:14:00] - Commit: NAV_UI_SPACING_FIX
+
+No change required for this commit.
+
+### Reason
+UI spacing adjustment based on user feedback. No functional defects resolved.
+
+---
+
+## [2026-02-06 | 21:30:00] - Commit: MOBILE_ABOUT_ME_FIX
+### Description of the problem encountered
+**UI Overflow / Content Cut-off**. On mobile devices, the "About Me" profile header buttons (Email, LinkedIn) were pushed off-screen or cut off because the flex container remained in `row` mode despite the narrow viewport.
+### Root cause (logical, design, or assumption failure)
+**Responsive Layout Failure**. The `ProfileHorizontal` component was hardcoded to `flex-row`, assuming the content (Avatar + Name + Buttons) would always fit horizontally. This assumption failed on mobile screens (< 400px width).
+### User or system impact
+**Broken Access**. Users could not see or click the contact buttons on mobile.
+### Resolution applied
+**Responsive Layout Switch**: Refactored the container to use `flex-col` on mobile (stacking buttons below the name) and `flex-row` on desktop (md: breakpoint).
+### Justification for why this solution was chosen over alternatives
+Standard responsive design pattern. Stacking is the only way to preserve button touch targets without shrinking them to illegible sizes.
