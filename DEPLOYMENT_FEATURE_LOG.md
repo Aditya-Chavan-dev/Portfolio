@@ -289,6 +289,7 @@ To establish the final core architectural pillars and fulfill the requirement fo
 
 ### The resulting behavioral difference after the change
 The "Immersive Journey" button is now functional. Upon selection, the entire `LandingPage` context is swapped for the `ImmersiveJourney` module (Skeletons for Desktop/Mobile), allowing for a completely custom visual and logical flow.
+The "Immersive Journey" button is now functional. Upon selection, the entire `LandingPage` context is swapped for the `ImmersiveJourney` module, allowing for a completely custom visual and logical flow.
 
 ### Description of the feature or capability introduced or changed
 Executed **Phase 3 of Recursive Restructuring**: Configured the `src/QuickNavigation` module with strictly isolated sub-features (AboutMe, Project, ProfessionalExperience, Certifications). Implemented **Modular Skeleton Architecture** and unified **Landing Page Integration** ensuring functional hash-link navigation.
@@ -826,3 +827,90 @@ To meet "premium" smoothness standards and clear up standard UI patterns.
 **Smoother Scroll**: Higher FPS on scroll.
 **Cleaner View**: No scrollbars.
 **Clearer Actions**: Explicit close button.
+
+## [2026-02-06 | 20:55:00] - Commit: PROJECT_KEYBOARD_NAV
+
+### Description of the feature or capability introduced or changed
+Added keyboard support for navigating the Project Showcase using Arrow Left and Arrow Right keys.
+
+### The problem or limitation that existed before the change
+Users could only navigate the project carousel by scrolling or clicking adjacent cards. There was no keyboard accessibility for this primary UI component.
+
+### The reason the change was necessary
+To improve accessibility and provide a more native application-like feel for desktop users.
+
+### The resulting behavioral difference after the change
+Pressing the Left Arrow key now scrolls to the previous project, and the Right Arrow key scrolls to the next project, updating the active selection accordingly.
+
+## [2026-02-06 | 21:00:00] - Commit: HOTFIX_useEffect_IMPORT
+No change required for this commit.
+
+### Reason
+This commit repairs a syntax error introduced in the previous step. No new feature logic was added.
+
+## [2026-02-06 | 21:10:00] - Commit: NAV_HINT_UI
+
+### Description of the feature or capability introduced or changed
+Added a visual "Keyboard Hint" to the Project Showcase UI. A pulsed text label ("Use Arrow Keys ← →") now appears at the bottom of the screen.
+
+### The problem or limitation that existed before the change
+Although keyboard navigation was implemented, there was no signifier to inform the user of this capability. Users might have missed the feature entirely.
+
+### The reason the change was necessary
+To improve feature discoverability and user experience. A subtle visual cue encourages users to utilize the more ergonomic keyboard navigation method.
+
+### The resulting behavioral difference after the change
+A subtle, non-intrusive text label appears at the bottom of the project deck, pulsing gently to catch the eye without distracting from the content.
+
+## [2026-02-06 | 21:12:00] - Commit: NAV_HINT_POLISH
+
+### Description of the feature or capability introduced or changed
+Enhanced the visual prominence of the "Keyboard Hint" in the Project Showcase.
+1. **Glassmorphism**: Added a `bg-black/40 backdrop-blur-md` pill container.
+2. **Typography**: Increased text opacity to `text-white/90` and weight to `font-medium`.
+3. **Iconography**: Switched to `font-mono` arrows for sharper visual definition.
+
+### The problem or limitation that existed before the change
+The previous hint was "too subtle" (`text-white/30`), rendering it potentially invisible against complex project card backdrops. The user requested "more highlighting".
+
+### The reason the change was necessary
+To ensure the accessibility cue is clearly visible without breaking the cinematic design language.
+
+### The resulting behavioral difference after the change
+The hint is now a distinct UI element (Badged Pill) rather than just floating text, significantly improving readability.
+
+## [2026-02-06 | 21:14:00] - Commit: NAV_UI_SPACING_FIX
+
+### Description of the feature or capability introduced or changed
+Adjusted vertical spacing of the Project Showcase navigation elements. Moved the main controls (Arrows/Dots) up to `bottom-24` and the Keyboard Hint up to `bottom-8`.
+
+### The problem or limitation that existed before the change
+The User reported a "Crowded" UI where the new Keyboard Hint pill was visually overlapping or too close to the pagination dots, creating an unpolished look.
+
+### The reason the change was necessary
+To establish clear visual hierarchy and breathing room between distinct UI controls.
+
+### The resulting behavioral difference after the change
+**Clean Separation**: There is now a distinct vertical gap between the interactive controls and the informational hint.
+
+---
+
+## [2026-02-06 | 22:30:00] - Commit: PROJECT_EFFECTS_PARALLAX
+### Description of the feature or capability introduced or changed
+Implemented **High-Fidelity Cyberpunk Visual Effects** for the Project Card.
+1. **Holographic Parallax**:
+   - **Desktop**: Mouse-movement drives a multi-layer depth effect (Content moves +20px, Background moves -10px).
+   - **Mobile**: Device Gyroscope (Tilt) drives the same effect, allowing users to "look inside" the card.
+2. **Decrypted Text**: Project titles now "hack" into existence with a random character cycling animation.
+3. **Conical Border**: Active cards feature a rotating golden gradient border.
+4. **Abbreviated Background**: The large background watermark now automatically abbreviates long names (e.g., "Multimodal Deepfake Detection" -> "MDD") to keep the visual clean, while the main card title remains full length.
+
+### The problem or limitation that existed before the change
+The Project Cards were static and failed to deliver the "State-of-the-Art" impact required by the design spec. The large background text would clip or look messy with long project names.
+
+### The reason the change was necessary
+To create a "Wow" moment and prove technical competence in advanced frontend animation and sensor integration (Gyroscope).
+
+### The resulting behavioral difference after the change
+**Immersive Interaction**: The UI feels alive and responsive to physical user input (Mouse/Tilt).
+**Cleaner Aesthetics**: Long project names no longer clutter the background watermark.
