@@ -72,6 +72,12 @@ Derived from the Master Workflow Diagram:
 - **Testimonial Portal**: User-facing interface for leaving endorsements.
 - **FAQ System**: Interactive question-and-answer module.
 
+### D. Professional Credentials
+- **Certifications Engine**: A dedicated responsive view (Desktop Grid / Mobile Stack) designed to showcase professional accreditations. Features:
+    - **Visual Cards**: Gold-accented glassmorphism cards with issuer logos and skill tags.
+    - **Deep Linking**: "View Project" action bridges the gap between theory (Cert) and practice (Project), navigating users directly to the relevant repository in the Projects section.
+    - **PDF Preview Hooks**: Architecture ready for future integration of direct certificate rendering.
+
 ## ⚡ 5. Performance Standards
 - **Assets**: Image delivery via WebP/AVIF formats.
 - **Layout**: CSS aspect-ratio stabilizers to prevent Cumulative Layout Shift (CLS).

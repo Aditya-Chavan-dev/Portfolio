@@ -1,7 +1,7 @@
 import { Education } from './components/Education';
 import { TechStack } from './components/TechStack';
-import { GithubHeatmap } from './components/GithubHeatmap'; // Fixed Import
-import { ProfileHorizontal } from './components/ProfileHorizontal'; // Ensuring we use the new profile
+import { GithubHeatmap } from './components/GithubHeatmap';
+import { ProfileHorizontal } from './components/ProfileHorizontal';
 import { ArrowLeft } from 'lucide-react';
 
 interface AboutMeMobileProps {
@@ -15,15 +15,17 @@ export const AboutMeMobile = ({ onBack }: AboutMeMobileProps) => {
             {/* Header Section */}
             <div className="px-6 pt-12 pb-8">
                 {onBack && (
-                    <button
-                        onClick={onBack}
-                        className="mb-6 flex items-center gap-2 text-gold-glow text-sm font-medium"
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                        Back
-                    </button>
+                    <div className="w-full flex justify-start mb-4 relative z-50">
+                        <button
+                            onClick={onBack}
+                            className="flex items-center gap-2 text-gold-glow text-sm font-medium py-2 px-3 rounded-lg bg-black/40 border border-white/5 backdrop-blur-md"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            Back
+                        </button>
+                    </div>
                 )}
-                {/* Profile Component (now includes Stats) */}
+                {/* Profile Component */}
                 <ProfileHorizontal />
             </div>
 

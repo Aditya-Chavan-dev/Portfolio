@@ -8,6 +8,8 @@ import { AboutMe } from './QuickNavigation/AboutMe/AboutMe';
 import { ProfessionalExperience } from './QuickNavigation/ProfessionalExperience/ProfessionalExperience';
 import { Certifications } from './QuickNavigation/Certifications/Certifications';
 import { TransitionLoader } from './components/TransitionLoader';
+import { QuickNavLayout } from './QuickNavigation/QuickNavLayout';
+import { motion } from 'framer-motion';
 
 // Define the valid view states
 type ViewState =
@@ -85,42 +87,30 @@ const App: React.FC = () => {
                         />
                     )}
 
-                    {/* 4. Sub-Sections */}
-                    {view === 'IMMERSIVE' && (
-                        <ImmersiveJourney key="immersive" onBack={handleBackToHero} />
-                    )}
-
-                    {view === 'PROJECTS' && (
-                        <div key="projects" className="fixed inset-0 z-50 overflow-auto bg-obsidian">
-                            <button onClick={handleBackToHero} className="fixed top-4 left-4 z-[60] px-4 py-2 bg-black/50 text-gold-glow border border-gold-glow/30 rounded backdrop-blur-md hover:bg-gold-glow hover:text-black transition-colors">
-                                ← Back
-                            </button>
-                            <Project />
-                        </div>
-                    )}
-
-                    {view === 'ABOUT' && (
-                        <div key="about" className="fixed inset-0 z-50 overflow-auto bg-obsidian">
-                            <AboutMe onNavigate={handleNavigate} />
-                        </div>
-                    )}
-
-                    {view === 'EXPERIENCE' && (
-                        <div key="experience" className="fixed inset-0 z-50 overflow-auto bg-obsidian">
-                            <button onClick={handleBackToHero} className="fixed top-4 left-4 z-[60] px-4 py-2 bg-black/50 text-gold-glow border border-gold-glow/30 rounded backdrop-blur-md hover:bg-gold-glow hover:text-black transition-colors">
-                                ← Back
-                            </button>
-                            <ProfessionalExperience />
-                        </div>
-                    )}
-
-                    {view === 'CERTIFICATION' && (
-                        <div key="certification" className="fixed inset-0 z-50 overflow-auto bg-obsidian">
-                            <button onClick={handleBackToHero} className="fixed top-4 left-4 z-[60] px-4 py-2 bg-black/50 text-gold-glow border border-gold-glow/30 rounded backdrop-blur-md hover:bg-gold-glow hover:text-black transition-colors">
-                                ← Back
-                            </button>
-                            <Certifications />
-                        </div>
+                    {/* 4. Sub-Sections (Persistent Layout) */}
+                    {(view === 'PROJECTS' || view === 'ABOUT' || view === 'EXPERIENCE' || view === 'CERTIFICATION') && (
+                        <motion.div
+                            key="quick-nav"
+                            className="fixed inset-0 z-50 overflow-hidden bg-obsidian"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <QuickNavLayout
+                                activeSection={
+                                    view === 'PROJECTS' ? 'projects' :
+                                        view === 'ABOUT' ? 'about' :
+                                            view === 'EXPERIENCE' ? 'experience' :
+                                                'certification'
+                                }
+                                onNavigate={handleNavigate}
+                            >
+                                {view === 'PROJECTS' && <Project onNavigate={handleNavigate} />}
+                                {view === 'ABOUT' && <AboutMe onNavigate={handleNavigate} />}
+                                {view === 'EXPERIENCE' && <ProfessionalExperience onNavigate={handleNavigate} />}
+                                {view === 'CERTIFICATION' && <Certifications onNavigate={handleNavigate} />}
+                            </QuickNavLayout>
+                        </motion.div>
                     )}
                 </AnimatePresence>
             </LayoutGroup>
