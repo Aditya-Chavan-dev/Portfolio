@@ -2,7 +2,13 @@ import { useDeviceType } from '@/hooks/useDeviceType';
 import { CertificationsDesktop } from './CertificationsDesktop';
 import { CertificationsMobile } from './CertificationsMobile';
 
-export const Certifications = () => {
+interface CertificationsProps {
+    onNavigate: (section: string) => void;
+}
+
+export const Certifications = ({ onNavigate }: CertificationsProps) => {
     const { isMobile } = useDeviceType();
-    return isMobile ? <CertificationsMobile /> : <CertificationsDesktop />;
+    return isMobile
+        ? <CertificationsMobile onBack={() => onNavigate('hero')} onNavigate={onNavigate} />
+        : <CertificationsDesktop onNavigate={onNavigate} />;
 };

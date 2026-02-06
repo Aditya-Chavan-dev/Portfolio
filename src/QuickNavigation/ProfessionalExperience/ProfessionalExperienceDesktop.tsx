@@ -1,7 +1,7 @@
 export const ProfessionalExperienceDesktop = () => {
     return (
-        <section id="experience" className="min-h-screen flex items-center justify-center bg-obsidian text-primary">
+        <div className="h-full w-full flex items-center justify-center">
             <h2 className="text-4xl font-bold">Experience (Desktop)</h2>
-        </section>
+        </div>
     );
 };

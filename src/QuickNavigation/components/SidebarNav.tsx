@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 
 interface SidebarNavProps {
     onNavigate: (section: string) => void;
-    activeSection?: 'projects' | 'about' | 'experience' | 'certification';
+    activeSection?: string;
 }
 
-export const SidebarNav = ({ onNavigate, activeSection = 'about' }: SidebarNavProps) => {
+export const SidebarNav = ({ onNavigate, activeSection }: SidebarNavProps) => {
 
     const navItems = [
         { id: 'back', icon: ArrowLeft, label: 'Back to Hub', action: () => onNavigate('hero') },
@@ -17,7 +17,7 @@ export const SidebarNav = ({ onNavigate, activeSection = 'about' }: SidebarNavPr
     ];
 
     return (
-        <div className="h-full w-16 glass-panel rounded-2xl border border-white/10 flex flex-col items-center py-6 gap-6 relative overflow-visible z-50">
+        <div className="h-full w-16 glass-panel rounded-2xl border border-white/10 flex flex-col items-center py-6 gap-6 relative overflow-visible z-50 pointer-events-auto">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-20 rounded-2xl pointer-events-none" />
 
