@@ -15,19 +15,19 @@ export const GithubHeatmap = () => {
     };
 
     return (
-        <div className="glass-panel p-4 rounded-2xl border border-white/10 h-full relative overflow-hidden hover:border-gold-dim/20 transition-all duration-300 group flex flex-col items-center justify-center">
+        <div className="glass-panel p-4 rounded-2xl border-white-10 h-full relative overflow-hidden hover:border-gold-dim/20 transition-fast group flex flex-col items-center justify-center">
             {/* Animated background glow */}
-            <div className="absolute inset-0 bg-gradient-to-t from-gold-glow/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="card-gradient-overlay" />
 
             <h3 className="text-xs font-bold mb-4 flex items-center gap-2 flex-shrink-0 self-start w-full">
-                <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-lg bg-white/5 flex-center">
                     <Github className="w-3.5 h-3.5 text-white/80" />
                 </div>
                 <span className="text-white/90">Github Activity</span>
             </h3>
 
             {loading ? (
-                <div className="flex-1 flex items-center justify-center w-full">
+                <div className="flex-1 flex-center w-full">
                     <div className="loader" />
                 </div>
             ) : (
@@ -37,11 +37,11 @@ export const GithubHeatmap = () => {
                         <div className="flex flex-col gap-1 mt-[26px]">
                             {/* Adjusted top spacer for larger cells/month header */}
                             <div className="h-3" /> {/* Spacer */}
-                            <span className="text-[10px] text-secondary h-3 flex items-center leading-none">Mon</span>
+                            <span className="text-2xs text-secondary h-3 flex items-center leading-none">Mon</span>
                             <div className="h-3" />
-                            <span className="text-[10px] text-secondary h-3 flex items-center leading-none">Wed</span>
+                            <span className="text-2xs text-secondary h-3 flex items-center leading-none">Wed</span>
                             <div className="h-3" />
-                            <span className="text-[10px] text-secondary h-3 flex items-center leading-none">Fri</span>
+                            <span className="text-2xs text-secondary h-3 flex items-center leading-none">Fri</span>
                             <div className="h-3" />
                         </div>
 
@@ -52,7 +52,7 @@ export const GithubHeatmap = () => {
                                 {heatmapGrid && heatmapGrid.map((week, i) => (
                                     <div key={i} className={`w-3 flex flex-col justify-end relative ${week.monthLabel && i > 0 ? 'ml-3' : ''}`}>
                                         {week.monthLabel && (
-                                            <span className="absolute top-0 left-0 text-[10px] text-secondary whitespace-nowrap font-medium">
+                                            <span className="absolute top-0 left-0 text-2xs text-secondary whitespace-nowrap font-medium">
                                                 {week.monthLabel}
                                             </span>
                                         )}
@@ -89,17 +89,17 @@ export const GithubHeatmap = () => {
 
                     {/* Footer Legend */}
                     <div className="flex items-center justify-between pl-8 mt-2 w-full">
-                        <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile" target="_blank" rel="noopener noreferrer" className="text-[10px] text-secondary/60 hover:text-gold-glow transition-colors">
+                        <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile" target="_blank" rel="noopener noreferrer" className="text-2xs text-secondary/60 hover:text-gold-glow transition-colors">
                             Learn how we count contributions
                         </a>
                         <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] text-secondary mr-1">Less</span>
-                            <div className="w-3 h-3 rounded-[2px] bg-[#161b22] border border-white/5" />
-                            <div className="w-3 h-3 rounded-[2px] bg-[#0e4429] border border-white/5" />
-                            <div className="w-3 h-3 rounded-[2px] bg-[#006d32] border border-white/5" />
-                            <div className="w-3 h-3 rounded-[2px] bg-[#26a641] border border-white/5" />
-                            <div className="w-3 h-3 rounded-[2px] bg-[#39d353] border border-white/5" />
-                            <span className="text-[10px] text-secondary ml-1">More</span>
+                            <span className="text-2xs text-secondary mr-1">Less</span>
+                            <div className="w-3 h-3 rounded-[2px] bg-[#161b22] border-white-5" />
+                            <div className="w-3 h-3 rounded-[2px] bg-[#0e4429] border-white-5" />
+                            <div className="w-3 h-3 rounded-[2px] bg-[#006d32] border-white-5" />
+                            <div className="w-3 h-3 rounded-[2px] bg-[#26a641] border-white-5" />
+                            <div className="w-3 h-3 rounded-[2px] bg-[#39d353] border-white-5" />
+                            <span className="text-2xs text-secondary ml-1">More</span>
                         </div>
                     </div>
                 </div>

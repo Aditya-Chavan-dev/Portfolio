@@ -21,8 +21,8 @@ export const QuickNavLayout = ({ children, activeSection, onNavigate }: QuickNav
         <div className="h-screen w-full flex flex-col p-6 relative overflow-hidden bg-obsidian text-white font-sans selection:bg-gold-dim/30">
             {/* Enhanced Ambient Background Effects (Persistent) */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-[5%] right-[10%] w-[600px] h-[600px] bg-gradient-to-br from-gold-dim/10 to-gold-glow/5 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
-                <div className="absolute bottom-[10%] left-[5%] w-[550px] h-[550px] bg-gradient-to-tr from-emerald-500/10 to-emerald-400/5 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s' }} />
+                <div className="absolute top-[5%] right-[10%] w-[600px] h-[600px] bg-gradient-to-br from-gold-dim/10 to-gold-glow/5 rounded-full blur-[120px] animate-pulse-slow" />
+                <div className="absolute bottom-[10%] left-[5%] w-[550px] h-[550px] bg-gradient-to-tr from-emerald-500/10 to-emerald-400/5 rounded-full blur-[120px] animate-pulse-slower" />
             </div>
 
             {/* Main Layout Grid */}

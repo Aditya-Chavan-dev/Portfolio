@@ -88,8 +88,7 @@ export const AnimatedBackgroundNeural = () => {
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 z-0 bg-[#020617]"
-            style={{ touchAction: 'none' }}
+            className="absolute inset-0 w-full h-full touch-none"
         />
     );
 };

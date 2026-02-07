@@ -85,13 +85,13 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="flex-1 h-full flex flex-col bg-black/20 p-6 md:p-8 overflow-hidden"
+            className="flex-1 h-full flex flex-col bg-black/20 p-card overflow-hidden"
         >
             {/* Header Area */}
             <div className="flex-shrink-0 flex justify-between items-start mb-6 border-b border-white/10 pb-4 relative">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-card-content">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
+                        <h1 className="text-3xl md:text-4xl font-bold text-white bg-clip-text text-transparent text-gradient-gold">
                             {displayName}
                         </h1>
                         <div className="flex flex-wrap items-center gap-2 mt-2">
@@ -101,7 +101,7 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
                                 </div>
                             )}
                             {repo.topics && repo.topics.slice(0, 3).map(topic => (
-                                <span key={topic} className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/5 text-secondary border border-white/5">
+                                <span key={topic} className="px-2 py-0.5 rounded-full text-2xs font-medium bg-white/5 text-secondary border-white-5">
                                     #{topic}
                                 </span>
                             ))}
@@ -115,14 +115,14 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
                             <ExternalLink className="w-4 h-4" />
                         </a>
                     )}
-                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors">
+                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-xl bg-white/5 border-white-10 text-white hover:bg-white/10 transition-colors">
                         <Github className="w-4 h-4" />
                     </a>
 
                     {/* Close Button - Clean 'X' */}
                     <button
                         onClick={onClose}
-                        className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-secondary hover:text-white hover:bg-red-500/10 hover:border-red-500/20 transition-all ml-2"
+                        className="p-2.5 rounded-xl bg-white/5 border-white-10 text-secondary hover:text-white hover:bg-red-500/10 hover:border-red-500/20 transition-all ml-2"
                         aria-label="Close details"
                     >
                         <X className="w-4 h-4" />
@@ -131,11 +131,11 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
             </div>
 
             {/* Dashboard Grid - Fills remaining height */}
-            <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-12 gap-section">
 
                 {/* Column 1: Stats & Overview (3 cols) */}
-                <motion.div variants={itemVariants} className="md:col-span-3 flex flex-col gap-4 h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
-                    <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
+                <motion.div variants={itemVariants} className="md:col-span-3 flex flex-col gap-card-content h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+                    <div className="p-5 rounded-2xl bg-white/5 border-white-10">
                         <h3 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Project Stats</h3>
                         <div className="space-y-4">
                             <div className="flex justify-between items-center text-sm">
@@ -158,7 +158,7 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
                 </motion.div>
 
                 {/* Column 2: Description & Tech Stack (5 cols) */}
-                <motion.div variants={itemVariants} className="md:col-span-5 flex flex-col gap-6 h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+                <motion.div variants={itemVariants} className="md:col-span-5 flex flex-col gap-section h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
                     <div className="prose prose-sm prose-invert max-w-none">
                         <h3 className="text-lg font-bold text-white mb-2">About</h3>
                         <p className="text-secondary/80 leading-relaxed">
@@ -171,12 +171,12 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
                             <h3 className="text-md font-bold text-white">Tech Stack</h3>
                             <div className="flex flex-wrap gap-2">
                                 {metadata.techStack.flatMap(cat => cat.items).map((item, idx) => (
-                                    <div key={idx} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-secondary hover:text-white hover:border-white/20 transition-colors">
+                                    <div key={idx} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 border-white-10 text-xs text-secondary hover:text-white hover:border-white/20 transition-colors">
                                         <div className="w-3.5 h-3.5" style={{ color: item.color ? `#${item.color}` : (item.icon?.hex ? `#${item.icon.hex}` : '#ffffff') }}>
                                             {item.icon ? (
                                                 <svg role="img" viewBox="0 0 24 24" className="w-full h-full fill-current"><path d={item.icon.path} /></svg>
                                             ) : (
-                                                <div className="w-full h-full bg-current rounded-full opacity-50" />
+                                                <div className="w-full h-full bg-current rounded-full opacity-dim" />
                                             )}
                                         </div>
                                         <span>{item.name}</span>
@@ -188,7 +188,7 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
                 </motion.div>
 
                 {/* Column 3: Features & Challenges (4 cols) */}
-                <motion.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-4 h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+                <motion.div variants={itemVariants} className="md:col-span-4 flex flex-col gap-card-content h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
                     {metadata ? (
                         <>
                             {(metadata.topFeatures && metadata.topFeatures.length > 0) && (
@@ -224,7 +224,7 @@ export const ProjectDetailView = ({ repo, onClose }: ProjectDetailViewProps) => 
                             )}
                         </>
                     ) : (
-                        <div className="p-6 rounded-xl bg-white/5 border border-white/10 border-dashed text-center">
+                        <div className="p-6 rounded-xl bg-white/5 border-white-10 border-dashed text-center">
                             <p className="text-secondary/50 text-sm italic">Standard metadata not available for this project.</p>
                         </div>
                     )}

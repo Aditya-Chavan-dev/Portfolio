@@ -6,7 +6,6 @@ import { useDeviceType } from '@/hooks/useDeviceType';
 
 interface ProjectCardProps {
     repo: GithubRepo;
-    index: number;
     isActive?: boolean;
     onClick?: () => void;
 }
@@ -26,7 +25,7 @@ const getLanguageColor = (language: string | null) => {
     }
 };
 
-export const ProjectCard = ({ repo, index, isActive = false, onClick }: ProjectCardProps) => {
+export const ProjectCard = ({ repo, isActive = false, onClick }: ProjectCardProps) => {
     // Device & Parallax Logic
     const { isMobile } = useDeviceType();
     const { x, y, handleMouseMove, handleMouseLeave } = useParallax({
@@ -44,9 +43,11 @@ export const ProjectCard = ({ repo, index, isActive = false, onClick }: ProjectC
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05, duration: 0.4 }}
-            className={`group relative flex flex-col h-full cursor-pointer transition-all duration-500 will-change-transform perspective-1000 ${isActive ? 'scale-[1.02] z-50' : 'hover:scale-[1.01] opacity-40'}`}
+            animate={{
+                opacity: 1,
+                y: 0,
+                ...(isActive ? { scale: 1.02, zIndex: 20 } : { scale: 1, zIndex: 0 })
+            }}
             onClick={onClick}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -61,8 +62,8 @@ export const ProjectCard = ({ repo, index, isActive = false, onClick }: ProjectC
         >
             {/* Main Card Container */}
             <motion.div
-                className={`relative h-full flex flex-col p-8 rounded-3xl border transition-all duration-500 overflow-hidden z-10 ${isActive
-                    ? 'border-gold-glow/20 bg-black shadow-2xl shadow-gold-glow/5'
+                className={`relative h-full flex flex-col p-card card-round border overflow-hidden z-10 transition-colors duration-300 ${isActive
+                    ? 'border-gold-glow/20 bg-black shadow-card-hover'
                     : 'border-white/10 bg-white/5 hover:border-white/20'
                     }`}
                 style={{
@@ -80,12 +81,12 @@ export const ProjectCard = ({ repo, index, isActive = false, onClick }: ProjectC
                 >
                     {/* Header: Folder Icon + Links */}
                     <div className="flex justify-between items-start mb-6">
-                        <div className={`p-4 rounded-2xl transition-all duration-500 backdrop-blur-sm ${isActive ? 'bg-gold-glow/10 text-gold-glow border border-gold-glow/20' : 'bg-white/5 text-gold-glow/60 group-hover:text-gold-glow'
+                        <div className={`p-4 rounded-2xl transition-colors duration-500 backdrop-blur-sm ${isActive ? 'bg-gold-glow/10 text-gold-glow border border-gold-glow/20' : 'bg-white/5 text-gold-glow/60 group-hover:text-gold-glow'
                             }`}>
-                            <Folder className={`w-8 h-8 ${isActive ? 'drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]' : ''}`} />
+                            <Folder className={`w-8 h-8 ${isActive ? 'drop-shadow-glow' : ''}`} />
                         </div>
 
-                        <div className={`flex gap-3 transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                        <div className={`flex gap-icon-text ${isActive ? 'opacity-100' : 'opacity-hover-reveal'}`}>
                             {repo.homepage && (
                                 <a
                                     href={repo.homepage}
@@ -113,10 +114,10 @@ export const ProjectCard = ({ repo, index, isActive = false, onClick }: ProjectC
 
                     {/* Content: Title + Description */}
                     <div className="flex-1 flex flex-col justify-center mb-8">
-                        <h3 className={`font-black text-white mb-4 transition-all duration-300 ${isActive ? 'text-4xl md:text-5xl drop-shadow-2xl' : 'text-3xl'}`}>
+                        <h3 className={`font-black text-white mb-4 transition-colors duration-300 ${isActive ? 'text-4xl md:text-5xl drop-shadow-2xl' : 'text-3xl'}`}>
                             {repo.name}
                         </h3>
-                        <p className={`text-secondary leading-relaxed transition-all duration-300 ${isActive ? 'text-lg line-clamp-none font-medium text-white/80' : 'text-base line-clamp-4'}`}>
+                        <p className={`text-secondary leading-relaxed transition-colors duration-300 ${isActive ? 'text-lg line-clamp-none font-medium text-white/80' : 'text-base line-clamp-4'}`}>
                             {repo.description || "A cool project doing cool things."}
                         </p>
 
@@ -140,7 +141,7 @@ export const ProjectCard = ({ repo, index, isActive = false, onClick }: ProjectC
                             </div>
                         ) : (<span></span>)}
 
-                        <div className="flex items-center gap-6 text-sm font-medium text-secondary">
+                        <div className="flex items-center gap-icon-text text-sm font-medium text-secondary">
                             <div className="flex items-center gap-2">
                                 <Star className={`w-4 h-4 ${isActive ? 'text-yellow-400 fill-yellow-400 drop-shadow-lg' : ''}`} />
                                 <span>{repo.stargazers_count}</span>

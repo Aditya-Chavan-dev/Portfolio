@@ -41,9 +41,9 @@ export const StrengthsStrip = () => {
             <div className="hidden lg:flex items-center gap-2 pl-8 border-l border-white/5 ml-8">
                 <div className="relative">
                     <div className="w-2 h-2 bg-gold-glow rounded-full animate-pulse" />
-                    <div className="absolute inset-0 w-2 h-2 bg-gold-glow rounded-full animate-ping opacity-50" />
+                    <div className="absolute inset-0 w-2 h-2 bg-gold-glow rounded-full animate-ping opacity-dim" />
                 </div>
-                <span className="text-[10px] text-gold-glow/80 font-mono tracking-tight">OPEN TO WORK</span>
+                <span className="text-2xs text-gold-glow/80 font-mono tracking-tight">OPEN TO WORK</span>
             </div>
         </div>
     );

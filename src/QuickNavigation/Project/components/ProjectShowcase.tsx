@@ -66,7 +66,7 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
             {/* Background Ambient Glow based on active project language/theme? 
                 For now, generic gold glow that pulses 
             */}
-            <div className="absolute inset-0 pointer-events-none transition-colors duration-700 bg-gradient-to-b from-transparent via-transparent to-black/80" />
+            <div className="absolute inset-0 pointer-events-none transition-colors duration-slow bg-gradient-to-b from-transparent via-transparent to-black/80" />
 
             {/* Horizontal Scroll Container */}
             <div
@@ -84,9 +84,21 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
                         <motion.div
                             key={repo.id}
                             layoutId={`project-card-${repo.id}`}
-                            className={`relative flex-shrink-0 w-[80vw] md:w-[60vw] lg:w-[40vw] h-full snap-center transition-all duration-500 ease-out will-change-transform ${isActive ? 'scale-100 opacity-100 z-20' : 'scale-95 opacity-40 z-10 hover:opacity-60 cursor-pointer'
-                                }`}
-                            style={{ backfaceVisibility: 'hidden' }}
+                            className={`relative flex-shrink-0 w-[80vw] md:w-[60vw] lg:w-[40vw] h-full snap-center will-change-transform backface-hidden z-10`}
+                            animate={{
+                                scale: isActive ? 1 : 0.95,
+                                opacity: isActive ? 1 : 0.4,
+                                zIndex: isActive ? 20 : 10
+                            }}
+                            whileHover={{
+                                opacity: isActive ? 1 : 0.6,
+                                transition: { duration: 0.2 }
+                            }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 30
+                            }}
                             onClick={() => {
                                 if (!isActive) scrollTo(index);
                                 else onSelect(repo);
@@ -94,7 +106,6 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
                         >
                             <ProjectCard
                                 repo={repo}
-                                index={index}
                                 isActive={isActive}
                             />
                         </motion.div>
@@ -103,11 +114,11 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
             </div>
 
             {/* Navigation Dots / Controls */}
-            <div className="absolute bottom-24 left-0 right-0 flex justify-center items-center gap-3 z-20">
+            <div className="absolute bottom-24 left-0 right-0 flex justify-center items-center gap-icon-text z-20">
                 <button
                     onClick={() => scrollTo(Math.max(0, activeIndex - 1))}
                     disabled={activeIndex === 0}
-                    className="p-2 rounded-full hover:bg-white/10 disabled:opacity-20 transition-colors"
+                    className="p-2 rounded-full hover:bg-white/10 disabled:opacity-subtle transition-colors"
                     aria-label="Previous project"
                 >
                     <ChevronLeft className="w-6 h-6 text-white" />
@@ -119,7 +130,7 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
                             key={idx}
                             onClick={() => scrollTo(idx)}
                             aria-label={`Go to project ${idx + 1}`}
-                            className={`h-1.5 rounded-full transition-all duration-300 ${idx === activeIndex ? 'w-8 bg-gold-glow' : 'w-1.5 bg-white/20 hover:bg-white/40'
+                            className={`h-1.5 rounded-full transition-fast ${idx === activeIndex ? 'w-8 bg-gold-glow' : 'w-1.5 bg-white/20 hover:bg-white/40'
                                 }`}
                         />
                     ))}
@@ -128,7 +139,7 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
                 <button
                     onClick={() => scrollTo(Math.min(projects.length - 1, activeIndex + 1))}
                     disabled={activeIndex === projects.length - 1}
-                    className="p-2 rounded-full hover:bg-white/10 disabled:opacity-20 transition-colors"
+                    className="p-2 rounded-full hover:bg-white/10 disabled:opacity-subtle transition-colors"
                     aria-label="Next project"
                 >
                     <ChevronRight className="w-6 h-6 text-white" />
@@ -137,15 +148,15 @@ export const ProjectShowcase = ({ projects, onSelect }: ProjectShowcaseProps) =>
 
             {/* Keyboard Hint */}
             <div className="absolute bottom-8 left-0 right-0 flex justify-center z-20 pointer-events-none">
-                <div className="bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center gap-3 animate-pulse">
+                <div className="bg-black/40 backdrop-blur-md border-white-10 px-4 py-2 rounded-full flex items-center gap-icon-text animate-pulse">
                     <span className="text-xs text-white/80 font-mono">←</span>
-                    <span className="text-[10px] text-white/90 uppercase tracking-widest font-medium">Use Arrow Keys</span>
+                    <span className="text-2xs text-white/90 uppercase tracking-widest font-medium">Use Arrow Keys</span>
                     <span className="text-xs text-white/80 font-mono">→</span>
                 </div>
             </div>
 
             {/* Active Project Title Reflection (Optional Cinematic Touch) */}
-            <div className="absolute top-12 left-0 right-0 text-center z-0 opacity-10 pointer-events-none">
+            <div className="absolute top-12 left-0 right-0 text-center z-0 opacity-faint pointer-events-none">
                 <h1 className="text-[12vw] font-black uppercase text-white tracking-widest leading-none truncate px-4">
                     {(() => {
                         const name = projects[activeIndex]?.name || '';

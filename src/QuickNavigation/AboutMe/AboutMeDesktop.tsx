@@ -37,7 +37,7 @@ export const AboutMeDesktop = () => {
 
                 {/* RIGHT COLUMN: Education Timeline (Narrower) */}
                 <div className="col-span-3 h-full min-h-0">
-                    <div className="glass-panel rounded-2xl border border-white/10 h-full overflow-hidden hover:border-gold-dim/20 transition-all duration-300">
+                    <div className="glass-panel rounded-2xl border-white-10 h-full overflow-hidden hover:border-gold-dim/20 transition-fast">
                         <Education />
                     </div>
                 </div>

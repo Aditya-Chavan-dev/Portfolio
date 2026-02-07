@@ -6,6 +6,16 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    sourcemap: true, // Enable source maps in production
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['react', 'react-dom', 'framer-motion'],
+        },
+      },
+    },
+  },
   server: {
     port: 3000,
     host: '127.0.0.1',

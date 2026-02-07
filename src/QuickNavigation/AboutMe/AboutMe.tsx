@@ -13,5 +13,5 @@ export const AboutMe = ({ onNavigate }: AboutMeProps) => {
 
     return isMobile
         ? <AboutMeMobile onBack={handleMobileBack} />
-        : <AboutMeDesktop onNavigate={onNavigate} />;
+        : <AboutMeDesktop />;
 };

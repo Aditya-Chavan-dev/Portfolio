@@ -13,10 +13,10 @@ export const TechStack = () => {
     ];
 
     return (
-        <div className="glass-panel px-5 py-2 rounded-xl border border-white/10 h-full flex items-center gap-4 relative overflow-hidden group hover:border-gold-dim/20 transition-all duration-300">
+        <div className="glass-panel px-5 py-2 rounded-xl border-white-10 h-full flex items-center gap-4 relative overflow-hidden group hover:border-gold-dim/20 transition-fast">
             {/* Label Section */}
             <div className="flex items-center gap-3 pr-5 border-r border-white/10 min-w-max">
-                <div className="w-8 h-8 rounded-lg bg-[#161b22] border border-white/10 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-[#161b22] border-white-10 flex-center">
                     <span className="text-sm">⚡</span>
                 </div>
                 <div className="flex flex-col">
@@ -34,11 +34,11 @@ export const TechStack = () => {
                         onMouseEnter={() => setActiveTech(i)}
                         onMouseLeave={() => setActiveTech(null)}
                     >
-                        <div className="w-8 h-8 flex items-center justify-center transition-transform duration-300 group-hover/icon:scale-110">
+                        <div className="w-8 h-8 flex-center transition-transform duration-300 group-hover/icon:scale-110">
                             <svg
                                 role="img"
                                 viewBox="0 0 24 24"
-                                className="w-full h-full text-secondary group-hover/icon:text-white transition-colors opacity-70 group-hover/icon:opacity-100"
+                                className="w-full h-full text-secondary group-hover/icon:text-white transition-colors opacity-text-subtle group-hover/icon:opacity-100"
                                 style={{ fill: activeTech === i ? `#${tech.color}` : 'currentColor' }}
                             >
                                 <path d={tech.iconPath} />

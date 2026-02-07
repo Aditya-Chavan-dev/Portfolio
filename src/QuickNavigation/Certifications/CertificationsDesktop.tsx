@@ -9,9 +9,8 @@ interface CertificationsDesktopProps {
 export const CertificationsDesktop = ({ onNavigate }: CertificationsDesktopProps) => {
 
     // Placeholder for View Project interaction
-    const handleViewProject = (repoName: string) => {
+    const handleViewProject = () => {
         // Logic to navigate to Project View and select this repo
-        console.log(`Deep link to project: ${repoName}`);
         if (onNavigate) onNavigate('projects');
     };
 

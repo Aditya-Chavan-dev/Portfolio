@@ -5,10 +5,10 @@ export const AboutMeProfile = () => {
     const { stats, totalContributions, streak, loading } = useGithubData();
 
     return (
-        <div className="glass-panel p-5 rounded-2xl border border-white/10 h-full relative overflow-hidden group hover:border-gold-dim/30 transition-all duration-300 flex flex-col justify-between">
+        <div className="glass-panel p-5 rounded-2xl border-white-10 h-full relative overflow-hidden group hover:border-gold-dim/30 transition-fast flex flex-col justify-between">
             {/* Header Title */}
             <div className="mb-2 shrink-0">
-                <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                <h2 className="text-xl font-bold text-white flex items-center gap-icon-text">
                     About <span className="text-gold-glow">Me</span>
                     <div className="h-[2px] w-12 bg-gold-dim/50 rounded-full" />
                 </h2>
@@ -31,7 +31,7 @@ export const AboutMeProfile = () => {
             <div className="grid grid-cols-3 items-center shrink-0">
                 {/* Commits */}
                 <div className="flex flex-col items-center justify-center border-r border-white/5">
-                    <span className="text-[10px] uppercase tracking-wider text-secondary/60 font-medium mb-0.5">
+                    <span className="text-2xs uppercase tracking-wider text-secondary/60 font-medium mb-0.5">
                         Commits
                     </span>
                     <span className="text-xl font-bold text-white font-mono">
@@ -41,7 +41,7 @@ export const AboutMeProfile = () => {
 
                 {/* Projects */}
                 <div className="flex flex-col items-center justify-center border-r border-white/5">
-                    <span className="text-[10px] uppercase tracking-wider text-secondary/60 font-medium mb-0.5">
+                    <span className="text-2xs uppercase tracking-wider text-secondary/60 font-medium mb-0.5">
                         Projects
                     </span>
                     <span className="text-xl font-bold text-white font-mono">
@@ -51,7 +51,7 @@ export const AboutMeProfile = () => {
 
                 {/* Streak */}
                 <div className="flex flex-col items-center justify-center">
-                    <span className="text-[10px] uppercase tracking-wider text-secondary/60 font-medium mb-0.5">
+                    <span className="text-2xs uppercase tracking-wider text-secondary/60 font-medium mb-0.5">
                         Streak
                     </span>
                     <div className="flex items-end gap-1">

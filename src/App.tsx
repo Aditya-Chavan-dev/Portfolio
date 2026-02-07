@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AnimatePresence, LayoutGroup } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { LandingPage } from './LandingPage';
 import { HeroSection } from './HeroSection';
 import { ImmersiveJourney } from './ImmersiveJourney/ImmersiveJourney';
@@ -9,7 +9,13 @@ import { ProfessionalExperience } from './QuickNavigation/ProfessionalExperience
 import { Certifications } from './QuickNavigation/Certifications/Certifications';
 import { TransitionLoader } from './components/TransitionLoader';
 import { QuickNavLayout } from './QuickNavigation/QuickNavLayout';
-import { motion } from 'framer-motion';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { initPerformanceMonitoring } from './utils/performanceMonitoring';
+
+// Initialize performance monitoring in production
+if (import.meta.env.PROD) {
+    initPerformanceMonitoring();
+}
 
 // Define the valid view states
 type ViewState =
@@ -65,58 +71,64 @@ const App: React.FC = () => {
     };
 
     return (
-        <main className="w-full min-h-screen bg-obsidian text-primary">
-            <LayoutGroup>
-                <AnimatePresence mode="popLayout">
-                    {/* 1. Landing Page */}
-                    {view === 'LANDING' && !showLoader && (
-                        <LandingPage key="landing" onEnter={handleEnterFromLanding} />
-                    )}
+        <ErrorBoundary>
+            <main className="w-full min-h-screen bg-obsidian text-primary">
+                <LayoutGroup>
+                    <AnimatePresence mode="popLayout">
+                        {/* 1. Landing Page */}
+                        {view === 'LANDING' && !showLoader && (
+                            <LandingPage key="landing" onEnter={handleEnterFromLanding} />
+                        )}
 
-                    {/* 2. Transition Loader */}
-                    {showLoader && (
-                        <TransitionLoader key="loader" onComplete={handleLoaderComplete} />
-                    )}
+                        {/* 2. Transition Loader */}
+                        {showLoader && (
+                            <TransitionLoader key="loader" onComplete={handleLoaderComplete} />
+                        )}
 
-                    {/* 3. Hero Section (Hub) */}
-                    {view === 'HERO' && (
-                        <HeroSection
-                            key="hero"
-                            onStartJourney={handleStartJourney}
-                            onNavigate={handleNavigate}
-                        />
-                    )}
-
-                    {/* 4. Sub-Sections (Persistent Layout) */}
-                    {(view === 'PROJECTS' || view === 'ABOUT' || view === 'EXPERIENCE' || view === 'CERTIFICATION') && (
-                        <motion.div
-                            key="quick-nav"
-                            className="fixed inset-0 z-50 overflow-hidden bg-obsidian"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                        >
-                            <QuickNavLayout
-                                activeSection={
-                                    view === 'PROJECTS' ? 'projects' :
-                                        view === 'ABOUT' ? 'about' :
-                                            view === 'EXPERIENCE' ? 'experience' :
-                                                'certification'
-                                }
+                        {/* 3. Hero Section (Hub) */}
+                        {view === 'HERO' && (
+                            <HeroSection
+                                key="hero"
+                                onStartJourney={handleStartJourney}
                                 onNavigate={handleNavigate}
+                            />
+                        )}
+
+                        {/* 4. Immersive Journey */}
+                        {view === 'IMMERSIVE' && (
+                            <ImmersiveJourney key="immersive" onBack={handleBackToHero} />
+                        )}
+
+                        {/* 5. Sub-Sections (Persistent Layout) */}
+                        {(view === 'PROJECTS' || view === 'ABOUT' || view === 'EXPERIENCE' || view === 'CERTIFICATION') && (
+                            <motion.div
+                                key="quick-nav"
+                                className="fixed inset-0 z-50 overflow-hidden bg-obsidian"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
                             >
-                                {view === 'PROJECTS' && <Project onNavigate={handleNavigate} />}
-                                {view === 'ABOUT' && <AboutMe onNavigate={handleNavigate} />}
-                                {view === 'EXPERIENCE' && <ProfessionalExperience onNavigate={handleNavigate} />}
-                                {view === 'CERTIFICATION' && <Certifications onNavigate={handleNavigate} />}
-                            </QuickNavLayout>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </LayoutGroup>
-        </main>
+                                <QuickNavLayout
+                                    activeSection={
+                                        view === 'PROJECTS' ? 'projects' :
+                                            view === 'ABOUT' ? 'about' :
+                                                view === 'EXPERIENCE' ? 'experience' :
+                                                    'certification'
+                                    }
+                                    onNavigate={handleNavigate}
+                                >
+                                    {view === 'PROJECTS' && <Project onNavigate={handleNavigate} />}
+                                    {view === 'ABOUT' && <AboutMe onNavigate={handleNavigate} />}
+                                    {view === 'EXPERIENCE' && <ProfessionalExperience onNavigate={handleNavigate} />}
+                                    {view === 'CERTIFICATION' && <Certifications onNavigate={handleNavigate} />}
+                                </QuickNavLayout>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </LayoutGroup>
+            </main>
+        </ErrorBoundary>
     );
 };
 
 export default App;
-

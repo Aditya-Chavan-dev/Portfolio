@@ -16,7 +16,7 @@ export const ProjectMobile = ({ onBack }: ProjectMobileProps) => {
                     <div className="w-full flex justify-start mb-6 relative z-50">
                         <button
                             onClick={onBack}
-                            className="flex items-center gap-2 text-gold-glow text-sm font-medium py-2 px-3 rounded-lg bg-black/40 border border-white/5 backdrop-blur-md"
+                            className="nav-button-mobile"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back
@@ -33,7 +33,7 @@ export const ProjectMobile = ({ onBack }: ProjectMobileProps) => {
                 </div>
 
                 {loading ? (
-                    <div className="flex items-center justify-center h-40">
+                    <div className="flex-center h-40">
                         <div className="loader" />
                     </div>
                 ) : error ? (
@@ -43,11 +43,11 @@ export const ProjectMobile = ({ onBack }: ProjectMobileProps) => {
                 ) : (
                     <div className="flex flex-col gap-4">
                         {/* Flagship */}
-                        {flagship && <ProjectCard repo={flagship} index={0} isActive={true} />}
+                        {flagship && <ProjectCard repo={flagship} isActive={true} />}
 
                         {/* List */}
-                        {projects.map((repo, index) => (
-                            <ProjectCard key={repo.id} repo={repo} index={index + 1} />
+                        {projects.map((repo) => (
+                            <ProjectCard key={repo.id} repo={repo} />
                         ))}
                     </div>
                 )}

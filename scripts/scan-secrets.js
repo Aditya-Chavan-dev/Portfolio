@@ -6,8 +6,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const ROOT_DIR = path.resolve(__dirname, '../src');
-const EXCLUDE_DIRS = ['node_modules', 'dist', 'build', '.git'];
+const ROOT_DIR = path.resolve(__dirname, '../');
+const EXCLUDE_DIRS = ['node_modules', 'dist', 'build', '.git', '.firebase', '.github', 'coverage', 'scripts'];
+const EXCLUDE_FILES = ['.env', '.env.local', '.env.development', '.env.production', 'serviceAccountKey'];
 
 // Regex patterns for common secrets
 const PATTERNS = [
@@ -52,6 +53,15 @@ function walkDir(dir) {
 
     files.forEach(file => {
         if (EXCLUDE_DIRS.includes(file)) return;
+
+        // Skip excluded files (.env, serviceAccountKey, etc.)
+        const shouldExcludeFile = EXCLUDE_FILES.some(excludePattern =>
+            file.includes(excludePattern)
+        );
+        if (shouldExcludeFile) {
+            console.log(`⏭️  Skipping excluded file: ${file}`);
+            return;
+        }
 
         const filePath = path.join(dir, file);
         const stat = fs.statSync(filePath);

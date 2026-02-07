@@ -3,6 +3,28 @@
 @theme {
     /* --- PREMIUM PALETTE (The DNA) --- */
 
+    /* === Design Tokens === */
+    --obsidian: #050505;
+    --gold-glow: #FFD700;
+    --gold-dim: #C5A000;
+    --gold-muted: #8B7500;
+    --surface: #121212;
+    --surface-elevated: #1a1a1a;
+    --primary: #ffffff;
+    --secondary: #a0a0a0;
+    --accent: var(--gold-glow);
+
+    /* === Animation Durations === */
+    --anim-pulse-slow: 8s;
+    --anim-pulse-slower: 10s;
+    --anim-pulse-fast: 4s;
+
+    /* === Layout === */
+    --flex-disclaimer-small: 0.4;
+    --flex-disclaimer-medium: 0.3;
+    --flex-disclaimer-large: 0.5;
+    --flex-mobile-small: 0.2;
+
     /* Base Backgrounds */
     --color-obsidian: #050505;
     /* Deepest Black - The Global Background */
@@ -30,6 +52,7 @@
     /* Typography */
     --font-sans: "Space Grotesk", sans-serif;
     --font-body: "Inter", sans-serif;
+    --font-serif: "Georgia", serif;
 
     /* Animations */
     --animate-fade-in: fade-in 0.8s ease-out forwards;
@@ -37,91 +60,124 @@
     --animate-float: float 6s ease-in-out infinite;
     --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
 
-    @keyframes fade-in {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
+    /* === Z-Index Scale (Issue #9) === */
+    --z-background: 0;
+    --z-content: 10;
+    --z-elevated: 20;
+    --z-sticky: 30;
+    --z-navigation: 40;
+    --z-dropdown: 50;
+    --z-modal: 60;
+    --z-popover: 70;
+    --z-toast: 80;
+    --z-tooltip: 90;
+    --z-overlay: 100;
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* === Rounding Scale (Issue #8) === */
+    --radius-sm: 0.125rem;
+    /* 2px */
+    --radius-md: 0.375rem;
+    /* 6px */
+    --radius-lg: 0.5rem;
+    /* 8px */
+    --radius-xl: 0.75rem;
+    /* 12px */
+    --radius-2xl: 1rem;
+    /* 16px */
+    --radius-3xl: 1.5rem;
+    /* 24px */
+    --radius-full: 9999px;
+}
+
+/* --- KEYFRAMES (Standard CSS) --- */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
 
-    @keyframes float {
-
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-10px);
-        }
-    }
-
-    @keyframes pulse-glow {
-
-        0%,
-        100% {
-            opacity: 1;
-            filter: brightness(1);
-        }
-
-        50% {
-            opacity: 0.8;
-            filter: brightness(1.2);
-        }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* --- GLOBAL DEFAULTS --- */
-@layer base {
-    html {
-        scroll-behavior: smooth;
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
     }
 
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* --- GLOBAL STYLES (Standard CSS) --- */
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html,
     body {
+        font-family: var(--font-body);
         background-color: var(--color-obsidian);
         color: var(--color-primary);
-        font-family: var(--font-sans);
-        -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
-        /* Prevent horizontal scroll from animations */
     }
 
-    /* Selection - Gold Logic */
-    ::selection {
-        background-color: var(--color-gold-glow);
-        color: black;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-sans);
+    }
+
+    /* Hide Scrollbar Globally */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    * {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 }
 
-/* --- PREMIUM UTILITIES --- */
+/* --- UTILITY CLASSES (Standard CSS) --- */
 @layer utilities {
 
-    /* Marquee Animation */
-    @keyframes marquee {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    .animate-marquee {
-        animation: marquee 20s linear infinite;
-    }
-
-    /* Glassmorphism */
+    /* Glassmorphism Panels */
     .glass-panel {
         background: rgba(18, 18, 18, 0.6);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-panel-hover {
+        background: rgba(26, 26, 26, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 215, 0, 0.2);
     }
 
     .glass-panel-gold {
@@ -147,23 +203,249 @@
         justify-content: center;
     }
 
-    .abs-center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    .grid-center {
+        display: grid;
+        place-items: center;
     }
 
-    /* Scrollbar Hide */
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        /* IE and Edge */
-        scrollbar-width: none;
-        /* Firefox */
+    /* Smooth Animations */
+    .transition-smooth {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-        /* Chrome, Safari and Opera */
+    .transition-slow {
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    /* Custom Utility Classes for Inline Styles */
+    .animate-pulse-slow {
+        @apply animate-pulse;
+        animation-duration: 8s;
+    }
+
+    .animate-pulse-slower {
+        @apply animate-pulse;
+        animation-duration: 10s;
+    }
+
+    .backface-hidden {
+        backface-visibility: hidden;
+    }
+
+    .touch-none {
+        touch-action: none;
+    }
+
+    .will-change-transform {
+        will-change: transform;
+    }
+}
+
+/* --- UTILITIES (Added during CSS Audit) --- */
+
+/* Mobile Navigation Button (Issue #1) */
+.nav-button-mobile {
+    @apply flex items-center gap-2 text-gold-glow text-sm font-medium;
+    @apply py-2 px-3 rounded-lg bg-black/40 border border-white/5 backdrop-blur-md;
+}
+
+/* Stat Card Desktop (Issue #1) */
+.stat-card {
+    @apply flex items-center gap-3 px-4 py-2 bg-surface/50;
+    @apply border border-white/5 rounded-lg backdrop-blur-sm;
+}
+
+/* Stat Card Mobile (Issue #1) */
+.stat-card-mobile {
+    @apply flex flex-col items-center gap-1 p-2 bg-surface/50;
+    @apply border border-white/5 rounded-lg backdrop-blur-sm;
+}
+
+/* Full Screen Overlay (Issue #1) */
+.overlay-blur {
+    @apply absolute inset-0 bg-black/95 backdrop-blur-xl;
+}
+
+/* --- Inline Style Replacements (Issue #5) --- */
+
+.flex-disclaimer-small {
+    flex: 0.4;
+}
+
+.flex-disclaimer-medium {
+    flex: 0.3;
+}
+
+.flex-disclaimer-large {
+    flex: 0.5;
+}
+
+.flex-mobile-small {
+    flex: 0.2;
+}
+
+.flex-0 {
+    flex: 0;
+}
+
+.will-change-transform {
+    will-change: transform;
+}
+
+/* --- Border Utilities (Issue #6) --- */
+.border-white-10 {
+    @apply border border-white/10;
+}
+
+.border-white-5 {
+    @apply border border-white/5;
+}
+
+.border-gold-dim-30 {
+    @apply border border-gold-dim/30;
+}
+
+/* --- Transition Utilities (Issue #6) --- */
+.transition-fast {
+    @apply transition-all duration-300;
+}
+
+.transition-medium {
+    @apply transition-all duration-500;
+}
+
+.transition-opacity-medium {
+    @apply transition-opacity duration-500;
+}
+
+/* --- Opacity Standards (Issue #14) --- */
+.opacity-faint {
+    @apply opacity-5;
+}
+
+.opacity-subtle {
+    @apply opacity-20;
+}
+
+.opacity-dim {
+    @apply opacity-50;
+}
+
+.opacity-text-subtle {
+    @apply opacity-60;
+}
+
+.opacity-hover-reveal {
+    @apply opacity-0 group-hover:opacity-100 transition-opacity duration-300;
+}
+
+/* --- Z-Index Utilities (Issue #9) --- */
+.z-background {
+    z-index: var(--z-background);
+}
+
+.z-content {
+    z-index: var(--z-content);
+}
+
+.z-elevated {
+    z-index: var(--z-elevated);
+}
+
+.z-navigation {
+    z-index: var(--z-navigation);
+}
+
+.z-modal {
+    z-index: var(--z-modal);
+}
+
+.z-overlay {
+    z-index: var(--z-overlay);
+}
+
+/* --- Rounding Utilities (Issue #8) --- */
+.card-round {
+    @apply rounded-2xl;
+}
+
+/* Standard Card: 16px */
+.panel-round {
+    @apply rounded-xl;
+}
+
+/* Panels: 12px */
+.btn-round {
+    @apply rounded-sm;
+}
+
+/* Buttons: 2px */
+.input-round {
+    @apply rounded-lg;
+}
+
+/* Inputs: 8px */
+
+/* --- Typography Scale Extensions (Issue #10) --- */
+.text-2xs {
+    font-size: 0.625rem;
+    /* 10px */
+    line-height: 1rem;
+}
+
+.text-3xs {
+    font-size: 0.5625rem;
+    /* 9px */
+    line-height: 0.75rem;
+}
+/* --- Gap Spacing Utilities (Issue #11) --- */
+.gap-icon-text {
+    @apply gap-3; /* 12px */
+}
+
+.gap-card-content {
+    @apply gap-4; /* 16px */
+}
+
+.gap-section {
+    @apply gap-6; /* 24px */
+}
+
+.gap-list-item {
+    @apply gap-2; /* 8px */
+}
+
+/* --- Padding Utilities (Issue #12) --- */
+.p-card {
+    @apply p-6 md:p-8;
+}
+
+.p-section {
+    @apply py-12 px-4 md:px-8;
+}
+
+.p-icon {
+    @apply p-2;
+}
+
+/* --- Shadow Utilities (Issue #13) --- */
+.shadow-glow {
+    @apply shadow-[0_0_15px_rgba(255,215,0,0.3)];
+}
+
+.drop-shadow-glow {
+    @apply drop-shadow-[0_0_8px_rgba(255,215,0,0.5)];
+}
+
+.shadow-card-hover {
+    @apply shadow-2xl shadow-gold-glow/5;
+}
+
+/* --- Animation Durations (Issue #15) --- */
+.duration-slow {
+    @apply duration-700;
+}
+
+.duration-slower {
+    @apply duration-1000;
 }
