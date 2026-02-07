@@ -1,18 +1,51 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+/**
+ * Props for the Loader component
+ */
 interface LoaderProps {
+    /** Callback function to execute when loading completes */
     onComplete: () => void;
+    /** Optional humorous message to display during loading */
     message?: string;
 }
 
+// Constants
+const LOADER_DURATION_MS = 4000; // 4 seconds
+const PROGRESS_STEPS = 100;
+const COMPLETION_DELAY_MS = 200;
+const PARTICLE_COUNT = 6;
+
+/**
+ * Full-screen loader component with animated progress bar and particle effects
+ * Displays a humorous message and animates from 0 to 100% over 4 seconds
+ * 
+ * @example
+ * ```tsx
+ * <Loader 
+ *   message="Brewing coffee for the developer..." 
+ *   onComplete={() => setLoading(false)}
+ * />
+ * ```
+ */
 export const Loader = ({ onComplete, message }: LoaderProps) => {
     const [progress, setProgress] = useState(0);
 
+    // Generate random particle positions and delays once using lazy initialization
+    const [particles] = useState(() =>
+        Array.from({ length: PARTICLE_COUNT }).map(() => ({
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            duration: 4 + Math.random() * 2,
+            delay: Math.random() * 4
+        }))
+    );
+
     useEffect(() => {
         // Animate progress from 0 to 100
-        const duration = 4000; // 4 seconds
-        const steps = 100;
+        const duration = LOADER_DURATION_MS;
+        const steps = PROGRESS_STEPS;
         const interval = duration / steps;
 
         let currentProgress = 0;
@@ -20,9 +53,9 @@ export const Loader = ({ onComplete, message }: LoaderProps) => {
             currentProgress += 1;
             setProgress(currentProgress);
 
-            if (currentProgress >= 100) {
+            if (currentProgress >= steps) {
                 clearInterval(timer);
-                setTimeout(() => onComplete(), 200);
+                setTimeout(() => onComplete(), COMPLETION_DELAY_MS);
             }
         }, interval);
 
@@ -35,8 +68,7 @@ export const Loader = ({ onComplete, message }: LoaderProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden px-8"
-            style={{ width: '100vw', height: '100dvh' }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden px-8 w-screen h-dvh"
         >
             {/* Main Content - Humor Line as Hero */}
             <div className="relative flex flex-col items-center max-w-4xl w-full">
@@ -49,8 +81,7 @@ export const Loader = ({ onComplete, message }: LoaderProps) => {
                         className="mb-20"
                     >
                         <motion.p
-                            className="text-2xl md:text-3xl lg:text-4xl text-center font-light tracking-wide text-amber-100 leading-relaxed"
-                            style={{ fontFamily: 'Georgia, serif' }}
+                            className="text-2xl md:text-3xl lg:text-4xl text-center font-light tracking-wide text-amber-100 leading-relaxed font-serif"
                             animate={{
                                 textShadow: [
                                     '0 0 20px rgba(251, 191, 36, 0.3)',
@@ -72,7 +103,7 @@ export const Loader = ({ onComplete, message }: LoaderProps) => {
                 {/* Subtle Minimal Loader Below */}
                 <div className="relative flex flex-col items-center">
                     {/* Small Golden Ring */}
-                    <div className="relative mb-6" style={{ width: '80px', height: '80px' }}>
+                    <div className="relative mb-6 w-20 h-20">
                         {/* Subtle glow */}
                         <div className="absolute inset-0 rounded-full bg-amber-500/20 blur-lg" />
 
@@ -156,24 +187,24 @@ export const Loader = ({ onComplete, message }: LoaderProps) => {
                 </div>
             </div>
 
-            {/* Very subtle ambient particles */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
-                {[...Array(6)].map((_, i) => (
+            {/* Ambient Background Particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-subtle">
+                {particles.map((particle, i) => (
                     <motion.div
                         key={i}
-                        className="absolute w-0.5 h-0.5 bg-amber-400/20 rounded-full"
+                        className="absolute w-1 h-1 bg-amber-400/20 rounded-full"
                         style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
+                            left: particle.left,
+                            top: particle.top,
                         }}
                         animate={{
                             opacity: [0, 0.4, 0],
                             scale: [0, 1, 0]
                         }}
                         transition={{
-                            duration: 4 + Math.random() * 2,
+                            duration: particle.duration,
                             repeat: Infinity,
-                            delay: Math.random() * 4,
+                            delay: particle.delay,
                             ease: 'easeInOut'
                         }}
                     />

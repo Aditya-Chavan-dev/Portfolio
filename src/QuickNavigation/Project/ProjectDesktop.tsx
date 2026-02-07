@@ -26,7 +26,7 @@ export const ProjectDesktop = () => {
                         className="h-full w-full"
                     >
                         {loading ? (
-                            <div className="flex items-center justify-center h-full">
+                            <div className="flex-center h-full">
                                 <div className="loader" />
                             </div>
                         ) : error ? (
@@ -48,7 +48,7 @@ export const ProjectDesktop = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="h-full w-full absolute inset-0 z-50 bg-black/95 backdrop-blur-xl"
+                        className="overlay-blur z-modal"
                     >
                         <ProjectDetailView
                             repo={selectedRepo}

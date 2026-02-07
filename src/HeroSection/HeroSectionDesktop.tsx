@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FolderGit2, User, Briefcase, Award, Users, Zap, Linkedin } from 'lucide-react';
+import { StatCard } from '@/components/shared/StatCard';
 import { subscribeToMetrics } from '@/services/metricsService';
 
 interface HeroSectionDesktopProps {
@@ -62,7 +63,7 @@ export const HeroSectionDesktop: React.FC<HeroSectionDesktopProps> = ({ onStartJ
     return (
         <div className="relative w-full h-screen flex flex-col bg-obsidian text-primary overflow-hidden">
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 opacity-faint">
                 <div className="absolute inset-0" style={{
                     backgroundImage: 'linear-gradient(rgba(255, 215, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px)',
                     backgroundSize: '50px 50px'
@@ -90,37 +91,27 @@ export const HeroSectionDesktop: React.FC<HeroSectionDesktopProps> = ({ onStartJ
                 {/* Metrics */}
                 <div className="flex items-center gap-4">
                     {/* Total Visitors */}
-                    <div className="flex items-center gap-3 px-4 py-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm min-w-[140px]">
-                        <Users className="w-5 h-5 text-gold-glow" />
-                        <div className="flex flex-col">
-                            <span className="text-[10px] text-slate-400 uppercase tracking-wider">Total Visitors</span>
-                            <span className="text-sm font-bold text-white">
-                                {isLoading ? '---' : metrics.totalVisitors.toLocaleString()}
-                            </span>
-                        </div>
-                    </div>
+                    <StatCard
+                        icon={Users}
+                        label="Total Visitors"
+                        value={isLoading ? '---' : metrics.totalVisitors.toLocaleString()}
+                    />
 
                     {/* Active Now */}
-                    <div className="flex items-center gap-3 px-4 py-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm min-w-[140px]">
-                        <Zap className="w-5 h-5 text-emerald-400" />
-                        <div className="flex flex-col">
-                            <span className="text-[10px] text-slate-400 uppercase tracking-wider">Active Now</span>
-                            <span className="text-sm font-bold text-white">
-                                {isLoading ? '-' : metrics.activeUsers}
-                            </span>
-                        </div>
-                    </div>
+                    <StatCard
+                        icon={Zap}
+                        label="Active Now"
+                        value={isLoading ? '-' : metrics.activeUsers.toString()}
+                        iconColorClass="text-emerald-400"
+                    />
 
                     {/* From LinkedIn */}
-                    <div className="flex items-center gap-3 px-4 py-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm min-w-[140px]">
-                        <Linkedin className="w-5 h-5 text-blue-400" />
-                        <div className="flex flex-col">
-                            <span className="text-[10px] text-slate-400 uppercase tracking-wider">From LinkedIn</span>
-                            <span className="text-sm font-bold text-white">
-                                {isLoading ? '--' : metrics.linkedinReferrals}
-                            </span>
-                        </div>
-                    </div>
+                    <StatCard
+                        icon={Linkedin}
+                        label="From LinkedIn"
+                        value={isLoading ? '--' : metrics.linkedinReferrals.toString()}
+                        iconColorClass="text-blue-400"
+                    />
                 </div>
             </motion.nav>
 
@@ -146,12 +137,12 @@ export const HeroSectionDesktop: React.FC<HeroSectionDesktopProps> = ({ onStartJ
                         onClick={onStartJourney}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="group relative px-8 py-6 w-full max-w-md bg-gold-glow/5 border border-gold-glow/50 rounded-sm font-semibold text-gold-glow tracking-wider uppercase text-lg shadow-[0_0_30px_rgba(255,215,0,0.1)] hover:shadow-[0_0_50px_rgba(255,215,0,0.3)] hover:bg-gold-glow hover:text-black transition-all duration-300 overflow-hidden text-left"
+                        className="btn-secondary group relative overflow-hidden text-left"
                     >
                         <div className="relative z-10 flex items-center justify-between">
                             <span className="flex flex-col">
                                 <span>Start Immersive Journey</span>
-                                <span className="text-xs opacity-60 font-normal normal-case tracking-normal mt-1">Explore the 3D Interactive Experience</span>
+                                <span className="text-xs opacity-text-subtle font-normal normal-case tracking-normal mt-1">Explore the 3D Interactive Experience</span>
                             </span>
                             <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -197,11 +188,11 @@ export const HeroSectionDesktop: React.FC<HeroSectionDesktopProps> = ({ onStartJ
                             >
                                 {/* Independent Background Layer - Fades out on exit without affecting Icon */}
                                 <motion.div
-                                    className="absolute inset-0 bg-surface/50 border border-white/5 rounded-2xl backdrop-blur-md transition-colors duration-300 group-hover:border-gold-glow/50"
+                                    className="absolute inset-0 bg-surface/50 border-white-5 rounded-2xl backdrop-blur-md transition-colors duration-300 group-hover:border-gold-glow/50"
                                     exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
                                 >
                                     {/* Hover Gradient inside background */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-gold-glow/0 via-gold-glow/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+                                    <div className="hover-glow-gold rounded-2xl" />
                                 </motion.div>
 
                                 <motion.span
@@ -224,7 +215,7 @@ export const HeroSectionDesktop: React.FC<HeroSectionDesktopProps> = ({ onStartJ
                                     </p>
                                 </motion.div>
 
-                                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0 text-gold-glow">
+                                <div className="absolute top-4 right-4 opacity-hover-reveal -translate-x-2 group-hover:translate-x-0 text-gold-glow">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>

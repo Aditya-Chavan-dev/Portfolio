@@ -9,8 +9,7 @@ interface CertificationsMobileProps {
 
 export const CertificationsMobile = ({ onBack, onNavigate }: CertificationsMobileProps) => {
     // Placeholder for View Project interaction
-    const handleViewProject = (repoName: string) => {
-        console.log(`Deep link to project: ${repoName}`);
+    const handleViewProject = () => {
         if (onNavigate) onNavigate('projects');
     };
 
@@ -21,7 +20,7 @@ export const CertificationsMobile = ({ onBack, onNavigate }: CertificationsMobil
                     <div className="relative z-50">
                         <button
                             onClick={onBack}
-                            className="flex items-center gap-2 text-gold-glow text-sm font-medium py-2 px-3 rounded-lg bg-black/40 border border-white/5 backdrop-blur-md"
+                            className="nav-button-mobile"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             Back

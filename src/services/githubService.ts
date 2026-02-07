@@ -81,14 +81,12 @@ export const githubService = {
                 return null;
             }
 
-            // check coverage
             if (data.contributions.length < 360) {
-                console.error('[GithubService] Validation Failed: Insufficient coverage (< 360 days)');
+                console.error('[GithubService] Validation Failed: Insufficient coverage (<360 days)');
                 return null;
             }
 
-            // validate individual days
-            const isValid = data.contributions.every((d: any) => {
+            const isValid = data.contributions.every((d: { date: string; count: number }) => {
                 const validDate = /^\d{4}-\d{2}-\d{2}$/.test(d.date);
                 const validCount = Number.isInteger(d.count) && d.count >= 0;
                 return validDate && validCount;
@@ -166,7 +164,7 @@ export const githubService = {
         const gridStartSunday = new Date(currentWeekSunday);
         gridStartSunday.setDate(gridStartSunday.getDate() - (51 * 7));
 
-        let iteratorDate = new Date(gridStartSunday);
+        const iteratorDate = new Date(gridStartSunday);
         let lastMonth: number | null = null;
 
         for (let w = 0; w < TOTAL_WEEKS; w++) {
@@ -185,12 +183,10 @@ export const githubService = {
                     });
                 }
 
-                // Increment day
                 iteratorDate.setDate(iteratorDate.getDate() + 1);
             }
 
-            // Determine Month Label
-            // We use the month of the first day of the week (Sunday)
+            // Use the month of the first day of the week (Sunday) for labeling
             const firstDay = new Date(weekDays[0].date);
             const month = firstDay.getMonth();
             let monthLabel: string | undefined = undefined;

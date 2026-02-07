@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FolderGit2, User, Briefcase, Award, Users, Zap, Linkedin } from 'lucide-react';
+import { StatCard } from '@/components/shared/StatCard';
 import { subscribeToMetrics } from '@/services/metricsService';
 
 interface HeroSectionMobileProps {
@@ -42,7 +43,7 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
             <div className="absolute inset-0 overflow-y-auto overflow-x-hidden px-6 py-6 flex flex-col items-center justify-between min-h-[100dvh] gap-4 supports-[min-height:100dvh]:min-h-[100dvh]">
 
                 {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-5 pointer-events-none sticky top-0 h-screen">
+                <div className="absolute inset-0 opacity-faint pointer-events-none sticky top-0 h-screen">
                     <div className="absolute inset-0" style={{
                         backgroundImage: 'linear-gradient(rgba(255, 215, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px)',
                         backgroundSize: '30px 30px'
@@ -57,7 +58,7 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
                     className="relative z-10 w-full flex-none"
                 >
                     {/* System Status */}
-                    <div className="flex items-center justify-center gap-2 mb-3">
+                    <div className="flex-center gap-2 mb-3">
                         <div className="relative">
                             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                             <div className="absolute inset-0 w-2 h-2 bg-emerald-500 rounded-full animate-ping opacity-75" />
@@ -70,31 +71,30 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
                     {/* Metrics Grid */}
                     <div className="grid grid-cols-3 gap-2">
                         {/* Total Visitors */}
-                        <div className="flex flex-col items-center gap-1 p-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm">
-                            <Users className="w-4 h-4 text-gold-glow" />
-                            <span className="text-[9px] text-slate-400 text-center uppercase tracking-wide">Visitors</span>
-                            <span className="text-xs font-bold text-white">
-                                {isLoading ? '---' : metrics.totalVisitors.toLocaleString()}
-                            </span>
-                        </div>
+                        <StatCard
+                            icon={Users}
+                            label="Visitors"
+                            value={isLoading ? '---' : metrics.totalVisitors.toLocaleString()}
+                            variant="mobile"
+                        />
 
                         {/* Active Now */}
-                        <div className="flex flex-col items-center gap-1 p-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm">
-                            <Zap className="w-4 h-4 text-emerald-400" />
-                            <span className="text-[9px] text-slate-400 text-center uppercase tracking-wide">Active</span>
-                            <span className="text-xs font-bold text-white">
-                                {isLoading ? '-' : metrics.activeUsers}
-                            </span>
-                        </div>
+                        <StatCard
+                            icon={Zap}
+                            label="Active"
+                            value={isLoading ? '-' : metrics.activeUsers.toString()}
+                            variant="mobile"
+                            iconColorClass="text-emerald-400"
+                        />
 
                         {/* From LinkedIn */}
-                        <div className="flex flex-col items-center gap-1 p-2 bg-surface/50 border border-white/5 rounded-lg backdrop-blur-sm">
-                            <Linkedin className="w-4 h-4 text-blue-400" />
-                            <span className="text-[9px] text-slate-400 text-center uppercase tracking-wide">LinkedIn</span>
-                            <span className="text-xs font-bold text-white">
-                                {isLoading ? '--' : metrics.linkedinReferrals}
-                            </span>
-                        </div>
+                        <StatCard
+                            icon={Linkedin}
+                            label="LinkedIn"
+                            value={isLoading ? '--' : metrics.linkedinReferrals.toString()}
+                            variant="mobile"
+                            iconColorClass="text-blue-400"
+                        />
                     </div>
                 </motion.div>
 
@@ -116,9 +116,9 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
                     <motion.button
                         onClick={onStartJourney}
                         whileTap={{ scale: 0.95 }}
-                        className="w-full max-w-xs px-6 py-3 bg-transparent border border-gold-glow rounded-sm font-semibold text-gold-glow tracking-wider uppercase text-xs shadow-[0_0_15px_rgba(255,215,0,0.1)] active:bg-gold-glow active:text-black transition-all duration-300"
+                        className="btn-secondary-mobile"
                     >
-                        <span className="flex items-center justify-center gap-2">
+                        <span className="flex-center gap-2">
                             Immersive Journey
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -143,12 +143,12 @@ export const HeroSectionMobile: React.FC<HeroSectionMobileProps> = ({ onStartJou
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.5 + index * 0.1 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="flex flex-col items-center justify-center gap-2 p-3 bg-surface/80 border border-white/10 rounded-xl active:border-gold-glow/50 active:bg-gold-glow/10 transition-all duration-200 backdrop-blur-md"
+                                className="flex flex-col items-center justify-center gap-2 p-3 bg-surface/80 border-white-10 rounded-xl active:border-gold-glow/50 active:bg-gold-glow/10 transition-fast backdrop-blur-md"
                             >
                                 <span className="text-xl text-secondary">
                                     {item.icon}
                                 </span>
-                                <span className="text-[10px] text-secondary font-medium uppercase tracking-wide leading-tight text-center">
+                                <span className="text-2xs text-secondary font-medium uppercase tracking-wide leading-tight text-center">
                                     {item.label}
                                 </span>
                             </motion.button>

@@ -12,7 +12,7 @@ export const CertificationCard = ({ cert, onViewProject }: CertificationCardProp
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="group relative flex flex-col bg-obsidian/80 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden hover:border-gold-dim/40 transition-all duration-300 shadow-lg hover:shadow-gold-dim/10"
+            className="group relative flex flex-col bg-obsidian/80 backdrop-blur-md border-white-10 card-round overflow-hidden hover:border-gold-dim/40 transition-fast shadow-lg hover:shadow-gold-dim/10"
         >
             {/* 1. Header: Issuer & Title */}
             <div className="p-5 border-b border-white/5 bg-white/5">
@@ -31,15 +31,15 @@ export const CertificationCard = ({ cert, onViewProject }: CertificationCardProp
             {/* 2. Middle: PDF Thumbnail Preview (Placeholder for now) */}
             <div className="h-48 w-full bg-black/40 relative overflow-hidden group-hover:bg-black/20 transition-colors">
                 {/* Visual Placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center text-white/10 group-hover:text-white/20 transition-colors">
+                <div className="absolute inset-0 flex-center text-white/10 group-hover:text-white/20 transition-colors">
                     <div className="text-center">
-                        <Award className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                        <Award className="w-12 h-12 mx-auto mb-2 opacity-dim" />
                         <span className="text-sm font-medium">Certificate Preview</span>
                     </div>
                 </div>
 
                 {/* Hover overlay hint */}
-                <div className="absolute inset-0 bg-gold-dim/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+                <div className="absolute inset-0 bg-gold-dim/10 opacity-hover-reveal flex-center backdrop-blur-[1px]">
                     <a
                         href={cert.link}
                         target="_blank"
@@ -56,7 +56,7 @@ export const CertificationCard = ({ cert, onViewProject }: CertificationCardProp
                 {/* Skills */}
                 <div className="flex flex-wrap gap-2">
                     {cert.skills.map((skill) => (
-                        <span key={skill} className="px-2 py-1 rounded-md bg-white/5 border border-white/5 text-xs text-secondary/80 group-hover:border-white/10 transition-colors">
+                        <span key={skill} className="px-2 py-1 rounded-md bg-white/5 border-white-5 text-xs text-secondary/80 group-hover:border-white/10 transition-colors">
                             {skill}
                         </span>
                     ))}
@@ -66,7 +66,7 @@ export const CertificationCard = ({ cert, onViewProject }: CertificationCardProp
                 {cert.associatedProject && onViewProject && (
                     <button
                         onClick={() => onViewProject(cert.associatedProject!)}
-                        className="w-full flex items-center justify-center gap-2 py-2 mt-2 rounded-lg bg-white/5 border border-white/10 hover:bg-gold-dim/10 hover:border-gold-dim/30 hover:text-gold-glow text-secondary transition-all text-sm font-medium group/btn"
+                        className="w-full flex-center gap-2 py-2 mt-2 rounded-lg bg-white/5 border-white-10 hover:bg-gold-dim/10 hover:border-gold-dim/30 hover:text-gold-glow text-secondary transition-all text-sm font-medium group/btn"
                     >
                         <FolderGit2 className="w-4 h-4 group-hover/btn:text-gold-glow transition-colors" />
                         View Project used in

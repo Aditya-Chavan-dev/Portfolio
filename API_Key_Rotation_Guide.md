@@ -38,7 +38,17 @@ This guide covers rotating both the **Client-Side API Key** and the **Server-Sid
 ---
 
 ## 🔑 2. Service Account Private Key Rotation
-*Rotates the "Admin" key file (`serviceAccountKey.json`). This gives full super-admin access to your project. If this file was ever in git history, you **MUST** rotate it.*
+*Rotates the "Admin" key file (`serviceAccountKey.json`). This gives full super-admin access to your project.*
+
+**IMPORTANT**: The service account key is now stored **outside the repository** for security.
+
+**Current Location**: `G:\secure-keys\serviceAccountKey.json`
+
+### Why Store Outside Repository?
+- ✅ Prevents accidental commits
+- ✅ Reduces security risks
+- ✅ Follows security best practices
+- ✅ Keeps sensitive credentials separate from code
 
 ### Step 1: Generate New Key
 1. Go to **Firebase Console** > **Project Settings** (Gear Icon) > **Service accounts**.
@@ -48,8 +58,9 @@ This guide covers rotating both the **Client-Side API Key** and the **Server-Sid
 
 ### Step 2: Replace Local File
 1. Rename the downloaded file to `serviceAccountKey.json`.
-2. Overwrite the existing `g:\PORTFOLIO\serviceAccountKey.json` with this new file.
-3. **Double Check**: Ensure `serviceAccountKey.json` is listed in your `.gitignore` file.
+2. Move it to the secure location: `G:\secure-keys\serviceAccountKey.json`.
+3. **Verify**: The file should NOT be in the repository directory.
+4. **Double Check**: Ensure `serviceAccountKey.json` is listed in your `.gitignore` file.
 
 ### Step 3: Revoke Old Key (Delete)
 *Note: Firebase Console doesn't explicitly "list" old keys to delete in the UI easily, but generating a new one doesn't automatically invalidate the old one unless you delete the specific key ID from the associated Google Cloud Service Account.*

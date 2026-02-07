@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://adityachavan.dev/sitemap.xml
+
+# Disallow admin/config paths (if any in future)
+# Disallow: /admin/
+# Disallow: /.well-known/

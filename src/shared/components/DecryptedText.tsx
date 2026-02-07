@@ -20,7 +20,7 @@ export const DecryptedText = ({
 
     useEffect(() => {
         if (!reveal) {
-            setDisplayText(text); // Reset if not revealing
+            // Don't animate if reveal is false
             return;
         }
 

@@ -22,12 +22,12 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
             <motion.div
                 layout
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                style={{ willChange: "transform", flex: sequence.showDisclaimer ? 0.4 : 0.5 }}
-                className={`flex items-end justify-center w-full px-6 pb-6 text-center z-10`}
+                className={`flex items-end justify-center w-full px-6 pb-6 text-center z-10 will-change-transform ${sequence.showDisclaimer ? 'flex-disclaimer-small' : 'flex-disclaimer-large'
+                    }`}
             >
                 <motion.div layout className="flex flex-col gap-4 text-2xl md:text-5xl font-light tracking-wide leading-relaxed min-h-[140px]">
                     {/* Line 1 */}
-                    <div className="h-[60px] flex items-center justify-center">
+                    <div className="h-[60px] flex-center">
                         <TypewriterText
                             text="It's not how I write the code..."
                             onComplete={() => setTimeout(() => setSequence(s => ({ ...s, line1Done: true })), 500)}
@@ -36,7 +36,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
                     </div>
 
                     {/* Line 2 */}
-                    <div className="h-[60px] flex items-center justify-center">
+                    <div className="h-[60px] flex-center">
                         {sequence.line1Done && (
                             <>
                                 <TypewriterText
@@ -62,7 +62,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
                                         onComplete={() => setTimeout(() => setSequence(s => ({ ...s, line2Part3Done: true, showDisclaimer: true })), 1000)}
                                     />
                                 )}
-                                <span className={`transition-opacity duration-1000 ${sequence.showDisclaimer ? "opacity-0" : "opacity-100"}`}>
+                                <span className={`transition-opacity duration-slower ${sequence.showDisclaimer ? "opacity-0" : "opacity-100"}`}>
                                     <Cursor />
                                 </span>
                             </>
@@ -75,8 +75,8 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
             <motion.div
                 layout
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                style={{ willChange: "transform", flex: sequence.showDisclaimer ? 0.3 : 0 }}
-                className={`flex items-start justify-center w-full px-6 pt-6 z-10 overflow-hidden`}
+                className={`flex items-start justify-center w-full px-6 pt-6 z-10 overflow-hidden will-change-transform ${sequence.showDisclaimer ? 'flex-disclaimer-medium' : 'flex-0'
+                    }`}
             >
 
                 {sequence.showDisclaimer && (
@@ -102,8 +102,8 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
             <motion.div
                 layout
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                style={{ willChange: "transform", flex: sequence.showDisclaimer ? 0.3 : 0.5 }}
-                className={`flex items-start justify-center w-full px-6 pt-14 z-10 overflow-hidden`}
+                className={`flex items-start justify-center w-full px-6 pt-14 z-10 overflow-hidden will-change-transform ${sequence.showDisclaimer ? 'flex-disclaimer-medium' : 'flex-disclaimer-large'
+                    }`}
             >
                 {sequence.showDisclaimer && (
                     <motion.button
@@ -112,7 +112,7 @@ export const LandingPageDesktop: React.FC<{ onEnter: () => void }> = ({ onEnter 
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.5, duration: 0.5 }}
                         onClick={onEnter}
-                        className="group px-10 py-4 bg-gold-glow text-black border border-gold-glow hover:bg-white rounded-sm uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-4 cursor-pointer text-sm md:text-base font-bold shadow-[0_0_20px_rgba(255,215,0,0.3)]"
+                        className="btn-primary group"
                     >
                         <span>Let's Go</span>
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform text-black" />

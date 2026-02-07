@@ -4,8 +4,8 @@ import { githubService, type ContributionDay } from '@/services/githubService';
 import { ABOUT_ME_DATA } from '@/data/aboutMeData';
 
 export const GithubStats = () => {
-    const [stats, setStats] = useState<any>(null);
-    const [contributions, setContributions] = useState<any>(null);
+    const [stats, setStats] = useState<{ public_repos?: number } | null>(null);
+    const [contributions, setContributions] = useState<{ contributions?: ContributionDay[]; total?: { lastYear: number } } | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -42,58 +42,58 @@ export const GithubStats = () => {
     };
 
     return (
-        <div className="glass-panel p-2.5 rounded-2xl border border-white/10 h-full relative overflow-hidden hover:border-gold-dim/20 transition-all duration-300 group">
+        <div className="glass-panel p-2.5 rounded-2xl border-white-10 h-full relative overflow-hidden hover:border-gold-dim/20 transition-fast group">
             {/* Animated background glow */}
-            <div className="absolute inset-0 bg-gradient-to-bl from-gold-glow/0 via-gold-dim/5 to-gold-glow/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="hover-glow-gold" />
 
             <div className="relative z-10 h-full flex flex-col">
                 <h3 className="text-xs font-bold mb-2 flex items-center gap-1.5">
-                    <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-gold-dim/20 to-gold-glow/10 border border-gold-dim/30 flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-gold-dim/20 to-gold-glow/10 border-gold-dim-30 flex-center">
                         <Github className="w-4 h-4 text-gold-glow" />
                     </div>
-                    <span className="bg-gradient-to-r from-white to-secondary bg-clip-text text-transparent">
+                    <span className="text-gradient-gold">
                         Github Activity <span className="text-gold-dim">(Realtime)</span>
                     </span>
                 </h3>
 
                 {loading ? (
-                    <div className="flex items-center justify-center h-full">
+                    <div className="flex-center h-full">
                         <div className="loader" />
                     </div>
                 ) : (
                     <div className="flex items-center gap-8 h-full px-4 pt-10">
                         {/* Left: Stats Column - Distinct Cards */}
                         <div className="w-56 flex-shrink-0 flex flex-col gap-3 justify-center">
-                            <div className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-gold-dim/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
+                            <div className="p-4 rounded-xl bg-white/5 border-white-5 hover:border-gold-dim/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
                                 <div>
-                                    <p className="text-[10px] text-secondary mb-1 uppercase tracking-wide opacity-70">Total Commits</p>
+                                    <p className="text-2xs text-secondary mb-1 uppercase tracking-wide opacity-text-subtle">Total Commits</p>
                                     <p className="text-2xl font-bold text-white group-hover/stat:text-gold-glow transition-colors leading-none">
-                                        {contributions?.total.lastYear || 0}
+                                        {contributions?.total?.lastYear || 0}
                                     </p>
                                 </div>
-                                <div className="w-8 h-8 rounded-lg bg-gold-dim/10 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-gold-dim/10 flex-center">
                                     <span className="text-sm">🔥</span>
                                 </div>
                             </div>
-                            <div className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
+                            <div className="p-4 rounded-xl bg-white/5 border-white-5 hover:border-emerald-500/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
                                 <div>
-                                    <p className="text-[10px] text-secondary mb-1 uppercase tracking-wide opacity-70">Active Projects</p>
+                                    <p className="text-2xs text-secondary mb-1 uppercase tracking-wide opacity-text-subtle">Active Projects</p>
                                     <p className="text-2xl font-bold text-white group-hover/stat:text-emerald-400 transition-colors leading-none">
                                         {stats?.public_repos || 0}
                                     </p>
                                 </div>
-                                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex-center">
                                     <span className="text-sm">🚀</span>
                                 </div>
                             </div>
-                            <div className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-blue-500/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
+                            <div className="p-4 rounded-xl bg-white/5 border-white-5 hover:border-blue-500/30 hover:bg-white/10 transition-all cursor-pointer group/stat flex items-center justify-between">
                                 <div>
-                                    <p className="text-[10px] text-secondary mb-1 uppercase tracking-wide opacity-70">Current Streak</p>
+                                    <p className="text-2xs text-secondary mb-1 uppercase tracking-wide opacity-text-subtle">Current Streak</p>
                                     <p className="text-2xl font-bold text-white group-hover/stat:text-blue-400 transition-colors leading-none">
                                         {streak}
                                     </p>
                                 </div>
-                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex-center">
                                     <span className="text-sm">⚡</span>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@ export const GithubStats = () => {
                                     {/* Fixed Day labels column */}
                                     <div className="flex flex-col gap-[3px] pt-6 flex-shrink-0">
                                         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, i) => (
-                                            <div key={i} className="text-[9px] text-secondary/50 h-[10px] flex items-center leading-none">
+                                            <div key={i} className="text-3xs text-secondary/50 h-[10px] flex items-center leading-none">
                                                 {i % 2 === 1 ? day : ''}
                                             </div>
                                         ))}
@@ -144,7 +144,7 @@ export const GithubStats = () => {
                                                 monthLabel?: string;
                                             }> = [];
 
-                                            let currentDate = new Date(startDate);
+                                            const currentDate = new Date(startDate);
                                             let lastMonth = -1;
 
                                             for (let weekIdx = 0; weekIdx < TOTAL_WEEKS_TO_SHOW; weekIdx++) {
@@ -184,7 +184,7 @@ export const GithubStats = () => {
                                                                 {/* Month Label container */}
                                                                 <div className="h-4 relative w-3.5 mb-2">
                                                                     {week.monthLabel && (
-                                                                        <span className="absolute top-0 left-0 text-[10px] text-secondary/80 font-medium whitespace-nowrap">
+                                                                        <span className="absolute top-0 left-0 text-2xs text-secondary/80 font-medium whitespace-nowrap">
                                                                             {week.monthLabel}
                                                                         </span>
                                                                     )}

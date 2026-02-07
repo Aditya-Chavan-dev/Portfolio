@@ -55,7 +55,7 @@ export const useGithubData = () => {
                 if (isMounted.current) setLoading(false);
             }
         } catch (error) {
-            console.error('[GithubData] Error:', error);
+            console.error('Failed to fetch GitHub stats:', error);
             if (isMounted.current) setLoading(false);
         }
     }, [processData]);
@@ -80,7 +80,8 @@ export const useGithubData = () => {
                         processData(cachedStats.data, cachedContribs.data);
                         hasValidCache = true;
                     }
-                } catch (e) {
+                } catch {
+                    // Ignore errors during cleanup
                     console.error('[GithubData] Cache Pass Error');
                 }
             }
@@ -97,7 +98,7 @@ export const useGithubData = () => {
             const lastStats = localStorage.getItem(CACHE_KEY_STATS);
             let lastFetch = 0;
             if (lastStats) {
-                try { lastFetch = JSON.parse(lastStats).timestamp; } catch (e) { }
+                try { lastFetch = JSON.parse(lastStats).timestamp; } catch { /* Ignore parse errors */ }
             }
 
             const now = Date.now();
@@ -116,7 +117,7 @@ export const useGithubData = () => {
                 const lastStats = localStorage.getItem(CACHE_KEY_STATS);
                 let lastFetch = 0;
                 if (lastStats) {
-                    try { lastFetch = JSON.parse(lastStats).timestamp; } catch (e) { }
+                    try { lastFetch = JSON.parse(lastStats).timestamp; } catch { /* Ignore parse errors */ }
                 }
                 if (Date.now() - lastFetch >= CACHE_TIMEOUT) {
                     fetchData();
@@ -131,6 +132,7 @@ export const useGithubData = () => {
             clearInterval(intervalId);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData, processData]);
 
     return { stats, heatmapGrid, streak, totalContributions, loading };

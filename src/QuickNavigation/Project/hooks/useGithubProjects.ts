@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { githubService, type GithubRepo } from '@/services/githubService';
 import { ABOUT_ME_DATA } from '@/data/aboutMeData';
-
-const CACHE_KEY_PROJECTS = 'github_projects_v2';
-const CACHE_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
+import { CACHE_KEY_PROJECTS, CACHE_TIMEOUT } from '@/utils/constants';
 
 export const useGithubProjects = () => {
     const [projects, setProjects] = useState<GithubRepo[]>([]);

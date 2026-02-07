@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getRandomLine } from '@/data/humorousLines';
 import { Loader } from '@/shared/Loader';
 
@@ -7,13 +7,8 @@ interface TransitionLoaderProps {
 }
 
 export const TransitionLoader = ({ onComplete }: TransitionLoaderProps) => {
-    const [line, setLine] = useState('');
-
-    useEffect(() => {
-        // Get a random humorous line when component mounts
-        const randomLine = getRandomLine();
-        setLine(randomLine);
-    }, []);
+    // Initialize state with random line directly instead of using useEffect
+    const [line] = useState(() => getRandomLine());
 
     return <Loader onComplete={onComplete} message={line} />;
 };
