@@ -1,5 +1,6 @@
 import { getDatabase, ref, onValue, off, type DataSnapshot } from 'firebase/database';
 import { app } from './firebase';
+import { logger } from '@/utils/logger';
 
 export interface PortfolioMetrics {
     totalVisitors: number;
@@ -36,7 +37,7 @@ export const subscribeToMetrics = (
             }
         },
         (error: Error) => {
-            console.error('Error fetching metrics:', error);
+            logger.error('Error fetching metrics:', error);
             callback(null);
         }
     );

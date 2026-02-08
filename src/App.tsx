@@ -11,6 +11,19 @@ import { TransitionLoader } from './components/TransitionLoader';
 import { QuickNavLayout } from './QuickNavigation/QuickNavLayout';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { initPerformanceMonitoring } from './utils/performanceMonitoring';
+import { safeLocalStorage } from './utils/safeStorage';
+import { logger } from './utils/logger';
+
+// Valid view states to prevent navigation to invalid pages
+type ViewType = 'LANDING' | 'HERO' | 'IMMERSIVE' | 'PROJECTS' | 'ABOUT' | 'EXPERIENCE' | 'CERTIFICATION';
+const VALID_VIEWS: ViewType[] = ['LANDING', 'HERO', 'IMMERSIVE', 'PROJECTS', 'ABOUT', 'EXPERIENCE', 'CERTIFICATION'];
+
+/**
+ * Helper: Validates if saved view state is valid
+ */
+function isValidView(view: unknown): view is ViewType {
+    return typeof view === 'string' && VALID_VIEWS.includes(view as ViewType);
+}
 
 // Initialize performance monitoring in production
 if (import.meta.env.PROD) {
@@ -28,15 +41,25 @@ type ViewState =
     | 'CERTIFICATION';
 
 const App: React.FC = () => {
+    // Lazy initialization to read persisted view synchronously before any effects run
     const [view, setView] = useState<ViewState>(() => {
-        const savedView = localStorage.getItem('portfolio_view_state');
-        return (savedView as ViewState) || 'LANDING';
+        const result = safeLocalStorage.getItem<string>('portfolio_view_state');
+
+        if (result.success && result.data && isValidView(result.data)) {
+            return result.data;
+        }
+        return 'LANDING';
     });
     const [showLoader, setShowLoader] = useState(false);
 
-    // Persist view state
+    // Persist view state (with error handling)
     React.useEffect(() => {
-        localStorage.setItem('portfolio_view_state', view);
+        const result = safeLocalStorage.setItem('portfolio_view_state', view);
+
+        // Optional: Log failure in development for debugging
+        if (!result.success) {
+            logger.warn('[App] Failed to save view state:', result.error);
+        }
     }, [view]);
 
     // Initial Entry from Landing Page
@@ -58,7 +81,7 @@ const App: React.FC = () => {
             case 'about': setView('ABOUT'); break;
             case 'experience': setView('EXPERIENCE'); break;
             case 'certification': setView('CERTIFICATION'); break;
-            default: console.warn(`Unknown destination: ${destination}`);
+            default: logger.warn(`Unknown destination: ${destination}`);
         }
     };
 

@@ -1,4 +1,5 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
+import { logger } from '@/utils/logger';
 
 /**
  * Props for the ErrorBoundary component
@@ -44,7 +45,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         // Log to console in development only
         if (import.meta.env.DEV) {
-            console.error('ErrorBoundary caught an error:', error, errorInfo);
+            logger.error('ErrorBoundary caught an error:', error, errorInfo);
         }
         // In production, you could send to error tracking service like Sentry
     }

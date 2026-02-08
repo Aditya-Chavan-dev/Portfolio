@@ -79,9 +79,15 @@ export const AnimatedBackgroundNeural = () => {
         animate();
 
         return () => {
+            // Cleanup: Stop animation and clear canvas
+            cancelAnimationFrame(animationFrameId);
             window.removeEventListener('resize', resize);
             window.removeEventListener('mousemove', handleMouseMove);
-            cancelAnimationFrame(animationFrameId);
+
+            // Explicit canvas cleanup to prevent memory leaks
+            if (canvas && ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
         };
     }, []);
 

@@ -2,6 +2,7 @@ import { useState, useEffect, Fragment } from 'react';
 import { Github } from 'lucide-react';
 import { githubService, type ContributionDay } from '@/services/githubService';
 import { ABOUT_ME_DATA } from '@/data/aboutMeData';
+import { logger } from '@/utils/logger';
 
 export const GithubStats = () => {
     const [stats, setStats] = useState<{ public_repos?: number } | null>(null);
@@ -18,7 +19,7 @@ export const GithubStats = () => {
                 setStats(githubStats);
                 setContributions(githubContribs);
             } catch (error) {
-                console.error('Error fetching GitHub data:', error);
+                logger.error('Error fetching GitHub data:', error);
             } finally {
                 setLoading(false);
             }

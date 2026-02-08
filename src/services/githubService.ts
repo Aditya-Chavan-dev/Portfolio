@@ -32,6 +32,83 @@ export interface HeatmapWeek {
     monthLabel?: string;
 }
 
+
+
+import { logger } from '@/utils/logger';
+
+/**
+ * Utility: Delays execution for exponential backoff
+ */
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * Utility: Validates GitHub username format
+ * @throws Error if username is invalid
+ */
+function validateUsername(username: string): void {
+    if (!username || typeof username !== 'string') {
+        throw new Error('[GithubService] Username is required and must be a string');
+    }
+
+    // GitHub username rules: alphanumeric, hyphens, max 39 chars
+    // Must not start or end with hyphen, no consecutive hyphens
+    if (!/^[a-zA-Z0-9]([a-zA-Z0-9]|-(?!-))*[a-zA-Z0-9]$|^[a-zA-Z0-9]$/.test(username) || username.length > 39) {
+        throw new Error(`[GithubService] Invalid GitHub username format: "${username}"`);
+    }
+}
+
+/**
+ * Utility: Fetch with automatic retry and exponential backoff
+ * @param url - URL to fetch
+ * @param options - Fetch options (including signal for abort)
+ * @param retries - Number of retries (default 3)
+ * @returns Response object
+ */
+async function fetchWithRetry(url: string, options: RequestInit = {}, retries = 3): Promise<Response> {
+    for (let attempt = 0; attempt < retries; attempt++) {
+        try {
+            const response = await fetch(url, options);
+
+            // Don't retry on 4xx errors (client errors like 404, 401)
+            if (response.status >= 400 && response.status < 500) {
+                return response;
+            }
+
+            // Return successful responses
+            if (response.ok) {
+                return response;
+            }
+
+            // Retry on 5xx errors (server errors)
+            if (attempt < retries - 1) {
+                const backoffMs = 1000 * Math.pow(2, attempt); // 1s, 2s, 4s
+                logger.warn(`[GithubService] Request failed (${response.status}), retrying in ${backoffMs}ms...`);
+                await delay(backoffMs);
+                continue;
+            }
+
+            return response;
+        } catch (error) {
+            // Don't retry on abort errors
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw error;
+            }
+
+            // Retry on network errors
+            if (attempt < retries - 1) {
+                const backoffMs = 1000 * Math.pow(2, attempt);
+                logger.warn(`[GithubService] Network error, retrying in ${backoffMs}ms...`);
+                await delay(backoffMs);
+                continue;
+            }
+
+            throw error;
+        }
+    }
+
+    throw new Error('[GithubService] Max retries exceeded');
+}
+
 export const githubService = {
     /**
      * Strict UTC Date Normalizer
@@ -49,25 +126,37 @@ export const githubService = {
     },
 
     /**
-     * Fetches public user profile data from Github API
+     * Fetches GitHub user statistics with retry logic and validation
      */
-    fetchUserStats: async (username: string): Promise<GithubUser | null> => {
+    fetchUserStats: async (username: string, signal?: AbortSignal): Promise<GithubUser | null> => {
         try {
-            const response = await fetch(`https://api.github.com/users/${username}`);
-            if (!response.ok) throw new Error(`Failed to fetch user stats: ${response.status}`);
+            // Validate input
+            validateUsername(username);
+
+            // Fetch with retry
+            const response = await fetchWithRetry(`https://api.github.com/users/${username}`, { signal });
+            if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
             return await response.json();
         } catch (error) {
-            console.error('[GithubService] User Stats Error:', error);
+            // Don't log abort errors (component unmounting is expected behavior)
+            if (error instanceof Error && error.name === 'AbortError') {
+                return null;
+            }
+
+            logger.error('[GithubService] User Stats Error:', error);
             return null;
         }
     },
 
     /**
-     * Fetches contribution history from a third-party proxy with STRICT validation.
+     * Fetches GitHub contribution data and transforms it for heatmap
      */
-    fetchContributions: async (username: string): Promise<GithubContributionResponse | null> => {
+    fetchContributions: async (username: string, signal?: AbortSignal): Promise<GithubContributionResponse | null> => {
         try {
-            const response = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`);
+            // Validate input
+            validateUsername(username);
+
+            const response = await fetchWithRetry(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`, { signal });
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch contributions: ${response.status}`);
@@ -77,12 +166,12 @@ export const githubService = {
 
             // STRICT VALIDATION
             if (!data || !Array.isArray(data.contributions)) {
-                console.error('[GithubService] Validation Failed: Invalid schema');
+                logger.error('[GithubService] Validation Failed: Invalid schema');
                 return null;
             }
 
             if (data.contributions.length < 360) {
-                console.error('[GithubService] Validation Failed: Insufficient coverage (<360 days)');
+                logger.error('[GithubService] Validation Failed: Insufficient coverage (<360 days)');
                 return null;
             }
 
@@ -93,14 +182,19 @@ export const githubService = {
             });
 
             if (!isValid) {
-                console.error('[GithubService] Validation Failed: Corrupt data entries');
+                logger.error('[GithubService] Validation Failed: Corrupt data entries');
                 return null;
             }
 
             return data;
 
         } catch (error) {
-            console.error('[GithubService] Contribution Fetch Error:', error);
+            // Don't log abort errors (component unmounting is expected behavior)
+            if (error instanceof Error && error.name === 'AbortError') {
+                return null;
+            }
+
+            logger.error('[GithubService] Contribution Fetch Error:', error);
             return null;
         }
     },
@@ -205,14 +299,22 @@ export const githubService = {
     /**
      * Fetches public repositories for a user
      */
-    fetchUserRepos: async (username: string): Promise<GithubRepo[] | null> => {
+    fetchUserRepos: async (username: string, signal?: AbortSignal): Promise<GithubRepo[] | null> => {
         try {
+            // Validate input
+            validateUsername(username);
+
             // Sort by updated to show most recent activity first
-            const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+            const response = await fetchWithRetry(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, { signal });
             if (!response.ok) throw new Error(`Failed to fetch user repos: ${response.status}`);
             return await response.json();
         } catch (error) {
-            console.error('[GithubService] User Repos Error:', error);
+            // Don't log abort errors (component unmounting is expected behavior)
+            if (error instanceof Error && error.name === 'AbortError') {
+                return null;
+            }
+
+            logger.error('[GithubService] User Repos Error:', error);
             return null;
         }
     },
@@ -242,7 +344,7 @@ export const githubService = {
             const data = await response.json();
             return Array.isArray(data) ? data.length : 0;
         } catch (error) {
-            console.error('[GithubService] Commit Count Error:', error);
+            logger.error('[GithubService] Commit Count Error:', error);
             return null;
         }
     }

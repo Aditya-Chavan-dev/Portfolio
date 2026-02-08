@@ -64,8 +64,13 @@ export const AnimatedBackgroundNeuralMobile = () => {
         animate();
 
         return () => {
-            window.removeEventListener('resize', resize);
             cancelAnimationFrame(animationFrameId);
+            window.removeEventListener('resize', resize);
+
+            // Explicit canvas cleanup to prevent memory leaks
+            if (canvas && ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
         };
     }, []);
 
