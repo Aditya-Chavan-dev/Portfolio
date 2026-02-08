@@ -20,13 +20,16 @@ export const DecryptedText = ({
 
     useEffect(() => {
         if (!reveal) {
-            // Don't animate if reveal is false
             return;
         }
 
         let iteration = 0;
 
-        clearInterval(intervalRef.current!);
+        // SAFE: Check before clearing
+        if (intervalRef.current !== null) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
 
         intervalRef.current = setInterval(() => {
             setDisplayText(() =>
@@ -42,13 +45,23 @@ export const DecryptedText = ({
             );
 
             if (iteration >= text.length) {
-                clearInterval(intervalRef.current!);
+                // SAFE: Check before clearing
+                if (intervalRef.current !== null) {
+                    clearInterval(intervalRef.current);
+                    intervalRef.current = null;
+                }
             }
 
             iteration += 1 / 3; // Slow down the reveal
         }, speed);
 
-        return () => clearInterval(intervalRef.current!);
+        return () => {
+            // SAFE: Check before clearing in cleanup
+            if (intervalRef.current !== null) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
     }, [text, reveal, speed]);
 
     return (

@@ -109,6 +109,11 @@ export const AnimatedBackground = () => {
             cancelAnimationFrame(animationFrame);
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('resize', handleResize);
+
+            // Explicit canvas cleanup to prevent memory leaks
+            if (canvas && ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
         };
     }, []);
 

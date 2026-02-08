@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { ABOUT_ME_DATA } from '@/data/aboutMeData';
 import { githubService, type HeatmapWeek, type GithubUser, type GithubContributionResponse } from '@/services/githubService';
+import { safeLocalStorage } from '@/utils/safeStorage';
+import { logger } from '@/utils/logger';
 
 export const useGithubData = () => {
     const [stats, setStats] = useState<GithubUser | null>(null);
@@ -34,60 +36,78 @@ export const useGithubData = () => {
         }
     }, []);
 
-    const fetchData = useCallback(async () => {
+    const fetchData = useCallback(async (signal?: AbortSignal) => {
         try {
             const [githubStats, githubContribs] = await Promise.all([
-                githubService.fetchUserStats(ABOUT_ME_DATA.personal.github),
-                githubService.fetchContributions(ABOUT_ME_DATA.personal.github)
+                githubService.fetchUserStats(ABOUT_ME_DATA.personal.github, signal),
+                githubService.fetchContributions(ABOUT_ME_DATA.personal.github, signal)
             ]);
 
             if (githubStats && githubContribs) {
                 const timestamp = Date.now();
 
-                // Persist
-                localStorage.setItem(CACHE_KEY_STATS, JSON.stringify({ data: githubStats, timestamp }));
-                localStorage.setItem(CACHE_KEY_CONTRIBS, JSON.stringify({ data: githubContribs, timestamp }));
+                // SAFE: Persist with error handling (app continues if save fails)
+                safeLocalStorage.setItem(CACHE_KEY_STATS, { data: githubStats, timestamp });
+                safeLocalStorage.setItem(CACHE_KEY_CONTRIBS, { data: githubContribs, timestamp });
 
-                processData(githubStats, githubContribs);
+                if (isMounted.current) {
+                    processData(githubStats, githubContribs);
+                }
             } else {
-                console.warn('[GithubData] Fetch failed/invalid, keeping stale data.');
-                // Do NOT clear state, keep stale
-                if (isMounted.current) setLoading(false);
+                logger.warn('[GithubData] Fetch failed/invalid, keeping stale data.');
+                if (isMounted.current) {
+                    setLoading(false);
+                }
             }
         } catch (error) {
-            console.error('Failed to fetch GitHub stats:', error);
-            if (isMounted.current) setLoading(false);
+            // Don't log abort errors
+            if (error instanceof Error && error.name === 'AbortError') return;
+
+            logger.error('Failed to fetch GitHub stats:', error);
+            if (isMounted.current) {
+                setLoading(false);
+            }
         }
     }, [processData]);
 
     useEffect(() => {
         isMounted.current = true;
+        // AbortController to cancel fetch on unmount
+        const controller = new AbortController();
 
         const loadInitialData = async () => {
             const now = Date.now();
-            const cachedStatsStr = localStorage.getItem(CACHE_KEY_STATS);
-            const cachedContribsStr = localStorage.getItem(CACHE_KEY_CONTRIBS);
+            // SAFE: Use safe storage wrapper
+            const cachedStatsResult = safeLocalStorage.getItem<{
+                data: GithubUser;
+                timestamp: number;
+            }>(CACHE_KEY_STATS);
+            const cachedContribsResult = safeLocalStorage.getItem<{
+                data: GithubContributionResponse;
+                timestamp: number;
+            }>(CACHE_KEY_CONTRIBS);
 
             let hasValidCache = false;
 
-            if (cachedStatsStr && cachedContribsStr) {
-                try {
-                    const cachedStats = JSON.parse(cachedStatsStr);
-                    const cachedContribs = JSON.parse(cachedContribsStr);
+            if (cachedStatsResult.success && cachedStatsResult.data &&
+                cachedContribsResult.success && cachedContribsResult.data) {
 
+                const cachedStats = cachedStatsResult.data;
+                const cachedContribs = cachedContribsResult.data;
+
+                // Validate cache structure
+                if (cachedStats.timestamp && cachedStats.data &&
+                    cachedContribs.timestamp && cachedContribs.data) {
                     // Check validity
                     if (now - cachedStats.timestamp < CACHE_TIMEOUT) {
                         processData(cachedStats.data, cachedContribs.data);
                         hasValidCache = true;
                     }
-                } catch {
-                    // Ignore errors during cleanup
-                    console.error('[GithubData] Cache Pass Error');
                 }
             }
 
             if (!hasValidCache) {
-                await fetchData();
+                await fetchData(controller.signal);
             }
         };
 
@@ -95,10 +115,14 @@ export const useGithubData = () => {
 
         // Smart Polling Interval
         const intervalId = setInterval(() => {
-            const lastStats = localStorage.getItem(CACHE_KEY_STATS);
+            // SAFE: Check last fetch timestamp
+            const lastStatsResult = safeLocalStorage.getItem<{
+                data: GithubUser;
+                timestamp: number;
+            }>(CACHE_KEY_STATS);
             let lastFetch = 0;
-            if (lastStats) {
-                try { lastFetch = JSON.parse(lastStats).timestamp; } catch { /* Ignore parse errors */ }
+            if (lastStatsResult.success && lastStatsResult.data?.timestamp) {
+                lastFetch = lastStatsResult.data.timestamp;
             }
 
             const now = Date.now();
@@ -107,20 +131,24 @@ export const useGithubData = () => {
                 (now - lastFetch >= CACHE_TIMEOUT);
 
             if (shouldPoll) {
-                fetchData();
+                fetchData(controller.signal);
             }
         }, 1000 * 60); // Check every minute if we need to poll
 
         // Visibility Listener for immediate return
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible') {
-                const lastStats = localStorage.getItem(CACHE_KEY_STATS);
+                // SAFE: Check last fetch timestamp
+                const lastStatsResult = safeLocalStorage.getItem<{
+                    data: GithubUser;
+                    timestamp: number;
+                }>(CACHE_KEY_STATS);
                 let lastFetch = 0;
-                if (lastStats) {
-                    try { lastFetch = JSON.parse(lastStats).timestamp; } catch { /* Ignore parse errors */ }
+                if (lastStatsResult.success && lastStatsResult.data?.timestamp) {
+                    lastFetch = lastStatsResult.data.timestamp;
                 }
                 if (Date.now() - lastFetch >= CACHE_TIMEOUT) {
-                    fetchData();
+                    fetchData(controller.signal);
                 }
             }
         };
@@ -130,6 +158,8 @@ export const useGithubData = () => {
         return () => {
             isMounted.current = false;
             clearInterval(intervalId);
+            // Cancel ongoing fetch request
+            controller.abort();
             document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
