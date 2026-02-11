@@ -914,3 +914,23 @@ To create a "Wow" moment and prove technical competence in advanced frontend ani
 ### The resulting behavioral difference after the change
 **Immersive Interaction**: The UI feels alive and responsive to physical user input (Mouse/Tilt).
 **Cleaner Aesthetics**: Long project names no longer clutter the background watermark.
+
+---
+
+## [2026-02-11 | 21:00:00] - Commit: CODEBASE_MAPPING_CLEANUP
+
+### Description of the feature or capability introduced or changed
+Executed **Comprehensive Codebase Mapping** and **Sanitization**.
+1. **Architectural Mapping**: Generated detailed system maps (`STRUCTURE.md`, `ARCHITECTURE.md`, `TESTING.md`) in the `.planning/codebase` directory using GSD.
+2. **Defensive Audit**: Conducted a full pass of build, lint, and security checks (`scan:secrets`) to ensure zero defects.
+3. **Cleanup**: Removed verified dead code and redundant legacy comments to reduce technical debt.
+
+### The problem or limitation that existed before the change
+The project lacked a centralized, up-to-date "Architectural Memory". Knowledge was implicit rather than explicit. Additionally, minor legacy artifacts (unused imports, comments) were beginning to accumulate.
+
+### The reason the change was necessary
+To strictly enforce the "Zero-Ambiguity Contract" and "System Memory" protocols. A clean, documented codebase is a prerequisite for scalable feature development.
+
+### The resulting behavioral difference after the change
+**System Transparency**: The codebase structure is now fully documented.
+**Hygiene**: The repository is verified clean and secure, ready for the next feature increment.
