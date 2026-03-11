@@ -17,6 +17,13 @@ const PROGRESS_STEPS = 100;
 const COMPLETION_DELAY_MS = 200;
 const PARTICLE_COUNT = 6;
 
+const PARTICLES = Array.from({ length: PARTICLE_COUNT }).map(() => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    duration: 4 + Math.random() * 2,
+    delay: Math.random() * 4
+}));
+
 /**
  * Full-screen loader component with animated progress bar and particle effects
  * Displays a humorous message and animates from 0 to 100% over 4 seconds
@@ -31,16 +38,7 @@ const PARTICLE_COUNT = 6;
  */
 export const Loader = ({ onComplete, message }: LoaderProps) => {
     const [progress, setProgress] = useState(0);
-
-    // Generate random particle positions and delays once using lazy initialization
-    const [particles] = useState(() =>
-        Array.from({ length: PARTICLE_COUNT }).map(() => ({
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            duration: 4 + Math.random() * 2,
-            delay: Math.random() * 4
-        }))
-    );
+    const particles = PARTICLES;
 
     useEffect(() => {
         // Animate progress from 0 to 100

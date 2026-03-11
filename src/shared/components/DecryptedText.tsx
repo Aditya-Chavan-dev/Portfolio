@@ -25,7 +25,7 @@ export const DecryptedText = ({
 
         let iteration = 0;
 
-        // SAFE: Check before clearing
+        // Check before clearing
         if (intervalRef.current !== null) {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
@@ -45,7 +45,7 @@ export const DecryptedText = ({
             );
 
             if (iteration >= text.length) {
-                // SAFE: Check before clearing
+                // Check before clearing
                 if (intervalRef.current !== null) {
                     clearInterval(intervalRef.current);
                     intervalRef.current = null;
@@ -56,7 +56,7 @@ export const DecryptedText = ({
         }, speed);
 
         return () => {
-            // SAFE: Check before clearing in cleanup
+            // Check before clearing in cleanup
             if (intervalRef.current !== null) {
                 clearInterval(intervalRef.current);
                 intervalRef.current = null;

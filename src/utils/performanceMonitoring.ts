@@ -8,6 +8,8 @@ import { onCLS, onINP, onFCP, onLCP, onTTFB, type Metric } from 'web-vitals';
 const isDevelopment = import.meta.env.DEV;
 
 function logMetric(metric: Metric) {
+    if (!isDevelopment) return;
+
     const { name, value, rating, delta } = metric;
 
     const emoji = rating === 'good' ? '✅' : rating === 'needs-improvement' ? '⚠️' : '❌';
@@ -18,11 +20,6 @@ function logMetric(metric: Metric) {
         `(${rating})`,
         delta ? `Δ ${delta.toFixed(2)}ms` : ''
     );
-
-    // In production, you could send to analytics
-    // if (!isDevelopment) {
-    //   sendToAnalytics(metric);
-    // }
 }
 
 /**

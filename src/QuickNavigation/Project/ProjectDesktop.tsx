@@ -9,8 +9,9 @@ export const ProjectDesktop = () => {
     const { projects, flagship, loading, error } = useGithubProjects();
     const [selectedRepo, setSelectedRepo] = useState<GithubRepo | null>(null);
 
-    // Merge flagship into projects list at the start for the showcase if it exists
-    const allProjects = flagship ? [flagship, ...projects.filter(p => p.id !== flagship.id)] : projects;
+    // Flagship logic is already handled in the hook, but for the showcase we ensure it's at the top
+    // The hook returns { flagship, projects } where 'projects' already excludes the flagship
+    const allProjects = flagship ? [flagship, ...projects] : projects;
 
     return (
         <div className="h-full w-full relative">
