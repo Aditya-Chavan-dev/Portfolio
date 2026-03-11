@@ -45,6 +45,8 @@ export const TypewriterText = React.memo(({
     );
 });
 
+TypewriterText.displayName = 'TypewriterText';
+
 // Blinking Cursor Component
 export const Cursor = React.memo(({ className = "" }: { className?: string }) => (
     <motion.span
@@ -53,3 +55,5 @@ export const Cursor = React.memo(({ className = "" }: { className?: string }) =>
         className={`inline-block w-[2px] h-[1em] bg-white ml-1 align-middle ${className}`}
     />
 ));
+
+Cursor.displayName = 'Cursor';

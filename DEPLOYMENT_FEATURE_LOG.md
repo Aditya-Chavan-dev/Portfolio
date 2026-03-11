@@ -934,3 +934,24 @@ To strictly enforce the "Zero-Ambiguity Contract" and "System Memory" protocols.
 ### The resulting behavioral difference after the change
 **System Transparency**: The codebase structure is now fully documented.
 **Hygiene**: The repository is verified clean and secure, ready for the next feature increment.
+
+---
+
+## [2026-03-11 | 22:50:00] - Commit: PORTFOLIO_V2_CORE
+
+### Description of the feature or capability introduced or changed
+Implemented the **Cinematic Portfolio Core v2.0**.
+1. **Intro Sequence**: Added a sequenced framer-motion text reveal (`/`).
+2. **Hub Command Center**: Added a mouse-reactive gradient workspace (`/hub`) with Firebase live listeners for availability and visitor counts, and GitHub API integration for the latest push.
+3. **Immersive Navigation**: Added customized path cards for "The Journey" and "Quick Access".
+4. **Global Ecosystem**: Added a lerp-following custom cursor, Recruiter Mode modal, and hidden Easter Eggs (Konami code, console intro).
+
+### The problem or limitation that existed before the change
+The application previously featured a componentized V1 layout but lacked the highly polished, cinematic "Living System" opening and unified immersive hub requested in the V2 specification.
+
+### The reason the change was necessary
+To capture the recruiter's attention instantly and shift the portfolio from a standard webpage to a dynamic, cinematic experience leveraging GSAP and Framer Motion. 
+
+### The resulting behavioral difference after the change
+**Cinematic Opening**: Users enter via a timed typographic intro.
+**Live Data Integration**: The Hub pulls real-time GitHub stats and Firebase status signals.

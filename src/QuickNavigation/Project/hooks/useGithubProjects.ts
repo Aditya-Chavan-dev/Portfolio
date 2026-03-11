@@ -44,7 +44,7 @@ export const useGithubProjects = () => {
                     setFlagship(flagshipRepo);
 
                     const timestamp = Date.now();
-                    // SAFE: Store with error handling (app continues if save fails)
+                    // Store with error handling (app continues if save fails)
                     safeLocalStorage.setItem(CACHE_KEY_PROJECTS, { data: sorted, timestamp });
                 } else {
                     setError('Failed to fetch projects');
@@ -70,7 +70,7 @@ export const useGithubProjects = () => {
 
         const loadInitialData = async () => {
             const now = Date.now();
-            // SAFE: Use safe storage wrapper
+            // Use safe storage wrapper
             const cachedResult = safeLocalStorage.getItem<{
                 data: GithubRepo[];
                 timestamp: number;
