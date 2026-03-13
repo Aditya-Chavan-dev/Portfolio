@@ -14,11 +14,20 @@ export const Cursor = () => {
     const onLeave = () => { isHovering.current = false; };
 
     window.addEventListener("mousemove", move);
-    document.querySelectorAll("a, button, [data-cursor]")
-      .forEach((el) => { el.addEventListener("mouseenter", onEnter); el.addEventListener("mouseleave", onLeave); });
+    const elements = document.querySelectorAll("a, button, [data-cursor]");
+    elements.forEach((el) => { 
+      el.addEventListener("mouseenter", onEnter); 
+      el.addEventListener("mouseleave", onLeave); 
+    });
 
-    return () => window.removeEventListener("mousemove", move);
-  }, []);
+    return () => {
+      window.removeEventListener("mousemove", move);
+      elements.forEach((el) => {
+        el.removeEventListener("mouseenter", onEnter);
+        el.removeEventListener("mouseleave", onLeave);
+      });
+    };
+  }, [mouseX, mouseY]);
 
   return (
     <motion.div
