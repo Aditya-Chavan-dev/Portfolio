@@ -955,3 +955,74 @@ To capture the recruiter's attention instantly and shift the portfolio from a st
 ### The resulting behavioral difference after the change
 **Cinematic Opening**: Users enter via a timed typographic intro.
 **Live Data Integration**: The Hub pulls real-time GitHub stats and Firebase status signals.
+
+## [2026-03-13 | 06:03:54] - Commit: LANDING_PAGE_MODULE_SCAFFOLDED
+
+### Description of the feature or capability introduced or changed
+LandingPage module scaffolded — v3 prompt implemented.
+
+## [2026-03-13 | 06:09:46] - Commit: LINT_CLEAN_SWEEP
+
+### Description of the feature or capability introduced or changed
+Executed a codebase-wide clean sweep to resolve all linter warnings.
+1. **Cursor Component Refactor**: Modified src/components/shared/Cursor.tsx to include mouseX and mouseY in the useEffect dependency array.
+2. **Memory Leak Fix**: Corrected a missing cleanup routine in Cursor.tsx where \querySelectorAll\ event listeners (mouseenter/mouseleave) were not removed on unmount.
+
+### The problem or limitation that existed before the change
+The project had a recurring ESLint warning (eact-hooks/exhaustive-deps) concerning the missing Framer Motion hook dependencies, which violated the strict build-ready constraints. Additionally, hovering events were registering permanently without cleanup, creating a functional memory leak.
+
+### The reason the change was necessary
+To strictly enforce project health and hygiene (zero-warning builds) as per the "clean sweep" protocol and the Zuckerberg Pragmatism rule (defensive and minimalist footprint).
+
+### The resulting behavioral difference after the change
+**Zero Warnings**: 
+pm run lint now returns perfectly clean output with zero errors and zero warnings.
+**Memory Safe**: DOM event listeners are cleanly garbage collected upon unmount.
+
+## [2026-03-13 | 06:15:41] - Commit: CLEANUP_UNUSED_FOLDERS
+
+### Description of the feature or capability introduced or changed
+Executed a repository-wide cleanup to remove thoroughly unreferenced and empty legacy folders.
+- Removed strictly empty directories: src/global, src/components/About, Certifications, Experience, Footer, Hero, Navigation, Projects, QuickNav.
+- Removed completely disconnected legacy components and their folders: src/components/Hub, Intro, Journey, QuickAccess.
+- Scrubbed dead utility files with zero imports: src/components/shared/EasterEggs.tsx, RecruiterMode.tsx, and src/hooks/useFirebase.ts, useGitHub.ts.
+
+### The problem or limitation that existed before the change
+The repository retained "ghost" folders and dead components from previous architectural iterations (Phase 1-4 restructuring). This created noise and "zombie code," violating the core hygiene protocols. 
+
+### The reason the change was necessary
+To adhere to Rule 14 (Legacy & Debt Management): "Actively identify zombie code... Remove them immediately and log the removal."
+
+### The resulting behavioral difference after the change
+The codebase is now structurally leaner, containing only the code that is either actively running or preserved as functional feature modules for future wiring.
+
+## [2026-03-13 | 06:20:59] - Commit: ROOT_CLEANUP
+
+### Description of the feature or capability introduced or changed
+Cleaned up the root directory by isolating documentation and legacy planning files into a dedicated dump folder.
+- Created g:\PORTFOLIO\dump\.
+- Moved Admin.md, i_coding_rules.md, API_Key_Rotation_Guide.md, Project_specification.md, and the .planning folder to dump\.
+
+### The problem or limitation that existed before the change
+The root directory of the application contained extensive documentation and project specifications that cluttered the workspace, violating "The Zuckerberg Pragmatism" principle of minimizing the structural footprint.
+
+### The reason the change was necessary
+To separate build and runtime configuration files from documentation/specifications. The root should only contain strict system configurations (ite, 	sconfig, etc.) and system memory logs (Deployment_feature_log.md).
+
+### The resulting behavioral difference after the change
+The repository root is clean and immediately understandable for any engineer to bootstrap, while legacy context remains safe in the new folder.
+
+
+## [2026-03-13 | 00:53:29] - Commit: GITIGNORE_UPDATE
+
+### Description of the feature or capability introduced or changed
+Added dump/ directory to .gitignore exclusions to prevent committing legacy planning files.
+
+### The problem or limitation that existed before the change
+The newly created dump folder containing old project specifications and governance documents was actively tracked by git, risking repository bloat and leaking irrelevant historical files into the production source tree.
+
+### The reason the change was necessary
+Strict version control hygiene. The dump folder is for local preservation only, adhering to the principle of keeping the git ledger perfectly aligned with the functional src and configuration files.
+
+### The resulting behavioral difference after the change
+Git now entirely ignores the dump directory and its nested contents during any future commits.

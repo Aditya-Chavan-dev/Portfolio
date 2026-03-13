@@ -40,3 +40,6 @@ serviceAccountKey.json
 
 # Local env files
 *.local
+
+# Dump
+dump/
