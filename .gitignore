@@ -43,3 +43,7 @@ serviceAccountKey.json
 
 # Dump
 dump/
+
+# Agent Instruction Files
+Claude.md
+Gemini.md
