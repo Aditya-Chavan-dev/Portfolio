@@ -9,8 +9,6 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "scan:secrets": "node scripts/scan-secrets.js",
-    "validate:env": "node scripts/validate-env.js",
     "prepare": "husky",
     "test": "vitest",
     "test:ui": "vitest --ui",
