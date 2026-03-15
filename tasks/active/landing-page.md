@@ -1,105 +1,105 @@
-# Task: Punchy Landing Page
-**Created:** 2026-03-14
+# Task: Landing Page Scaffold
+**Created:** 2026-03-15
 **Tier:** 2
-**Status:** Completed
+**Status:** Pending User Approval
 
 ---
 
 ## Context Summary Reference
-
-## Context Summary — Punchy Landing Page
-
-**Tier:** 2
-
-**What already exists relevant to this task:**
-- The foundation of the app (Vite, TS, Tailwind v4 configs) is set up and functional.
-- `src/App.tsx` has a generic setup placeholder.
-- We discussed a decoupled content architecture where copy is driven by a `.json` config to support precise formatting (`whitespace-pre-wrap`) and easy CMS integration later.
-
-**Dependencies and affected areas:**
-- `src/LandingPage/` directory will be entirely new.
-- `src/App.tsx` will be adapted to swap the generic placeholder for the new `LandingPage` component.
-
-**Spec vs Reality gaps found:**
-- User explicitly emphasized the Landing Page is not just a standard "Hero", but a highly formatted dialogue/flex hook to impress recruiters in 8-12 seconds.
-
-**Hidden config files relevant to this task:**
-- None.
-
-**Existing partial implementations found:**
-- None.
-
-**Key constraints or risks identified:**
-- Content arrangement (spaces, newlines) must be exactly preserved from the JSON. We will use CSS `whitespace-pre-wrap` to guarantee this behaves correctly.
-- Must ensure animations (Framer Motion) look extremely professional.
+**Tier:** 2 (Feature)
+**What already exists:** `package.json` with React, Vite, Tailwind v4. `src/styles/tokens.css` and `global.css` (assumed active from previous task).
+**Dependencies:** `react-router-dom` for navigation, `framer-motion` for animations.
+**Spec vs Reality gap:** None found.
+**Constraints/Risks:** Strict timing for the entry animation (1200ms `dur-dramatic`). SessionStorage check must occur before render to prevent FOUC of the animation.
 
 ---
 
 ## Scope Boundary
 What is explicitly IN scope for this task:
-- Creation of `src/LandingPage/content.json` storing the placeholder text and whitespace layout.
-- Creation of `src/LandingPage/LandingPage.tsx` fetching and rendering the JSON content with `whitespace-pre-wrap` styling.
-- Adding Framer Motion animations to fade/slide the punchy dialogue in.
-- Injecting the component into `src/App.tsx`.
+- Installing `react-router-dom` (if not present).
+- Creating the `src/LandingPage/` directory structure.
+- Creating `src/LandingPage/WelcomeMobile.tsx` and `src/LandingPage/WelcomeDesktop.tsx`.
+- Creating `src/LandingPage/WelcomeDialogue.json` to store the animation dialogue.
+- Creating an entry index file to dynamically serve the correct component based on screen width/device type.
+- Creating the primary CTA `<Button>` component (`src/components/ui/Button.tsx`).
+- Setting up the main router in `App.tsx` (routing `/` to Welcome, `/hub` to a currently blank page).
+- Implementing the `sessionStorage` logic for `has_seen_welcome`.
+- Implementing the 1200ms entry animation using `framer-motion`.
+- Ensuring the light/dark toggle is present (even if hardcoded logic for now, UI must exist).
 
 What is explicitly OUT of scope (do not touch):
-- Other portfolio sections.
-- CMS/Backend integration (just proving local JSON works for now).
-
----
-
-## Execution Baseline
-**Branch:** main
-**Last commit:** 1200d475b8b58defe31c7dba90cab80fd7506f3a
-**Date started:** 2026-03-14 12:42:00
+- Building the actual `/hub`, `/projects`, or any other section.
+- Building the backend or Admin panel.
 
 ---
 
 ## Plan
 
-### Intended Folder Structure
-```text
-src/
-└── LandingPage/
-    ├── content.json          # Dialogue, spacing, and CTA text
-    ├── LandingPage.tsx       # React Component (UI, Framer Motion)
-    └── index.ts              # Export barrel (optional, clean imports)
-```
-
-### Content Configuration
-- [x] ✅ **[T1.1]** Create `src/LandingPage/content.json` representing the highly configurable spacing and dialogue to be shown to the recruiter. — *Definition of done: JSON file structured with flexible text fields.*
+### Foundation
+- [ ] **[T1.1]** Check `package.json` for `react-router-dom` and `framer-motion`. Install if missing. — *Definition of done: Dependencies are present and ready.*
   - Estimated effort: S
   - Depends on: none
   - External blocker: none
 
-### UI Development
-- [x] ✅ **[T2.1]** Create `src/LandingPage/LandingPage.tsx` reading the JSON and applying `whitespace-pre-wrap` to honor all spaces/newlines. — *Definition of done: The text visually mirrors text-file pacing/gaps.*
-  - Estimated effort: M
+- [ ] **[T1.2]** Set up basic routing in `src/App.tsx`. Define routes for `/` (Welcome) and `/hub` (Placeholder). — *Definition of done: Navigating between `/` and `/hub` manually in the address bar works without 404.*
+  - Estimated effort: S
   - Depends on: T1.1
   - External blocker: none
 
-### Animation & Assembly
-- [x] ✅ **[T3.1]** Integrate `framer-motion` to animate the layout entry (fade up/in) for maximum impact. — *Definition of done: Page load triggers a sleek transition.*
+### Components
+- [ ] **[T2.1]** Create `src/components/ui/Button.tsx`. Implement the primary button styling (`.btn-primary`) exactly as specified in `DESIGN_SYSTEM.md`. — *Definition of done: Reusable `<Button variant="primary">` is available.*
   - Estimated effort: S
-  - Depends on: T2.1
+  - Depends on: none
   - External blocker: none
-- [x] ✅ **[T3.2]** Update `src/App.tsx` to mount `<LandingPage />` in place of the current setup complete message. — *Definition of done: User sees the Landing Page when loading the site.*
+
+- [ ] **[T2.2]** Create a `ThemeToggle` component (placeholder for now, just the UI `[☀/☾]`) to place in the top right of the Welcome page. — *Definition of done: Visual toggle exists.*
   - Estimated effort: S
-  - Depends on: T3.1
+  - Depends on: none
+  - External blocker: none
+
+### The Welcome Page (Landing Directory)
+- [ ] **[T3.1]** Create `src/LandingPage/WelcomeDialogue.json` to store the dialogue content ("name", "title", "tagline", "cta_text") so text is separated from logic. — *Definition of done: JSON file exists with correct content keys.*
+  - Estimated effort: S
+  - Depends on: none
+  - External blocker: none
+
+- [ ] **[T3.2]** Create `src/LandingPage/WelcomeDesktop.tsx` and `src/LandingPage/WelcomeMobile.tsx`. Scaffold the specific layouts for each device type (handling padding differences, font scaling differences if necessary, and positioning). — *Definition of done: Both components exist and render static content loaded from the JSON.*
+  - Estimated effort: M
+  - Depends on: T2.1, T2.2, T3.1
+  - External blocker: none
+
+- [ ] **[T3.3]** Create `src/LandingPage/index.tsx` (or similar entry file). Implement dynamic serving logic (typically via a `useMediaQuery` hook checking viewport width against a breakpoint, e.g., 768px) to serve either the Mobile or Desktop component. — *Definition of done: The app serves the correct component based on resizing the window/device type.*
+  - Estimated effort: S
+  - Depends on: T3.2
+  - External blocker: none
+
+- [ ] **[T3.4]** Implement the `sessionStorage` check (`has_seen_welcome`) in the landing page components. — *Definition of done: State accurately reflects whether the animation should play.*
+  - Estimated effort: S
+  - Depends on: T3.3
+  - External blocker: none
+
+- [ ] **[T3.5]** Implement `framer-motion` enter animations on text elements and button. Apply conditionally based on T3.4 state. — *Definition of done: Animation plays on first visit, skips on subsequent (while session is active).*
+  - Estimated effort: M
+  - Depends on: T3.2, T3.4
+  - External blocker: none
+
+- [ ] **[T3.6]** Wire the "Enter" button to `navigate('/hub')`. — *Definition of done: Clicking enter navigates to the hub placeholder.*
+  - Estimated effort: S
+  - Depends on: T1.2, T3.2
   - External blocker: none
 
 ---
 
 ## Rollback Plan
-If execution fails or is abandoned midway:
-- Delete `src/LandingPage/` directory completely.
-- Revert `src/App.tsx` back to the original Setup Complete code.
+- Revert `App.tsx` configuration to its previous state.
+- Delete `src/LandingPage/` and `src/components/ui`.
+- Uninstall `react-router-dom` if it was added in T1.1.
 
 ---
 
 ## Risk Flags (for user review)
-High-impact or high-risk tasks that the user should scrutinise before approving:
-- None. This is a purely visual UI addition.
+- [T3.3] — Dynamic serving based solely on a window resize event listener / useMediaQuery might cause a slight flash on initial load depending on SSR/SSG. Since this is purely client-side Vite, standard `window.matchMedia` is fine.
+- [T3.5] — Relying heavily on specific animation curves. If framer-motion conflicts with strict CSS performance rules, it might cause jank. Sticking strictly to transform/opacity.
 
 ---
 
@@ -107,6 +107,6 @@ High-impact or high-risk tasks that the user should scrutinise before approving:
 | Step | Status | Notes |
 |---|---|---|
 | Planning | ✅ Done | |
-| User Approval | ✅ Approved | |
-| Execution | ✅ Done | |
-| Completion | ✅ Done | Landing Page scaffolded with exact whitespace control. |
+| User Approval | ⏳ Pending | |
+| Execution | — | |
+| Completion | — | |

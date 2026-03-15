@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /amgl-3-10
+Disallow: /amgl-panel
