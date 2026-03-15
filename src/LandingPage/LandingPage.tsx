@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import content from "./content.json";
+import { useEasterEggContext } from "../components/EasterEggWrapper";
 
 export default function LandingPage() {
+  const { logoTrigger } = useEasterEggContext();
+
   return (
     <section className="min-h-screen w-full flex flex-col justify-center px-8 md:px-24 bg-obsidian text-white">
       
@@ -11,7 +14,10 @@ export default function LandingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <h1 className="text-5xl md:text-7xl font-heading text-gold Glow tracking-tight">
+        <h1 
+          onClick={logoTrigger}
+          className="text-5xl md:text-7xl font-heading text-gold Glow tracking-tight cursor-default select-none"
+        >
           {content.name}
         </h1>
         <h2 className="mt-4 text-2xl md:text-3xl text-gray-400 tracking-widest font-body uppercase">

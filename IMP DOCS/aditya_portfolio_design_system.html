@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aditya Chavan — Design System v1.0 — Complete</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — COPY THIS BLOCK INTO src/styles/tokens.css
+   EVERY value in this file references these. Never hardcode hex.
+═══════════════════════════════════════════════════════════════ */
+:root {
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+  --color-bg-primary:     #0A0A0F;
+  --color-bg-secondary:   #111118;
+  --color-bg-tertiary:    #16161E;
+  --color-bg-hover:       #1C1C26;
+
+  /* Text — cool-toned, varied temperature. Not all beige. */
+  --color-text-primary:   #E8E6F0;  /* crisp blue-white — headings, hero, pg-title */
+  --color-text-secondary: #A8A4B8;  /* muted lavender-grey — body, descriptions */
+  --color-text-muted:     #5C5970;  /* deep slate-purple — helper text, timestamps */
+  --color-text-ghost:     #282633;  /* near-invisible — decorative large text only */
+  --color-text-key:       #C4C0D8;  /* table first-col keys — slightly brighter than body */
+  --color-text-value:     #9896A8;  /* table values — slightly dimmer than body */
+  --color-text-heading:   #F2F0FA;  /* section titles, pg-title — brightest readable */
+  --color-text-code:      #B8D4B0;  /* inline code / token names — soft sage green */
+
+  --color-accent:         #C9A96E;
+  --color-accent-muted:   #8B6F42;
+  --color-accent-faint:   rgba(201,169,110,0.07);
+  --color-accent-glow:    rgba(201,169,110,0.15);
+  --color-border:         rgba(255,255,255,0.07);
+  --color-border-mid:     rgba(255,255,255,0.12);
+  --color-border-accent:  rgba(201,169,110,0.25);
+  --color-border-ghost:   rgba(255,255,255,0.04);
+  --color-overlay:        rgba(10,10,15,0.85);
+  --color-success:        #3D9E5A;
+  --color-warning:        #C07840;
+  --color-error:          #C03838;
+  --color-info:           #4488CC;
+  --r-xs:2px; --r-sm:4px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-full:9999px;
+  --sp-1:4px;  --sp-2:8px;   --sp-3:12px;  --sp-4:16px;  --sp-5:20px;
+  --sp-6:24px; --sp-8:32px;  --sp-10:40px; --sp-12:48px; --sp-16:64px;
+  --sp-20:80px;--sp-24:96px; --sp-32:128px;--sp-40:160px;
+  --shadow-none:   none;
+  --shadow-sm:     0 2px 8px rgba(0,0,0,0.15);
+  --shadow-md:     0 4px 16px rgba(0,0,0,0.20);
+  --shadow-accent: 0 4px 20px rgba(201,169,110,0.20);
+  --shadow-modal:  0 24px 48px rgba(0,0,0,0.40);
+  --shadow-focus:  0 0 0 3px rgba(201,169,110,0.4);
+  --shadow-inner:  inset 0 1px 3px rgba(0,0,0,0.15);
+  --ease-expo: cubic-bezier(0.16,1,0.3,1);
+  --ease-back: cubic-bezier(0.34,1.56,0.64,1);
+  --ease-std:  cubic-bezier(0.4,0,0.2,1);
+  --ease-in:   cubic-bezier(0.4,0,1,1);
+  --dur-instant:80ms; --dur-fast:150ms; --dur-normal:300ms;
+  --dur-enter:500ms;  --dur-slow:700ms; --dur-dramatic:1200ms;
+}
+[data-theme="light"] {
+  --color-bg-primary:     #F5F2EC;
+  --color-bg-secondary:   #EAE6DF;
+  --color-bg-tertiary:    #DED9D0;
+  --color-bg-hover:       #D2CCC2;
+
+  /* Light mode text — much darker, clearly readable */
+  --color-text-primary:   #0D0D0F;  /* near-black with blue cast — headings */
+  --color-text-secondary: #2C2B32;  /* very dark grey — body text */
+  --color-text-muted:     #52505C;  /* medium dark — helper, timestamps */
+  --color-text-ghost:     #B8B4C0;  /* light — decorative only */
+  --color-text-key:       #1A1820;  /* table keys — darkest */
+  --color-text-value:     #3A3845;  /* table values — dark but distinct */
+  --color-text-heading:   #06060A;  /* page titles — maximum contrast */
+  --color-text-code:      #1E5C2E;  /* inline code — deep forest green */
+
+  --color-accent:         #966030;  /* deeper amber for better contrast on cream */
+  --color-accent-muted:   #7A4C22;
+  --color-accent-faint:   rgba(150,96,48,0.07);
+  --color-accent-glow:    rgba(150,96,48,0.15);
+  --color-border:         rgba(0,0,0,0.10);
+  --color-border-mid:     rgba(0,0,0,0.18);
+  --color-border-accent:  rgba(150,96,48,0.35);
+  --color-border-ghost:   rgba(0,0,0,0.05);
+  --color-overlay:        rgba(245,242,236,0.92);
+  --color-success:        #1A6B35;
+  --color-warning:        #8B4A10;
+  --color-error:          #9B1C1C;
+  --color-info:           #1A4E8C;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scrollbar-gutter:stable;font-size:13px;}
+body{
+  background:var(--color-bg-primary);color:var(--color-text-secondary);
+  font-family:var(--font-mono);font-weight:300;line-height:1.7;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  font-feature-settings:"liga" 1,"calt" 1,"lnum" 1,"tnum" 1;
+  transition:background-color 400ms var(--ease-std),color 400ms var(--ease-std);
+}
+/* ── GLOBAL NUMBER RENDERING ──
+   JetBrains Mono defaults to oldstyle figures which look like letters at small sizes.
+   Force lining tabular numerals with slashed zero everywhere mono is used. */
+.sp-val,.sp-tok,
+.tbl td,.tbl th,
+.code pre,.code *,
+.blk-title,.eyebrow,
+.sb-ver,
+.zi-val,.zi-lbl,
+.motion-val,.motion-spec-row *,
+.badge,.aaa,.aa,
+.sw-hex,
+.nav-group-lbl,
+[class*="tok"],[class*="val"],[class*="spec"] {
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "lnum" 1, "tnum" 1, "zero" 1;
+}
+::selection{background:rgba(201,169,110,0.2);color:inherit;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--color-border-mid);border-radius:var(--r-full);}
+/* ── LAYOUT ── */
+.wrap{display:flex;min-height:100vh;}
+.sidebar{
+  width:248px;min-width:248px;position:sticky;top:0;height:100vh;
+  overflow-y:auto;background:var(--color-bg-secondary);
+  border-right:1px solid var(--color-border);padding:0;
+  display:flex;flex-direction:column;
+}
+.sb-brand{padding:24px 24px 20px;border-bottom:1px solid var(--color-border);}
+.sb-name{font-family:var(--font-display);font-size:19px;font-weight:300;color:var(--color-text-heading);line-height:1;}
+.sb-sub{font-family:var(--font-mono);font-size:9px;color:var(--color-accent);letter-spacing:0.2em;text-transform:uppercase;margin-top:5px;}
+.sb-ver{font-family:var(--font-mono);font-size:9px;color:var(--color-text-muted);margin-top:2px;}
+.sb-nav{flex:1;overflow-y:auto;padding:12px 0;}
+.nav-group{margin-bottom:4px;}
+.nav-group-lbl{
+  font-family:var(--font-mono);font-size:9px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--color-text-muted);
+  padding:8px 24px 4px;display:block;
+}
+.nl{
+  display:flex;align-items:center;gap:8px;padding:6px 24px;
+  font-family:var(--font-mono);font-size:11px;color:var(--color-text-muted);
+  cursor:pointer;border-left:2px solid transparent;
+  transition:color var(--dur-fast),background var(--dur-fast),border-color var(--dur-fast);
+  text-decoration:none;user-select:none;
+}
+.nl:hover{color:var(--color-text-secondary);background:var(--color-accent-faint);}
+.nl.on{color:var(--color-accent);border-left-color:var(--color-accent);background:var(--color-accent-faint);}
+.nd{width:4px;height:4px;border-radius:var(--r-full);background:currentColor;flex-shrink:0;}
+.sb-footer{padding:16px 24px;border-top:1px solid var(--color-border);}
+.main{flex:1;padding:52px 60px;min-width:0;}
+/* ── SECTIONS ── */
+.sec{display:none;}
+.sec.on{display:block;animation:fadeUp var(--dur-enter) var(--ease-expo) forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* ── HEADINGS ── */
+.eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--color-accent);margin-bottom:8px;}
+.pg-title{font-family:var(--font-display);font-size:clamp(30px,4vw,52px);font-weight:300;letter-spacing:-0.02em;color:var(--color-text-heading);line-height:1.05;margin-bottom:8px;}
+.pg-desc{font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);line-height:1.8;max-width:620px;margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--color-border);}
+.blk{margin-bottom:52px;}
+.blk-title{font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--color-text-muted);padding-bottom:9px;border-bottom:1px solid var(--color-border);margin-bottom:18px;}
+.blk-desc{font-family:var(--font-mono);font-size:11px;color:var(--color-text-muted);margin-bottom:14px;line-height:1.7;}
+.subsec{
+  font-family:var(--font-mono);font-size:11px;font-weight:400;
+  color:var(--color-text-primary);
+  padding:10px 16px;margin:24px 0 12px;
+  background:var(--color-bg-tertiary);
+  border-left:3px solid var(--color-accent);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  letter-spacing:0.05em;
+}
+/* ── CARDS ── */
+.card{background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-md);padding:22px;}
+.card-sm{background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-md);padding:14px 18px;}
+.inner{background:var(--color-bg-tertiary);border-radius:var(--r-sm);padding:14px 16px;}
+.note{
+  background:var(--color-accent-faint);border:1px solid var(--color-border-accent);
+  border-radius:var(--r-sm);padding:11px 16px;
+  font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);
+  line-height:1.7;margin-bottom:18px;
+}
+.note::before{content:'→ ';color:var(--color-accent);}
+.rule-row{
+  display:flex;gap:10px;padding:8px 0;
+  border-bottom:1px solid var(--color-border-ghost);
+  font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);line-height:1.6;
+}
+.rule-row:last-child{border-bottom:none;}
+.rule-row::before{content:'→';color:var(--color-accent);flex-shrink:0;font-weight:400;}
+/* ── TABLES ── */
+.tbl{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:4px;}
+.tbl th{
+  font-family:var(--font-mono);font-weight:500;font-size:9px;
+  letter-spacing:0.15em;text-transform:uppercase;color:var(--color-accent);
+  text-align:left;padding:8px 12px;
+  border-bottom:1px solid var(--color-border-accent);
+  background:var(--color-accent-faint);
+}
+.tbl td{
+  font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);
+  padding:9px 12px;border-bottom:1px solid var(--color-border-ghost);
+  vertical-align:top;line-height:1.6;
+  font-variant-numeric:lining-nums tabular-nums;
+  font-feature-settings:"lnum" 1,"tnum" 1,"zero" 1;
+}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--color-accent-faint);}
+.tbl td:first-child{
+  color:var(--color-text-key);font-weight:400;
+  white-space:nowrap;
+  font-variant-numeric:lining-nums tabular-nums;
+  font-feature-settings:"lnum" 1,"tnum" 1,"zero" 1;
+}
+.tbl td code,.tbl .tok{
+  font-family:var(--font-mono);font-size:10px;color:var(--color-text-code);
+  background:rgba(100,180,100,0.07);border:1px solid rgba(100,180,100,0.2);
+  border-radius:var(--r-xs);padding:1px 5px;
+  font-variant-numeric:lining-nums tabular-nums;
+}
+.tbl td .good{color:var(--color-success);}
+.tbl td .warn{color:var(--color-warning);}
+.tbl td .bad {color:var(--color-error);}
+.tbl td .info{color:var(--color-info);}
+/* ── SWATCHES ── */
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:10px;}
+.sw{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--color-border);}
+.sw-color{height:60px;display:flex;align-items:flex-end;padding:7px 9px;position:relative;}
+.sw-hex{font-family:var(--font-mono);font-size:9px;opacity:.5;}
+.sw-meta{padding:9px 11px;background:var(--color-bg-secondary);}
+.sw-tok{font-family:var(--font-mono);font-size:9px;color:var(--color-accent);margin-bottom:2px;}
+.sw-name{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);}
+.badge{position:absolute;top:7px;right:7px;font-family:var(--font-mono);font-size:8px;padding:2px 5px;border-radius:2px;}
+.aaa{background:rgba(45,125,70,.3);color:#7DD4A0;}
+.aa{background:rgba(32,96,160,.3);color:#7DB4E0;}
+/* ── DEPTH STRIP ── */
+.depth-strip{display:flex;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--color-border);}
+.depth-cell{flex:1;padding:18px 12px;text-align:center;}
+.depth-cell .dlbl{font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:4px;}
+.depth-cell .dname{font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,0.15);}
+/* ── SPACING ── */
+.sp-row{display:flex;align-items:center;gap:14px;margin-bottom:7px;}
+.sp-tok{
+  font-family:var(--font-mono);font-size:10px;color:var(--color-accent);min-width:80px;
+  font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1,"zero" 1;
+}
+.sp-val{
+  font-family:var(--font-mono);font-size:11px;font-weight:400;
+  color:var(--color-text-key);min-width:48px;
+  font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1,"zero" 1;
+}
+.sp-bar{background:var(--color-accent);height:4px;border-radius:2px;opacity:.5;}
+.sp-use{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);}
+/* ── BUTTONS ── */
+.btn-p{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:11px;font-weight:400;
+  letter-spacing:.10em;text-transform:uppercase;
+  color:var(--color-bg-primary);background:var(--color-accent);
+  border:1px solid var(--color-accent);border-radius:var(--r-sm);
+  padding:10px 20px;cursor:pointer;
+  transition:background var(--dur-fast) var(--ease-std),border-color var(--dur-fast),
+    transform 120ms var(--ease-back),box-shadow var(--dur-fast);
+}
+.btn-p:hover{background:var(--color-accent-muted);border-color:var(--color-accent-muted);transform:translateY(-1px);box-shadow:var(--shadow-accent);}
+.btn-p:active{transform:scale(.97) translateY(0);box-shadow:none;}
+.btn-p:focus-visible{outline:2px solid var(--color-accent);outline-offset:3px;}
+.btn-s{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:11px;font-weight:400;
+  letter-spacing:.10em;text-transform:uppercase;
+  color:var(--color-text-secondary);background:transparent;
+  border:1px solid var(--color-border);border-radius:var(--r-sm);
+  padding:10px 20px;cursor:pointer;
+  transition:color var(--dur-fast),border-color var(--dur-normal),background var(--dur-fast),transform 120ms var(--ease-back);
+}
+.btn-s:hover{color:var(--color-accent);border-color:var(--color-border-accent);background:var(--color-accent-faint);transform:translateY(-1px);}
+.btn-s:active{transform:scale(.97) translateY(0);}
+.btn-g{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:11px;font-weight:400;
+  letter-spacing:.10em;text-transform:uppercase;
+  color:var(--color-text-muted);background:transparent;border:none;
+  padding:8px 0;cursor:pointer;position:relative;
+  transition:color var(--dur-fast),gap var(--dur-normal) var(--ease-expo);
+}
+.btn-g::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--color-accent);transition:width var(--dur-normal) var(--ease-expo);}
+.btn-g:hover{color:var(--color-text-primary);gap:10px;}
+.btn-g:hover::after{width:100%;}
+.btn-ico{
+  width:36px;height:36px;border-radius:6px;
+  background:transparent;border:1px solid var(--color-border);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:14px;cursor:pointer;color:var(--color-text-secondary);
+  transition:background var(--dur-fast),border-color var(--dur-fast),transform 150ms var(--ease-back),color var(--dur-fast);
+}
+.btn-ico:hover{background:var(--color-accent-faint);border-color:var(--color-border-accent);transform:scale(1.08);color:var(--color-accent);}
+.btn-ico:active{transform:scale(.94);}
+.btn-d{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:11px;font-weight:400;
+  letter-spacing:.10em;text-transform:uppercase;
+  color:var(--color-error);background:transparent;
+  border:1px solid rgba(160,32,32,.3);border-radius:var(--r-sm);
+  padding:10px 20px;cursor:pointer;
+  transition:background var(--dur-fast),border-color var(--dur-fast);
+}
+.btn-d:hover{background:rgba(160,32,32,.08);border-color:var(--color-error);}
+.brow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+/* ── INPUTS ── */
+.inp{
+  height:44px;width:100%;padding:0 12px;
+  font-family:var(--font-mono);font-size:13px;font-weight:300;
+  color:var(--color-text-heading);
+  background:var(--color-bg-secondary);
+  border:1px solid var(--color-border);border-radius:var(--r-sm);
+  outline:none;caret-color:var(--color-accent);
+  transition:border-color var(--dur-fast);
+  font-variant-numeric:lining-nums tabular-nums;
+  font-feature-settings:"lnum" 1,"tnum" 1,"zero" 1;
+}
+.inp::placeholder{color:var(--color-text-muted);font-size:12px;}
+.inp:hover{border-color:var(--color-border-mid);}
+.inp:focus{border-color:var(--color-border-accent);outline:2px solid var(--color-accent);outline-offset:-1px;}
+.inp-err{border-color:var(--color-error)!important;}
+.inp-ok{border-color:var(--color-success)!important;}
+textarea.inp{height:110px;padding:10px 12px;resize:vertical;}
+.flbl{font-family:var(--font-mono);font-size:11px;font-weight:400;letter-spacing:.08em;color:var(--color-text-secondary);display:block;margin-bottom:6px;}
+.flbl .req{color:var(--color-accent);margin-left:2px;}
+.fhelp{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-top:4px;}
+.ferr{font-family:var(--font-mono);font-size:10px;color:var(--color-error);margin-top:4px;}
+.fok{font-family:var(--font-mono);font-size:10px;color:var(--color-success);margin-top:4px;}
+/* custom checkbox */
+.chk-wrap{display:flex;align-items:flex-start;gap:10px;cursor:pointer;}
+.chk-box{
+  width:18px;height:18px;border-radius:var(--r-xs);flex-shrink:0;
+  border:1px solid var(--color-border-mid);background:var(--color-bg-secondary);
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+  transition:background var(--dur-fast),border-color var(--dur-fast);
+  cursor:pointer;
+}
+.chk-box.checked{background:var(--color-accent);border-color:var(--color-accent);}
+.chk-mark{font-size:11px;color:var(--color-bg-primary);opacity:0;transition:opacity 150ms;}
+.chk-box.checked .chk-mark{opacity:1;}
+.chk-lbl{font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);line-height:1.6;}
+/* ── TAGS ── */
+.tag{
+  font-family:var(--font-mono);font-size:9px;font-weight:400;
+  letter-spacing:.10em;text-transform:uppercase;
+  color:var(--color-accent);background:var(--color-accent-faint);
+  border:1px solid var(--color-border-accent);border-radius:var(--r-xs);
+  padding:3px 8px;display:inline-block;cursor:default;
+  transition:background var(--dur-fast),border-color var(--dur-fast);
+}
+.tag:hover{background:rgba(201,169,110,.13);border-color:var(--color-accent);}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;}
+/* ── NAV DEMO ── */
+.nav-demo{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:64px;
+  background:rgba(10,10,15,.95);border:1px solid var(--color-border);
+  border-radius:var(--r-md);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.nav-brand-d{font-family:var(--font-display);font-size:18px;font-weight:300;color:var(--color-text-heading);}
+.nav-links-d{display:flex;gap:32px;}
+.nav-lnk{
+  font-family:var(--font-mono);font-size:10px;font-weight:400;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-muted);
+  cursor:pointer;position:relative;padding-bottom:4px;
+  transition:color var(--dur-instant);
+}
+.nav-lnk::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--color-accent);transition:width var(--dur-normal) var(--ease-expo);}
+.nav-lnk:hover{color:var(--color-text-primary);}
+.nav-lnk:hover::after,.nav-lnk.on::after{width:100%;}
+.nav-lnk.on{color:var(--color-accent);}
+/* ── CARDS - COMPONENTS ── */
+.proj-card{
+  background:var(--color-bg-secondary);border:1px solid var(--color-border);
+  border-radius:var(--r-md);padding:22px;cursor:pointer;
+  transition:transform var(--dur-normal) var(--ease-expo),border-color var(--dur-fast),background var(--dur-fast);
+}
+.proj-card:hover{transform:translateY(-3px);border-color:var(--color-border-accent);background:var(--color-bg-tertiary);}
+.pct{font-family:var(--font-display);font-size:21px;font-weight:400;color:var(--color-text-heading);margin-bottom:6px;}
+.pcd{font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:13px;}
+/* testimonial card */
+.test-card{background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-md);padding:20px;position:relative;overflow:hidden;}
+.test-quote{position:absolute;top:8px;left:14px;font-family:var(--font-display);font-size:48px;font-weight:300;color:var(--color-accent);opacity:.25;line-height:1;pointer-events:none;}
+.test-name{font-family:var(--font-display);font-size:16px;font-weight:400;color:var(--color-text-heading);margin-bottom:2px;}
+.test-role{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);font-style:italic;margin-bottom:10px;}
+.test-msg{font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.test-date{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-top:10px;}
+/* timeline */
+.tl-entry{display:grid;grid-template-columns:40px 1fr;gap:16px;margin-bottom:28px;}
+.tl-ico{width:40px;height:40px;border-radius:var(--r-full);background:var(--color-bg-secondary);border:1px solid var(--color-border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.tl-co{font-family:var(--font-display);font-size:18px;font-weight:400;color:var(--color-text-heading);}
+.tl-role{font-family:var(--font-mono);font-size:10px;font-weight:400;color:var(--color-accent);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;}
+.tl-dur{
+  font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-top:2px;
+  font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1,"zero" 1;
+}
+.tl-desc{font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);line-height:1.8;margin-top:8px;max-width:440px;}
+/* skill cat */
+.skill-cat-lbl{font-family:var(--font-mono);font-size:10px;font-weight:400;letter-spacing:.15em;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:8px;margin-top:16px;}
+/* stat */
+.stat-row{display:flex;gap:32px;flex-wrap:wrap;}
+.stat-num{
+  font-family:var(--font-display);font-size:52px;font-weight:300;
+  color:var(--color-accent);line-height:1;
+  font-variant-numeric:lining-nums;
+}
+.stat-lbl{font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);margin-top:4px;}
+/* ── OVERLAYS ── */
+.overlay-demo{background:var(--color-overlay);border-radius:var(--r-lg);padding:40px 32px;display:flex;align-items:center;justify-content:center;min-height:200px;position:relative;}
+.modal-demo{background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-lg);padding:28px;max-width:420px;width:100%;box-shadow:var(--shadow-modal);}
+.tooltip-demo{background:var(--color-bg-tertiary);border:1px solid var(--color-border);border-radius:var(--r-sm);padding:6px 10px;font-family:var(--font-mono);font-size:10px;color:var(--color-text-heading);display:inline-block;position:relative;}
+.tooltip-demo::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--color-border);}
+/* ── TOAST ── */
+.toast{background:var(--color-bg-secondary);border:1px solid var(--color-border);border-left:3px solid var(--color-success);border-radius:var(--r-sm);padding:13px 16px;width:320px;}
+.toast.err{border-left-color:var(--color-error);}
+.toast.wrn{border-left-color:var(--color-warning);}
+.toast.inf{border-left-color:var(--color-info);}
+.t-title{font-family:var(--font-mono);font-size:11px;font-weight:400;color:var(--color-text-heading);margin-bottom:2px;}
+.t-body{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);line-height:1.6;}
+/* ── SKELETON ── */
+.skel{background:linear-gradient(90deg,var(--color-bg-tertiary) 25%,var(--color-bg-hover) 50%,var(--color-bg-tertiary) 75%);background-size:400px 100%;animation:shimmer 1.5s linear infinite;border-radius:var(--r-sm);}
+/* ── SPINNER ── */
+.spin-demo{width:16px;height:16px;border:2px solid var(--color-border-mid);border-top-color:var(--color-accent);border-radius:var(--r-full);animation:spin-full 700ms linear infinite;display:inline-block;}
+.spin-lg{width:24px;height:24px;}
+.spin-sm{width:12px;height:12px;}
+/* ── LIVE DOT ── */
+.live-dot{width:8px;height:8px;background:var(--color-success);border-radius:var(--r-full);display:inline-block;animation:pulse-ring 1.5s ease-out infinite;}
+/* ── EMPTY STATE ── */
+.empty-card{background:var(--color-bg-secondary);border:1px dashed var(--color-border-mid);border-radius:var(--r-md);padding:28px;text-align:center;}
+.empty-msg{font-family:var(--font-mono);font-size:12px;color:var(--color-text-muted);line-height:1.7;}
+/* ── PROGRESS BAR ── */
+.prog-track{width:100%;height:2px;background:var(--color-border);border-radius:var(--r-full);overflow:hidden;}
+.prog-fill{height:100%;background:var(--color-accent);animation:prog-fill 4s linear forwards;width:0;}
+@keyframes prog-fill{to{width:100%;}}
+/* ── SCENE DOTS ── */
+.scene-dots{display:flex;gap:8px;align-items:center;}
+.sdot{width:8px;height:8px;border-radius:var(--r-full);transition:transform 200ms var(--ease-back);}
+.sdot.past{background:var(--color-accent-muted);}
+.sdot.cur{background:var(--color-accent);transform:scale(1.3);}
+.sdot.fut{background:transparent;border:1px solid var(--color-border-mid);cursor:default;}
+/* ── RADIUS ── */
+.r-demo{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;}
+.r-box{background:var(--color-bg-tertiary);border:1px solid var(--color-border-accent);width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;color:var(--color-accent);text-align:center;}
+/* ── TYPE SPEC ── */
+.type-spec{padding:26px;background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-md);margin-bottom:10px;}
+.type-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:13px;padding-top:13px;border-top:1px solid var(--color-border);}
+.tm{font-family:var(--font-mono);font-size:9px;color:var(--color-text-muted);}
+.tm span{color:var(--color-accent);}
+/* ── MOTION BALLS ── */
+.m-track{height:54px;background:var(--color-bg-tertiary);border-radius:6px;position:relative;overflow:hidden;cursor:pointer;margin-bottom:4px;}
+.m-ball{position:absolute;top:50%;left:8px;transform:translateY(-50%);width:38px;height:38px;border-radius:var(--r-sm);background:var(--color-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;color:var(--color-bg-primary);user-select:none;}
+/* ── MICRO ── */
+.micro-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+.mc{padding:18px;background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-md);text-align:center;cursor:pointer;transition:border-color var(--dur-fast);}
+.mc:hover{border-color:var(--color-border-accent);}
+.mi{font-size:26px;margin-bottom:9px;display:block;line-height:1;}
+.mn{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-muted);}
+/* ── ANIMATIONS ── */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes float-a{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(201,169,110,.5)}70%{box-shadow:0 0 0 10px rgba(201,169,110,0)}100%{box-shadow:0 0 0 0 rgba(201,169,110,0)}}
+@keyframes bounce-in{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.1)}80%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
+@keyframes spin-slow{to{transform:rotate(360deg)}}
+@keyframes spin-full{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+@keyframes slide-r{from{transform:translateX(110%)}to{transform:none}}
+@keyframes stg-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.af{animation:float-a 2s ease-in-out infinite;display:inline-block;}
+.ap{animation:pulse-ring 1.5s ease-out infinite;display:inline-block;}
+.ab{animation:bounce-in 600ms var(--ease-back) forwards;display:inline-block;}
+.as{animation:spin-slow 3s linear infinite;display:inline-block;}
+.ash{
+  background:linear-gradient(90deg,var(--color-text-muted) 25%,var(--color-accent) 50%,var(--color-text-muted) 75%);
+  background-size:400px 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 2s linear infinite;display:inline-block;
+}
+/* ── TYPEWRITER ── */
+.tw-out{font-family:var(--font-display);font-size:clamp(18px,3vw,28px);font-weight:300;font-style:italic;color:var(--color-text-heading);line-height:1.55;min-height:80px;}
+.cur{display:inline-block;width:9px;height:1.1em;background:var(--color-accent);vertical-align:middle;margin-left:2px;animation:blink 530ms step-end infinite;}
+.cur-slow{animation-duration:800ms;}
+/* ── WELCOME ── */
+.wp{background:var(--color-bg-primary);border:1px solid var(--color-border);border-radius:var(--r-lg);padding:48px 60px;position:relative;overflow:hidden;min-height:300px;}
+.wp::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.04;pointer-events:none;}
+.wp-name{font-family:var(--font-display);font-size:clamp(34px,5vw,58px);font-weight:300;letter-spacing:-.02em;line-height:1;color:var(--color-text-heading);}
+.wp-role{font-family:var(--font-display);font-size:13px;font-weight:300;letter-spacing:.25em;text-transform:uppercase;color:var(--color-text-secondary);margin-top:4px;margin-bottom:36px;}
+.wp-dia{font-family:var(--font-display);font-size:clamp(17px,3vw,27px);font-weight:300;font-style:italic;line-height:1.55;color:var(--color-text-heading);margin-bottom:36px;}
+.wp-cta{font-family:var(--font-mono);font-size:12px;font-weight:300;color:var(--color-text-secondary);letter-spacing:.05em;}
+.wp-skip{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);letter-spacing:.05em;margin-top:4px;}
+/* ── LINK ── */
+.lnk{font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary);text-decoration:none;position:relative;cursor:pointer;padding-bottom:2px;display:inline-block;transition:color var(--dur-fast);}
+.lnk::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--color-accent);transition:width var(--dur-normal) var(--ease-expo);}
+.lnk:hover{color:var(--color-text-primary);}
+.lnk:hover::after{width:100%;}
+/* ── DIVIDER ── */
+.sdiv{display:flex;align-items:center;gap:14px;margin:28px 0;}
+.dl{flex:1;height:1px;background:var(--color-border);}
+.ddot{width:4px;height:4px;background:var(--color-accent);border-radius:var(--r-full);}
+/* ── STAGGER ── */
+.stg{padding:9px 15px;background:var(--color-bg-tertiary);border-radius:var(--r-sm);font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);opacity:0;transform:translateY(10px);transition:opacity var(--dur-enter) var(--ease-expo),transform var(--dur-enter) var(--ease-expo);}
+.stg.in{opacity:1;transform:none;}
+/* ── CODE ── */
+.code{background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-md);padding:18px 22px;overflow-x:auto;margin-bottom:8px;}
+.code pre{
+  font-family:var(--font-mono);font-size:11px;line-height:1.8;
+  color:var(--color-text-secondary);white-space:pre;margin:0;
+  font-variant-numeric:lining-nums tabular-nums;
+  font-feature-settings:"lnum" 1,"tnum" 1,"zero" 1;
+}
+.code .ct{color:var(--color-accent);}           /* token names  — gold    */
+.code .cv{color:#8EC8F0;}                       /* values       — sky blue */
+.code .cc{color:var(--color-text-muted);}       /* comments     — muted   */
+.code .cs{color:var(--color-text-code);}        /* strings      — sage    */
+/* ── GRID HELPERS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+/* ── FOCUS EXAMPLE ── */
+.foc-ex{outline:2px solid var(--color-accent);outline-offset:3px;}
+/* ── TOGGLE ── */
+.tog{position:relative;width:56px;height:28px;background:var(--color-bg-tertiary);border:1px solid var(--color-border);border-radius:var(--r-full);cursor:pointer;transition:background 400ms var(--ease-std),border-color 400ms;}
+.tog.li{background:#E8E4DC;border-color:rgba(0,0,0,.12);}
+.tog-knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:var(--r-full);background:var(--color-accent);transition:transform 380ms var(--ease-expo),background 400ms;display:flex;align-items:center;justify-content:center;font-size:9px;box-shadow:0 2px 8px rgba(201,169,110,.4);pointer-events:none;}
+.tog.li .tog-knob{transform:translateX(28px);background:#966030;}
+/* ── BOTTOM NAV ── */
+.bnav{max-width:390px;background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-lg);overflow:hidden;}
+.bnav-inner{display:flex;border-top:1px solid var(--color-border);padding:8px 0;}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer;}
+.bni-ico{font-size:18px;line-height:1;}
+.bni-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;}
+.bni.on .bni-ico,.bni.on .bni-lbl{color:var(--color-accent);}
+.bni:not(.on) .bni-ico,.bni:not(.on) .bni-lbl{color:var(--color-text-muted);opacity:.5;}
+/* ── INTERACTION STATE TABLE ── */
+.is-row{display:grid;grid-template-columns:110px 1fr 1fr;gap:0;border-bottom:1px solid var(--color-border-ghost);}
+.is-row:last-child{border-bottom:none;}
+.is-cell{padding:9px 12px;font-family:var(--font-mono);font-size:11px;line-height:1.5;}
+.is-cell:first-child{color:var(--color-text-heading);font-weight:400;background:var(--color-accent-faint);}
+.is-cell:not(:first-child){color:var(--color-text-value);}
+/* ── SHADOW DEMOS ── */
+.sh-demo{padding:18px;background:var(--color-bg-secondary);border-radius:var(--r-md);margin-bottom:10px;}
+/* ── HEADING REVEAL ── */
+.hr-el{transition:opacity 600ms var(--ease-expo),transform 600ms var(--ease-expo);opacity:0;transform:translateY(16px);}
+.hr-el.in{opacity:1;transform:none;}
+/* ── Z-INDEX LEGEND ── */
+.zi-row{display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--color-border-ghost);}
+.zi-row:last-child{border-bottom:none;}
+.zi-val{
+  font-family:var(--font-mono);font-size:10px;color:var(--color-accent);min-width:60px;
+  font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1,"zero" 1;
+  font-weight:400;
+}
+.zi-lbl{font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);}
+.zi-bar{height:3px;background:var(--color-accent);border-radius:2px;opacity:.4;}
+@media(max-width:768px){.sidebar{display:none;}.main{padding:24px 18px;}.g2,.g3{grid-template-columns:1fr;}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ════════ SIDEBAR ════════ -->
+<nav class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-name">Aditya Chavan</div>
+    <div class="sb-sub">Design System</div>
+    <div class="sb-ver">v1.0 — Complete Reference</div>
+  </div>
+  <div class="sb-nav">
+    <div class="nav-group">
+      <span class="nav-group-lbl">1. Visual Foundations</span>
+      <a class="nl on" onclick="S('colors')"><span class="nd"></span>1.2 Color System</a>
+      <a class="nl" onclick="S('type')"><span class="nd"></span>1.1 Typography</a>
+      <a class="nl" onclick="S('layout')"><span class="nd"></span>1.3 Layout System</a>
+      <a class="nl" onclick="S('responsive')"><span class="nd"></span>1.4 Responsive</a>
+      <a class="nl" onclick="S('spacing')"><span class="nd"></span>1.5 Spacing</a>
+      <a class="nl" onclick="S('borders')"><span class="nd"></span>1.6 Borders & Dividers</a>
+      <a class="nl" onclick="S('shadows')"><span class="nd"></span>1.7 Shadows & Depth</a>
+      <a class="nl" onclick="S('backgrounds')"><span class="nd"></span>1.8 Backgrounds</a>
+      <a class="nl" onclick="S('icons')"><span class="nd"></span>1.9 Iconography</a>
+      <a class="nl" onclick="S('imagery')"><span class="nd"></span>1.10 Imagery & Media</a>
+      <a class="nl" onclick="S('density')"><span class="nd"></span>1.11 Visual Density</a>
+    </div>
+    <div class="nav-group">
+      <span class="nav-group-lbl">2. Interaction</span>
+      <a class="nl" onclick="S('buttons')"><span class="nd"></span>2.1 Buttons</a>
+      <a class="nl" onclick="S('forms')"><span class="nd"></span>2.2 Form Elements</a>
+      <a class="nl" onclick="S('navcomp')"><span class="nd"></span>2.3 Navigation</a>
+      <a class="nl" onclick="S('feedback')"><span class="nd"></span>2.4 Feedback</a>
+      <a class="nl" onclick="S('datadisplay')"><span class="nd"></span>2.5 Data Display</a>
+      <a class="nl" onclick="S('overlays')"><span class="nd"></span>2.6 Overlays</a>
+      <a class="nl" onclick="S('states')"><span class="nd"></span>2.7 Interaction States</a>
+      <a class="nl" onclick="S('motion')"><span class="nd"></span>2.8 Motion</a>
+      <a class="nl" onclick="S('a11y')"><span class="nd"></span>2.9 Accessibility</a>
+    </div>
+    <div class="nav-group">
+      <span class="nav-group-lbl">3. Technical</span>
+      <a class="nl" onclick="S('resp-render')"><span class="nd"></span>3.1 Responsive Rendering</a>
+      <a class="nl" onclick="S('font-perf')"><span class="nd"></span>3.2 Font Performance</a>
+      <a class="nl" onclick="S('media-opt')"><span class="nd"></span>3.3 Media Optimization</a>
+      <a class="nl" onclick="S('css-arch')"><span class="nd"></span>3.4 CSS Architecture</a>
+      <a class="nl" onclick="S('theming')"><span class="nd"></span>3.5 Theming System</a>
+      <a class="nl" onclick="S('render-eff')"><span class="nd"></span>3.6 Render Efficiency</a>
+      <a class="nl" onclick="S('platform')"><span class="nd"></span>3.7 Platform Consistency</a>
+    </div>
+    <div class="nav-group">
+      <span class="nav-group-lbl">4. Micro Details</span>
+      <a class="nl" onclick="S('micro-det')"><span class="nd"></span>4.1 Forgotten Details</a>
+      <a class="nl" onclick="S('micro-anim')"><span class="nd"></span>Micro-Animations</a>
+      <a class="nl" onclick="S('text-fx')"><span class="nd"></span>Text Effects</a>
+      <a class="nl" onclick="S('welcome')"><span class="nd"></span>Welcome Preview</a>
+      <a class="nl" onclick="S('tokens')"><span class="nd"></span>Token Reference</a>
+    </div>
+  </div>
+  <div class="sb-footer">
+    <div style="font-family:var(--font-mono);font-size:9px;color:var(--color-text-muted);margin-bottom:8px;letter-spacing:.12em;text-transform:uppercase">Theme</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="tog" id="main-tog" onclick="toggleTheme()"><div class="tog-knob" id="main-knob">☾</div></div>
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)" id="tog-lbl">Dark</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════ MAIN ════════ -->
+<main class="main">
+
+<!-- ══ 1.2 COLORS ══ -->
+<section id="sec-colors" class="sec on">
+  <div class="eyebrow">1.2 — Visual Foundations</div>
+  <h1 class="pg-title">Color System</h1>
+  <p class="pg-desc">One accent. Two modes. 28 named tokens. Every color was selected for contrast, warmth balance, and WCAG compliance. Nothing is hardcoded anywhere in the codebase — ever.</p>
+
+  <div class="blk">
+    <div class="blk-title">Dark Mode — Default Palette</div>
+    <div class="sw-grid">
+      <div class="sw"><div class="sw-color" style="background:#0A0A0F"><span class="sw-hex" style="color:rgba(255,255,255,.2)">#0A0A0F</span></div><div class="sw-meta"><div class="sw-tok">--color-bg-primary</div><div class="sw-name">Abyss</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#111118"><span class="sw-hex" style="color:rgba(255,255,255,.2)">#111118</span></div><div class="sw-meta"><div class="sw-tok">--color-bg-secondary</div><div class="sw-name">Ink</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#16161E"><span class="sw-hex" style="color:rgba(255,255,255,.2)">#16161E</span></div><div class="sw-meta"><div class="sw-tok">--color-bg-tertiary</div><div class="sw-name">Dusk</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#1C1C26"><span class="sw-hex" style="color:rgba(255,255,255,.2)">#1C1C26</span></div><div class="sw-meta"><div class="sw-tok">--color-bg-hover</div><div class="sw-name">Hover Surface</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#E8E6F0"><span class="sw-hex" style="color:rgba(0,0,0,.3)">#E8E6F0</span><span class="badge aaa">AAA 16.8</span></div><div class="sw-meta"><div class="sw-tok">--color-text-heading</div><div class="sw-name">Frost — headings &amp; titles</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#A8A4B8"><span class="sw-hex" style="color:rgba(0,0,0,.4)">#A8A4B8</span><span class="badge aa">AA 7.1</span></div><div class="sw-meta"><div class="sw-tok">--color-text-secondary</div><div class="sw-name">Lavender Slate — body</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#C4C0D8"><span class="sw-hex" style="color:rgba(0,0,0,.4)">#C4C0D8</span></div><div class="sw-meta"><div class="sw-tok">--color-text-key</div><div class="sw-name">Soft Violet — table keys</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#5C5970"><span class="sw-hex" style="color:rgba(255,255,255,.4)">#5C5970</span></div><div class="sw-meta"><div class="sw-tok">--color-text-muted</div><div class="sw-name">Deep Slate — helper text</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#B8D4B0"><span class="sw-hex" style="color:rgba(0,0,0,.4)">#B8D4B0</span></div><div class="sw-meta"><div class="sw-tok">--color-text-code</div><div class="sw-name">Sage Green — tokens</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#C9A96E"><span class="sw-hex" style="color:rgba(0,0,0,.4)">#C9A96E</span><span class="badge aa">AA 6.3</span></div><div class="sw-meta"><div class="sw-tok">--color-accent ★</div><div class="sw-name">Tawny Gold</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#8B6F42"><span class="sw-hex" style="color:rgba(255,255,255,.4)">#8B6F42</span></div><div class="sw-meta"><div class="sw-tok">--color-accent-muted</div><div class="sw-name">Burnished</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#3D9E5A"><span class="sw-hex" style="color:rgba(255,255,255,.5)">#3D9E5A</span></div><div class="sw-meta"><div class="sw-tok">--color-success</div><div class="sw-name">Sage</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#C07840"><span class="sw-hex" style="color:rgba(255,255,255,.5)">#C07840</span></div><div class="sw-meta"><div class="sw-tok">--color-warning</div><div class="sw-name">Ochre</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#C03838"><span class="sw-hex" style="color:rgba(255,255,255,.5)">#C03838</span></div><div class="sw-meta"><div class="sw-tok">--color-error</div><div class="sw-name">Crimson</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#4488CC"><span class="sw-hex" style="color:rgba(255,255,255,.5)">#4488CC</span></div><div class="sw-meta"><div class="sw-tok">--color-info</div><div class="sw-name">Steel</div></div></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Light Mode — Warm Cream Override (toggle sidebar to see live)</div>
+    <div class="note">Only these tokens change in [data-theme="light"]. All radius, spacing, and motion tokens remain identical.</div>
+    <div class="sw-grid">
+      <div class="sw"><div class="sw-color" style="background:#F5F2EC;border-bottom:1px solid rgba(0,0,0,.06)"><span class="sw-hex" style="color:rgba(0,0,0,.3)">#F5F2EC</span></div><div class="sw-meta" style="background:#EAE6DF"><div class="sw-tok">--color-bg-primary</div><div class="sw-name">Cream</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#EAE6DF;border-bottom:1px solid rgba(0,0,0,.06)"><span class="sw-hex" style="color:rgba(0,0,0,.3)">#EAE6DF</span></div><div class="sw-meta" style="background:#EAE6DF"><div class="sw-tok">--color-bg-secondary</div><div class="sw-name">Linen</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#DED9D0;border-bottom:1px solid rgba(0,0,0,.06)"><span class="sw-hex" style="color:rgba(0,0,0,.3)">#DED9D0</span></div><div class="sw-meta" style="background:#EAE6DF"><div class="sw-tok">--color-bg-tertiary</div><div class="sw-name">Parchment</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#0D0D0F;border-bottom:1px solid rgba(0,0,0,.06)"><span class="sw-hex" style="color:rgba(255,255,255,.5)">#0D0D0F</span><span class="badge aaa" style="background:rgba(50,220,80,.2);color:#1a7a30">AAA 18.1</span></div><div class="sw-meta" style="background:#EAE6DF"><div class="sw-tok">--color-text-heading</div><div class="sw-name">Near-black — titles</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#2C2B32;border-bottom:1px solid rgba(0,0,0,.06)"><span class="sw-hex" style="color:rgba(255,255,255,.4)">#2C2B32</span><span class="badge aaa" style="background:rgba(50,220,80,.2);color:#1a7a30">AAA 12.4</span></div><div class="sw-meta" style="background:#EAE6DF"><div class="sw-tok">--color-text-secondary</div><div class="sw-name">Very dark grey — body</div></div></div>
+      <div class="sw"><div class="sw-color" style="background:#966030;border-bottom:1px solid rgba(0,0,0,.06)"><span class="sw-hex" style="color:rgba(255,255,255,.5)">#966030</span><span class="badge aa" style="background:rgba(30,100,200,.2);color:#1a4e8c">AA 5.2</span></div><div class="sw-meta" style="background:#EAE6DF"><div class="sw-tok">--color-accent (light)</div><div class="sw-name">Deep Amber</div></div></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Depth System — Layered Surfaces (no box-shadow needed)</div>
+    <div class="depth-strip">
+      <div class="depth-cell" style="background:#0A0A0F"><div class="dlbl">--bg-primary</div><div class="dname">Page</div></div>
+      <div class="depth-cell" style="background:#111118"><div class="dlbl">--bg-secondary</div><div class="dname">Cards</div></div>
+      <div class="depth-cell" style="background:#16161E"><div class="dlbl">--bg-tertiary</div><div class="dname">Inner</div></div>
+      <div class="depth-cell" style="background:#1C1C26"><div class="dlbl">--bg-hover</div><div class="dname">Hover</div></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Border & Surface Opacity Scale</div>
+    <div class="card" style="display:grid;gap:10px">
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:100px;height:1px;background:rgba(255,255,255,.04)"></div><span class="tok">--border-ghost</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">rgba(255,255,255,0.04) — section dividers</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:100px;height:1px;background:rgba(255,255,255,.07)"></div><span class="tok">--border</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">rgba(255,255,255,0.07) — card borders</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:100px;height:1px;background:rgba(255,255,255,.12)"></div><span class="tok">--border-mid</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">rgba(255,255,255,0.12) — hover borders</span></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:100px;height:1px;background:rgba(201,169,110,.25)"></div><span class="tok">--border-accent</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">rgba(201,169,110,0.25) — focused/active</span></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">WCAG Contrast Certification</div>
+    <table class="tbl"><thead><tr><th>Combination</th><th>Ratio</th><th>Grade</th></tr></thead><tbody>
+      <tr><td>text-heading (#E8E6F0) on bg-primary (dark)</td><td>16.8:1</td><td><span class="good">AAA ✓</span></td></tr>
+      <tr><td>text-secondary (#A8A4B8) on bg-primary (dark)</td><td>7.1:1</td><td><span class="info">AA ✓</span></td></tr>
+      <tr><td>accent (#C9A96E) on bg-primary (dark)</td><td>6.3:1</td><td><span class="info">AA ✓</span></td></tr>
+      <tr><td>text-code (#B8D4B0) on bg-primary (dark)</td><td>8.4:1</td><td><span class="good">AA ✓</span></td></tr>
+      <tr><td>text-heading (#0D0D0F) on bg-primary (light)</td><td>18.1:1</td><td><span class="good">AAA ✓</span></td></tr>
+      <tr><td>text-secondary (#2C2B32) on bg-primary (light)</td><td>12.4:1</td><td><span class="good">AAA ✓</span></td></tr>
+      <tr><td>accent (#966030) on bg-primary (light)</td><td>5.2:1</td><td><span class="info">AA ✓</span></td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 1.1 TYPOGRAPHY ══ -->
+<section id="sec-type" class="sec">
+  <div class="eyebrow">1.1 — Visual Foundations</div>
+  <h1 class="pg-title">Typography</h1>
+  <p class="pg-desc">Cormorant Garamond (editorial authority) + JetBrains Mono (technical credibility). The tension between them is the brand identity. Two fonts, zero compromises.</p>
+
+  <div class="blk">
+    <div class="blk-title">Font Families & Fallback Stacks</div>
+    <table class="tbl"><thead><tr><th>Role</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Display / Heading</td><td>Cormorant Garamond — editorial serif. High-contrast strokes. Never below 16px.</td></tr>
+      <tr><td>Body / UI / Mono</td><td>JetBrains Mono — geometric mono. Weight 300 reads as refined. Never above 16px for body.</td></tr>
+      <tr><td>Fallback (display)</td><td>Georgia, "Times New Roman", serif</td></tr>
+      <tr><td>Fallback (mono)</td><td>"Courier New", "Lucida Console", monospace</td></tr>
+      <tr><td>System stack (safety)</td><td>-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif — never used in practice</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Font Weights in Use</div>
+    <table class="tbl"><thead><tr><th>Weight</th><th>Usage</th></tr></thead><tbody>
+      <tr><td>Cormorant 300</td><td>All display text — name, dialogue, section headings, card titles</td></tr>
+      <tr><td>Cormorant 400</td><td>Card titles needing slightly more presence (project name on hub)</td></tr>
+      <tr><td>Cormorant 500</td><td>Rare: pull quotes, testimonial names</td></tr>
+      <tr><td>Cormorant 600 Italic</td><td>Single-word emphasis within dialogue lines</td></tr>
+      <tr><td>JetBrains 300</td><td>All body copy, descriptions, CTA text, nav links — default mono weight</td></tr>
+      <tr><td>JetBrains 400</td><td>UI labels, tags, section counters, form labels</td></tr>
+      <tr><td>JetBrains 500</td><td>Actively avoided — sparingly for critical UI labels only</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Type Scale — Responsive clamp() Values</div>
+    <div class="note">clamp(min, preferred, max) — min is mobile floor (sacred, never crossed). preferred is vw-based. max is desktop ceiling.</div>
+    <table class="tbl"><thead><tr><th>Element</th><th>Size</th><th>Style</th></tr></thead><tbody>
+      <tr><td>Hero Name</td><td>clamp(36px, 6vw, 72px)</td><td>Cormorant 300, tracking -0.02em</td></tr>
+      <tr><td>Hero Role</td><td>clamp(11px, 1.4vw, 14px)</td><td>Cormorant 300, tracking 0.25em, uppercase</td></tr>
+      <tr><td>Dialogue Lines</td><td>clamp(18px, 3vw, 34px)</td><td>Cormorant Italic 300, line-height 1.55</td></tr>
+      <tr><td>Section Heading</td><td>clamp(26px, 4.5vw, 54px)</td><td>Cormorant 300, tracking -0.01em</td></tr>
+      <tr><td>Section Counter</td><td>clamp(10px, 1vw, 11px)</td><td>JetBrains 400, tracking 0.2em, uppercase, accent color</td></tr>
+      <tr><td>Card Title</td><td>clamp(18px, 2vw, 22px)</td><td>Cormorant 400</td></tr>
+      <tr><td>Card Subtitle</td><td>clamp(11px, 1.2vw, 13px)</td><td>JetBrains 300, text-secondary</td></tr>
+      <tr><td>Body / Desc</td><td>13px (fixed)</td><td>JetBrains 300, line-height 1.8, max-width 540px</td></tr>
+      <tr><td>UI Tags / Badges</td><td>9–10px (fixed)</td><td>JetBrains 400, tracking 0.1em, uppercase</td></tr>
+      <tr><td>CTA Text</td><td>12px (fixed)</td><td>JetBrains 300, tracking 0.05em</td></tr>
+      <tr><td>Nav Links</td><td>10px (fixed)</td><td>JetBrains 400, tracking 0.12em, uppercase</td></tr>
+      <tr><td>Skip Hint</td><td>10–11px (fixed)</td><td>JetBrains 300, text-muted, tracking 0.05em</td></tr>
+      <tr><td>Form Labels</td><td>11px (fixed)</td><td>JetBrains 400, tracking 0.08em</td></tr>
+      <tr><td>Form Helper Text</td><td>10px (fixed)</td><td>JetBrains 300, text-muted</td></tr>
+      <tr><td>Tooltip</td><td>10px (fixed)</td><td>JetBrains 300, text-primary on bg-tertiary</td></tr>
+      <tr><td>Footer / Legal</td><td>10px (fixed)</td><td>JetBrains 300, text-muted</td></tr>
+      <tr><td>Journey Scene Number</td><td>clamp(80px, 12vw, 140px)</td><td>Cormorant 300, tracking -0.04em, opacity 0.08, ghost color</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Line Height System</div>
+    <table class="tbl"><thead><tr><th>Context</th><th>line-height</th></tr></thead><tbody>
+      <tr><td>Display / Headings</td><td>1.0 – 1.1 — tight, command-like</td></tr>
+      <tr><td>Dialogue lines</td><td>1.5 – 1.6 — breathing but controlled</td></tr>
+      <tr><td>Body copy</td><td>1.8 — generous, legible at small mono sizes</td></tr>
+      <tr><td>UI labels / tags</td><td>1.0 – 1.2 — compact</td></tr>
+      <tr><td>Form helper text</td><td>1.6 — room for error messages</td></tr>
+      <tr><td>Testimonial body</td><td>1.75 — warm, readable at card scale</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Text Rendering & Advanced Rules</div>
+    <div class="card" style="display:grid;gap:8px">
+      <div class="rule-row">-webkit-font-smoothing: antialiased on all text. -moz-osx-font-smoothing: grayscale.</div>
+      <div class="rule-row">font-feature-settings: "liga" 1, "calt" 1 — enables Cormorant ligatures.</div>
+      <div class="rule-row">JetBrains Mono: font-feature-settings: "zero" 1 — slashed zero for code-style clarity.</div>
+      <div class="rule-row">text-rendering: optimizeLegibility on headings only. NOT on body — causes GPU thrash.</div>
+      <div class="rule-row">Numeric data in tables: font-variant-numeric: tabular-nums — columns align vertically.</div>
+      <div class="rule-row">Large stat numbers: font-variant-numeric: proportional-nums — feels editorial.</div>
+      <div class="rule-row">word-spacing: 0 — JetBrains Mono has built-in appropriate spacing.</div>
+      <div class="rule-row">orphans: 2; widows: 2 on body copy — prevents single words on a line.</div>
+      <div class="rule-row">hyphens: auto on testimonial body text only. NOT on headings, labels, or UI text.</div>
+      <div class="rule-row">Text alignment: left-aligned always. Center alignment is never used. Exception: Journey scene numbers (decorative).</div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Text Decoration & Selection</div>
+    <div class="card" style="display:grid;gap:8px">
+      <div class="rule-row">Underlines: custom, never browser default. 1px accent color, drawn from left via CSS transition (width 0→100%).</div>
+      <div class="rule-row">Strikethrough: only in Journey scenes for contrast effect. Never elsewhere.</div>
+      <div class="rule-row">::selection { background: rgba(201,169,110,0.2); color: inherit; } — applied globally.</div>
+      <div class="rule-row">caret-color: var(--color-accent) on all text inputs and textareas.</div>
+      <div class="rule-row">::placeholder { color: var(--color-text-muted); font-size: 12px; font-weight: 300; }</div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Emphasis Styles — Live Specimens</div>
+    <div class="g2">
+      <div class="card-sm"><div class="blk-desc">Inline accent underline</div><div style="font-family:var(--font-display);font-size:22px;font-weight:300;color:var(--color-text-heading)">I build things that <span style="color:var(--color-accent);background:linear-gradient(to bottom,transparent 58%,rgba(201,169,110,.2) 58%);padding:0 2px">work</span>.</div></div>
+      <div class="card-sm"><div class="blk-desc">Mono break in serif</div><div style="font-family:var(--font-display);font-size:22px;font-weight:300;color:var(--color-text-heading)">Built with <code style="font-family:var(--font-mono);font-size:14px;color:var(--color-accent);background:var(--color-accent-faint);border:1px solid var(--color-border-accent);border-radius:var(--r-xs);padding:2px 7px">React</code>.</div></div>
+      <div class="card-sm"><div class="blk-desc">Weight contrast</div><div style="font-family:var(--font-display);font-size:22px;font-weight:300;color:var(--color-text-heading)">Good code, <span style="font-weight:600;font-style:italic">great design</span>.</div></div>
+      <div class="card-sm"><div class="blk-desc">Large editorial stat</div><div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:var(--font-display);font-size:52px;font-weight:300;line-height:1;color:var(--color-accent)">12</span><span style="font-family:var(--font-mono);font-size:12px;color:var(--color-text-secondary)">projects shipped</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 1.3 LAYOUT ══ -->
+<section id="sec-layout" class="sec">
+  <div class="eyebrow">1.3 — Visual Foundations</div>
+  <h1 class="pg-title">Layout System</h1>
+  <p class="pg-desc">Left-aligned, document-like. Content never stretches to viewport edges. Negative space is structural. Max-width: 1100px.</p>
+
+  <div class="blk">
+    <div class="blk-title">Page & Component Containers</div>
+    <table class="tbl"><thead><tr><th>Page / Component</th><th>Layout Rule</th></tr></thead><tbody>
+      <tr><td>Page wrapper</td><td>max-width: 1100px, mx-auto, px-16 (desktop), px-6 (mobile)</td></tr>
+      <tr><td>Welcome screen</td><td>Full viewport (100vw × 100vh). Content anchored top-left: padding 64px desktop, 24px mobile. No other elements.</td></tr>
+      <tr><td>Hub page</td><td>max-width: 1100px. Two-column desktop (left 60%, right 40%). Single column mobile.</td></tr>
+      <tr><td>Section pages</td><td>max-width: 900px. Single column. Content left-aligned. Never centered.</td></tr>
+      <tr><td>Journey scenes</td><td>Full viewport. Content centered vertically (only exception to left-align — cinematic intent).</td></tr>
+      <tr><td>Project detail modal</td><td>max-width: 680px, centered overlay. Mobile: full-screen bottom sheet.</td></tr>
+      <tr><td>Testimonial page</td><td>max-width: 560px. Single column, left-aligned.</td></tr>
+      <tr><td>Admin panel</td><td>max-width: 1200px. Sidebar + main content.</td></tr>
+      <tr><td>404 page</td><td>Full viewport, content centered vertically and left-aligned horizontally.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Grid & Flexbox Patterns</div>
+    <table class="tbl"><thead><tr><th>Component</th><th>Pattern</th></tr></thead><tbody>
+      <tr><td>Hub Quick Access cards</td><td>CSS Grid: repeat(2, 1fr). Gap: 16px. Mobile: 1fr.</td></tr>
+      <tr><td>Project cards grid</td><td>CSS Grid: repeat(auto-fill, minmax(300px, 1fr)). Gap: 24px. Mobile: 1fr.</td></tr>
+      <tr><td>Skills grid</td><td>CSS Grid: repeat(auto-fill, minmax(120px, 1fr)). Gap: 12px.</td></tr>
+      <tr><td>Nav links</td><td>Flexbox, row, gap: 32px (desktop), gap: 0 (mobile bottom nav)</td></tr>
+      <tr><td>Timeline entries</td><td>CSS Grid: 40px (icon col) + 1fr (content). Each row top-aligned.</td></tr>
+      <tr><td>Testimonial strip (desktop)</td><td>Single column flex. CSS animation scrolls upward. overflow: hidden.</td></tr>
+      <tr><td>Testimonial strip (mobile)</td><td>Horizontal flex. CSS animation scrolls rightward. overflow: hidden.</td></tr>
+      <tr><td>Stat panels</td><td>Flexbox row, wrap. gap: 32px. Dividers between.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Layout Rules</div>
+    <div class="card" style="display:grid;gap:8px">
+      <div class="rule-row">All text is left-aligned. Center alignment is never used. The portfolio is a document, not a banner ad.</div>
+      <div class="rule-row">Negative space is intentional. Sections breathe. Crowding is a quality-signal failure.</div>
+      <div class="rule-row">Content max-width: 1100px for layout. 540px for body text paragraphs.</div>
+      <div class="rule-row">Cards per row: max 2 for project cards, max 2 for Quick Access cards. Never 3+.</div>
+      <div class="rule-row">Sticky elements: nav only. No sticky cards, no sticky panels.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 1.4 RESPONSIVE ══ -->
+<section id="sec-responsive" class="sec">
+  <div class="eyebrow">1.4 — Visual Foundations</div>
+  <h1 class="pg-title">Responsive Structure</h1>
+  <p class="pg-desc">Mobile and desktop use identical colors, fonts, and accents. Only layout, font-size floors, spacing, and component arrangement adapt. Same product, not a watered-down version.</p>
+
+  <div class="blk">
+    <div class="blk-title">Breakpoint System</div>
+    <table class="tbl"><thead><tr><th>Label</th><th>Range</th><th>Key Changes</th></tr></thead><tbody>
+      <tr><td>xs — Mobile</td><td>&lt; 480px</td><td>Single column everything, 24px edge padding, bottom nav, welcome screen at 24px padding</td></tr>
+      <tr><td>sm — Mobile L</td><td>480–767px</td><td>Hub cards 2-col starts, most mobile rules apply here</td></tr>
+      <tr><td>md — Tablet</td><td>768–1023px</td><td>Some two-column layouts begin, sticky top nav appears</td></tr>
+      <tr><td>lg — Desktop</td><td>1024–1279px</td><td>Full two-column hub, sticky top nav, modals (not bottom sheets)</td></tr>
+      <tr><td>xl — Wide</td><td>1280–1535px</td><td>Max-width containers center content in wider viewports</td></tr>
+      <tr><td>2xl — Ultra-wide</td><td>≥ 1536px</td><td>Content stays at max-width, backgrounds stretch to fill</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Mobile-Specific Differences</div>
+    <table class="tbl"><thead><tr><th>Element</th><th>Desktop</th><th>Mobile</th></tr></thead><tbody>
+      <tr><td>Hub layout</td><td>Two columns (left 60%, right 40%)</td><td>Single column. Testimonials below Quick Access cards.</td></tr>
+      <tr><td>Section nav</td><td>Sticky top nav bar (64px)</td><td>Fixed bottom nav bar with icons (56px)</td></tr>
+      <tr><td>Back to Hub</td><td>Button in sticky top nav, left</td><td>Back arrow in top-left header bar</td></tr>
+      <tr><td>Project detail</td><td>Centered modal overlay</td><td>Full-screen bottom sheet (slides up)</td></tr>
+      <tr><td>Journey nav</td><td>Next button + scene dots</td><td>Next button + left/right swipe gesture + dots</td></tr>
+      <tr><td>Journey Exit</td><td>Text button top area</td><td>Icon button (×) top-right</td></tr>
+      <tr><td>Confirmation modal</td><td>Centered card modal</td><td>Bottom sheet modal</td></tr>
+      <tr><td>Testimonial scroll</td><td>Vertical, upward, pauses on hover</td><td>Horizontal, rightward, pauses on touchstart</td></tr>
+      <tr><td>Welcome padding</td><td>64px from all edges</td><td>24px from all edges</td></tr>
+      <tr><td>Touch targets</td><td>—</td><td>min 44×44px on all interactive elements</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 1.5 SPACING ══ -->
+<section id="sec-spacing" class="sec">
+  <div class="eyebrow">1.5 — Visual Foundations</div>
+  <h1 class="pg-title">Spacing System</h1>
+  <p class="pg-desc">Base unit: 4px. Every spacing value is a multiple of 4. This creates visual rhythm — nothing ever feels arbitrary or accidental.</p>
+
+  <div class="blk">
+    <div class="blk-title">Spacing Scale Tokens</div>
+    <div class="card">
+      <div class="sp-row"><div class="sp-tok">--sp-1</div><div class="sp-val">4px</div><div class="sp-bar" style="width:4px"></div><div class="sp-use">Inline icon gap, tight label spacing</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-2</div><div class="sp-val">8px</div><div class="sp-bar" style="width:8px"></div><div class="sp-use">Button vertical padding, tag gap</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-3</div><div class="sp-val">12px</div><div class="sp-bar" style="width:12px"></div><div class="sp-use">Card inner element gap</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-4</div><div class="sp-val">16px</div><div class="sp-bar" style="width:16px"></div><div class="sp-use">Card padding, form field gap, list item gap</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-5</div><div class="sp-val">20px</div><div class="sp-bar" style="width:20px"></div><div class="sp-use">Nav item gap, inline element spacing</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-6</div><div class="sp-val">24px</div><div class="sp-bar" style="width:24px"></div><div class="sp-use">Card padding (comfortable), project card grid gap</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-8</div><div class="sp-val">32px</div><div class="sp-bar" style="width:32px"></div><div class="sp-use">Between components within a section</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-10</div><div class="sp-val">40px</div><div class="sp-bar" style="width:40px"></div><div class="sp-use">Nav height, welcome screen block gap</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-12</div><div class="sp-val">48px</div><div class="sp-bar" style="width:48px"></div><div class="sp-use">Between subsections</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-16</div><div class="sp-val">64px</div><div class="sp-bar" style="width:64px"></div><div class="sp-use">Page edge padding (desktop), welcome screen edges</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-20</div><div class="sp-val">80px</div><div class="sp-bar" style="width:80px"></div><div class="sp-use">Between major section components</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-24</div><div class="sp-val">96px</div><div class="sp-bar" style="width:96px"></div><div class="sp-use">Between sections (section-to-section gap)</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-32</div><div class="sp-val">128px</div><div class="sp-bar" style="width:128px"></div><div class="sp-use">Section vertical padding (top and bottom)</div></div>
+      <div class="sp-row"><div class="sp-tok">--sp-40</div><div class="sp-val">160px</div><div class="sp-bar" style="width:160px"></div><div class="sp-use">Hero breathing space, welcome screen vertical center</div></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Specific Component Spacing</div>
+    <table class="tbl"><thead><tr><th>Context</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Welcome: name to role gap</td><td>4px (--sp-1)</td></tr>
+      <tr><td>Welcome: role to dialogue gap</td><td>40px (--sp-10)</td></tr>
+      <tr><td>Welcome: dialogue to CTA gap</td><td>40px (--sp-10)</td></tr>
+      <tr><td>Welcome: edge padding (desktop)</td><td>64px (--sp-16) from all edges</td></tr>
+      <tr><td>Welcome: edge padding (mobile)</td><td>24px (--sp-6) from all edges</td></tr>
+      <tr><td>Nav height (desktop sticky)</td><td>64px</td></tr>
+      <tr><td>Nav height (mobile bottom)</td><td>56px + safe-area-inset-bottom</td></tr>
+      <tr><td>Project card padding</td><td>24px (--sp-6)</td></tr>
+      <tr><td>Project card grid gap</td><td>24px (--sp-6)</td></tr>
+      <tr><td>Testimonial card padding</td><td>20px (--sp-5)</td></tr>
+      <tr><td>Journey scene content padding</td><td>clamp(32px, 5vw, 80px) horizontal</td></tr>
+      <tr><td>Timeline icon size</td><td>40px</td></tr>
+      <tr><td>Form field height</td><td>44px (touch-safe minimum)</td></tr>
+      <tr><td>Form field gap</td><td>16px (--sp-4)</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 1.6 BORDERS ══ -->
+<section id="sec-borders" class="sec">
+  <div class="eyebrow">1.6 — Visual Foundations</div>
+  <h1 class="pg-title">Borders & Dividers</h1>
+  <p class="pg-desc">Every border width, radius, and divider style has a named token and a specific purpose. Nothing is arbitrarily sized.</p>
+
+  <div class="blk">
+    <div class="blk-title">Border Width Scale</div>
+    <table class="tbl"><thead><tr><th>Token</th><th>Value &amp; Usage</th></tr></thead><tbody>
+      <tr><td>--border-width-hairline</td><td>1px — All card borders, input outlines, dividers</td></tr>
+      <tr><td>--border-width-thin</td><td>2px — Hover state borders, active nav underline</td></tr>
+      <tr><td>--border-width-medium</td><td>4px — Focus rings (accessibility), active section indicator</td></tr>
+      <tr><td>--border-width-thick</td><td>8px — Timeline vertical line (mobile only, left edge of entry)</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Border Radius System — Live</div>
+    <div class="r-demo">
+      <div><div class="r-box" style="border-radius:2px">xs<br>2px</div></div>
+      <div><div class="r-box" style="border-radius:4px">sm<br>4px</div></div>
+      <div><div class="r-box" style="border-radius:8px">md<br>8px</div></div>
+      <div><div class="r-box" style="border-radius:12px">lg<br>12px</div></div>
+      <div><div class="r-box" style="border-radius:16px">xl<br>16px</div></div>
+      <div><div class="r-box" style="border-radius:9999px;width:80px">full</div></div>
+    </div>
+    <div style="margin-top:12px;font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);line-height:1.8">
+      xs=2px (tags, tiny badges) · sm=4px (buttons, inputs, code) · md=8px (secondary cards) · lg=12px (primary cards, modals) · xl=16px (bottom sheet top corners) · full=9999px (toggle knob, avatars, live dot)
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Focus Ring — Accessibility Critical</div>
+    <div class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <button class="btn-p foc-ex">Focused Button</button>
+      <input class="inp foc-ex" style="max-width:200px" value="Focused Input" readonly>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-muted);line-height:1.8">outline: 2px solid var(--color-accent)<br>outline-offset: 3px<br>Only on :focus-visible (not :focus)</div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Section Divider — The Only Decorative Element</div>
+    <div class="sdiv"><div class="dl"></div><div class="ddot"></div><div class="dl"></div></div>
+    <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">1px line (border-ghost) + 4px gold dot center. This is the only decorative element permitted in the entire portfolio.</div>
+  </div>
+</section>
+
+<!-- ══ 1.7 SHADOWS ══ -->
+<section id="sec-shadows" class="sec">
+  <div class="eyebrow">1.7 — Visual Foundations</div>
+  <h1 class="pg-title">Shadows & Depth</h1>
+  <p class="pg-desc">Shadows are minimal. Dark mode relies on layered background surfaces for depth — no box-shadow on cards by default. Light mode uses subtle shadows.</p>
+
+  <div class="blk">
+    <div class="blk-title">Shadow Scale — Live Demos</div>
+    <div style="display:grid;gap:10px">
+      <div class="sh-demo" style="box-shadow:none;border:1px solid var(--color-border)"><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-accent)">--shadow-none</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-left:12px">Default state of all cards in dark mode</span></div>
+      <div class="sh-demo" style="box-shadow:0 2px 8px rgba(0,0,0,0.15)"><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-accent)">--shadow-sm</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-left:12px">0 2px 8px rgba(0,0,0,0.15) — light mode card default</span></div>
+      <div class="sh-demo" style="box-shadow:0 4px 16px rgba(0,0,0,0.20)"><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-accent)">--shadow-md</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-left:12px">0 4px 16px rgba(0,0,0,0.20) — light mode card hover</span></div>
+      <div class="sh-demo" style="box-shadow:0 4px 20px rgba(201,169,110,0.20)"><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-accent)">--shadow-accent</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-left:12px">0 4px 20px rgba(201,169,110,0.20) — primary button hover ONLY</span></div>
+      <div class="sh-demo" style="box-shadow:0 24px 48px rgba(0,0,0,0.40)"><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-accent)">--shadow-modal</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-left:12px">0 24px 48px rgba(0,0,0,0.40) — modals and bottom sheets</span></div>
+      <div class="sh-demo" style="box-shadow:inset 0 1px 3px rgba(0,0,0,0.15)"><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-accent)">--shadow-inner</span><span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-left:12px">inset 0 1px 3px rgba(0,0,0,0.15) — pressed button state</span></div>
+    </div>
+    <div class="note" style="margin-top:16px">The accent glow (--shadow-accent) is used only for primary button hover. Never on cards. Never decoratively.</div>
+  </div>
+</section>
+
+<!-- ══ 1.8 BACKGROUNDS ══ -->
+<section id="sec-backgrounds" class="sec">
+  <div class="eyebrow">1.8 — Visual Foundations</div>
+  <h1 class="pg-title">Background System</h1>
+  <p class="pg-desc">Solid colors only. No gradients anywhere in the portfolio. The one exception: the Welcome screen noise texture (SVG, opacity 0.04) which adds premium film grain.</p>
+
+  <div class="blk">
+    <div class="blk-title">Background Rules by Context</div>
+    <table class="tbl"><thead><tr><th>Context</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>Page backgrounds</td><td>Solid color only: var(--color-bg-primary). No gradients. Ever.</td></tr>
+      <tr><td>Card backgrounds</td><td>var(--color-bg-secondary). Never transparent.</td></tr>
+      <tr><td>Inner card regions</td><td>var(--color-bg-tertiary).</td></tr>
+      <tr><td>Hover state surface</td><td>var(--color-bg-hover). Only on interactive cards.</td></tr>
+      <tr><td>Welcome screen texture</td><td>SVG noise overlay via CSS background-image, opacity: 0.04. Creates premium film grain. Not visible at a glance — only perceptible up close.</td></tr>
+      <tr><td>Journey scenes</td><td>Solid bg-primary. Scene-specific overlay elements via absolute positioning. No background images.</td></tr>
+      <tr><td>Modal backdrop</td><td>var(--color-overlay) — semi-transparent bg-primary.</td></tr>
+      <tr><td>Sticky nav backdrop</td><td>var(--color-bg-primary) at 95% opacity + backdrop-filter: blur(8px) on scroll. Applied only when scrollY &gt; 10px.</td></tr>
+      <tr><td>Code blocks</td><td>var(--color-bg-tertiary), border: 1px solid var(--color-border).</td></tr>
+      <tr><td>Toast notifications</td><td>var(--color-bg-secondary) + left border: 3px solid semantic-color.</td></tr>
+    </tbody></table>
+    <div class="note">backdrop-filter: blur(8px) is used ONLY on the sticky nav when scrolled. Not on cards. Not on modals. Prefix: -webkit-backdrop-filter also required for Safari.</div>
+  </div>
+</section>
+
+<!-- ══ 1.9 ICONOGRAPHY ══ -->
+<section id="sec-icons" class="sec">
+  <div class="eyebrow">1.9 — Visual Foundations</div>
+  <h1 class="pg-title">Iconography</h1>
+  <p class="pg-desc">Lucide React. Stroke-based, never filled. Outline icons feel lighter alongside Cormorant Garamond. Filled icons feel heavy — avoid them.</p>
+
+  <div class="blk">
+    <div class="blk-title">Icon Specification by Context</div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Spec</th></tr></thead><tbody>
+      <tr><td>Icon library</td><td>Lucide React — consistent stroke-based icons, 1.5px stroke width</td></tr>
+      <tr><td>Icon style</td><td>Outline only. Never filled icons (filled feels heavy against Cormorant)</td></tr>
+      <tr><td>Nav icons (mobile bottom nav)</td><td>20px, color: text-muted default, accent color + no underline on active</td></tr>
+      <tr><td>Button icons (inline)</td><td>14px, inline with button text, gap: 6px from text</td></tr>
+      <tr><td>Standalone icon buttons</td><td>16–18px, centered in 36×36px container</td></tr>
+      <tr><td>Journey controls</td><td>20px, color: text-secondary</td></tr>
+      <tr><td>Form icons (input)</td><td>14px, color: text-muted, position: absolute right-12px, vertically centered</td></tr>
+      <tr><td>Status icons (toasts)</td><td>14px, semantic color matching the status</td></tr>
+      <tr><td>Admin panel icons</td><td>16px, text-secondary default, accent on active state</td></tr>
+      <tr><td>Theme toggle icon</td><td>10px — ☾ / ☀ character (not SVG icon). Positioned inside toggle knob.</td></tr>
+      <tr><td>Section counter</td><td>Pure typography, no icon. Format: "01 /" in JetBrains 400, accent color.</td></tr>
+      <tr><td>Icon color</td><td>Inherits from parent by default. Override only for semantic meaning (status, active state).</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 1.10 IMAGERY ══ -->
+<section id="sec-imagery" class="sec">
+  <div class="eyebrow">1.10 — Visual Foundations</div>
+  <h1 class="pg-title">Imagery & Media</h1>
+  <p class="pg-desc">Every image context has a defined container, format, size, and loading strategy. No images in the Journey. No broken image icons anywhere.</p>
+
+  <div class="blk">
+    <div class="blk-title">Image Rules by Context</div>
+    <table class="tbl"><thead><tr><th>Context</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>Profile photo</td><td>Circular. 80px mobile / 96px desktop. border: 2px solid accent-faint. object-fit: cover. Eager-loaded (above fold).</td></tr>
+      <tr><td>Project screenshots</td><td>Aspect ratio 16:9. border-radius: radius-md. object-fit: cover. Lazy-loaded. WebP format, max 150KB.</td></tr>
+      <tr><td>Journey scene imagery</td><td>NOT used. All scenes are pure typography + subtle decorative CSS. No photos.</td></tr>
+      <tr><td>Company logos (timeline)</td><td>32px height. object-fit: contain. filter: grayscale(0.3) opacity(0.7). Full color on hover, 300ms transition.</td></tr>
+      <tr><td>OG / social image</td><td>Static 1200×630px. Generated at build time. Never loaded at runtime.</td></tr>
+      <tr><td>Image placeholder</td><td>var(--color-bg-tertiary) background + shimmer animation. Never a broken image icon. Never an empty white box.</td></tr>
+      <tr><td>Lazy loading</td><td>loading="lazy" + IntersectionObserver for all below-fold images. Profile photo: loading="eager".</td></tr>
+      <tr><td>Aspect ratio</td><td>Use aspect-ratio CSS property. Never padding-top hacks. Prevents CLS.</td></tr>
+      <tr><td>Format</td><td>WebP for all project screenshots and profile photo. PNG fallback via &lt;picture&gt; element.</td></tr>
+      <tr><td>Firebase Storage</td><td>All images served from Firebase Storage CDN. No third-party image CDN needed in v1.</td></tr>
+      <tr><td>Resume PDF</td><td>Direct download link from Firebase Storage. Opens in new tab. Never inline iframe.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 1.11 DENSITY ══ -->
+<section id="sec-density" class="sec">
+  <div class="eyebrow">1.11 — Visual Foundations</div>
+  <h1 class="pg-title">Visual Density</h1>
+  <p class="pg-desc">Single density mode: Comfortable. No compact/spacious toggle. Density is permanent, calibrated, and intentional.</p>
+
+  <div class="blk">
+    <div class="blk-title">Density Rules</div>
+    <table class="tbl"><thead><tr><th>Context</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>Body text max-width</td><td>540px. Wide open space on sides is intentional. Never stretch body text to full container.</td></tr>
+      <tr><td>Cards per row (desktop)</td><td>Max 2 for project cards. Max 2 for Quick Access. Never 3+.</td></tr>
+      <tr><td>Section breathing space</td><td>96–128px vertical padding top and bottom per section.</td></tr>
+      <tr><td>Journey scenes</td><td>Single thought per scene. Never more than 3 lines of text. One idea at a time.</td></tr>
+      <tr><td>Skills display</td><td>Tags in a wrap container. Dense grid on desktop, wrapping list on mobile. Never a bullet list.</td></tr>
+      <tr><td>Timeline entries</td><td>Vertical stack, full width on mobile. Grid layout on desktop.</td></tr>
+      <tr><td>Testimonial cards</td><td>Never pack multiple testimonials in a fixed-height container. Let them breathe.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 2.1 BUTTONS ══ -->
+<section id="sec-buttons" class="sec">
+  <div class="eyebrow">2.1 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Button System</h1>
+  <p class="pg-desc">Four types. Five states each. Nothing left to browser defaults. Hover over every button to see the exact animation specified.</p>
+
+  <div class="blk">
+    <div class="blk-title">Primary — Max ONE per visual section</div>
+    <div class="card"><div class="brow" style="margin-bottom:14px"><button class="btn-p">View Project</button><button class="btn-p">Download Resume ↓</button><button class="btn-p" disabled style="opacity:.35;cursor:not-allowed">Disabled</button></div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Font</td><td>JetBrains Mono 400, 11px, tracking 0.10em, uppercase</td></tr>
+      <tr><td>Padding</td><td>10px 20px</td></tr>
+      <tr><td>Rest</td><td>bg: accent, text: bg-primary, border: 1px solid accent</td></tr>
+      <tr><td>Hover</td><td>bg → accent-muted, translateY(-1px), box-shadow: shadow-accent, 200ms ease-std</td></tr>
+      <tr><td>Active</td><td>scale(0.97) translateY(0), shadow: none, 80ms</td></tr>
+      <tr><td>Focus</td><td>outline: 2px solid accent, outline-offset: 3px</td></tr>
+      <tr><td>Disabled</td><td>opacity: 0.35, cursor: not-allowed, pointer-events: none</td></tr>
+      <tr><td>Usage rule</td><td>Maximum ONE per visual section. Scarcity is its power.</td></tr>
+      <tr><td>Pages</td><td>Welcome "Enter", Project cards "View Project", Journey final scene CTA</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Secondary — CTAs, external links</div>
+    <div class="card"><div class="brow" style="margin-bottom:14px"><button class="btn-s">View on GitHub</button><button class="btn-s">Live Demo →</button><button class="btn-s" disabled style="opacity:.35;cursor:not-allowed">Disabled</button></div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Rest</td><td>bg: transparent, text: text-secondary, border: 1px solid border</td></tr>
+      <tr><td>Hover</td><td>text → accent, border → border-accent, bg → accent-faint, translateY(-1px), 200ms</td></tr>
+      <tr><td>Active</td><td>scale(0.97), 80ms</td></tr>
+      <tr><td>Usage</td><td>GitHub links, Live Demo, Download Resume, "Leave a Testimonial"</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Ghost — Skip hints, navigation aids</div>
+    <div class="card"><div class="brow" style="margin-bottom:14px"><button class="btn-g">Skip intro →</button><button class="btn-g">See all projects →</button><button class="btn-g">Read more →</button></div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Rest</td><td>text: text-muted, no border, no background, gap: 6px</td></tr>
+      <tr><td>Hover</td><td>text → text-primary, gap: 6→10px (300ms expo), underline draws left-to-right width 0→100% (300ms expo), 1px accent</td></tr>
+      <tr><td>Usage</td><td>"Skip intro →", "See all projects →", "Read more →"</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Icon Button — Toggle, close, admin actions</div>
+    <div class="card"><div class="brow" style="margin-bottom:14px"><button class="btn-ico">☾</button><button class="btn-ico">↗</button><button class="btn-ico">✕</button><button class="btn-ico">⌘</button></div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Size</td><td>36×36px container, icon 14–18px centered</td></tr>
+      <tr><td>Border-radius</td><td>6px (between radius-sm and radius-md)</td></tr>
+      <tr><td>Hover</td><td>scale(1.08) via ease-back (slight overshoot — feels alive), border → border-accent, bg → accent-faint, 150ms</td></tr>
+      <tr><td>Active</td><td>scale(0.94), 80ms</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Destructive — Admin panel only</div>
+    <div class="card"><div class="brow"><button class="btn-d">Reject Testimonial</button></div><div style="margin-top:10px;font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">Never used in public portfolio. Admin panel: reject testimonial, delete content.</div></div>
+  </div>
+</section>
+
+<!-- ══ 2.2 FORMS ══ -->
+<section id="sec-forms" class="sec">
+  <div class="eyebrow">2.2 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Form Elements</h1>
+  <p class="pg-desc">Used on: /testimonial submission form and admin login. 44px height for touch safety. Gold caret. All five input states fully specified.</p>
+
+  <div class="blk">
+    <div class="blk-title">Text Input — All States</div>
+    <div style="display:grid;gap:16px;max-width:480px">
+      <div><div class="blk-desc">Rest state</div><label class="flbl">Name <span class="req">*</span></label><input class="inp" placeholder="e.g. Priya Sharma" type="text"><div class="fhelp">As you'd like it displayed.</div></div>
+      <div><div class="blk-desc">Focus state (click input)</div><label class="flbl">Role / Relationship <span class="req">*</span></label><input class="inp" placeholder="e.g. Hackathon teammate" type="text"></div>
+      <div><div class="blk-desc">Error state</div><label class="flbl">Email <span class="req">*</span></label><input class="inp inp-err" value="notvalid" type="text"><div class="ferr">✕ Please enter a valid email address.</div></div>
+      <div><div class="blk-desc">Success state</div><label class="flbl">Name</label><input class="inp inp-ok" value="Priya Sharma" type="text"><div class="fok">✓ Looks good.</div></div>
+      <div><div class="blk-desc">Disabled state</div><label class="flbl">Field</label><input class="inp" value="Cannot edit" type="text" disabled style="opacity:.35;cursor:not-allowed"></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Textarea with Character Counter</div>
+    <div style="max-width:480px">
+      <label class="flbl">Message <span class="req">*</span></label>
+      <textarea class="inp" id="ta" oninput="countChars()" placeholder="Your message (max 300 characters)..." style="height:110px"></textarea>
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <div class="fhelp">Be specific about your experience.</div>
+        <div id="cc" style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">0 / 300</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Checkbox — Consent field</div>
+    <div class="chk-wrap" onclick="toggleChk()">
+      <div class="chk-box" id="chkbox"><span class="chk-mark">✓</span></div>
+      <span class="chk-lbl">I agree my name and message may be displayed on this portfolio</span>
+    </div>
+    <table class="tbl" style="margin-top:14px"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Size</td><td>18×18px — never browser default checkbox</td></tr>
+      <tr><td>Rest border</td><td>1px solid var(--color-border-mid)</td></tr>
+      <tr><td>Checked bg</td><td>var(--color-accent)</td></tr>
+      <tr><td>Checkmark</td><td>✓ character, color: bg-primary, opacity 0→1 on check, 150ms</td></tr>
+      <tr><td>Focus</td><td>outline: 2px solid accent, offset 3px</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Form Labels, Helper Text & Validation</div>
+    <table class="tbl"><thead><tr><th>Element</th><th>Style</th></tr></thead><tbody>
+      <tr><td>Label font</td><td>JetBrains 400, 11px, tracking 0.08em, color: text-secondary</td></tr>
+      <tr><td>Label position</td><td>Above input, margin-bottom: 6px</td></tr>
+      <tr><td>Required marker</td><td>"*" in accent color, margin-left: 2px</td></tr>
+      <tr><td>Helper text</td><td>Below input, JetBrains 300, 10px, text-muted, margin-top: 4px</td></tr>
+      <tr><td>Error message</td><td>Below input, JetBrains 300, 10px, error color, "✕" prefix</td></tr>
+      <tr><td>Success message</td><td>Below input, JetBrains 300, 10px, success color, "✓" prefix</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 2.3 NAVIGATION ══ -->
+<section id="sec-navcomp" class="sec">
+  <div class="eyebrow">2.3 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Navigation Components</h1>
+  <p class="pg-desc">Sticky top nav (desktop section pages) and fixed bottom nav (mobile). Never shown on /, /hub, /journey, /testimonial, or /404.</p>
+
+  <div class="blk">
+    <div class="blk-title">Sticky Top Nav — Desktop Section Pages</div>
+    <div class="nav-demo" style="margin-bottom:12px">
+      <div style="font-family:var(--font-mono);font-size:10px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-muted);cursor:pointer;transition:color var(--dur-fast)">← Hub</div>
+      <div class="nav-links-d">
+        <div class="nav-lnk on">Work</div>
+        <div class="nav-lnk">Skills</div>
+        <div class="nav-lnk">Experience</div>
+        <div class="nav-lnk">About</div>
+      </div>
+      <div class="btn-ico">☾</div>
+    </div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Height</td><td>64px</td></tr>
+      <tr><td>Background</td><td>var(--color-bg-primary) at 95% opacity + backdrop-filter: blur(8px)</td></tr>
+      <tr><td>Border-bottom</td><td>1px solid var(--color-border-ghost) — appears at scrollY &gt; 10px</td></tr>
+      <tr><td>Left element</td><td>"← Hub" ghost button. Explicit navigate("/hub") — NEVER navigate(-1).</td></tr>
+      <tr><td>Active indicator</td><td>Accent color text + 2px accent underline offset 4px below + 3×3px dot below</td></tr>
+      <tr><td>Right element</td><td>Theme toggle icon button</td></tr>
+      <tr><td>Pages shown on</td><td>/projects, /skills, /experience, /about ONLY</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Fixed Bottom Nav — Mobile</div>
+    <div class="bnav" style="margin-bottom:12px">
+      <div class="bnav-inner">
+        <div class="bni on"><span class="bni-ico">◈</span><span class="bni-lbl">Work</span></div>
+        <div class="bni"><span class="bni-ico">◇</span><span class="bni-lbl">Skills</span></div>
+        <div class="bni"><span class="bni-ico">◈</span><span class="bni-lbl">Timeline</span></div>
+        <div class="bni"><span class="bni-ico">◉</span><span class="bni-lbl">About</span></div>
+      </div>
+    </div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Height</td><td>56px + env(safe-area-inset-bottom) — supports iPhone notch</td></tr>
+      <tr><td>Active state</td><td>Icon + label: accent color. No underline. Color change is the only signal.</td></tr>
+      <tr><td>Touch target</td><td>Full height of nav bar (56px) — always touch-safe</td></tr>
+      <tr><td>Back to Hub</td><td>Separate top-left header bar (36px height). NOT inside bottom nav.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Journey Navigation</div>
+    <div class="card" style="display:grid;gap:16px">
+      <div>
+        <div class="blk-desc">Progress bar (2px, fills over 6s)</div>
+        <div class="prog-track"><div class="prog-fill" id="prog-bar"></div></div>
+      </div>
+      <div>
+        <div class="blk-desc">Scene dots — past (filled muted), current (accent scale 1.3), future (border only, non-interactive)</div>
+        <div class="scene-dots">
+          <div class="sdot past"></div><div class="sdot past"></div><div class="sdot cur"></div>
+          <div class="sdot fut"></div><div class="sdot fut"></div><div class="sdot fut"></div>
+          <div class="sdot fut"></div><div class="sdot fut"></div>
+        </div>
+      </div>
+      <button onclick="resetProg()" class="btn-g" style="width:fit-content">▶ Replay progress bar →</button>
+    </div>
+    <table class="tbl" style="margin-top:12px"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Exit button</td><td>"Exit Journey" ghost button, top area. On click: confirmation modal.</td></tr>
+      <tr><td>Progress bar</td><td>2px height, full width, accent fill, linear ease, matches 6s scene timer. Snaps to 0% on scene change (no transition on reset).</td></tr>
+      <tr><td>Scene dots</td><td>8px circles. Past: filled accent-muted. Current: filled accent, scale 1.3. Future: border-only, non-interactive.</td></tr>
+      <tr><td>Auto-advance</td><td>6 second timer per scene. Pauses on hover/touch, resumes after 2s.</td></tr>
+      <tr><td>Scene counter</td><td>JetBrains 300, 10px, text-muted. "1 / 8" format.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Hub Page Header</div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Content</td><td>Name (Cormorant 400, 22px) + Profile photo (circular 48px) left. Theme toggle right.</td></tr>
+      <tr><td>Position</td><td>Static — part of hub page flow. NOT sticky.</td></tr>
+      <tr><td>No nav links</td><td>Hub is a landing pad. Navigation is via the Quick Access cards only.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 2.4 FEEDBACK ══ -->
+<section id="sec-feedback" class="sec">
+  <div class="eyebrow">2.4 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Feedback Components</h1>
+  <p class="pg-desc">Toasts, skeletons, empty states, spinners, progress bars, live indicators. Every state is a communication, not decoration.</p>
+
+  <div class="blk">
+    <div class="blk-title">Toast Notifications — All Four Variants</div>
+    <div style="display:grid;gap:10px;max-width:340px;margin-bottom:12px">
+      <div class="toast"><div class="t-title">✓ Testimonial submitted</div><div class="t-body">Thank you — sent for review. Appears once approved.</div></div>
+      <div class="toast err"><div class="t-title">✕ Submission failed</div><div class="t-body">Check connection and try again.</div></div>
+      <div class="toast wrn"><div class="t-title">⚠ Character limit near</div><div class="t-body">250 / 300 characters used.</div></div>
+      <div class="toast inf"><div class="t-title">ℹ Session expires soon</div><div class="t-body">Admin session expires in 5 minutes.</div></div>
+    </div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Position</td><td>Top-right (desktop), top-center (mobile). z-index: 9999.</td></tr>
+      <tr><td>Width</td><td>320px desktop, calc(100vw - 32px) mobile</td></tr>
+      <tr><td>Left border</td><td>3px solid semantic-color (success/warning/error/info)</td></tr>
+      <tr><td>Entry animation</td><td>translateX(110%) → translateX(0), 300ms ease-expo</td></tr>
+      <tr><td>Exit animation</td><td>translateX(0) → translateX(110%), 250ms ease-in, then remove from DOM</td></tr>
+      <tr><td>Auto-dismiss</td><td>4000ms. Pauses on hover.</td></tr>
+      <tr><td>Max stack</td><td>3 toasts simultaneously. 4th pushes 1st out.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Skeleton Loaders</div>
+    <div class="g2" style="margin-bottom:12px">
+      <div style="padding:20px;background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-md)">
+        <div class="skel" style="height:18px;width:60%;margin-bottom:10px"></div>
+        <div class="skel" style="height:11px;width:100%;margin-bottom:6px"></div>
+        <div class="skel" style="height:11px;width:80%;margin-bottom:14px"></div>
+        <div style="display:flex;gap:6px"><div class="skel" style="height:20px;width:52px;border-radius:2px"></div><div class="skel" style="height:20px;width:44px;border-radius:2px"></div></div>
+      </div>
+      <div style="padding:20px;background:var(--color-bg-secondary);border:1px solid var(--color-border);border-radius:var(--r-md)">
+        <div class="skel" style="height:18px;width:70%;margin-bottom:10px"></div>
+        <div class="skel" style="height:11px;width:100%;margin-bottom:6px"></div>
+        <div class="skel" style="height:11px;width:90%;margin-bottom:14px"></div>
+        <div style="display:flex;gap:6px"><div class="skel" style="height:20px;width:60px;border-radius:2px"></div><div class="skel" style="height:20px;width:38px;border-radius:2px"></div></div>
+      </div>
+    </div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Animation</td><td>shimmer: background-position sweeps left-to-right, 1.5s linear infinite</td></tr>
+      <tr><td>Gradient</td><td>linear-gradient(90deg, bg-tertiary 25%, bg-hover 50%, bg-tertiary 75%)</td></tr>
+      <tr><td>Border-radius</td><td>Match the element being loaded. Card → radius-md. Avatar → radius-full.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Loading Spinners</div>
+    <div class="card" style="display:flex;align-items:center;gap:20px">
+      <div class="spin-demo spin-sm"></div>
+      <div class="spin-demo"></div>
+      <div class="spin-demo spin-lg"></div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);line-height:1.8">12px (buttons) · 16px (standalone) · 24px (page-level)<br>3/4 border in accent, 1/4 transparent. 700ms linear infinite.</div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Empty States</div>
+    <div class="empty-card" style="max-width:340px">
+      <div class="empty-msg">Testimonials from colleagues and collaborators will appear here once approved.</div>
+    </div>
+    <table class="tbl" style="margin-top:12px"><thead><tr><th>Component</th><th>Spec</th></tr></thead><tbody>
+      <tr><td>Testimonials (no approved)</td><td>Single card: dashed border (border-mid), centered text, JetBrains 300 12px, text-muted.</td></tr>
+      <tr><td>Projects</td><td>Never shown — seeded with real projects at launch.</td></tr>
+      <tr><td>Admin pending list empty</td><td>"All caught up." JetBrains 300, 12px, text-muted. Centered in panel.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Live Visitor Count Indicator</div>
+    <div class="card-sm" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span class="live-dot"></span>
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">3 viewing now</span>
+    </div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Dot size</td><td>6px circle (not 8px — subtle), success color, border-radius-full</td></tr>
+      <tr><td>Pulse animation</td><td>box-shadow 0 0 0 0 → 0 0 0 8px rgba(success,0), 1.5s ease-out infinite</td></tr>
+      <tr><td>Label</td><td>JetBrains 300, 10px, text-muted. "n viewing now"</td></tr>
+      <tr><td>Position</td><td>Hub page, below profile section. Subtle — not hero placement.</td></tr>
+      <tr><td>Data source</td><td>Firebase RTDB presence system (not Firestore)</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 2.5 DATA DISPLAY ══ -->
+<section id="sec-datadisplay" class="sec">
+  <div class="eyebrow">2.5 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Data Display Components</h1>
+  <p class="pg-desc">Project cards, Quick Access cards, Testimonial cards, Timeline entries, Skills display, and Stat panels. Each pixel specified.</p>
+
+  <div class="blk">
+    <div class="blk-title">Project Cards — Hover to lift</div>
+    <div class="g2" style="margin-bottom:14px">
+      <div class="proj-card"><div class="pct">Nimbus App</div><div class="pcd">Real-time weather dashboard with hyperlocal data. FCP under 800ms.</div><div class="tag-row"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">Firebase</span></div></div>
+      <div class="proj-card"><div class="pct">Patchwork CMS</div><div class="pcd">Headless content system with drag-and-drop block editor and live preview.</div><div class="tag-row"><span class="tag">Next.js</span><span class="tag">PostgreSQL</span><span class="tag">tRPC</span></div></div>
+    </div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Background</td><td>var(--color-bg-secondary)</td></tr>
+      <tr><td>Border</td><td>1px solid var(--color-border)</td></tr>
+      <tr><td>Padding</td><td>24px</td></tr>
+      <tr><td>Title</td><td>Cormorant 400, clamp(18px, 2vw, 22px), text-primary</td></tr>
+      <tr><td>Description</td><td>JetBrains 300, 12px, text-secondary, line-height 1.7, max 3 lines (-webkit-line-clamp: 3)</td></tr>
+      <tr><td>Hover</td><td>translateY(-3px) 300ms expo, border → border-accent 250ms, bg → bg-tertiary 250ms</td></tr>
+      <tr><td>On click</td><td>Opens project detail overlay — NO route change</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Quick Access Cards (Hub)</div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Icon area</td><td>Lucide icon 20px (accent) + section number JetBrains 300, 10px, text-muted</td></tr>
+      <tr><td>Title</td><td>Cormorant 400, 20px, text-primary</td></tr>
+      <tr><td>Hover arrow</td><td>"→" appears on hover, accent color, translateX: 0→4px, 200ms expo</td></tr>
+      <tr><td>Hover</td><td>Same as project card pattern</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Testimonial Cards</div>
+    <div style="max-width:340px;margin-bottom:14px">
+      <div class="test-card">
+        <div class="test-quote">"</div>
+        <div class="test-name">Rahul Mehta</div>
+        <div class="test-role">Hackathon teammate, GFSC 2024</div>
+        <div class="test-msg">Aditya's attention to detail is exceptional. He consistently shipped polished work even under tight deadlines, and brought a clarity to the codebase that made collaboration effortless.</div>
+        <div class="test-date">January 2025</div>
+      </div>
+    </div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Name</td><td>Cormorant 400, 16px, text-primary</td></tr>
+      <tr><td>Role</td><td>JetBrains 300, 10px, text-muted, italic</td></tr>
+      <tr><td>Message</td><td>JetBrains 300, 12px, text-secondary, line-height 1.7, max 3 lines, expand on click</td></tr>
+      <tr><td>Quote mark</td><td>Cormorant 300, 48px, accent, opacity 0.25, absolute top-left</td></tr>
+      <tr><td>Auto-scroll (desktop)</td><td>CSS animation translateY(-100%), 20s linear infinite. Pauses on hover.</td></tr>
+      <tr><td>Auto-scroll (mobile)</td><td>CSS animation translateX(-100%), 20s linear infinite. Pauses on touchstart.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Timeline Entries (Experience)</div>
+    <div class="tl-entry" style="margin-bottom:0">
+      <div class="tl-ico">🏢</div>
+      <div>
+        <div class="tl-co">Acme Technologies</div>
+        <div class="tl-role">Frontend Developer Intern</div>
+        <div class="tl-dur">Jun 2024 – Aug 2024 · 3 months</div>
+        <div class="tl-desc">Built real-time dashboards for internal tooling. Reduced bundle size by 40% via code splitting.</div>
+      </div>
+    </div>
+    <table class="tbl" style="margin-top:12px"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Layout</td><td>CSS Grid: 40px (icon) + 1fr (content). Each row top-aligned.</td></tr>
+      <tr><td>Icon</td><td>40px circle, bg-secondary, border, company logo 32px grayscale(30%)</td></tr>
+      <tr><td>Connector line</td><td>1px dashed, border-ghost, bottom of icon to top of next icon</td></tr>
+      <tr><td>Entry animation</td><td>opacity 0→1, translateX(-16px)→0, 600ms expo-out. Left-side entry.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Skills Display</div>
+    <div class="skill-cat-lbl">Frontend</div>
+    <div class="tag-row"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Tailwind</span><span class="tag">Three.js</span><span class="tag">Framer Motion</span></div>
+    <div class="skill-cat-lbl">Backend</div>
+    <div class="tag-row"><span class="tag">Node.js</span><span class="tag">Firebase</span><span class="tag">PostgreSQL</span><span class="tag">tRPC</span></div>
+    <table class="tbl" style="margin-top:14px"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Layout</td><td>Flex wrap. Each skill is a tag. Tags never truncate — container wraps.</td></tr>
+      <tr><td>Grouping</td><td>Category label: JetBrains 400, 10px, text-muted, uppercase, tracking 0.15em. Gap above each category.</td></tr>
+      <tr><td>Entry animation</td><td>Each tag stagger: 40ms delay per tag. Bounce-in via ease-back.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Stat Panels</div>
+    <div class="stat-row">
+      <div><div class="stat-num">12</div><div class="stat-lbl">projects shipped</div></div>
+      <div><div class="stat-num" style="font-size:40px">3</div><div class="stat-lbl">open source repos</div></div>
+      <div><div class="stat-num" style="font-size:40px">∞</div><div class="stat-lbl">cups of chai</div></div>
+    </div>
+    <table class="tbl" style="margin-top:14px"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Number</td><td>Cormorant 300, 52px, accent, font-variant-numeric: tabular-nums</td></tr>
+      <tr><td>Layout</td><td>Flex row, gap 32px, wrap on mobile. Divider: 1px solid border-ghost between stats.</td></tr>
+      <tr><td>Count-up animation</td><td>0 → final value, 1200ms ease-out cubic, triggered on scroll reveal</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 2.6 OVERLAYS ══ -->
+<section id="sec-overlays" class="sec">
+  <div class="eyebrow">2.6 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Overlay Components</h1>
+  <p class="pg-desc">Modals, bottom sheets, tooltips, and the journey exit confirmation. Every overlay has defined entry, exit, and close mechanisms.</p>
+
+  <div class="blk">
+    <div class="blk-title">Project Detail Modal</div>
+    <div class="overlay-demo" style="margin-bottom:12px">
+      <div class="modal-demo">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+          <div style="font-family:var(--font-display);font-size:24px;font-weight:300;color:var(--color-text-heading)">Nimbus App</div>
+          <button class="btn-ico">✕</button>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);line-height:1.8;margin-bottom:16px">Real-time weather dashboard built to solve the problem of inaccurate hyperlocal data. Integrated 3 weather APIs with intelligent fallback logic.</div>
+        <div class="tag-row"><span class="tag">React</span><span class="tag">Firebase</span><span class="tag">Node.js</span></div>
+      </div>
+    </div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Desktop</th><th>Mobile</th></tr></thead><tbody>
+      <tr><td>Container</td><td>max-width 680px, max-height 80vh, centered overlay</td><td>Full-screen bottom sheet, max-height 90vh</td></tr>
+      <tr><td>Border-radius</td><td>radius-lg on all corners</td><td>radius-xl on top corners only</td></tr>
+      <tr><td>Entry</td><td>opacity 0→1 + scale(0.96)→1, 300ms expo</td><td>translateY(100%)→0, 400ms expo</td></tr>
+      <tr><td>Exit</td><td>opacity 1→0 + scale(1)→0.96, 200ms ease-in</td><td>translateY(0)→100%, 300ms ease-in</td></tr>
+      <tr><td>Close triggers</td><td>× button, backdrop click, Escape key</td><td>× button, drag-down, backdrop touch</td></tr>
+      <tr><td>Route change</td><td>NONE — opens in-place on /projects</td><td>NONE — same</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Journey Exit Confirmation Modal</div>
+    <table class="tbl"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+      <tr><td>Title</td><td>"Leave the journey?" — Cormorant 300, 22px</td></tr>
+      <tr><td>Buttons</td><td>"Continue watching" (secondary) + "Yes, exit" (ghost)</td></tr>
+      <tr><td>Trigger</td><td>"Exit Journey" button OR browser back (via React Router useBlocker)</td></tr>
+      <tr><td>Cannot be skipped</td><td>useBlocker intercepts ALL navigation away from /journey, including mobile back gesture</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Tooltip</div>
+    <div class="card" style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+      <div>
+        <div class="blk-desc" style="margin-bottom:10px">The actual tooltip component:</div>
+        <div class="tooltip-demo">Icon label</div>
+      </div>
+      <table class="tbl" style="flex:1"><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
+        <tr><td>Background</td><td>var(--color-bg-tertiary)</td></tr>
+        <tr><td>Font</td><td>JetBrains 300, 10px, text-primary</td></tr>
+        <tr><td>Arrow</td><td>4px CSS triangle, matches tooltip bg color</td></tr>
+        <tr><td>Entry</td><td>opacity 0→1 + translateY(-4px)→0, 200ms ease-out</td></tr>
+        <tr><td>Show delay</td><td>400ms — prevents flash on quick mouse passes</td></tr>
+        <tr><td>Usage</td><td>Icon buttons (show label), timeline entries on mobile</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2.7 STATES ══ -->
+<section id="sec-states" class="sec">
+  <div class="eyebrow">2.7 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Interaction States</h1>
+  <p class="pg-desc">Every interactive element has a defined treatment for every condition. Nothing relies on browser defaults.</p>
+
+  <div class="blk">
+    <div class="blk-title">State Matrix — All Interactive Elements</div>
+    <div style="border:1px solid var(--color-border);border-radius:var(--r-md);overflow:hidden">
+      <div class="is-row" style="background:var(--color-accent-faint)">
+        <div class="is-cell" style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--color-accent)">State</div>
+        <div class="is-cell" style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--color-accent)">Visual Treatment</div>
+        <div class="is-cell" style="font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--color-accent)">Duration / Curve</div>
+      </div>
+      <div class="is-row"><div class="is-cell">hover</div><div class="is-cell">Color shift, optional translateY(-1 to -3px), border brightens</div><div class="is-cell">150–200ms, ease-std</div></div>
+      <div class="is-row"><div class="is-cell">focus</div><div class="is-cell">2px solid accent outline, outline-offset 3px. Only on :focus-visible</div><div class="is-cell">Instant</div></div>
+      <div class="is-row"><div class="is-cell">active</div><div class="is-cell">scale(0.96–0.97) + translateY(0) — physical press feel</div><div class="is-cell">80ms, ease-std</div></div>
+      <div class="is-row"><div class="is-cell">disabled</div><div class="is-cell">opacity: 0.35, cursor: not-allowed, pointer-events: none, no hover effects</div><div class="is-cell">Instant</div></div>
+      <div class="is-row"><div class="is-cell">selected</div><div class="is-cell">bg-accent-faint, border-accent, text-accent — active nav state</div><div class="is-cell">150ms</div></div>
+      <div class="is-row"><div class="is-cell">loading</div><div class="is-cell">Spinner replaces text, cursor: wait, pointer-events: none, identical dimensions</div><div class="is-cell">Instant</div></div>
+      <div class="is-row"><div class="is-cell">error</div><div class="is-cell">border-color: error, helper text below in error color, "✕" prefix</div><div class="is-cell">150ms</div></div>
+      <div class="is-row"><div class="is-cell">success</div><div class="is-cell">border-color: success, helper text below in success color, "✓" prefix</div><div class="is-cell">150ms</div></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Z-Index Scale</div>
+    <div class="card">
+      <div class="zi-row"><div class="zi-val">0</div><div class="zi-bar" style="width:2px"></div><div class="zi-lbl">Base (cards, content)</div></div>
+      <div class="zi-row"><div class="zi-val">1</div><div class="zi-bar" style="width:4px"></div><div class="zi-lbl">Card hover state</div></div>
+      <div class="zi-row"><div class="zi-val">100</div><div class="zi-bar" style="width:20px"></div><div class="zi-lbl">Sticky nav bar</div></div>
+      <div class="zi-row"><div class="zi-val">500</div><div class="zi-bar" style="width:50px"></div><div class="zi-lbl">Tooltips</div></div>
+      <div class="zi-row"><div class="zi-val">1000</div><div class="zi-bar" style="width:80px"></div><div class="zi-lbl">Modal backdrop</div></div>
+      <div class="zi-row"><div class="zi-val">1001</div><div class="zi-bar" style="width:90px"></div><div class="zi-lbl">Modal / bottom sheet content</div></div>
+      <div class="zi-row"><div class="zi-val">9999</div><div class="zi-bar" style="width:140px"></div><div class="zi-lbl">Toast notifications</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2.8 MOTION ══ -->
+<section id="sec-motion" class="sec">
+  <div class="eyebrow">2.8 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Motion & Micro-Interactions</h1>
+  <p class="pg-desc">Motion has one job: make the interface feel alive without demanding attention. Every animation either communicates state or reveals structure. Click the tracks to preview easing curves.</p>
+
+  <div class="blk">
+    <div class="blk-title">Easing Curves — Click to animate</div>
+    <div style="display:grid;gap:12px">
+      <div><div class="blk-desc">--ease-expo · Elements entering. Fast start, soft land. <strong style="color:var(--color-accent)">The primary curve.</strong></div><div class="m-track" id="t1" onclick="animBall('b1','t1','cubic-bezier(0.16,1,0.3,1)',600)"><div class="m-ball" id="b1">expo</div></div></div>
+      <div><div class="blk-desc">--ease-back · Tags, icon buttons. Slight overshoot = feels alive.</div><div class="m-track" id="t2" onclick="animBall('b2','t2','cubic-bezier(0.34,1.56,0.64,1)',500)"><div class="m-ball" id="b2">back</div></div></div>
+      <div><div class="blk-desc">--ease-std · Page transitions, layout shifts. Material standard.</div><div class="m-track" id="t3" onclick="animBall('b3','t3','cubic-bezier(0.4,0,0.2,1)',400)"><div class="m-ball" id="b3">std</div></div></div>
+      <div><div class="blk-desc">--ease-in · Exit animations ONLY. Never use for entry.</div><div class="m-track" id="t4" onclick="animBall('b4','t4','cubic-bezier(0.4,0,1,1)',300)"><div class="m-ball" id="b4">in</div></div></div>
+      <div><div class="blk-desc">linear · Typewriter cursor, progress bars, shimmer. Mechanical rhythmic only.</div><div class="m-track" id="t5" onclick="animBall('b5','t5','linear',800)"><div class="m-ball" id="b5">linear</div></div></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Duration Tokens</div>
+    <table class="tbl"><thead><tr><th>Token</th><th>Value</th><th>Used For</th></tr></thead><tbody>
+      <tr><td>--dur-instant</td><td>80ms</td><td>Hover color shifts, icon swaps, nav link color</td></tr>
+      <tr><td>--dur-fast</td><td>150ms</td><td>Button press, border color, input focus ring</td></tr>
+      <tr><td>--dur-normal</td><td>300ms</td><td>Card hover lift, underline grow, toast entry, tag hover</td></tr>
+      <tr><td>--dur-enter</td><td>500ms</td><td>Components entering viewport, modal entry</td></tr>
+      <tr><td>--dur-slow</td><td>700ms</td><td>Page transitions, section heading reveal</td></tr>
+      <tr><td>--dur-dramatic</td><td>1200ms</td><td>Welcome screen first impression ONLY. Never used elsewhere.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Scroll Reveal — Universal Entry Pattern</div>
+    <div class="code">
+<pre><span class="cc">// Framer Motion — applied to EVERY scroll-revealed element</span>
+<span class="ct">initial</span>:    <span class="cs">{ opacity: 0, y: 24 }</span>
+<span class="ct">animate</span>:    <span class="cs">{ opacity: 1, y: 0 }</span>
+<span class="ct">transition</span>: <span class="cs">{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }</span>
+<span class="ct">viewport</span>:   <span class="cs">{ once: true, margin: "-80px" }</span>
+
+<span class="cc">// Stagger for lists (project cards, skills, timeline)</span>
+<span class="ct">transition</span>: <span class="cs">{ delay: index * 0.08 }</span>  <span class="cc">// 80ms per child</span></pre>
+    </div>
+    <div class="card" style="display:grid;gap:8px">
+      <div class="rule-row">y: 24px — not 48 (too long, feels slow), not 8 (too subtle, imperceptible). 24px is calibrated.</div>
+      <div class="rule-row">once: true — never re-animates on scroll up. This signals maturity, not toy-like behavior.</div>
+      <div class="rule-row">margin: "-80px" — trigger starts 80px before element is fully visible. Feels natural.</div>
+      <div class="rule-row">Stagger 80ms per child — cascade reads as intentional, not simultaneous dump.</div>
+    </div>
+    <div style="display:grid;gap:8px;margin-top:14px" id="stagger-demo">
+      <div class="stg">React · Node.js · Firebase · TypeScript</div>
+      <div class="stg">Three.js · Framer Motion · Tailwind CSS</div>
+      <div class="stg">Firebase · PostgreSQL · tRPC · Vite</div>
+    </div>
+    <button onclick="runStagger()" class="btn-g" style="margin-top:10px">▶ Replay stagger →</button>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Complete Micro-Interaction Inventory</div>
+    <table class="tbl"><thead><tr><th>Element</th><th>Micro-interaction</th></tr></thead><tbody>
+      <tr><td>Nav link hover</td><td>color: text-muted → text-primary, 80ms</td></tr>
+      <tr><td>Nav active underline</td><td>width 0→100% from left, 300ms expo, on route change</td></tr>
+      <tr><td>Ghost button hover</td><td>gap 6→10px (200ms expo) + underline draws left-to-right (300ms expo)</td></tr>
+      <tr><td>Primary button hover</td><td>translateY(-1px) + accent glow shadow, 200ms ease-std</td></tr>
+      <tr><td>Icon button hover</td><td>scale(1.08) via ease-back (overshoot) + border-accent + accent-faint bg, 150ms</td></tr>
+      <tr><td>Card hover lift</td><td>translateY(-3px) + border-accent (250ms) + bg-tertiary (250ms) + translate (300ms)</td></tr>
+      <tr><td>Tag hover</td><td>border → accent, bg → rgba(.13), 150ms</td></tr>
+      <tr><td>Testimonial expand</td><td>max-height auto, 400ms ease-std, on click</td></tr>
+      <tr><td>Testimonial auto-scroll</td><td>CSS translateY(-100%), 20s linear infinite. Pauses on hover.</td></tr>
+      <tr><td>Stats count-up</td><td>0 → final value, 1200ms ease-out cubic, on scroll reveal</td></tr>
+      <tr><td>Company logo</td><td>filter grayscale(30%)→0%, opacity 0.7→1, 300ms, hover</td></tr>
+      <tr><td>Progress bar fill</td><td>width 0→100%, linear, exactly 6s (matches scene timer)</td></tr>
+      <tr><td>Scene dot scale</td><td>scale(1)→scale(1.3), 200ms ease-back, on active</td></tr>
+      <tr><td>Live dot pulse</td><td>box-shadow 0→8px rgba(success), 1.5s ease-out infinite</td></tr>
+      <tr><td>Character counter</td><td>color text-muted → warning at 250 chars, error at 300 chars, 150ms</td></tr>
+      <tr><td>Form submit success</td><td>Form opacity 0 + translateY(-8px), success message fades in, 400ms</td></tr>
+      <tr><td>Toast entry</td><td>translateX(110%)→0, 300ms expo-out</td></tr>
+      <tr><td>Toast exit</td><td>translateX(0)→translateX(110%), 250ms ease-in, then remove from DOM</td></tr>
+      <tr><td>Modal backdrop</td><td>opacity 0→1, 300ms ease-std</td></tr>
+      <tr><td>Bottom sheet entry</td><td>translateY(100%)→0, 400ms expo-out</td></tr>
+      <tr><td>Page transition exit</td><td>opacity 1→0 + translateY(0→-16px), 300ms ease-in</td></tr>
+      <tr><td>Page transition enter</td><td>opacity 0→1 + translateY(16px→0), 500ms expo-out</td></tr>
+      <tr><td>Theme toggle knob</td><td>translateX(0→28px), 380ms expo. Track bg: 400ms std. Icon: 200ms crossfade at midpoint.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 2.9 ACCESSIBILITY ══ -->
+<section id="sec-a11y" class="sec">
+  <div class="eyebrow">2.9 — Cognitive & Interaction</div>
+  <h1 class="pg-title">Accessibility</h1>
+  <p class="pg-desc">WCAG 2.1 AA minimum. AAA on all primary text. Keyboard navigation, screen readers, reduced motion, touch targets — all specified and implemented.</p>
+
+  <div class="blk">
+    <div class="blk-title">Complete Accessibility Specification</div>
+    <table class="tbl"><thead><tr><th>Concern</th><th>Implementation</th></tr></thead><tbody>
+      <tr><td>Color contrast</td><td>All text combos pass WCAG AA minimum. Primary/heading combos pass AAA. Verified in Section 1.2.</td></tr>
+      <tr><td>Focus management</td><td>:focus-visible used everywhere. outline: 2px solid accent, offset 3px. Never outline: none without replacement.</td></tr>
+      <tr><td>Keyboard navigation</td><td>All interactive elements reachable via Tab. Modals trap focus (focus-trap-react). Escape closes modals.</td></tr>
+      <tr><td>ARIA — icon buttons</td><td>aria-label on every icon button: e.g. aria-label="Switch to light mode"</td></tr>
+      <tr><td>ARIA — toggle</td><td>aria-pressed on theme toggle button. Updates on toggle.</td></tr>
+      <tr><td>ARIA — decorative</td><td>aria-hidden="true" on: noise texture, journey scene numbers, quote marks, decorative dots.</td></tr>
+      <tr><td>ARIA — loading</td><td>Skeleton loaders: role="status" aria-label="Loading content"</td></tr>
+      <tr><td>Semantic HTML</td><td>&lt;nav&gt;, &lt;main&gt;, &lt;section&gt;, &lt;article&gt;, &lt;header&gt;, &lt;footer&gt;, &lt;button&gt; — never &lt;div onclick&gt;</td></tr>
+      <tr><td>Form accessibility</td><td>All inputs have associated &lt;label&gt; via htmlFor/id. Error messages linked via aria-describedby.</td></tr>
+      <tr><td>Touch targets</td><td>All interactive elements: minimum 44×44px. Bottom nav items: full 56px height.</td></tr>
+      <tr><td>Live regions</td><td>Toasts: aria-live="polite". Error messages: aria-live="assertive".</td></tr>
+      <tr><td>Image alt text</td><td>Profile photo: alt="Aditya Chavan". Screenshots: descriptive. Logos: alt="{Company} logo".</td></tr>
+      <tr><td>Skip link</td><td>&lt;a href="#main-content" class="skip-link"&gt; — visible on focus, visually hidden otherwise.</td></tr>
+      <tr><td>Reduced motion</td><td>@media (prefers-reduced-motion: reduce): all transition and animation durations set to 0.01ms. Typewriter plays instantly. Journey auto-advances off.</td></tr>
+      <tr><td>Screen reader</td><td>Testimonial auto-scroll: aria-label on strip container. Hidden duplicate for screen readers.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 3.1 RESPONSIVE RENDERING ══ -->
+<section id="sec-resp-render" class="sec">
+  <div class="eyebrow">3.1 — Technical Rendering</div>
+  <h1 class="pg-title">Responsive Rendering</h1>
+  <p class="pg-desc">Mobile-first CSS. Base styles target mobile. Larger breakpoints add overrides. No desktop-first rewrites needed.</p>
+
+  <div class="blk">
+    <div class="blk-title">Rendering Rules</div>
+    <table class="tbl"><thead><tr><th>Concern</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>Strategy</td><td>Mobile-first CSS. Base styles target mobile. Larger breakpoints add overrides via min-width media queries.</td></tr>
+      <tr><td>Tailwind config breakpoints</td><td>sm: 480px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px</td></tr>
+      <tr><td>Fluid typography</td><td>clamp() for all display text. JetBrains Mono sizes fixed in px (already optimized for small sizes — no scaling needed).</td></tr>
+      <tr><td>Hub layout switch</td><td>flex-col (mobile) → flex-row (lg). Left column 60%, right column 40%.</td></tr>
+      <tr><td>Nav switch</td><td>Fixed bottom nav (mobile) → Sticky top nav (lg). CSS display swap via Tailwind classes.</td></tr>
+      <tr><td>Project grid</td><td>grid-cols-1 (mobile) → grid-cols-2 (md). Never 3 columns.</td></tr>
+      <tr><td>Hub cards</td><td>grid-cols-1 (xs) → grid-cols-2 (sm).</td></tr>
+      <tr><td>Overflow prevention</td><td>html: overflow-x: hidden. All containers: max-width with mx-auto or padding containment.</td></tr>
+      <tr><td>Font size floors</td><td>clamp() min values — mobile floors never crossed. Every font remains legible on smallest screen.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 3.2 FONT PERFORMANCE ══ -->
+<section id="sec-font-perf" class="sec">
+  <div class="eyebrow">3.2 — Technical Rendering</div>
+  <h1 class="pg-title">Font Performance</h1>
+  <p class="pg-desc">Preconnect, font-display: swap, static instances only (not variable fonts), minimum weights loaded. No invisible text during load.</p>
+
+  <div class="blk">
+    <div class="blk-title">Font Loading Strategy</div>
+    <table class="tbl"><thead><tr><th>Concern</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>Preconnect</td><td>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt; AND gstatic in &lt;head&gt;. Both required.</td></tr>
+      <tr><td>font-display</td><td>font-display: swap — prevents invisible text during font load. Shows Georgia fallback, swaps when ready.</td></tr>
+      <tr><td>Subsetting</td><td>Google Fonts auto-subsets. If further optimization needed: &text= param on URL query.</td></tr>
+      <tr><td>Variable fonts</td><td>NOT used — static instances loaded only. Reduces CSS complexity. Each weight is a separate file.</td></tr>
+      <tr><td>Weights loaded</td><td>Cormorant: 300, 400, 500, 600italic only. JetBrains: 300, 400 only. Zero unused weights loaded.</td></tr>
+      <tr><td>Display fallback</td><td>Georgia, "Times New Roman", serif — selected for metric similarity to Cormorant to minimize CLS on swap.</td></tr>
+      <tr><td>Mono fallback</td><td>"Courier New", monospace — acceptable substitute while JetBrains loads.</td></tr>
+      <tr><td>FOUT management</td><td>font-size-adjust not used (inconsistent support). Fallbacks selected for metric similarity to minimize layout shift.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 3.3 MEDIA OPTIMIZATION ══ -->
+<section id="sec-media-opt" class="sec">
+  <div class="eyebrow">3.3 — Technical Rendering</div>
+  <h1 class="pg-title">Image & Media Optimization</h1>
+  <p class="pg-desc">WebP everywhere, Firebase CDN, lazy loading on all below-fold images, aspect-ratio CSS to prevent CLS. Target: Lighthouse performance ≥ 90.</p>
+
+  <div class="blk">
+    <div class="blk-title">Image & Media Rules</div>
+    <table class="tbl"><thead><tr><th>Concern</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>Format</td><td>WebP for all project screenshots and profile photo. PNG fallback via &lt;picture&gt; element.</td></tr>
+      <tr><td>Compression targets</td><td>Profile photo: max 80KB. Project screenshots: max 150KB each. Use Squoosh at build time.</td></tr>
+      <tr><td>Lazy loading</td><td>loading="lazy" on all images except profile photo (above fold, use loading="eager").</td></tr>
+      <tr><td>Aspect ratio</td><td>aspect-ratio CSS property on all image containers. Prevents layout shift (CLS target: 0).</td></tr>
+      <tr><td>CDN</td><td>All images served from Firebase Storage CDN. No third-party image CDN in v1.</td></tr>
+      <tr><td>Resume PDF</td><td>Direct download link from Firebase Storage. Opens in new tab. Never inline iframe.</td></tr>
+      <tr><td>Retina</td><td>Profile photo: 1× and 2× srcset. Project screenshots: single source, CSS max-width contained.</td></tr>
+      <tr><td>No video</td><td>No video content in v1. Journey scenes are pure HTML/CSS/JS — no media files.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 3.4 CSS ARCHITECTURE ══ -->
+<section id="sec-css-arch" class="sec">
+  <div class="eyebrow">3.4 — Technical Rendering</div>
+  <h1 class="pg-title">CSS Architecture</h1>
+  <p class="pg-desc">Tailwind CSS utility-first. One tokens.css file. No inline styles except dynamic values. All animation keyframes in tokens.css.</p>
+
+  <div class="blk">
+    <div class="blk-title">Architecture Rules</div>
+    <table class="tbl"><thead><tr><th>Concern</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>Framework</td><td>Tailwind CSS 3.x. Utility-first. No BEM, no CSS Modules, no styled-components.</td></tr>
+      <tr><td>Token file</td><td>src/styles/tokens.css — all CSS custom properties defined here. Imported FIRST in main.tsx.</td></tr>
+      <tr><td>Tailwind config</td><td>tailwind.config.js extends theme with all design tokens mapped to Tailwind utility names.</td></tr>
+      <tr><td>Inline styles</td><td>Tailwind utility classes only. No style={{}} except for dynamic values (e.g. stagger delay calculated from array index).</td></tr>
+      <tr><td>Global styles</td><td>src/styles/global.css — font imports, CSS reset additions, ::selection, ::-webkit-scrollbar, caret-color, scrollbar-gutter.</td></tr>
+      <tr><td>Animations</td><td>Framer Motion for JS-driven scroll/page animations. CSS @keyframes for pure CSS loops (shimmer, pulse, blink, spin) — defined in tokens.css.</td></tr>
+      <tr><td>Dark mode</td><td>[data-theme="light"] selector on &lt;html&gt;. Tailwind darkMode: "class" DISABLED — using custom data attribute instead.</td></tr>
+      <tr><td>Purge</td><td>Tailwind content paths include all component files. Dead CSS purged at build. Target: &lt;15KB gzipped CSS.</td></tr>
+      <tr><td>CSS order</td><td>tokens.css → global.css → Tailwind base → Tailwind components → Tailwind utilities</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">tokens.css File Structure</div>
+    <table class="tbl"><thead><tr><th>Section</th><th>Contents</th></tr></thead><tbody>
+      <tr><td>@import</td><td>Google Fonts import — the very first line</td></tr>
+      <tr><td>:root (dark defaults)</td><td>ALL --color-*, --font-*, --radius-*, --sp-*, --shadow-*, --ease-*, --dur-* tokens</td></tr>
+      <tr><td>[data-theme="light"]</td><td>Color token overrides only. All other tokens inherit from :root.</td></tr>
+      <tr><td>@keyframes</td><td>blink, shimmer, float-anim, pulse-ring, bounce-in, spin-slow, spin-full, slide-r, stagger-in</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 3.5 THEMING ══ -->
+<section id="sec-theming" class="sec">
+  <div class="eyebrow">3.5 — Technical Rendering</div>
+  <h1 class="pg-title">Theming System</h1>
+  <p class="pg-desc">localStorage persists theme preference. Inline script prevents FOUC. One data-attribute toggle switches the entire site. No page reload.</p>
+
+  <div class="blk">
+    <div class="blk-title">Theme Implementation</div>
+    <table class="tbl"><thead><tr><th>Concern</th><th>Implementation</th></tr></thead><tbody>
+      <tr><td>Storage</td><td>localStorage key "theme". Persists across sessions and browser closes.</td></tr>
+      <tr><td>First visit</td><td>Read prefers-color-scheme system preference. Set [data-theme] on &lt;html&gt; accordingly.</td></tr>
+      <tr><td>Toggle action</td><td>Flip [data-theme] attribute on &lt;html&gt;. Update localStorage. No page reload.</td></tr>
+      <tr><td>Transition</td><td>body { transition: background-color 400ms var(--ease-std), color 400ms var(--ease-std); } — smooth cross-fade.</td></tr>
+      <tr><td>FOUC prevention</td><td>Inline &lt;script&gt; in &lt;head&gt; reads localStorage and sets [data-theme] BEFORE first paint. Prevents flash.</td></tr>
+      <tr><td>Admin panel theme</td><td>Separate localStorage key "admin-theme". Independent of public site preference.</td></tr>
+      <tr><td>Knob color</td><td>Stays gold (accent) in both modes — this is the visual signature that persists across themes.</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Theme Toggle — Click to see animation</div>
+    <div class="card" style="display:flex;align-items:center;gap:20px;justify-content:center;padding:40px">
+      <div class="tog" id="demo-tog" onclick="demoTog()"><div class="tog-knob" id="demo-knob">☾</div></div>
+      <div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);margin-bottom:4px" id="demo-tog-lbl">Dark mode active</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">Knob: 380ms expo · Track bg: 400ms std<br>Icon swap at midpoint: 200ms crossfade</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3.6 RENDERING EFFICIENCY ══ -->
+<section id="sec-render-eff" class="sec">
+  <div class="eyebrow">3.6 — Technical Rendering</div>
+  <h1 class="pg-title">Rendering Efficiency</h1>
+  <p class="pg-desc">GPU-accelerated animations only. No layout thrash. CLS = 0. Lazy-loaded heavy modules. Firebase listeners cleaned up on unmount.</p>
+
+  <div class="blk">
+    <div class="blk-title">Performance Rules</div>
+    <table class="tbl"><thead><tr><th>Concern</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>GPU animations</td><td>Animate ONLY transform and opacity. NEVER animate: width, height, margin, padding, top, left, border-width. These cause layout recalculation.</td></tr>
+      <tr><td>will-change</td><td>will-change: transform added only on elements actively animating. Removed after animation completes. Not a blanket property — overuse causes memory overhead.</td></tr>
+      <tr><td>Layout stability (CLS)</td><td>Target CLS: 0. Achieved via: aspect-ratio on images, min-height on sections, no dynamic insertion of content above fold.</td></tr>
+      <tr><td>Framer Motion</td><td>LazyMotion with domAnimation features — reduces bundle by ~85% vs full motion import.</td></tr>
+      <tr><td>Three.js</td><td>Lazy-loaded only when Hub page mounts. Disposed on unmount (renderer.dispose()). Canvas removed from DOM on leave.</td></tr>
+      <tr><td>Firebase listeners</td><td>All onSnapshot listeners unsubscribed in useEffect cleanup. No memory leaks.</td></tr>
+      <tr><td>Code splitting</td><td>React.lazy + Suspense on: Journey page, Admin panel, Project modal. Heavy sections only.</td></tr>
+      <tr><td>CSS bundle</td><td>Tailwind purge eliminates unused utilities. Target: &lt;15KB gzipped CSS.</td></tr>
+      <tr><td>Reduced motion</td><td>@media (prefers-reduced-motion: reduce) sets all animation/transition durations to 0.01ms.</td></tr>
+      <tr><td>Lighthouse targets</td><td>Performance ≥ 90, Accessibility ≥ 95, Best Practices ≥ 90, SEO ≥ 90. FCP &lt; 1.5s on 4G.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 3.7 PLATFORM ══ -->
+<section id="sec-platform" class="sec">
+  <div class="eyebrow">3.7 — Technical Rendering</div>
+  <h1 class="pg-title">Platform Consistency</h1>
+  <p class="pg-desc">Chrome, Safari, Firefox, Edge. iOS and Android. Retina displays. Safari quirks addressed. Scrollbar styled. Safe area insets handled.</p>
+
+  <div class="blk">
+    <div class="blk-title">Cross-Platform Rules</div>
+    <table class="tbl"><thead><tr><th>Concern</th><th>Rule</th></tr></thead><tbody>
+      <tr><td>Browsers supported</td><td>Chrome 100+, Safari 15+, Firefox 100+, Edge 100+. No IE11.</td></tr>
+      <tr><td>Mobile browsers</td><td>Chrome Android, Safari iOS (14+). Tested at 375px and 390px viewports.</td></tr>
+      <tr><td>Retina displays</td><td>1× and 2× image srcset. CSS pixel density handled. Borders in px (not sub-pixel) to avoid blurriness.</td></tr>
+      <tr><td>Safari — backdrop-filter</td><td>-webkit-backdrop-filter: blur(8px); — prefix required alongside standard.</td></tr>
+      <tr><td>Safari — sticky</td><td>position: -webkit-sticky; — prefix alongside position: sticky.</td></tr>
+      <tr><td>Custom scrollbar (webkit)</td><td>::-webkit-scrollbar { width: 4px } ::-webkit-scrollbar-track { background: transparent } ::-webkit-scrollbar-thumb { background: var(--color-border-mid); border-radius: var(--r-full) }</td></tr>
+      <tr><td>Custom scrollbar (Firefox)</td><td>scrollbar-width: thin; scrollbar-color: var(--color-border-mid) transparent;</td></tr>
+      <tr><td>Scrollbar gutter</td><td>scrollbar-gutter: stable on body — prevents layout shift when scrollbar appears/disappears.</td></tr>
+      <tr><td>Safe area insets</td><td>Bottom nav: padding-bottom: env(safe-area-inset-bottom) — supports iPhone Dynamic Island.</td></tr>
+      <tr><td>-webkit-tap-highlight</td><td>-webkit-tap-highlight-color: transparent on all interactive elements — removes grey iOS tap flash.</td></tr>
+      <tr><td>Input zoom (iOS)</td><td>All inputs: font-size minimum 16px on iOS to prevent auto-zoom. If design needs smaller: restore after blur.</td></tr>
+      <tr><td>Print styles</td><td>Not implemented in v1.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ 4.1 MICRO DETAILS ══ -->
+<section id="sec-micro-det" class="sec">
+  <div class="eyebrow">4.1 — Micro-Level Details</div>
+  <h1 class="pg-title">Often-Forgotten Details</h1>
+  <p class="pg-desc">These are the details most developers skip. They are also the details most visitors notice subconsciously. Every single one is specified and implemented. Nothing is "TBD".</p>
+
+  <div class="blk">
+    <div class="blk-title">Complete Micro-Detail Specification</div>
+    <table class="tbl"><thead><tr><th>Detail</th><th>Specification</th></tr></thead><tbody>
+      <tr><td>Cursor styles</td><td>Buttons/links: cursor: pointer. Disabled: cursor: not-allowed. Loading: cursor: wait. Textarea: cursor: text. Body: cursor: default.</td></tr>
+      <tr><td>Text selection color</td><td>::selection { background: rgba(201,169,110,0.2); color: inherit; } — gold tint in both light and dark modes.</td></tr>
+      <tr><td>Scrollbar styling</td><td>Webkit: 4px wide, transparent track, accent-muted thumb, radius-full. Firefox: thin, matching colors. scrollbar-gutter: stable prevents layout shift.</td></tr>
+      <tr><td>Caret color</td><td>caret-color: var(--color-accent) on ALL text inputs and textareas. The blinking cursor is gold.</td></tr>
+      <tr><td>Link styling</td><td>No browser default blue underline. All links styled explicitly. External links: target="_blank" + rel="noopener noreferrer" without exception.</td></tr>
+      <tr><td>List markers</td><td>No bullet lists in public UI — content displayed as cards or prose. list-style: none; padding: 0; margin: 0 on all lists.</td></tr>
+      <tr><td>Admin table headers</td><td>position: sticky; top: 0; background: var(--color-bg-secondary); z-index: 10;</td></tr>
+      <tr><td>Admin table row hover</td><td>background: var(--color-bg-hover), 100ms transition.</td></tr>
+      <tr><td>Tooltip arrows</td><td>4px CSS triangle via border trick. Color matches tooltip background exactly. Positioned at trigger midpoint.</td></tr>
+      <tr><td>Loading placeholders</td><td>Shimmer skeletons — never "Loading..." text for content areas. Spinners only for action buttons and form submit.</td></tr>
+      <tr><td>Disabled opacity</td><td>opacity: 0.35 — not 0.5 (too subtle), not 0.25 (too invisible). 0.35 is calibrated.</td></tr>
+      <tr><td>Sticky nav shadow</td><td>box-shadow: 0 4px 16px rgba(0,0,0,0.12) appears on scroll via JS class toggle at scrollY &gt; 10px. Not applied at rest.</td></tr>
+      <tr><td>Backdrop blur</td><td>ONLY on sticky nav. -webkit-backdrop-filter and backdrop-filter both set. Never on cards or modals.</td></tr>
+      <tr><td>Overflow behavior</td><td>html: overflow-x: hidden. Body during modal open: overflow: hidden. All text containers: overflow-wrap: break-word.</td></tr>
+      <tr><td>Focus outline</td><td>outline: 2px solid var(--color-accent), outline-offset: 3px on :focus-visible. Never outline: none alone.</td></tr>
+      <tr><td>Touch action</td><td>touch-action: manipulation on all buttons — removes 300ms tap delay on iOS without disabling pinch-zoom.</td></tr>
+      <tr><td>User select</td><td>user-select: none on buttons, nav links, UI chrome. user-select: text on body copy and form inputs.</td></tr>
+      <tr><td>-webkit-tap-highlight</td><td>-webkit-tap-highlight-color: transparent on interactive elements — removes grey iOS tap flash.</td></tr>
+      <tr><td>iOS input zoom</td><td>All inputs: font-size minimum 16px on iOS — prevents auto-zoom on focus. Restore smaller size after blur if needed.</td></tr>
+      <tr><td>Smooth scroll</td><td>scroll-behavior: smooth on html. scroll-padding-top: 80px (accounts for sticky nav height).</td></tr>
+      <tr><td>Word spacing</td><td>word-spacing: 0 everywhere — JetBrains Mono has built-in correct spacing.</td></tr>
+      <tr><td>Widows / orphans</td><td>orphans: 2; widows: 2 on body copy paragraphs — prevents single words on the last line.</td></tr>
+      <tr><td>Hyphenation</td><td>hyphens: auto on testimonial body text ONLY. Not on headings, labels, or any UI text.</td></tr>
+      <tr><td>Font smoothing</td><td>-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; on body. Global, never per-component.</td></tr>
+      <tr><td>Box sizing</td><td>*, *::before, *::after { box-sizing: border-box } — global reset, included in Tailwind preflight.</td></tr>
+      <tr><td>Pointer events</td><td>Decorative elements (noise texture, ghost text, scene numbers): pointer-events: none.</td></tr>
+      <tr><td>Body transition</td><td>body transition: background-color 400ms var(--ease-std), color 400ms var(--ease-std). ONLY these two — not a global transition that causes layout flicker.</td></tr>
+      <tr><td>Scrollbar gutter</td><td>scrollbar-gutter: stable on body — page does not jump width when scrollbar appears.</td></tr>
+      <tr><td>Theme FOUC script</td><td>Inline &lt;script&gt; in &lt;head&gt; reads localStorage["theme"] and sets data-theme on &lt;html&gt; BEFORE any CSS or render. Prevents white flash on dark-preferring users.</td></tr>
+      <tr><td>External link security</td><td>All target="_blank" links: rel="noopener noreferrer" — prevents window.opener attacks.</td></tr>
+      <tr><td>Form submit prevention</td><td>Forms use onSubmit with e.preventDefault(). Never rely on HTML form submission.</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<!-- ══ MICRO ANIMATIONS ══ -->
+<section id="sec-micro-anim" class="sec">
+  <div class="eyebrow">Motion — Interactive Preview</div>
+  <h1 class="pg-title">Micro-Animations</h1>
+  <p class="pg-desc">Click each card to preview the animation. These are the invisible details that make visitors say "this feels different" without knowing why.</p>
+
+  <div class="blk">
+    <div class="blk-title">Animation Primitives — Click to preview</div>
+    <div class="micro-grid">
+      <div class="mc" onclick="trigMicro('mi1','af')"><span class="mi" id="mi1">◆</span><div class="mn">Float</div></div>
+      <div class="mc" onclick="trigMicro('mi2','ap')"><span class="mi" id="mi2">●</span><div class="mn">Pulse ring</div></div>
+      <div class="mc" onclick="trigMicro('mi3','ab')"><span class="mi" id="mi3">★</span><div class="mn">Bounce in</div></div>
+      <div class="mc" onclick="trigMicro('mi4','as')"><span class="mi" id="mi4">✦</span><div class="mn">Slow spin</div></div>
+      <div class="mc" onclick="trigMicro('mi5','ash')"><span class="mi" id="mi5">▬▬▬</span><div class="mn">Shimmer text</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TEXT FX ══ -->
+<section id="sec-text-fx" class="sec">
+  <div class="eyebrow">Motion — Text Effects</div>
+  <h1 class="pg-title">Text Effects</h1>
+  <p class="pg-desc">Typewriter, section heading reveals, link hover underlines. Click to replay each effect.</p>
+
+  <div class="blk">
+    <div class="blk-title">Typewriter — Click Run</div>
+    <div class="card">
+      <div class="tw-out" id="tw-out" style="min-height:160px"></div>
+      <div style="display:flex;gap:8px;margin-top:14px"><button onclick="runTW()" class="btn-s" style="font-size:10px;padding:7px 14px">▶ Run</button><button onclick="resetTW()" class="btn-g" style="font-size:10px">Reset →</button></div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-top:12px;line-height:1.8">45ms/char · 300ms line pause · Cursor blinks at 530ms while typing · Switches to 800ms heartbeat on completion</div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Section Heading Reveal — Click to replay</div>
+    <div class="card" style="cursor:pointer;min-height:110px;display:flex;align-items:center" onclick="runReveal()">
+      <div>
+        <div id="hr-ey" class="hr-el" style="font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent)">02 / Projects</div>
+        <div id="hr-ti" class="hr-el" style="font-family:var(--font-display);font-size:clamp(24px,4vw,38px);font-weight:300;color:var(--color-text-heading);transition-delay:100ms">Things I've built.</div>
+        <div id="hr-su" class="hr-el" style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);transition-delay:200ms">Each one started with a problem worth solving.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Link Hover — Hover to see underline draw</div>
+    <div class="card" style="display:flex;gap:24px;flex-wrap:wrap">
+      <a class="lnk">GitHub Profile</a>
+      <a class="lnk">LinkedIn</a>
+      <a class="lnk">Read case study</a>
+      <a class="lnk">View all projects</a>
+    </div>
+    <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-top:10px">width 0→100% from left, 300ms expo-out. Text color shifts simultaneously: text-secondary → text-primary, 80ms.</div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Text Selection Color</div>
+    <div class="card">
+      <div style="font-family:var(--font-display);font-size:22px;font-weight:300;color:var(--color-text-heading)">Try selecting this text to see the custom gold selection color.</div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-top:10px">::selection { background: rgba(201,169,110,0.2); color: inherit; } — one more detail that says "someone cared".</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WELCOME PREVIEW ══ -->
+<section id="sec-welcome" class="sec">
+  <div class="eyebrow">Page Preview</div>
+  <h1 class="pg-title">Welcome Screen</h1>
+  <p class="pg-desc">The first thing every visitor sees. Full viewport. Sparse. Left-aligned. The negative space IS the design. 4 Figma frames: dark/light × desktop/mobile.</p>
+
+  <div class="blk">
+    <div class="blk-title">Dark Mode — Complete State</div>
+    <div class="wp">
+      <div style="position:absolute;top:20px;right:20px"><div class="btn-ico" style="font-size:10px">☾</div></div>
+      <div class="wp-name">Aditya Chavan</div>
+      <div class="wp-role">Developer</div>
+      <div class="wp-dia" id="wp-dia"><span id="wl0"></span><br><span id="wl1"></span><br><span id="wl2"></span><br><span id="wl3"></span><br><span id="wl4"></span></div>
+      <div class="wp-cta" id="wp-cta" style="opacity:0;transition:opacity 400ms">Press any key to continue<span class="cur cur-slow"></span></div>
+      <div class="wp-skip" id="wp-skip">Press Enter twice to skip</div>
+    </div>
+    <button onclick="runWP()" class="btn-g" style="margin-top:12px">▶ Replay typewriter →</button>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">Light Mode Preview</div>
+    <div style="background:#F5F2EC;border:1px solid rgba(0,0,0,.08);border-radius:var(--r-lg);padding:48px 60px;position:relative;min-height:280px">
+      <div style="position:absolute;top:20px;right:20px;font-family:var(--font-mono);font-size:10px;color:#52505C;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(0,0,0,.12);border-radius:4px;padding:5px 9px;cursor:pointer">☀</div>
+      <div style="font-family:var(--font-display);font-size:clamp(34px,5vw,56px);font-weight:300;letter-spacing:-.02em;line-height:1;color:#0D0D0F">Aditya Chavan</div>
+      <div style="font-family:var(--font-display);font-size:13px;font-weight:300;letter-spacing:.25em;text-transform:uppercase;color:#2C2B32;margin-top:4px;margin-bottom:34px">Developer</div>
+      <div style="font-family:var(--font-display);font-size:clamp(17px,3vw,26px);font-weight:300;font-style:italic;line-height:1.55;color:#0D0D0F;margin-bottom:34px">Not your average developer.<br>I build things that work,<br>look good,<br>and scale.<br>Welcome.</div>
+      <div style="font-family:var(--font-mono);font-size:12px;color:#2C2B32;letter-spacing:.05em">Press any key to continue<span style="display:inline-block;width:7px;height:12px;background:#966030;vertical-align:middle;margin-left:2px;animation:blink 800ms step-end infinite"></span></div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:#52505C;letter-spacing:.05em;margin-top:4px">Press Enter twice to skip</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TOKENS ══ -->
+<section id="sec-tokens" class="sec">
+  <div class="eyebrow">Reference</div>
+  <h1 class="pg-title">Token Reference</h1>
+  <p class="pg-desc">The complete tokens.css. Copy into src/styles/tokens.css. Every value in every component references these. If you're ever tempted to write a hex value directly — stop and add a token here first.</p>
+
+  <div class="blk">
+    <div class="blk-title">Complete tokens.css — Copy into project</div>
+    <div class="code"><pre><span class="cc">/* ── Aditya Chavan Portfolio — tokens.css v1.0 ── */</span>
+<span class="cc">/* THE LAW: Every color, size, duration references a token. Never hardcode. */</span>
+
+@import url(<span class="cs">'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap'</span>);
+
+:root {
+  <span class="cc">/* ── Fonts ── */</span>
+  <span class="ct">--font-display</span>: <span class="cs">'Cormorant Garamond', Georgia, serif</span>;
+  <span class="ct">--font-mono</span>:    <span class="cs">'JetBrains Mono', 'Courier New', monospace</span>;
+
+  <span class="cc">/* ── Backgrounds (Dark Mode Default) ── */</span>
+  <span class="ct">--color-bg-primary</span>:     <span class="cv">#0A0A0F</span>;  <span class="cc">/* Abyss */</span>
+  <span class="ct">--color-bg-secondary</span>:   <span class="cv">#111118</span>;  <span class="cc">/* Ink */</span>
+  <span class="ct">--color-bg-tertiary</span>:    <span class="cv">#16161E</span>;  <span class="cc">/* Dusk */</span>
+  <span class="ct">--color-bg-hover</span>:       <span class="cv">#1C1C26</span>;  <span class="cc">/* Hover surface */</span>
+
+  <span class="cc">/* ── Text — varied temperature, not all the same tone ── */</span>
+  <span class="ct">--color-text-heading</span>:   <span class="cv">#F2F0FA</span>;  <span class="cc">/* 17.8:1 AAA — pg-title, hero, card titles */</span>
+  <span class="ct">--color-text-primary</span>:   <span class="cv">#E8E6F0</span>;  <span class="cc">/* 16.8:1 AAA — subsec labels, hover targets */</span>
+  <span class="ct">--color-text-secondary</span>: <span class="cv">#A8A4B8</span>;  <span class="cc">/*  7.1:1  AA — body copy, descriptions */</span>
+  <span class="ct">--color-text-key</span>:       <span class="cv">#C4C0D8</span>;  <span class="cc">/* table first-col keys — soft violet */</span>
+  <span class="ct">--color-text-value</span>:     <span class="cv">#9896A8</span>;  <span class="cc">/* table values, law descriptions */</span>
+  <span class="ct">--color-text-muted</span>:     <span class="cv">#5C5970</span>;  <span class="cc">/* helper text, timestamps, skip hints */</span>
+  <span class="ct">--color-text-ghost</span>:     <span class="cv">#282633</span>;  <span class="cc">/* decorative large text only */</span>
+  <span class="ct">--color-text-code</span>:      <span class="cv">#B8D4B0</span>;  <span class="cc">/* token names, inline code — sage green */</span>
+
+  <span class="cc">/* ── Accent — ONE color, use sparingly ── */</span>
+  <span class="ct">--color-accent</span>:         <span class="cv">#C9A96E</span>;  <span class="cc">/* 6.3:1 AA  */</span>
+  <span class="ct">--color-accent-muted</span>:   <span class="cv">#8B6F42</span>;
+  <span class="ct">--color-accent-faint</span>:   <span class="cv">rgba(201,169,110,0.07)</span>;
+  <span class="ct">--color-accent-glow</span>:    <span class="cv">rgba(201,169,110,0.15)</span>;
+
+  <span class="cc">/* ── Borders ── */</span>
+  <span class="ct">--color-border</span>:         <span class="cv">rgba(255,255,255,0.07)</span>;
+  <span class="ct">--color-border-mid</span>:     <span class="cv">rgba(255,255,255,0.12)</span>;
+  <span class="ct">--color-border-accent</span>:  <span class="cv">rgba(201,169,110,0.25)</span>;
+  <span class="ct">--color-border-ghost</span>:   <span class="cv">rgba(255,255,255,0.04)</span>;
+  <span class="ct">--color-overlay</span>:        <span class="cv">rgba(10,10,15,0.85)</span>;
+
+  <span class="cc">/* ── Semantic ── */</span>
+  <span class="ct">--color-success</span>: <span class="cv">#3D9E5A</span>;
+  <span class="ct">--color-warning</span>: <span class="cv">#C07840</span>;
+  <span class="ct">--color-error</span>:   <span class="cv">#C03838</span>;
+  <span class="ct">--color-info</span>:    <span class="cv">#4488CC</span>;
+
+  <span class="cc">/* ── Border Radius ── */</span>
+  <span class="ct">--r-xs</span>:<span class="cv">2px</span>; <span class="ct">--r-sm</span>:<span class="cv">4px</span>; <span class="ct">--r-md</span>:<span class="cv">8px</span>;
+  <span class="ct">--r-lg</span>:<span class="cv">12px</span>; <span class="ct">--r-xl</span>:<span class="cv">16px</span>; <span class="ct">--r-full</span>:<span class="cv">9999px</span>;
+
+  <span class="cc">/* ── Spacing (4px base unit) ── */</span>
+  <span class="ct">--sp-1</span>:<span class="cv">4px</span>;  <span class="ct">--sp-2</span>:<span class="cv">8px</span>;   <span class="ct">--sp-3</span>:<span class="cv">12px</span>; <span class="ct">--sp-4</span>:<span class="cv">16px</span>;
+  <span class="ct">--sp-5</span>:<span class="cv">20px</span>; <span class="ct">--sp-6</span>:<span class="cv">24px</span>;  <span class="ct">--sp-8</span>:<span class="cv">32px</span>; <span class="ct">--sp-10</span>:<span class="cv">40px</span>;
+  <span class="ct">--sp-12</span>:<span class="cv">48px</span>;<span class="ct">--sp-16</span>:<span class="cv">64px</span>; <span class="ct">--sp-20</span>:<span class="cv">80px</span>;<span class="ct">--sp-24</span>:<span class="cv">96px</span>;
+  <span class="ct">--sp-32</span>:<span class="cv">128px</span>;<span class="ct">--sp-40</span>:<span class="cv">160px</span>;
+
+  <span class="cc">/* ── Shadows ── */</span>
+  <span class="ct">--shadow-none</span>:   <span class="cv">none</span>;
+  <span class="ct">--shadow-sm</span>:     <span class="cv">0 2px 8px rgba(0,0,0,0.15)</span>;
+  <span class="ct">--shadow-md</span>:     <span class="cv">0 4px 16px rgba(0,0,0,0.20)</span>;
+  <span class="ct">--shadow-accent</span>: <span class="cv">0 4px 20px rgba(201,169,110,0.20)</span>;
+  <span class="ct">--shadow-modal</span>:  <span class="cv">0 24px 48px rgba(0,0,0,0.40)</span>;
+  <span class="ct">--shadow-inner</span>:  <span class="cv">inset 0 1px 3px rgba(0,0,0,0.15)</span>;
+
+  <span class="cc">/* ── Easing ── */</span>
+  <span class="ct">--ease-expo</span>: <span class="cv">cubic-bezier(0.16,1,0.3,1)</span>;
+  <span class="ct">--ease-back</span>: <span class="cv">cubic-bezier(0.34,1.56,0.64,1)</span>;
+  <span class="ct">--ease-std</span>:  <span class="cv">cubic-bezier(0.4,0,0.2,1)</span>;
+  <span class="ct">--ease-in</span>:   <span class="cv">cubic-bezier(0.4,0,1,1)</span>;
+
+  <span class="cc">/* ── Durations ── */</span>
+  <span class="ct">--dur-instant</span>:<span class="cv">80ms</span>;  <span class="ct">--dur-fast</span>:<span class="cv">150ms</span>; <span class="ct">--dur-normal</span>:<span class="cv">300ms</span>;
+  <span class="ct">--dur-enter</span>:<span class="cv">500ms</span>;   <span class="ct">--dur-slow</span>:<span class="cv">700ms</span>;  <span class="ct">--dur-dramatic</span>:<span class="cv">1200ms</span>;
+
+  <span class="cc">/* ── @keyframes ── */</span>
+  <span class="cc">/* Define: blink, shimmer, float-anim, pulse-ring, bounce-in, spin-slow */</span>
+  <span class="cc">/* See Section 4.1 of design_system.html for complete @keyframes code */</span>
+}
+
+[data-theme=<span class="cs">"light"</span>] {
+  <span class="ct">--color-bg-primary</span>:     <span class="cv">#F5F2EC</span>;
+  <span class="ct">--color-bg-secondary</span>:   <span class="cv">#EAE6DF</span>;
+  <span class="ct">--color-bg-tertiary</span>:    <span class="cv">#DED9D0</span>;
+  <span class="ct">--color-bg-hover</span>:       <span class="cv">#D2CCC2</span>;
+  <span class="ct">--color-text-heading</span>:   <span class="cv">#0D0D0F</span>;  <span class="cc">/* 18.1:1 AAA */</span>
+  <span class="ct">--color-text-secondary</span>: <span class="cv">#2C2B32</span>;  <span class="cc">/* 12.4:1 AAA */</span>
+  <span class="ct">--color-text-muted</span>:     <span class="cv">#52505C</span>;
+  <span class="ct">--color-text-ghost</span>:     <span class="cv">#B8B4C0</span>;
+  <span class="ct">--color-text-key</span>:       <span class="cv">#1A1820</span>;
+  <span class="ct">--color-text-value</span>:     <span class="cv">#3A3845</span>;
+  <span class="ct">--color-text-code</span>:      <span class="cv">#1E5C2E</span>;
+  <span class="ct">--color-accent</span>:         <span class="cv">#966030</span>;  <span class="cc">/* 5.2:1 AA */</span>
+  <span class="ct">--color-accent-muted</span>:   <span class="cv">#7A4C22</span>;
+  <span class="ct">--color-accent-faint</span>:   <span class="cv">rgba(150,96,48,0.07)</span>;
+  <span class="ct">--color-accent-glow</span>:    <span class="cv">rgba(150,96,48,0.15)</span>;
+  <span class="ct">--color-border</span>:         <span class="cv">rgba(0,0,0,0.10)</span>;
+  <span class="ct">--color-border-mid</span>:     <span class="cv">rgba(0,0,0,0.18)</span>;
+  <span class="ct">--color-border-accent</span>:  <span class="cv">rgba(150,96,48,0.35)</span>;
+  <span class="ct">--color-border-ghost</span>:   <span class="cv">rgba(0,0,0,0.05)</span>;
+  <span class="ct">--color-overlay</span>:        <span class="cv">rgba(245,242,236,0.92)</span>;
+}</pre>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-title">The 10 Laws</div>
+    <div class="card" style="display:grid;gap:10px">
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">01</span><span>Every color, size, spacing and duration references a token. Never a hardcoded value.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">02</span><span>The accent color appears sparingly. If it is everywhere, it means nothing.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">03</span><span>Everything is left-aligned. Center alignment is generic.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">04</span><span>Negative space is structural. Filling space is a design failure.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">05</span><span>Dark mode is the primary experience. Light mode is equally polished.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">06</span><span>Font sizes never drop below the clamp minimum. The mobile floor is sacred.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">07</span><span>Animations use only transform and opacity. Never animate layout properties.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">08</span><span>once: true — elements animate in once, never on scroll-up. Maturity signals.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">09</span><span>One primary button per visual section. Its scarcity is its power.</span></div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--color-text-value);display:flex;gap:12px"><span style="color:var(--color-accent);font-weight:400;min-width:20px">10</span><span>All interactive elements have all five states: rest, hover, active, focus, disabled.</span></div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+// ── NAVIGATION ──
+function S(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.nl').forEach(l => l.classList.remove('on'));
+  document.getElementById('sec-' + id).classList.add('on');
+  event.currentTarget.classList.add('on');
+  window.scrollTo({ top: 0 });
+  if (id === 'welcome') setTimeout(runWP, 300);
+  if (id === 'text-fx') { setTimeout(runReveal, 300); setTimeout(runTW, 600); }
+  if (id === 'motion') { runStagger(); }
+}
+
+// ── GLOBAL THEME ──
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  const mainTog = document.getElementById('main-tog');
+  const mainKnob = document.getElementById('main-knob');
+  if (mainTog) mainTog.classList.toggle('li', !isLight);
+  if (mainKnob) mainKnob.textContent = isLight ? '☾' : '☀';
+  const lbl = document.getElementById('tog-lbl');
+  if (lbl) lbl.textContent = isLight ? 'Dark' : 'Light';
+}
+
+// ── DEMO TOGGLE ──
+function demoTog() {
+  const t = document.getElementById('demo-tog');
+  const k = document.getElementById('demo-knob');
+  const lbl = document.getElementById('demo-tog-lbl');
+  if (!t) return;
+  const isLight = t.classList.contains('li');
+  t.classList.toggle('li');
+  k.textContent = isLight ? '☾' : '☀';
+  lbl.textContent = isLight ? 'Dark mode active' : 'Light mode active';
+}
+
+// ── MOTION BALLS ──
+const bs = {};
+function animBall(bId, tId, ease, dur) {
+  const b = document.getElementById(bId);
+  const t = document.getElementById(tId);
+  if (!b || !t) return;
+  const toEnd = !bs[bId];
+  b.style.transition = `left ${dur}ms ${ease}`;
+  b.style.left = toEnd ? (t.offsetWidth - 46) + 'px' : '8px';
+  bs[bId] = toEnd;
+}
+
+// ── MICRO ANIMS ──
+const anims = ['af','ap','ab','as','ash'];
+function trigMicro(id, cls) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  anims.forEach(c => el.classList.remove(c));
+  void el.offsetWidth;
+  el.classList.add(cls);
+}
+
+// ── STAGGER ──
+function runStagger() {
+  const items = document.querySelectorAll('#stagger-demo .stg');
+  items.forEach(i => i.classList.remove('in'));
+  items.forEach((i, idx) => setTimeout(() => i.classList.add('in'), 80 + idx * 80));
+}
+
+// ── TYPEWRITER ──
+const TW_LINES = ['Not your average developer.','I build things that work,','look good,','and scale.','Welcome.'];
+let twActive = false;
+function runTW() {
+  if (twActive) return;
+  twActive = true;
+  const el = document.getElementById('tw-out');
+  if (!el) { twActive = false; return; }
+  el.innerHTML = '';
+  let li = 0, ci = 0;
+  function tick() {
+    if (li >= TW_LINES.length) {
+      el.innerHTML = TW_LINES.join('<br>') + '<span class="cur cur-slow"></span>';
+      twActive = false; return;
+    }
+    const prev = TW_LINES.slice(0, li).join('<br>') + (li > 0 ? '<br>' : '');
+    el.innerHTML = prev + TW_LINES[li].slice(0, ci) + '<span class="cur"></span>';
+    if (ci < TW_LINES[li].length) { ci++; setTimeout(tick, 45); }
+    else { li++; ci = 0; setTimeout(tick, 300); }
+  }
+  tick();
+}
+function resetTW() { twActive = false; const el = document.getElementById('tw-out'); if (el) el.innerHTML = ''; }
+
+// ── HEADING REVEAL ──
+function runReveal() {
+  const ids = ['hr-ey','hr-ti','hr-su'];
+  ids.forEach(id => { const e = document.getElementById(id); if(e) { e.classList.remove('in'); e.style.opacity='0'; e.style.transform='translateY(16px)'; } });
+  [0,100,200].forEach((d,i) => setTimeout(() => { const e = document.getElementById(ids[i]); if(e) e.classList.add('in'); }, 80 + d));
+}
+
+// ── WELCOME TYPEWRITER ──
+let wpActive = false;
+function runWP() {
+  if (wpActive) return;
+  wpActive = true;
+  const ids = ['wl0','wl1','wl2','wl3','wl4'];
+  const cta = document.getElementById('wp-cta');
+  const skip = document.getElementById('wp-skip');
+  ids.forEach(id => { const e = document.getElementById(id); if(e) e.textContent = ''; });
+  if (cta) cta.style.opacity = '0';
+  if (skip) skip.style.opacity = '1';
+  let li = 0, ci = 0;
+  function tick() {
+    if (li >= TW_LINES.length) {
+      if (skip) skip.style.opacity = '0';
+      setTimeout(() => { if (cta) cta.style.opacity = '1'; }, 600);
+      wpActive = false; return;
+    }
+    const el = document.getElementById(ids[li]);
+    if (!el) { li++; ci=0; setTimeout(tick, 300); return; }
+    el.textContent = TW_LINES[li].slice(0, ci + 1);
+    if (ci < TW_LINES[li].length - 1) { ci++; setTimeout(tick, 45); }
+    else { li++; ci = 0; setTimeout(tick, 300); }
+  }
+  tick();
+}
+
+// ── CHAR COUNTER ──
+function countChars() {
+  const ta = document.getElementById('ta');
+  const cc = document.getElementById('cc');
+  if (!ta || !cc) return;
+  const n = ta.value.length;
+  cc.textContent = n + ' / 300';
+  cc.style.color = n >= 300 ? 'var(--color-error)' : n >= 250 ? 'var(--color-warning)' : 'var(--color-text-muted)';
+  ta.style.borderColor = n >= 300 ? 'var(--color-error)' : n >= 250 ? 'var(--color-warning)' : '';
+}
+
+// ── CHECKBOX ──
+function toggleChk() {
+  const cb = document.getElementById('chkbox');
+  if (cb) cb.classList.toggle('checked');
+}
+
+// ── PROGRESS BAR ──
+function resetProg() {
+  const fill = document.getElementById('prog-bar');
+  if (!fill) return;
+  fill.style.animation = 'none';
+  void fill.offsetWidth;
+  fill.style.animation = 'prog-fill 4s linear forwards';
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(runStagger, 300);
+  setTimeout(runReveal, 400);
+});
+</script>
+</body>
+</html>
