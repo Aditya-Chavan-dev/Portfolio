@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./LandingPage/landing-tokens.css";
 
 @theme {
   --color-obsidian: #050505;

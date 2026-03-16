@@ -1,0 +1,153 @@
+/* WelcomeDesktop — 3-row CSS grid, 100vh, centred dialogue */
+
+.page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--color-bg-primary);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(32px, 5vw, 64px);
+  transition: background-color 0.3s ease;
+}
+
+/* Noise grain overlay */
+.page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--noise-opacity, 0.04);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Row 1 — header: name+role left, toggle right */
+.header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.nameBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  color: var(--color-text-primary);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.role {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--color-text-secondary);
+  margin: 6px 0 0 0;
+}
+
+.toggleWrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+
+/* Row 2 — dialogue centred */
+.dialogueSection {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialogueLine {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  text-align: center;
+  margin: 0;
+  min-height: 1.6em; /* reserve space even when empty */
+}
+
+/* Blinking block cursor during typing — 530ms period */
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.cursor {
+  animation: cursorBlink 530ms step-end infinite;
+  color: var(--color-accent);
+}
+
+/* Row 3 — CTA and skip hint */
+.footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 400;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-primary);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.ctaVisible {
+  opacity: 1;
+}
+
+/* Slower blinking cursor after CTA — 800ms heartbeat */
+@keyframes ctaCursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.ctaCursor {
+  animation: ctaCursorBlink 800ms step-end infinite;
+  color: var(--color-accent);
+}
+
+.skipHint {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  transition: opacity 300ms ease;
+}
+
+.skipHintHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Fade-out transition for page exit */
+.fadeOut {
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
