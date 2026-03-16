@@ -10,17 +10,24 @@ const CTA_DELAY = 600;
 const SKIP_WINDOW = 600;     // ms window for double-tap skip (tighter than desktop)
 const FADE_DURATION = 500;
 
+// Build the full typewriter sequence: name → role → blank spacer → dialogue lines
+const allLines: string[] = [
+  content.name,
+  content.role,
+  '',               // visual spacer between identity and dialogue
+  ...content.dialogue,
+];
+
 export const WelcomeMobile: React.FC = () => {
   const navigate = useNavigate();
 
   // --- State ---
   const [lineTexts, setLineTexts] = useState<string[]>(() =>
-    content.dialogue.map(() => '')
+    allLines.map(() => '')
   );
   const [activeLine, setActiveLine] = useState(0);
   const [animDone, setAnimDone] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
-  const [skipHintVisible, setSkipHintVisible] = useState(true);
 
   // --- Refs ---
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -55,10 +62,9 @@ export const WelcomeMobile: React.FC = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (!mountedRef.current) return;
 
-    setLineTexts(content.dialogue.map((line: string) => line));
+    setLineTexts(allLines.map((line) => line));
     setActiveLine(-1);
     setAnimDone(true);
-    setSkipHintVisible(false);
     animDoneRef.current = true;
 
     timeoutRef.current = setTimeout(() => {
@@ -71,7 +77,24 @@ export const WelcomeMobile: React.FC = () => {
     if (!mountedRef.current) return;
 
     const lineIdx = activeLineRef.current;
-    const fullLine = content.dialogue[lineIdx];
+    const fullLine = allLines[lineIdx];
+
+    // Blank spacer line — skip immediately
+    if (fullLine === '') {
+      if (lineIdx < allLines.length - 1) {
+        timeoutRef.current = setTimeout(() => {
+          if (!mountedRef.current) return;
+          charIndexRef.current = 0;
+          const nextLine = lineIdx + 1;
+          activeLineRef.current = nextLine;
+          setActiveLine(nextLine);
+          timeoutRef.current = setTimeout(typeNextChar, CHAR_DELAY);
+        }, LINE_PAUSE);
+      } else {
+        completeAll();
+      }
+      return;
+    }
 
     if (charIndexRef.current < fullLine.length) {
       const nextChar = charIndexRef.current + 1;
@@ -84,7 +107,7 @@ export const WelcomeMobile: React.FC = () => {
       });
 
       timeoutRef.current = setTimeout(typeNextChar, CHAR_DELAY);
-    } else if (lineIdx < content.dialogue.length - 1) {
+    } else if (lineIdx < allLines.length - 1) {
       timeoutRef.current = setTimeout(() => {
         if (!mountedRef.current) return;
         charIndexRef.current = 0;
@@ -119,8 +142,7 @@ export const WelcomeMobile: React.FC = () => {
 
   // --- Touch handler: double-tap skip + tap continue ---
   const handleTap = useCallback((e: React.TouchEvent | React.MouseEvent) => {
-    // Ignore if the tap was on the theme toggle (stopPropagation handles most,
-    // but this is a safety check for event delegation)
+    // Ignore if the tap was on the theme toggle
     const target = e.target as HTMLElement;
     if (target.closest('button')) return;
 
@@ -144,6 +166,14 @@ export const WelcomeMobile: React.FC = () => {
     navigateToHub();
   }, [completeAll, navigateToHub]);
 
+  // Determine per-line CSS class
+  const getLineClass = (index: number): string => {
+    if (index === 0) return styles.nameLine;
+    if (index === 1) return styles.roleLine;
+    if (index === 2) return styles.spacerLine;
+    return styles.dialogueLine;
+  };
+
   return (
     <div
       ref={pageRef}
@@ -151,38 +181,35 @@ export const WelcomeMobile: React.FC = () => {
       onClick={handleTap}
       onTouchEnd={handleTap}
     >
-      {/* Row 1 — Toggle top-right, then name+role */}
-      <header className={styles.header}>
-        <div className={styles.toggleRow}>
-          <div className={styles.toggleWrap}>
-            <ThemeToggle />
-          </div>
-        </div>
-        <h1 className={styles.name}>{content.name}</h1>
-        <p className={styles.role}>{content.role}</p>
-      </header>
+      {/* Theme toggle — top right */}
+      <div className={styles.toggleWrap}>
+        <ThemeToggle />
+      </div>
 
-      {/* Row 2 — Dialogue centre */}
+      {/* All text — typewritten */}
       <section className={styles.dialogueSection} aria-live="polite">
-        {content.dialogue.map((_line: string, i: number) => (
-          <p key={i} className={styles.dialogueLine}>
+        {allLines.map((_line, i) => (
+          <p key={i} className={getLineClass(i)}>
             {lineTexts[i]}
-            {activeLine === i && (
+            {activeLine === i && allLines[i] !== '' && (
               <span className={styles.cursor}>▋</span>
             )}
           </p>
         ))}
       </section>
 
-      {/* Row 3 — CTA + skip hint */}
+      {/* Footer — one prompt at a time */}
       <footer className={styles.footer}>
-        <span className={`${styles.cta} ${ctaVisible ? styles.ctaVisible : ''}`}>
-          {content.cta.mobile}
-          {ctaVisible && <span className={styles.ctaCursor}> ▋</span>}
-        </span>
-        <span className={`${styles.skipHint} ${!skipHintVisible ? styles.skipHintHidden : ''}`}>
-          {content.skip_hint.mobile}
-        </span>
+        {!animDone ? (
+          <span className={styles.hint}>
+            {content.skip_hint.mobile}
+          </span>
+        ) : (
+          <span className={`${styles.cta} ${ctaVisible ? styles.ctaVisible : ''}`}>
+            {content.cta.mobile}
+            {ctaVisible && <span className={styles.ctaCursor}> ▋</span>}
+          </span>
+        )}
       </footer>
     </div>
   );

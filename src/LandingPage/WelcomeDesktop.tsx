@@ -10,17 +10,24 @@ const CTA_DELAY = 600;       // ms after animation completes before showing CTA
 const SKIP_WINDOW = 800;     // ms window for double-Enter skip
 const FADE_DURATION = 500;   // ms page fade-out before navigation
 
+// Build the full typewriter sequence: name → role → blank spacer → dialogue lines
+const allLines: string[] = [
+  content.name,
+  content.role,
+  '',               // visual spacer between identity and dialogue
+  ...content.dialogue,
+];
+
 export const WelcomeDesktop: React.FC = () => {
   const navigate = useNavigate();
 
   // --- State ---
   const [lineTexts, setLineTexts] = useState<string[]>(() =>
-    content.dialogue.map(() => '')
+    allLines.map(() => '')
   );
   const [activeLine, setActiveLine] = useState(0);
   const [animDone, setAnimDone] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
-  const [skipHintVisible, setSkipHintVisible] = useState(true);
 
   // --- Refs ---
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -57,10 +64,9 @@ export const WelcomeDesktop: React.FC = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (!mountedRef.current) return;
 
-    setLineTexts(content.dialogue.map((line: string) => line));
+    setLineTexts(allLines.map((line) => line));
     setActiveLine(-1);
     setAnimDone(true);
-    setSkipHintVisible(false);
     animDoneRef.current = true;
 
     // Show CTA after delay
@@ -74,7 +80,24 @@ export const WelcomeDesktop: React.FC = () => {
     if (!mountedRef.current) return;
 
     const lineIdx = activeLineRef.current;
-    const fullLine = content.dialogue[lineIdx];
+    const fullLine = allLines[lineIdx];
+
+    // Blank spacer line — skip immediately
+    if (fullLine === '') {
+      if (lineIdx < allLines.length - 1) {
+        timeoutRef.current = setTimeout(() => {
+          if (!mountedRef.current) return;
+          charIndexRef.current = 0;
+          const nextLine = lineIdx + 1;
+          activeLineRef.current = nextLine;
+          setActiveLine(nextLine);
+          timeoutRef.current = setTimeout(typeNextChar, CHAR_DELAY);
+        }, LINE_PAUSE);
+      } else {
+        completeAll();
+      }
+      return;
+    }
 
     if (charIndexRef.current < fullLine.length) {
       // Type next character
@@ -88,7 +111,7 @@ export const WelcomeDesktop: React.FC = () => {
       });
 
       timeoutRef.current = setTimeout(typeNextChar, CHAR_DELAY);
-    } else if (lineIdx < content.dialogue.length - 1) {
+    } else if (lineIdx < allLines.length - 1) {
       // Line complete — pause then start next line
       timeoutRef.current = setTimeout(() => {
         if (!mountedRef.current) return;
@@ -152,40 +175,45 @@ export const WelcomeDesktop: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [completeAll, navigateToHub]);
 
+  // Determine per-line CSS class
+  const getLineClass = (index: number): string => {
+    if (index === 0) return styles.nameLine;
+    if (index === 1) return styles.roleLine;
+    if (index === 2) return styles.spacerLine;
+    return styles.dialogueLine;
+  };
+
   return (
     <div ref={pageRef} className={styles.page}>
-      {/* Row 1 — Header: name+role left, toggle right */}
-      <header className={styles.header}>
-        <div className={styles.nameBlock}>
-          <h1 className={styles.name}>{content.name}</h1>
-          <p className={styles.role}>{content.role}</p>
-        </div>
-        <div className={styles.toggleWrap}>
-          <ThemeToggle />
-        </div>
-      </header>
+      {/* Theme toggle — top right */}
+      <div className={styles.toggleWrap}>
+        <ThemeToggle />
+      </div>
 
-      {/* Row 2 — Dialogue centre */}
+      {/* All text — typewritten */}
       <section className={styles.dialogueSection} aria-live="polite">
-        {content.dialogue.map((_line: string, i: number) => (
-          <p key={i} className={styles.dialogueLine}>
+        {allLines.map((_line, i) => (
+          <p key={i} className={getLineClass(i)}>
             {lineTexts[i]}
-            {activeLine === i && (
+            {activeLine === i && allLines[i] !== '' && (
               <span className={styles.cursor}>▋</span>
             )}
           </p>
         ))}
       </section>
 
-      {/* Row 3 — CTA + skip hint */}
+      {/* Footer — one prompt at a time */}
       <footer className={styles.footer}>
-        <span className={`${styles.cta} ${ctaVisible ? styles.ctaVisible : ''}`}>
-          {content.cta.desktop}
-          {ctaVisible && <span className={styles.ctaCursor}> ▋</span>}
-        </span>
-        <span className={`${styles.skipHint} ${!skipHintVisible ? styles.skipHintHidden : ''}`}>
-          {content.skip_hint.desktop}
-        </span>
+        {!animDone ? (
+          <span className={styles.hint}>
+            {content.skip_hint.desktop}
+          </span>
+        ) : (
+          <span className={`${styles.cta} ${ctaVisible ? styles.ctaVisible : ''}`}>
+            {content.cta.desktop}
+            {ctaVisible && <span className={styles.ctaCursor}> ▋</span>}
+          </span>
+        )}
       </footer>
     </div>
   );
