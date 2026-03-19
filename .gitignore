@@ -44,6 +44,9 @@ serviceAccountKey.json
 # Dump
 dump/
 
+# Learning documentation (personal reference only)
+LEARNING_DOCS/
+
 # Agent Instruction Files
 Claude.md
 Gemini.md
