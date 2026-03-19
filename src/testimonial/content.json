@@ -1,0 +1,13 @@
+{
+  "pageTitle": "Leave a Testimonial",
+  "pageSubtitle": "Share your experience working with me",
+  "namePlaceholder": "Your name",
+  "rolePlaceholder": "Your role or company",
+  "messagePlaceholder": "Write your testimonial (max 300 characters)…",
+  "emailPlaceholder": "Your email (optional, never displayed)",
+  "consentLabel": "I give permission for this testimonial to be displayed publicly on the portfolio.",
+  "submitLabel": "Submit Testimonial",
+  "successMessage": "Thank you! This form is a prototype — submissions are not stored yet.",
+  "prototypeNotice": "This form is a prototype. Submissions will be enabled in a future phase.",
+  "backLabel": "← Back to Hub"
+}

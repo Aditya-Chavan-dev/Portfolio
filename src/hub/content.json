@@ -1,0 +1,16 @@
+{
+  "ownerName": "Aditya Chavan",
+  "ownerRole": "Developer",
+  "journeyButtonLabel": "Immersive Journey →",
+  "journeyButtonSubtext": "Coming soon",
+  "quickAccessLabel": "Quick Access",
+  "quickAccessItems": [
+    { "title": "Projects",    "description": "What I've built",   "route": "/projects"   },
+    { "title": "Skills",      "description": "What I work with",  "route": "/skills"     },
+    { "title": "Experience",  "description": "Where I've worked", "route": "/experience" },
+    { "title": "About",       "description": "Who I am",          "route": "/about"      }
+  ],
+  "testimonialsLabel": "Testimonials",
+  "testimonialsEmptyState": "Testimonials will appear here once approved",
+  "leaveTestimonialLabel": "Leave a testimonial →"
+}

@@ -1,0 +1,22 @@
+{
+  "pageTitle": "Skills",
+  "pageSubtitle": "What I work with",
+  "emptyState": "Skills will appear here.",
+  "categories": [
+    {
+      "name": "Frontend",
+      "items": [
+        { "name": "React",        "level": "Advanced"      },
+        { "name": "TypeScript",   "level": "Intermediate"  },
+        { "name": "Tailwind CSS", "level": "Advanced"      }
+      ]
+    },
+    {
+      "name": "Backend",
+      "items": [
+        { "name": "Node.js",  "level": "Intermediate" },
+        { "name": "Firebase", "level": "Intermediate" }
+      ]
+    }
+  ]
+}

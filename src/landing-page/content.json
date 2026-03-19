@@ -1,0 +1,15 @@
+{
+  "name": "Aditya Chavan",
+  "role": "Developer",
+  "dialogue": [
+    "Not your average developer.",
+    "I build things that work,",
+    "look good,",
+    "and scale.",
+    "Welcome."
+  ],
+  "ctaDesktop": "Press any key to continue",
+  "ctaMobile": "Tap to continue",
+  "skipHintDesktop": "Press Enter twice to skip",
+  "skipHintMobile": "Double tap to skip"
+}
