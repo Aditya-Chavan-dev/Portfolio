@@ -7,3 +7,9 @@ export interface WelcomeContent {
   skipHintDesktop:  string
   skipHintMobile:   string
 }
+
+export interface WelcomeConfig {
+  readonly name: string
+  readonly dialogue: string[]
+  readonly highlightIndex: number | number[]
+}

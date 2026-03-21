@@ -4,21 +4,20 @@ import type { PublicTestimonial } from '@/shared/testimonial.types'
 function TestimonialCard({ testimonial }: { readonly testimonial: PublicTestimonial }) {
   return (
     <article className="
-      p-4 rounded-xl shrink-0
-      border border-gray-200 dark:border-gray-800
-      bg-white dark:bg-gray-900
+      p-5 rounded-2xl shrink-0
+      glass-card
       w-72 md:w-auto
     ">
       <blockquote>
-        <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3 leading-relaxed">
+        <p className="text-sm text-theme-secondary line-clamp-3 leading-relaxed">
           {testimonial.message}
         </p>
       </blockquote>
       <footer className="mt-3">
-        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+        <p className="text-sm font-semibold text-theme-primary">
           {testimonial.name}
         </p>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-theme-secondary">
           {testimonial.relationship}
         </p>
       </footer>
@@ -30,10 +29,10 @@ function PlaceholderCard({ text }: { readonly text: string }) {
   return (
     <div className="
       p-4 rounded-xl shrink-0
-      border border-dashed border-gray-300 dark:border-gray-700
+      border border-dashed border-theme-dashed
       w-72 md:w-auto
     ">
-      <p className="text-sm text-gray-400 dark:text-gray-600">{text}</p>
+      <p className="text-sm text-theme-muted">{text}</p>
     </div>
   )
 }
@@ -48,7 +47,7 @@ export function TestimonialsStrip({ emptyStateText }: TestimonialsStripProps) {
   if (loading) {
     return (
       <div
-        className="h-32 rounded-xl bg-gray-100 dark:bg-gray-900 animate-pulse"
+        className="h-32 skeleton"
         role="status"
         aria-live="polite"
       >

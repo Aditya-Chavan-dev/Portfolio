@@ -1,23 +1,41 @@
 import { useState, useEffect } from 'react'
-import { getWelcomeContent } from '@/shared/firestore.service'
-import type { WelcomeContent } from './landing.types'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { db } from '@/shared/firebase'
+import type { WelcomeConfig } from './landing.types'
 import fallbackContent from './content.json'
 
 export function useWelcomeContent() {
-  const [content, setContent] = useState<WelcomeContent | null>(null)
+  const [content, setContent] = useState<WelcomeConfig | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    let cancelled = false
-    getWelcomeContent()
-      .then((data) => {
-        if (!cancelled) setContent(data ?? (fallbackContent as WelcomeContent))
-      })
-      .catch(() => {
-        if (!cancelled) setContent(fallbackContent as WelcomeContent)
-      })
-      .finally(() => { if (!cancelled) setLoading(false) })
-    return () => { cancelled = true }
+    const docRef = doc(db, 'adminConfig', 'welcomeScreen')
+    
+    // Safety timer to force fallback if onSnapshot hangs/crashes (e.g., due to Adblocker)
+    const timeoutTimer = setTimeout(() => {
+      setContent(fallbackContent as unknown as WelcomeConfig)
+      setLoading(false)
+    }, 2500)
+
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      clearTimeout(timeoutTimer)
+      if (docSnap.exists()) {
+         setContent(docSnap.data() as WelcomeConfig)
+      } else {
+         setContent(fallbackContent as unknown as WelcomeConfig)
+      }
+      setLoading(false)
+    }, (error) => {
+      clearTimeout(timeoutTimer)
+      console.error('Welcome screen content subscription error:', error)
+      setContent(fallbackContent as unknown as WelcomeConfig)
+      setLoading(false)
+    })
+
+    return () => {
+      clearTimeout(timeoutTimer)
+      unsubscribe()
+    }
   }, [])
 
   return { content, loading } as const

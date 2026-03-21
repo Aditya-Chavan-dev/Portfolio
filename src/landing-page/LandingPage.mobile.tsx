@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import { ThemeToggle } from '@/shared/ThemeToggle'
 import { WelcomeDialogue } from './WelcomeDialogue'
-import type { WelcomeContent } from './landing.types'
+import type { WelcomeConfig } from './landing.types'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface Props {
-  readonly content:        WelcomeContent
+  readonly content:        WelcomeConfig
   readonly showCTA:        boolean
   readonly showSkipHint:   boolean
   readonly skipAnimation:  boolean
@@ -23,56 +23,57 @@ export function LandingPageMobile({
   return (
     <div
       onClick={() => showCTA && navigate('/hub')}
-      className="min-h-dvh bg-white dark:bg-gray-950 flex flex-col select-none cursor-pointer"
+      className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center select-none cursor-pointer overflow-y-auto py-[48px] relative px-8"
     >
-      {/* Top bar — toggle right-aligned */}
-      <header className="flex justify-end px-6 pt-8">
-        <ThemeToggle />
-      </header>
-
-      {/* Name + role */}
-      <div className="px-6 pt-8">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-          {content.name}
-        </h1>
-        <p className="text-base text-gray-500 dark:text-gray-400 mt-1">
-          {content.role}
-        </p>
-      </div>
-
-      {/* Dialogue */}
-      <main className="flex-1 flex flex-col justify-center px-6 py-8">
+      <div className="max-w-[320px] w-full flex flex-col items-center justify-center text-center">
+        
+        {/* 2. Dialogue */}
         <WelcomeDialogue
+          name={content.name}
           lines={content.dialogue}
           skip={skipAnimation}
           onComplete={onDialogueComplete}
+          highlightIndex={content.highlightIndex}
         />
-      </main>
 
-      {/* CTA — thumb-reach bottom */}
-      <footer className="px-6 pb-10 space-y-2">
-        {showCTA && (
-          <button
-            type="button"
-            onClick={() => navigate('/hub')}
-            className="
-              font-mono text-sm
-              text-gray-500 dark:text-gray-400
-              hover:text-gray-900 dark:hover:text-gray-100
-              transition-colors duration-150
-              min-h-[44px] flex items-center
-            "
-          >
-            {content.ctaMobile}
-            <span aria-hidden="true" className="ml-0.5">▋</span>
-          </button>
-        )}
-        {showSkipHint && (
-          <p className="font-mono text-xs text-gray-400 dark:text-gray-600">
-            {content.skipHintMobile}
-          </p>
-        )}
-      </footer>
+        {/* 3. Prompts */}
+        <div className="mt-[42px] flex flex-col items-center justify-center h-[50px] relative">
+          <AnimatePresence mode="wait">
+            {showCTA ? (
+              <motion.p
+                key="continue"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="font-['JetBrains_Mono',monospace] text-[12px] text-[#555555] tracking-[0.02em] flex items-center"
+              >
+                Tap to continue 
+                <motion.span 
+                  animate={{ opacity: [1, 0.3, 1] }} 
+                  transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+                  className="ml-1"
+                >
+                  ▋
+                </motion.span>
+              </motion.p>
+            ) : showSkipHint ? (
+              <motion.p
+                key="skip"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.4 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6 }}
+                className="font-['JetBrains_Mono',monospace] text-[12px] text-[#555555] tracking-[0.02em]"
+              >
+                Tap twice to skip
+              </motion.p>
+            ) : null}
+          </AnimatePresence>
+        </div>
+
+      </div>
     </div>
   )
 }
+

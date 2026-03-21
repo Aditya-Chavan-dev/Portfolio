@@ -30,17 +30,17 @@ export default function NotFound() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-theme-primary flex items-center justify-center p-6">
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{content.heading}</h1>
-        <p className="text-gray-500 dark:text-gray-400 mb-8">{content.body}</p>
+        <h1 className="text-4xl font-bold text-theme-primary mb-2">{content.heading}</h1>
+        <p className="text-theme-secondary mb-8">{content.body}</p>
         <button
           type="button"
           onClick={() => navigate('/hub')}
           className="
             text-sm
-            text-gray-500 dark:text-gray-400
-            hover:text-gray-900 dark:hover:text-gray-100
+            text-theme-secondary
+            hover:text-theme-primary
             transition-colors duration-150
           "
         >

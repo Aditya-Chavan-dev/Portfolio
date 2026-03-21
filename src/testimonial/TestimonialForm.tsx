@@ -19,9 +19,9 @@ export function TestimonialForm({
 }: Props) {
   const inputClasses = `
     w-full px-4 py-3 rounded-xl text-sm
-    border border-gray-200 dark:border-gray-800
-    bg-white dark:bg-gray-900
-    text-gray-900 dark:text-gray-100
+    border border-theme-default
+    bg-theme-secondary
+    text-theme-primary
     placeholder-gray-400 dark:placeholder-gray-600
     focus-visible:ring-2 focus-visible:ring-gray-400
     transition-colors duration-150
@@ -40,8 +40,8 @@ export function TestimonialForm({
       <input type="email" aria-label={emailPlaceholder}   placeholder={emailPlaceholder}   disabled className={inputClasses} />
 
       <label className="flex items-start gap-3 select-none">
-        <input type="checkbox" disabled className="mt-1 accent-gray-700" />
-        <span className="text-xs text-gray-500 dark:text-gray-400 leading-snug">{consentLabel}</span>
+        <input type="checkbox" disabled className="mt-1 accent-theme-primary" />
+        <span className="text-xs text-theme-secondary leading-snug">{consentLabel}</span>
       </label>
 
       <button
@@ -50,14 +50,14 @@ export function TestimonialForm({
         className="
           w-full py-3 rounded-xl text-sm font-semibold
           bg-gray-200 dark:bg-gray-800
-          text-gray-500 dark:text-gray-400
+          text-theme-secondary
           cursor-not-allowed
         "
       >
         {submitLabel}
       </button>
 
-      <p className="text-xs text-center text-gray-400 dark:text-gray-600 pt-2">
+      <p className="text-xs text-center text-theme-muted pt-2">
         {prototypeNotice}
       </p>
     </form>

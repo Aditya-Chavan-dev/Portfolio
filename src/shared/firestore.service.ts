@@ -10,7 +10,7 @@ import {
   type Unsubscribe,
 } from 'firebase/firestore'
 import { db } from '@/shared/firebase'
-import type { WelcomeContent }         from '@/landing-page/landing.types'
+import type { WelcomeContent, WelcomeConfig } from '@/landing-page/landing.types'
 import type { HubContent }             from '@/hub/hub.types'
 import type { ProjectsContent }        from '@/quick-access/projects/projects.types'
 import type { SkillsContent }          from '@/quick-access/skills/skills.types'
@@ -38,9 +38,20 @@ async function getLiveDoc<T>(page: string): Promise<T | null> {
   return snap.exists() ? (snap.data() as T) : null
 }
 
+async function getConfigDoc<T>(config: string): Promise<T | null> {
+  const snap = await withTimeout(getDoc(doc(db, 'adminConfig', config)))
+  return snap.exists() ? (snap.data() as T) : null
+}
+
 // ─── Page content reads — each maps to one Firestore document ─────────────
 
 export const getWelcomeContent         = (): Promise<WelcomeContent | null>         => getLiveDoc('welcome')
+export const getWelcomeConfig          = (): Promise<WelcomeConfig | null>         => getConfigDoc('welcomeScreen')
+
+export async function updateWelcomeConfig(data: WelcomeConfig): Promise<void> {
+  await setDoc(doc(db, 'adminConfig', 'welcomeScreen'), data)
+}
+
 export const getHubContent             = (): Promise<HubContent | null>             => getLiveDoc('hub')
 export const getProjectsContent        = (): Promise<ProjectsContent | null>        => getLiveDoc('projects')
 export const getSkillsContent          = (): Promise<SkillsContent | null>          => getLiveDoc('skills')

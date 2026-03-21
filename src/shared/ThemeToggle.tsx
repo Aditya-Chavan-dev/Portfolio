@@ -12,8 +12,8 @@ export function ThemeToggle() {
       className="
         inline-flex items-center justify-center
         w-9 h-9 rounded-md
-        text-gray-600 dark:text-gray-300
-        hover:bg-gray-100 dark:hover:bg-gray-800
+        text-theme-secondary
+        hover:bg-theme-secondary
         transition-colors duration-150
       "
     >

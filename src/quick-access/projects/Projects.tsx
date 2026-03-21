@@ -15,9 +15,9 @@ export default function Projects() {
 
   if (contentLoading || !content) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center" role="status" aria-live="polite">
+      <div className="min-h-screen bg-theme-primary flex items-center justify-center" role="status" aria-live="polite">
         <span className="sr-only">Loading projects…</span>
-        <div className="w-6 h-6 border-2 border-gray-300 dark:border-gray-700 border-t-gray-600 dark:border-t-gray-400 rounded-full animate-spin" aria-hidden="true" />
+        <div className="w-6 h-6 border-2 border-theme-default border-t-theme-primary rounded-full animate-spin" aria-hidden="true" />
       </div>
     )
   }

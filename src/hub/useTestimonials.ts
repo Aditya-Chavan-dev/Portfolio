@@ -7,11 +7,27 @@ export function useTestimonials() {
   const [loading,      setLoading     ] = useState(true)
 
   useEffect(() => {
-    const unsubscribe = subscribeToApprovedTestimonials((items) => {
-      setTestimonials(items)
+    const timeoutTimer = setTimeout(() => {
       setLoading(false)
-    })
-    return () => unsubscribe()
+    }, 2500)
+
+    const unsubscribe = subscribeToApprovedTestimonials(
+      (items) => {
+        clearTimeout(timeoutTimer)
+        setTestimonials(items)
+        setLoading(false)
+      },
+      (error) => {
+        clearTimeout(timeoutTimer)
+        console.error('Testimonials loading stream error:', error)
+        setLoading(false)
+      }
+    )
+
+    return () => {
+      clearTimeout(timeoutTimer)
+      unsubscribe()
+    }
   }, [])
 
   return { testimonials, loading } as const

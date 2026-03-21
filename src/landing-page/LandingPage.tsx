@@ -61,12 +61,12 @@ export default function LandingPage() {
 
   const handleDialogueComplete = useCallback(() => {
     sessionStorage.setItem(SESSION_KEY, 'true')
-    ctaTimeoutRef.current = window.setTimeout(() => setShowCTA(true), 600)
+    ctaTimeoutRef.current = window.setTimeout(() => setShowCTA(true), 2000)
   }, [])
 
   if (loading || !content) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-950" role="status" aria-live="polite">
+      <div className="min-h-screen bg-theme-primary" role="status" aria-live="polite">
         <span className="sr-only">Loading…</span>
       </div>
     )

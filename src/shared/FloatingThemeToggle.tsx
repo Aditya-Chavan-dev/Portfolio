@@ -1,0 +1,38 @@
+import { useThemeContext } from '@/shared/ThemeProvider'
+
+/**
+ * Persistent floating theme toggle.
+ * Rendered once in App.tsx — visible on every page, every scroll position.
+ * Position: fixed bottom-right, above mobile nav bar.
+ * z-index: 9999 — floats above all content including overlays.
+ */
+export function FloatingThemeToggle() {
+  const { theme, toggle } = useThemeContext()
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-pressed={theme === 'dark'}
+      className="
+        fixed z-[9999]
+        bottom-6 right-6
+        md:bottom-6 md:right-6
+        bottom-20 right-4
+        w-11 h-11 rounded-full
+        flex items-center justify-center
+        bg-theme-secondary
+        border border-theme-default
+        shadow-md
+        hover:scale-105
+        transition-all duration-150
+        text-theme-secondary
+      "
+    >
+      <span aria-hidden="true" className="text-base leading-none select-none">
+        {theme === 'dark' ? '☀' : '☾'}
+      </span>
+    </button>
+  )
+}

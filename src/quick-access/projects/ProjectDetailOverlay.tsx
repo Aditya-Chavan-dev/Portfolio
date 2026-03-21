@@ -73,14 +73,14 @@ export function ProjectDetailOverlay({ project, onClose }: Props) {
 
       <div className="
         relative z-10
-        bg-white dark:bg-gray-900
+        bg-theme-secondary
         rounded-2xl shadow-2xl
         w-full max-w-2xl max-h-[90vh]
         overflow-y-auto
         p-8
       ">
         <div className="flex justify-between items-start mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 pr-8 leading-tight">
+          <h2 className="text-2xl font-bold text-theme-primary pr-8 leading-tight">
             {project.name}
           </h2>
           <button
@@ -90,8 +90,8 @@ export function ProjectDetailOverlay({ project, onClose }: Props) {
             aria-label="Close"
             className="
               shrink-0 w-8 h-8 flex items-center justify-center
-              text-gray-400 hover:text-gray-900 dark:hover:text-gray-100
-              rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800
+              text-theme-muted hover:text-theme-primary
+              rounded-lg hover:bg-theme-default
               transition-colors duration-150 text-xl leading-none
             "
           >
@@ -99,26 +99,26 @@ export function ProjectDetailOverlay({ project, onClose }: Props) {
           </button>
         </div>
 
-        <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+        <p className="text-theme-secondary leading-relaxed mb-6">
           {project.description}
         </p>
 
         {project.problem && (
           <div className="mb-5">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">Problem</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{project.problem}</p>
+            <p className="text-sm font-semibold text-theme-primary mb-1">Problem</p>
+            <p className="text-sm text-theme-secondary leading-relaxed">{project.problem}</p>
           </div>
         )}
         {project.approach && (
           <div className="mb-5">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">Approach</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{project.approach}</p>
+            <p className="text-sm font-semibold text-theme-primary mb-1">Approach</p>
+            <p className="text-sm text-theme-secondary leading-relaxed">{project.approach}</p>
           </div>
         )}
         {project.outcome && (
           <div className="mb-5">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">Outcome</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{project.outcome}</p>
+            <p className="text-sm font-semibold text-theme-primary mb-1">Outcome</p>
+            <p className="text-sm text-theme-secondary leading-relaxed">{project.outcome}</p>
           </div>
         )}
 
@@ -126,7 +126,7 @@ export function ProjectDetailOverlay({ project, onClose }: Props) {
           <ul aria-label="Tech tags" className="flex flex-wrap gap-2 mb-6">
             {project.tags.map((tag) => (
               <li key={tag}>
-                <span className="text-xs px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                <span className="text-xs px-2 py-1 rounded-md tag">
                   {tag}
                 </span>
               </li>
@@ -142,9 +142,9 @@ export function ProjectDetailOverlay({ project, onClose }: Props) {
               rel="noopener noreferrer"
               className="
                 text-sm px-4 py-2 rounded-lg
-                border border-gray-200 dark:border-gray-700
-                text-gray-700 dark:text-gray-300
-                hover:bg-gray-50 dark:hover:bg-gray-800
+                border border-theme-default
+                text-theme-secondary
+                hover:bg-theme-secondary
                 transition-colors duration-150
               "
             >

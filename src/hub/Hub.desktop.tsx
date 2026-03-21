@@ -3,6 +3,7 @@ import { ThemeToggle } from '@/shared/ThemeToggle'
 import { QuickAccessGrid } from './QuickAccessGrid'
 import { TestimonialsStrip } from './TestimonialsStrip'
 import type { HubContent } from './hub.types'
+import { motion } from 'framer-motion'
 
 interface Props {
   readonly content: HubContent
@@ -12,28 +13,38 @@ export function HubDesktop({ content }: Props) {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="min-h-screen bg-ambient-light dark:bg-ambient-dark flex flex-col antialiased overflow-hidden">
       {/* ── Header ─────────────────────────────────────────────── */}
-      <header className="flex items-center justify-between px-8 py-6 border-b border-gray-100 dark:border-gray-900">
+      <motion.header 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="flex items-center justify-between px-10 py-6 border-b border-theme-muted bg-theme-nav backdrop-blur-md sticky top-0 z-10"
+      >
         <div className="flex items-center gap-4">
           <div
-            className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800 shrink-0"
+            className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-md"
             aria-hidden="true"
           />
           <div>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className="text-xl font-bold text-theme-primary tracking-tight">
               {content.ownerName}
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm font-medium text-theme-secondary">
               {content.ownerRole}
             </p>
           </div>
         </div>
         <ThemeToggle />
-      </header>
+      </motion.header>
 
       {/* ── Body: two-column ───────────────────────────────────── */}
-      <main className="flex gap-8 p-8">
+      <motion.main 
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+        className="flex gap-8 p-10 max-w-7xl mx-auto w-full flex-1"
+      >
         {/* Left (60%) */}
         <div className="flex-1 space-y-6">
           <button
@@ -42,14 +53,13 @@ export function HubDesktop({ content }: Props) {
             aria-disabled="true"
             className="
               w-full p-5 text-left rounded-xl
-              border border-gray-200 dark:border-gray-800
-              opacity-50 cursor-not-allowed
+              glass-card opacity-40 cursor-not-allowed
             "
           >
-            <p className="font-semibold text-gray-900 dark:text-gray-100">
+            <p className="font-semibold text-theme-primary">
               {content.journeyButtonLabel}
             </p>
-            <p className="text-sm text-gray-400 dark:text-gray-600 mt-1">
+            <p className="text-sm text-theme-muted mt-1">
               {content.journeyButtonSubtext}
             </p>
           </button>
@@ -62,7 +72,7 @@ export function HubDesktop({ content }: Props) {
 
         {/* Right (40%) */}
         <aside className="w-80 space-y-4 shrink-0">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          <p className="text-sm font-medium text-theme-secondary">
             {content.testimonialsLabel}
           </p>
           <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
@@ -71,15 +81,15 @@ export function HubDesktop({ content }: Props) {
             onClick={() => navigate('/testimonial')}
             className="
               w-full text-left text-sm
-              text-gray-500 dark:text-gray-400
-              hover:text-gray-900 dark:hover:text-gray-100
+              text-theme-secondary
+              hover:text-theme-primary
               transition-colors duration-150
             "
           >
             {content.leaveTestimonialLabel}
           </button>
         </aside>
-      </main>
+      </motion.main>
     </div>
   )
 }

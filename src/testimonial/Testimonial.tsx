@@ -25,32 +25,32 @@ export default function Testimonial() {
 
   if (loading || !content) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center" role="status" aria-live="polite">
+      <div className="min-h-screen bg-theme-primary flex items-center justify-center" role="status" aria-live="polite">
         <span className="sr-only">Loading…</span>
-        <div className="w-6 h-6 border-2 border-gray-300 dark:border-gray-700 border-t-gray-600 dark:border-t-gray-400 rounded-full animate-spin" aria-hidden="true" />
+        <div className="w-6 h-6 border-2 border-theme-default border-t-theme-primary rounded-full animate-spin" aria-hidden="true" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-theme-primary flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <button
           type="button"
           onClick={() => navigate('/hub')}
           className="
-            text-sm text-gray-400 dark:text-gray-500
-            hover:text-gray-900 dark:hover:text-gray-100
+            text-sm text-theme-muted
+            hover:text-theme-primary
             transition-colors duration-150 mb-8
           "
         >
           {content.backLabel}
         </button>
 
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 tracking-tight">
+        <h1 className="text-2xl font-bold text-theme-primary mb-2 tracking-tight">
           {content.pageTitle}
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+        <p className="text-sm text-theme-secondary mb-8">
           {content.pageSubtitle}
         </p>
 

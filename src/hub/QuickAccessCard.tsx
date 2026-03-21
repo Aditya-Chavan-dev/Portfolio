@@ -14,19 +14,14 @@ export function QuickAccessCard({ title, description, route }: QuickAccessCardPr
       type="button"
       onClick={() => navigate(route)}
       className="
-        w-full p-5 text-left rounded-xl
-        border border-gray-200 dark:border-gray-800
-        bg-white dark:bg-gray-900
-        hover:border-gray-400 dark:hover:border-gray-600
-        hover:shadow-sm
-        transition-all duration-150
-        focus-visible:ring-2 focus-visible:ring-gray-400
+        w-full p-6 text-left rounded-2xl
+        glass-card premium-hover cursor-pointer
       "
     >
-      <p className="font-semibold text-gray-900 dark:text-gray-100 leading-snug">
+      <p className="font-bold text-lg text-theme-primary leading-snug tracking-tight">
         {title}
       </p>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-snug">
+      <p className="text-sm font-medium text-theme-secondary mt-1.5 leading-relaxed">
         {description}
       </p>
     </button>

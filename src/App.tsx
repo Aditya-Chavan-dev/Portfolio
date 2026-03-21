@@ -1,6 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from '@/shared/ThemeProvider'
 import { ProtectedRoute } from '@/shared/ProtectedRoute'
+import { FloatingThemeToggle } from '@/shared/FloatingThemeToggle'
 
 import LandingPage      from '@/landing-page/LandingPage'
 import Hub              from '@/hub/Hub'
@@ -14,34 +16,54 @@ import NotFound         from '@/not-found/NotFound'
 import AdminLogin       from '@/admin/AdminLogin'
 import AdminPanel       from '@/admin/AdminPanel'
 
-export default function App() {
+function PageTransition({ children }: { readonly children: React.ReactNode }) {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <Routes>
-          {/* ── Public routes ─────────────────────────────────── */}
-          <Route path="/"           element={<LandingPage />}      />
-          <Route path="/hub"        element={<Hub />}              />
-          <Route path="/journey"    element={<ImmersiveJourney />} />
-          <Route path="/projects"   element={<Projects />}         />
-          <Route path="/skills"     element={<Skills />}           />
-          <Route path="/experience" element={<Experience />}       />
-          <Route path="/about"      element={<About />}            />
-          <Route path="/testimonial" element={<Testimonial />}     />
-          <Route path="/404"        element={<NotFound />}         />
+    <motion.div
+      initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+      animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+      exit={{ opacity: 0, scale: 1.02, filter: 'blur(4px)' }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="w-full min-h-screen"
+    >
+      {children}
+    </motion.div>
+  )
+}
 
-          {/* ── Admin routes — covert, never linked publicly ─── */}
-          <Route path="/amgl-3-10"  element={<AdminLogin />} />
+export default function App() {
+  const location = useLocation()
+  const isWelcomeScreen = location.pathname === '/'
+
+  return (
+    <ThemeProvider>
+      {!isWelcomeScreen && <FloatingThemeToggle />}
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          {/* ── Public routes ─────────────────────────────────── */}
+          <Route path="/"           element={<PageTransition><LandingPage /></PageTransition>}      />
+          <Route path="/hub"        element={<PageTransition><Hub /></PageTransition>}              />
+          <Route path="/journey"    element={<PageTransition><ImmersiveJourney /></PageTransition>} />
+          <Route path="/projects"   element={<PageTransition><Projects /></PageTransition>}         />
+          <Route path="/skills"     element={<PageTransition><Skills /></PageTransition>}           />
+          <Route path="/experience" element={<PageTransition><Experience /></PageTransition>}       />
+          <Route path="/about"      element={<PageTransition><About /></PageTransition>}            />
+          <Route path="/testimonial" element={<PageTransition><Testimonial /></PageTransition>}     />
+          <Route path="/404"        element={<PageTransition><NotFound /></PageTransition>}         />
+
+          {/* ── Admin routes ─────────────────────────────────── */}
+          <Route path="/amgl-3-10"  element={<PageTransition><AdminLogin /></PageTransition>} />
           <Route path="/amgl-panel" element={
-            <ProtectedRoute>
-              <AdminPanel />
-            </ProtectedRoute>
+            <PageTransition>
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            </PageTransition>
           } />
 
-          {/* ── Catch-all — always /404, never / ─────────────── */}
+          {/* ── Catch-all ────────────────────────────────────── */}
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
-      </ThemeProvider>
-    </BrowserRouter>
+      </AnimatePresence>
+    </ThemeProvider>
   )
 }
