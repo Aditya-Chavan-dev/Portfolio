@@ -8,7 +8,7 @@
     "This one skips that part.",
     "",
     "It's not how I code underneath —",
-    "it's how I think that defines me.",
+    "but how I think that defines me.",
     "",
     "One vision. One developer. AI as the instrument.",
     "A live system built to a standard",
@@ -17,7 +17,10 @@
     "You're already reading this far.",
     "That's a good sign."
   ],
-  "highlightIndex": [5, 6],
+  "highlightIndex": [
+    5,
+    6
+  ],
   "ctaDesktop": "Press any key to continue",
   "ctaMobile": "Tap to continue",
   "skipHintDesktop": "Press Enter twice to skip",

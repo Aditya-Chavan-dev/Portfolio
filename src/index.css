@@ -1,8 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
 @import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
   --color-gray-980: #03040b;
+  --font-sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Syne', 'Helvetica Neue', Arial, sans-serif;
+  --font-quote: 'Playfair Display', serif;
 }
 
 /* ─── Design tokens — theme-aware CSS custom properties ────────────────────
@@ -12,122 +17,124 @@
    that reference these tokens (defined below).
    ─────────────────────────────────────────────────────────────────────── */
 
-:root {
-  /* Backgrounds */
-  --bg-primary:        #ffffff;
-  --bg-secondary:      #f9fafb;   /* gray-50 */
-  --bg-card:           #ffffff;
-  --bg-card-hover:     #f9fafb;
-  --bg-overlay:        rgba(0, 0, 0, 0.5);
-  --bg-nav:            rgba(255, 255, 255, 0.9);
-  --bg-skeleton:       #f3f4f6;   /* gray-100 */
+html[data-theme="light"] {
+  --bg-base: #F5F4F0;
+  --bg-surface: #ECEAE4;
+  --bg-card: #E4E2DC;
+  --bg-elevated: #FFFFFF;
+  --text-primary: #1A1917;
+  --text-secondary: #6B6863;
+  --text-muted: #A09C98;
+  --border-subtle: rgba(0, 0, 0, 0.07);
+  --border-default: rgba(0, 0, 0, 0.12);
+  --accent: #2A2A2A;
+  --accent-text: #FFFFFF;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --overlay: rgba(0, 0, 0, 0.4);
 
-  /* Text */
-  --text-primary:      #111827;   /* gray-900 */
-  --text-secondary:    #6b7280;   /* gray-500 */
-  --text-muted:        #9ca3af;   /* gray-400 */
-  --text-placeholder:  #d1d5db;   /* gray-300 */
-
-  /* Borders */
-  --border-default:    #e5e7eb;   /* gray-200 */
-  --border-hover:      #9ca3af;   /* gray-400 */
-  --border-muted:      #f3f4f6;   /* gray-100 */
-  --border-dashed:     #d1d5db;   /* gray-300 */
-
-  /* Interactive */
-  --btn-primary-bg:    #111827;   /* gray-900 */
-  --btn-primary-text:  #ffffff;
-  --btn-secondary-bg:  transparent;
-  --btn-secondary-text: #374151;  /* gray-700 */
-
-  /* Progress bars (skill levels) */
-  --progress-track:    #f3f4f6;   /* gray-100 */
-  --progress-fill:     #111827;   /* gray-900 */
-
-  /* Tags / badges */
-  --tag-bg:            #f3f4f6;   /* gray-100 */
-  --tag-text:          #4b5563;   /* gray-600 */
-
-  /* Typewriter cursor */
-  --cursor-color:      #111827;
-
-  /* Card glow — subtle shadow behind cards */
-  --card-glow:         0 1px 3px rgba(0, 0, 0, 0.08),
-                       0 1px 2px rgba(0, 0, 0, 0.06);
-  --card-glow-hover:   0 4px 12px rgba(0, 0, 0, 0.10),
-                       0 2px 4px rgba(0, 0, 0, 0.06);
-
-  /* Skeleton shimmer */
-  --skeleton-from:     #f3f4f6;
-  --skeleton-to:       #e5e7eb;
-
-  /* Overlay backdrop */
-  --backdrop:          rgba(0, 0, 0, 0.45);
-
-  /* Timeline (experience) */
-  --timeline-line:     #e5e7eb;
-  --timeline-dot-bg:   #ffffff;
-  --timeline-dot-border: #d1d5db;
+  /* Semantic fallback/accent constants */
+  --gold:  #b6924d;
+  --gold2: #d8b26a;
+  --gold3: rgba(182,146,77,0.09);
+  --r: 12px;
+  --r2: 8px;
+  --glow-hover: 0 12px 40px rgba(182, 146, 77, 0.45);
 }
 
-/* ─── Dark mode token overrides ─────────────────────────────────────────── */
+html[data-theme="dark"] {
+  --bg-base: #0E0E10;
+  --bg-surface: #161618;
+  --bg-card: #1E1E21;
+  --bg-elevated: #26262A;
+  --text-primary: #F0EFE9;
+  --text-secondary: #9A9894;
+  --text-muted: #5A5856;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --accent: #F0EFE9;
+  --accent-text: #0E0E10;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  --overlay: rgba(0, 0, 0, 0.7);
 
-.dark {
+  /* Semantic fallback/accent constants */
+  --gold:  #c8a96e;
+  --gold2: #e8c88a;
+  --gold3: rgba(200,169,110,0.09);
+  --glow-hover: 0 10px 32px rgba(200, 169, 110, 0.18);
+}
+
+/* Global Transitions anti-flash setup */
+*, *::before, *::after {
+  transition: background-color 0.25s ease, color 0.2s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+:root {
+
+  /* ─── Backwards Compatibility Mappings ─── */
+  
   /* Backgrounds */
-  --bg-primary:        #030712;   /* gray-950 */
-  --bg-secondary:      #111827;   /* gray-900 */
-  --bg-card:           #111827;   /* gray-900 */
-  --bg-card-hover:     #1f2937;   /* gray-800 */
-  --bg-overlay:        rgba(0, 0, 0, 0.7);
-  --bg-nav:            rgba(3, 7, 18, 0.9);
-  --bg-skeleton:       #111827;   /* gray-900 */
+  --bg-primary:        var(--bg-base);
+  --bg-secondary:      var(--bg-surface);
+  --bg-card:           var(--bg-card);
+  --bg-card-hover:     var(--bg-elevated);
+  --bg-overlay:        var(--overlay);
+  --bg-nav:            var(--bg-base);
+  --bg-skeleton:       var(--bg-surface);
 
   /* Text */
-  --text-primary:      #f9fafb;   /* gray-100 */
-  --text-secondary:    #9ca3af;   /* gray-400 */
-  --text-muted:        #6b7280;   /* gray-500 */
-  --text-placeholder:  #374151;   /* gray-700 */
+  --text-primary:      var(--text-primary);
+  --text-secondary:    var(--text-secondary);
+  --text-muted:        var(--text-muted);
+  --text-placeholder:  var(--text-muted);
 
   /* Borders */
-  --border-default:    #1f2937;   /* gray-800 */
-  --border-hover:      #4b5563;   /* gray-600 */
-  --border-muted:      #111827;   /* gray-900 */
-  --border-dashed:     #374151;   /* gray-700 */
+  --border-default:    var(--border-default);
+  --border-hover:      var(--border-subtle);
+  --border-muted:      var(--border-subtle);
+  --border-dashed:     var(--border-default);
 
   /* Interactive */
-  --btn-primary-bg:    #f9fafb;   /* gray-100 */
-  --btn-primary-text:  #111827;   /* gray-900 */
+  --btn-primary-bg:    var(--gold);
+  --btn-primary-text:  #080808;
   --btn-secondary-bg:  transparent;
-  --btn-secondary-text: #d1d5db;  /* gray-300 */
+  --btn-secondary-text: var(--tx);
 
-  /* Progress bars */
-  --progress-track:    #1f2937;   /* gray-800 */
-  --progress-fill:     #f9fafb;   /* gray-100 */
+  /* Progress bars (skill levels) */
+  --progress-track:    var(--s3);
+  --progress-fill:     var(--gold);
 
-  /* Tags */
-  --tag-bg:            #1f2937;   /* gray-800 */
-  --tag-text:          #9ca3af;   /* gray-400 */
+  /* Tags / badges */
+  --tag-bg:            rgba(200,169,110,0.13);
+  --tag-text:          var(--gold);
 
   /* Typewriter cursor */
-  --cursor-color:      #f9fafb;
+  --cursor-color:      var(--gold);
 
-  /* Card glow — glows are more vivid in dark mode */
-  --card-glow:         0 1px 3px rgba(0, 0, 0, 0.4),
-                       0 1px 2px rgba(0, 0, 0, 0.3);
-  --card-glow-hover:   0 4px 16px rgba(0, 0, 0, 0.5),
-                       0 2px 6px rgba(0, 0, 0, 0.4);
+  /* Card glow */
+  --card-glow:         0 4px 12px rgba(0, 0, 0, 0.5);
+  --card-glow-hover:   0 8px 24px rgba(200, 169, 110, 0.05);
 
   /* Skeleton shimmer */
-  --skeleton-from:     #111827;
-  --skeleton-to:       #1f2937;
+  --skeleton-from:     var(--s1);
+  --skeleton-to:       var(--s2);
 
   /* Overlay backdrop */
-  --backdrop:          rgba(0, 0, 0, 0.65);
+  --backdrop:          rgba(0, 0, 0, 0.8);
 
   /* Timeline */
-  --timeline-line:     #1f2937;
-  --timeline-dot-bg:   #030712;
-  --timeline-dot-border: #374151;
+  --timeline-line:     var(--b1);
+  --timeline-dot-bg:   var(--bg);
+  --timeline-dot-border: var(--b2);
+}
+
+/* ─── MindForge Specific Overrides ─── */
+::selection {
+  background: var(--gold3);
+  color: inherit;
+}
+
+:root {
+  caret-color: var(--gold);
 }
 
 /* ─── Token-based utility classes ─────────────────────────────────────────
@@ -161,10 +168,12 @@
 .btn-primary {
   background-color: var(--btn-primary-bg);
   color: var(--btn-primary-text);
+  font-family: 'Syne', sans-serif;
 }
 .btn-secondary {
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
+  font-family: 'Syne', sans-serif;
 }
 
 /* Progress bars */
@@ -214,34 +223,48 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  /* Hide scrollbars strictly for everything */
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
   }
 
   body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
     min-height: 100dvh;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Syne', sans-serif;
   }
 }
 
 /* ─── Premium Ambient Backdrops ────────────────────────────── */
 
 .bg-ambient-light {
-  background-color: #ffffff;
+  background-color: var(--bg-base);
   background-image: 
     radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(244, 63, 64, 0.04) 0px, transparent 50%),
     radial-gradient(at 50% 100%, rgba(14, 165, 233, 0.05) 0px, transparent 50%);
 }
 
 .bg-ambient-dark {
-  background-color: #03040b;
+  background-color: var(--bg-base);
   background-image: 
     radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
     radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.12) 0px, transparent 50%),
@@ -253,10 +276,14 @@
 .glass-card {
   @apply backdrop-blur-md bg-white/70 border border-white/20 shadow-lg shadow-gray-200/20
          dark:bg-gray-900/40 dark:border-gray-800/50 dark:shadow-none;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, shadow 0.3s ease;
 }
 
 .premium-hover {
-  @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:shadow-gray-200/30 dark:hover:shadow-indigo-500/10;
+  @apply transition-all duration-300 ease-out hover:-translate-y-1;
+}
+.premium-hover:hover {
+  box-shadow: var(--glow-hover) !important;
 }
 
 /* Testimonials auto-scroll — desktop vertical */

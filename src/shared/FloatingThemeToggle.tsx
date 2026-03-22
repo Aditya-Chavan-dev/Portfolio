@@ -17,10 +17,9 @@ export function FloatingThemeToggle() {
       aria-pressed={theme === 'dark'}
       className="
         fixed z-[9999]
-        bottom-6 right-6
-        md:bottom-6 md:right-6
-        bottom-20 right-4
-        w-11 h-11 rounded-full
+        top-4 right-4
+        md:top-6 md:right-8
+        w-10 h-10 rounded-full
         flex items-center justify-center
         bg-theme-secondary
         border border-theme-default

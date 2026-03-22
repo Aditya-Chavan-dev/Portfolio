@@ -25,7 +25,7 @@ export function SkillCategoryBlock({ category }: Props) {
             </div>
             <div className="h-1.5 bg-theme-secondary rounded-full overflow-hidden">
               <div
-                className={`h-full bg-gray-400 dark:bg-gray-500 rounded-full ${LEVEL_WIDTH[skill.level] ?? 'w-1/2'}`}
+                className={`h-full bg-indigo-600 dark:bg-indigo-500 rounded-full ${LEVEL_WIDTH[skill.level] ?? 'w-1/2'}`}
               />
             </div>
           </li>

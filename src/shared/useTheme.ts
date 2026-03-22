@@ -18,14 +18,10 @@ export function useTheme() {
     }
   }, [])
 
-  // Apply class + persist
+  // Apply attribute + persist
   useEffect(() => {
     const root = document.documentElement
-    if (theme === 'dark') {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
+    root.setAttribute('data-theme', theme)
     localStorage.setItem(STORAGE_KEY, theme)
   }, [theme])
 

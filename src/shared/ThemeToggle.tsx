@@ -13,7 +13,7 @@ export function ThemeToggle() {
         inline-flex items-center justify-center
         w-9 h-9 rounded-md
         text-theme-secondary
-        hover:bg-theme-secondary
+        hover:bg-theme-muted
         transition-colors duration-150
       "
     >

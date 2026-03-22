@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import { ThemeToggle } from '@/shared/ThemeToggle'
 import { QuickAccessGrid } from './QuickAccessGrid'
 import { TestimonialsStrip } from './TestimonialsStrip'
 import type { HubContent } from './hub.types'
@@ -13,77 +12,97 @@ export function HubDesktop({ content }: Props) {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-ambient-light dark:bg-ambient-dark flex flex-col antialiased overflow-hidden">
-      {/* ── Header ─────────────────────────────────────────────── */}
-      <motion.header 
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex items-center justify-between px-10 py-6 border-b border-theme-muted bg-theme-nav backdrop-blur-md sticky top-0 z-10"
-      >
-        <div className="flex items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-md"
-            aria-hidden="true"
-          />
-          <div>
-            <h1 className="text-xl font-bold text-theme-primary tracking-tight">
-              {content.ownerName}
-            </h1>
-            <p className="text-sm font-medium text-theme-secondary">
-              {content.ownerRole}
-            </p>
-          </div>
-        </div>
-        <ThemeToggle />
-      </motion.header>
-
+    <div className="h-screen bg-ambient-light dark:bg-ambient-dark flex flex-col antialiased overflow-hidden">
       {/* ── Body: two-column ───────────────────────────────────── */}
       <motion.main 
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-        className="flex gap-8 p-10 max-w-7xl mx-auto w-full flex-1"
+        className="flex gap-8 px-12 pt-6 pb-12 w-full flex-1 items-stretch overflow-hidden"
       >
-        {/* Left (60%) */}
-        <div className="flex-1 space-y-6">
-          <button
-            type="button"
-            disabled
-            aria-disabled="true"
-            className="
-              w-full p-5 text-left rounded-xl
-              glass-card opacity-40 cursor-not-allowed
-            "
-          >
-            <p className="font-semibold text-theme-primary">
-              {content.journeyButtonLabel}
-            </p>
-            <p className="text-sm text-theme-muted mt-1">
-              {content.journeyButtonSubtext}
-            </p>
-          </button>
-
-          <QuickAccessGrid
-            label={content.quickAccessLabel}
-            items={content.quickAccessItems}
-          />
+        {/* Left Column (Main content area) */}
+        <div className="flex-1 flex flex-col justify-start pt-2 overflow-hidden">
+          <div className="space-y-4">
+            {/* 1. Upper Row: Hero + Photo Side-By-Side */}
+            <div className="flex items-center justify-between gap-8">
+              <div className="space-y-2 flex-1">
+                <p className="text-sm uppercase tracking-widest text-theme-secondary font-medium">
+                  {content.ownerRole}
+                </p>
+                <h1 className="text-5xl font-bold text-theme-primary tracking-tight">
+                  {content.ownerName}
+                </h1>
+                {content.ownerQuote && (
+                  <p className="text-base text-gray-600 dark:text-gray-300 font-quote italic leading-relaxed pr-8">
+                    &ldquo;{content.ownerQuote}&rdquo;
+                  </p>
+                )}
+              </div>
+ 
+              {/* Profile Image Mask */}
+              <div 
+                className="w-52 h-52 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-xl flex items-center justify-center text-gray-400 text-xs border-2 border-theme-muted"
+                aria-label="Profile photo"
+              >
+                {content.ownerPhotoUrl ? (
+                  <img src={content.ownerPhotoUrl} className="w-full h-full rounded-full object-cover" alt={content.ownerName} />
+                ) : (
+                  <span>[ Profile ]</span>
+                )}
+              </div>
+            </div>
+ 
+            {/* 2. Journey Bar */}
+            <div className="pt-0">
+              <button
+                type="button"
+                disabled
+                aria-disabled="true"
+                className="
+                  w-full p-5 text-left rounded-xl
+                  glass-card flex items-center justify-between
+                  opacity-40 cursor-not-allowed border border-theme-muted
+                "
+              >
+              <div>
+                <p className="font-semibold text-sm text-theme-primary font-serif">
+                  {content.journeyButtonLabel}
+                </p>
+                <p className="text-[10px] text-theme-muted mt-0.5 uppercase tracking-wider">
+                  {content.journeyButtonSubtext}
+                </p>
+              </div>
+              <span className="text-lg text-gray-500">→</span>
+            </button>
+          </div>
+ 
+            {/* 3. Section Divider & Quick Access */}
+            <div className="space-y-4">
+              <div className="h-px bg-theme-muted" />
+              <QuickAccessGrid
+                label="QUICK ACCESS"
+                items={content.quickAccessItems}
+              />
+            </div>
+          </div>
         </div>
-
-        {/* Right (40%) */}
-        <aside className="w-80 space-y-4 shrink-0">
-          <p className="text-sm font-medium text-theme-secondary">
+ 
+        {/* Right Column (Sidebar Testimonials) */}
+        <aside className="w-80 p-6 bg-gradient-to-b from-transparent to-theme-nav/10 rounded-2xl space-y-6 flex flex-col shrink-0 border border-theme-muted/20">
+          <p className="text-xs font-semibold text-theme-secondary uppercase tracking-wider">
             {content.testimonialsLabel}
           </p>
-          <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
+          <div className="flex-1">
+            <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
+          </div>
           <button
             type="button"
             onClick={() => navigate('/testimonial')}
             className="
-              w-full text-left text-sm
-              text-theme-secondary
-              hover:text-theme-primary
-              transition-colors duration-150
+              w-full text-center text-sm
+              text-theme-secondary font-medium
+              hover:text-theme-primary hover:underline
+              transition-colors duration-150 cursor-pointer
             "
           >
             {content.leaveTestimonialLabel}

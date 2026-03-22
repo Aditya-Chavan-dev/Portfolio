@@ -11,6 +11,7 @@ import Projects         from '@/quick-access/projects/Projects'
 import Skills           from '@/quick-access/skills/Skills'
 import Experience       from '@/quick-access/experience/Experience'
 import About            from '@/quick-access/about/About'
+import ProjectDetail    from '@/quick-access/projects/ProjectDetail'
 import Testimonial      from '@/testimonial/Testimonial'
 import NotFound         from '@/not-found/NotFound'
 import AdminLogin       from '@/admin/AdminLogin'
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/hub"        element={<PageTransition><Hub /></PageTransition>}              />
           <Route path="/journey"    element={<PageTransition><ImmersiveJourney /></PageTransition>} />
           <Route path="/projects"   element={<PageTransition><Projects /></PageTransition>}         />
+          <Route path="/projects/:projectId" element={<PageTransition><ProjectDetail /></PageTransition>} />
           <Route path="/skills"     element={<PageTransition><Skills /></PageTransition>}           />
           <Route path="/experience" element={<PageTransition><Experience /></PageTransition>}       />
           <Route path="/about"      element={<PageTransition><About /></PageTransition>}            />

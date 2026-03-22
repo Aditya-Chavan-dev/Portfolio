@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 interface WelcomeDialogueProps {
-  readonly name: string
   readonly lines: string[]
   readonly skip: boolean
   readonly highlightIndex?: number | number[] | null
@@ -12,7 +11,6 @@ interface WelcomeDialogueProps {
 type WelcomeState = 'READY' | 'TYPING_NAME' | 'PAUSE_NAME' | 'TYPING_LINE' | 'PAUSE_LINE' | 'PAUSE_BATMAN' | 'COMPLETE' | 'PROMPT' | 'EXITING';
 
 export function WelcomeDialogue({
-  name,
   lines,
   skip,
   highlightIndex,
@@ -21,18 +19,20 @@ export function WelcomeDialogue({
   const [state, setState] = useState<WelcomeState>('READY')
   const [currentLine, setCurrentLine] = useState(0)
   const [currentLineText, setCurrentLineText] = useState('')
-  const [currentContent, setCurrentContent] = useState({ name, lines, highlightIndex })
+  const [currentContent, setCurrentContent] = useState({ lines, highlightIndex })
+  const completedRef = useRef(false)
 
   // Buffer live Firestore updates safely only at pauses
   useEffect(() => {
     if (state === 'READY' || state === 'COMPLETE' || state === 'PROMPT') {
-      setCurrentContent({ name, lines, highlightIndex })
+      setCurrentContent({ lines, highlightIndex })
     }
-  }, [name, lines, highlightIndex, state])
+  }, [lines, highlightIndex, state])
 
   // Skip behaviour triggers
   useEffect(() => {
-    if (skip && state !== 'COMPLETE' && state !== 'PROMPT') {
+    if (skip && !completedRef.current && state !== 'COMPLETE' && state !== 'PROMPT') {
+      completedRef.current = true
       setState('COMPLETE')
       onComplete()
     }
@@ -65,8 +65,11 @@ export function WelcomeDialogue({
         return () => clearTimeout(t)
       } else {
         if (currentLine === currentContent.lines.length - 1) {
-          setState('COMPLETE')
-          onComplete()
+          if (!completedRef.current) {
+            completedRef.current = true
+            setState('COMPLETE')
+            onComplete()
+          }
         } else {
           setState(isBatman ? 'PAUSE_BATMAN' : 'PAUSE_LINE')
         }
@@ -97,7 +100,7 @@ export function WelcomeDialogue({
 
   return (
     <div 
-      className="flex flex-col items-center justify-center font-['JetBrains_Mono',monospace] w-full"
+      className="flex flex-col items-center justify-center w-full"
       style={{
         '--gap-paragraph': '28px',
         '--gap-batman': '36px',
@@ -133,22 +136,40 @@ export function WelcomeDialogue({
             else marginTop = 'var(--gap-paragraph)'
           }
 
-          const isCompleted = skip || state === 'COMPLETE' || state === 'PROMPT' || i < currentLine
+          const isCompleted = skip || 
+            state === 'COMPLETE' || 
+            state === 'PROMPT' || 
+            i < currentLine ||
+            (i === currentLine && (state === 'PAUSE_LINE' || state === 'PAUSE_BATMAN'))
           const isTyping = !skip && state === 'TYPING_LINE' && i === currentLine
-
-          const lineDisplay = isCompleted ? text : (isTyping ? currentLineText : '')
 
           if (!isCompleted && !isTyping) return null // Absolutely prevents layout stacking of future placeholders
 
           return (
             <motion.p
               key={i}
-              className={`text-[13px] md:text-[18px] tracking-[0.02em] leading-[1.8] font-normal ${colorClass} text-center`}
+              className={`text-[13px] md:text-[18px] font-serif tracking-[0.02em] leading-[1.8] font-bold ${colorClass} text-center`}
               style={{ marginTop }}
             >
-              {lineDisplay}
-              {isTyping && (
-                <span className="ml-1 text-[#555555]">▋</span>
+              {isCompleted ? (
+                text
+              ) : (
+                <>
+                  {isTyping && currentLineText.length === 0 && (
+                    <span className="text-[#555555] inline-block">▋</span>
+                  )}
+                  {text.split('').map((char, index) => {
+                    const isVisible = index < currentLineText.length;
+                    return (
+                      <span key={index} className={isVisible ? 'opacity-100' : 'opacity-0'}>
+                        {char}
+                        {isTyping && index === currentLineText.length - 1 && (
+                          <span className="ml-0.5 text-[#555555] inline-block">▋</span>
+                        )}
+                      </span>
+                    )
+                  })}
+                </>
               )}
             </motion.p>
           )

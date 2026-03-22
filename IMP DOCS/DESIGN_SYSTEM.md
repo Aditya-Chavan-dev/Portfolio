@@ -2,7 +2,7 @@
 > **Single Source of Truth.** Every color, size, spacing value, duration, and animation in this portfolio references a token defined in this document. No hardcoded hex values anywhere in the codebase. Ever.
 
 **Stack:** React (Vite) · Tailwind CSS · Framer Motion · Three.js · Firebase  
-**Fonts:** Cormorant Garamond (display) · JetBrains Mono (body/UI)  
+**Fonts:** Syne (display) · DM Sans (body/UI)  
 **Theme:** Dark-first · Warm gold accent · Cream light mode  
 **Token file location:** `src/styles/tokens.css`  
 **Theme switch:** `[data-theme="light"]` on `<html>` element
@@ -52,12 +52,12 @@ Copy this entire block into `src/styles/tokens.css`. This file must be the **fir
 /* ── Aditya Chavan Portfolio — tokens.css v1.0 ── */
 /* THE LAW: Every color, size, duration references a token. Never hardcode. */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
 :root {
   /* ── Fonts ── */
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+  --font-display: 'Syne', sans-serif;
+  --font-mono:    'DM Sans', sans-serif;
 
   /* ── Backgrounds (Dark Mode Default) ── */
   --color-bg-primary:     #0A0A0F;   /* Abyss — page bg */
@@ -274,10 +274,10 @@ Cards feel lifted without box-shadow because they sit on a lighter surface:
 
 | Role | Font | Fallback |
 |---|---|---|
-| Display / Heading | Cormorant Garamond | Georgia, "Times New Roman", serif |
-| Body / UI / Mono | JetBrains Mono | "Courier New", monospace |
+| Display / Heading | Syne | 'Helvetica Neue', Arial, sans-serif |
+| Body / UI | DM Sans | 'Helvetica Neue', Arial, sans-serif |
 
-**Pairing philosophy:** Editorial serif meets developer mono. Communicates "I think about design AND I write code." Never use Inter, Space Grotesk, or Poppins.
+**Pairing philosophy:** High-end display meets readable humanist sans. Never use Outfit or Inter. Always rely on MindForge tokens.
 
 ### Font Weights in Use
 

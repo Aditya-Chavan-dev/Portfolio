@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useIsMobile } from '@/shared/useIsMobile'
 import { useWelcomeContent } from './useWelcomeContent'
 import { LandingPageDesktop } from './LandingPage.desktop'
@@ -9,9 +11,11 @@ const SESSION_KEY = 'has_seen_welcome' as const
 export default function LandingPage() {
   const isMobile               = useIsMobile()
   const { content, loading }   = useWelcomeContent()
+  const navigate               = useNavigate()
 
   const [showCTA,        setShowCTA       ] = useState(false)
   const [skipAnimation,  setSkipAnimation ] = useState(false)
+  const [isExiting,      setIsExiting     ] = useState(false)
 
   const ctaTimeoutRef         = useRef<number | undefined>(undefined)
   const enterResetTimeoutRef  = useRef<number | undefined>(undefined)
@@ -23,14 +27,6 @@ export default function LandingPage() {
     if (seen) {
       setShowCTA(true)
       setSkipAnimation(true)
-    }
-  }, [])
-
-  // Cleanup all timers on unmount
-  useEffect(() => {
-    return () => {
-      clearTimeout(ctaTimeoutRef.current)
-      clearTimeout(enterResetTimeoutRef.current)
     }
   }, [])
 
@@ -59,9 +55,21 @@ export default function LandingPage() {
     return () => window.removeEventListener('keydown', handleKey)
   }, [isMobile])
 
+  // Cleanup all timers on unmount
+  useEffect(() => {
+    return () => {
+      clearTimeout(ctaTimeoutRef.current)
+      clearTimeout(enterResetTimeoutRef.current)
+    }
+  }, [])
+
   const handleDialogueComplete = useCallback(() => {
     sessionStorage.setItem(SESSION_KEY, 'true')
     ctaTimeoutRef.current = window.setTimeout(() => setShowCTA(true), 2000)
+  }, [])
+
+  const handleNavigateHub = useCallback(() => {
+    setIsExiting(true)
   }, [])
 
   if (loading || !content) {
@@ -78,9 +86,29 @@ export default function LandingPage() {
     showSkipHint:        !showCTA,
     skipAnimation,
     onDialogueComplete:  handleDialogueComplete,
+    onNavigateHub:       handleNavigateHub,
   }
 
-  return isMobile
-    ? <LandingPageMobile  {...sharedProps} />
-    : <LandingPageDesktop {...sharedProps} />
+  return (
+    <>
+      {isMobile ? (
+        <LandingPageMobile  {...sharedProps} />
+      ) : (
+        <LandingPageDesktop {...sharedProps} />
+      )}
+
+      <AnimatePresence>
+        {isExiting && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="fixed inset-0 bg-black z-[9999] pointer-events-none"
+            onAnimationComplete={() => navigate('/hub')}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  )
 }

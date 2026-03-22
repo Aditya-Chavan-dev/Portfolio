@@ -13,62 +13,80 @@ export function HubMobile({ content }: Props) {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-dvh bg-ambient-light dark:bg-ambient-dark pb-4 flex flex-col antialiased overflow-hidden">
-      {/* ── Header ─────────────────────────────────────────────── */}
-      <motion.header 
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex items-center justify-between px-6 py-5 border-b border-theme-muted bg-theme-nav backdrop-blur-md sticky top-0 z-10"
-      >
-        <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-md"
-            aria-hidden="true"
-          />
-          <div>
-            <h1 className="text-base font-bold text-theme-primary tracking-tight">
-              {content.ownerName}
-            </h1>
-            <p className="text-xs font-medium text-theme-secondary">
-              {content.ownerRole}
-            </p>
-          </div>
-        </div>
+    <div className="min-h-dvh bg-ambient-light dark:bg-ambient-dark pb-8 flex flex-col antialiased overflow-x-hidden">
+      {/* ── Header Layer (Minimal) ───────────────────────────────── */}
+      <div className="absolute top-5 right-6 z-20">
         <ThemeToggle />
-      </motion.header>
+      </div>
 
-      {/* ── Single column body ─────────────────────────────────── */}
+      {/* ── Single Column Stack ──────────────────────────────────── */}
       <motion.main 
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-        className="px-6 py-6 space-y-6 flex-1"
+        className="px-6 pt-16 flex flex-col items-center space-y-8 flex-1 w-full max-w-md mx-auto"
       >
+        {/* 1. Photo Top */}
+        <div 
+          className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-xl flex items-center justify-center text-gray-400 text-xs border-2 border-theme-muted"
+          aria-label="Profile photo"
+        >
+          {content.ownerPhotoUrl ? (
+            <img src={content.ownerPhotoUrl} className="w-full h-full rounded-full object-cover" alt={content.ownerName} />
+          ) : (
+            <span>[ Profile ]</span>
+          )}
+        </div>
+
+        {/* 2. Hero Section (Centered) */}
+        <div className="text-center space-y-2">
+          <p className="text-xs uppercase tracking-widest text-theme-secondary font-medium">
+            {content.ownerRole}
+          </p>
+          <h1 className="text-3xl font-bold text-theme-primary tracking-tight">
+            {content.ownerName}
+          </h1>
+          {content.ownerQuote && (
+            <p className="text-sm italic text-gray-600 dark:text-gray-300 font-serif px-2">
+              &ldquo;{content.ownerQuote}&rdquo;
+            </p>
+          )}
+        </div>
+
+        {/* 3. Journey Bar */}
         <button
           type="button"
           disabled
           aria-disabled="true"
           className="
-            w-full p-4 text-left rounded-xl
-            glass-card opacity-40 cursor-not-allowed
+            w-full p-5 text-left rounded-xl
+            glass-card flex items-center justify-between
+            opacity-40 cursor-not-allowed border border-theme-muted
           "
         >
-          <p className="font-semibold text-theme-primary text-sm">
-            {content.journeyButtonLabel}
-          </p>
-          <p className="text-xs text-theme-muted mt-1">
-            {content.journeyButtonSubtext}
-          </p>
+          <div>
+            <p className="font-semibold text-theme-primary font-serif text-sm">
+              {content.journeyButtonLabel}
+            </p>
+            <p className="text-xs text-theme-muted mt-1 uppercase tracking-wider">
+              {content.journeyButtonSubtext}
+            </p>
+          </div>
+          <span className="text-lg text-theme-secondary">→</span>
         </button>
 
-        <QuickAccessGrid
-          label={content.quickAccessLabel}
-          items={content.quickAccessItems}
-        />
+        {/* 4. Section Divider & Quick Access */}
+        <div className="w-full space-y-5">
+          <div className="h-px bg-theme-muted w-full" />
+          <QuickAccessGrid
+            label="QUICK ACCESS"
+            items={content.quickAccessItems}
+          />
+        </div>
 
-        <section aria-label={content.testimonialsLabel}>
-          <p className="text-sm font-medium text-theme-secondary mb-3">
+        {/* 5. Testimonials Section */}
+        <section className="w-full space-y-4" aria-label={content.testimonialsLabel}>
+          <p className="text-xs font-semibold text-theme-secondary uppercase tracking-wider text-center">
             {content.testimonialsLabel}
           </p>
           <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
@@ -76,9 +94,8 @@ export function HubMobile({ content }: Props) {
             type="button"
             onClick={() => navigate('/testimonial')}
             className="
-              mt-3 text-sm
-              text-indigo-600 dark:text-indigo-400
-              hover:text-indigo-500 dark:hover:text-indigo-300
+              mt-2 text-sm w-full text-center
+              text-theme-secondary font-medium hover:underline
               transition-colors duration-150 cursor-pointer
             "
           >

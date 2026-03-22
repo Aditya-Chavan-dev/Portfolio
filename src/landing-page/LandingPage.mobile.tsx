@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom'
 import { WelcomeDialogue } from './WelcomeDialogue'
 import type { WelcomeConfig } from './landing.types'
+import { AmbientDust } from './AmbientDust'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
   readonly showSkipHint:   boolean
   readonly skipAnimation:  boolean
   readonly onDialogueComplete: () => void
+  readonly onNavigateHub:  () => void
 }
 
 export function LandingPageMobile({
@@ -17,19 +18,29 @@ export function LandingPageMobile({
   showSkipHint,
   skipAnimation,
   onDialogueComplete,
+  onNavigateHub,
 }: Props) {
-  const navigate = useNavigate()
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (showCTA && (e.key === 'Enter' || e.key === ' ')) {
+      if (e.key === ' ') e.preventDefault()
+      onNavigateHub()
+    }
+  }
 
   return (
     <div
-      onClick={() => showCTA && navigate('/hub')}
-      className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center select-none cursor-pointer overflow-y-auto py-[48px] relative px-8"
+      onClick={() => showCTA && onNavigateHub()}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center select-none cursor-pointer overflow-hidden py-[48px] relative px-8"
     >
-      <div className="max-w-[320px] w-full flex flex-col items-center justify-center text-center">
+      <AmbientDust count={40} />
+      <div className="max-w-[320px] w-full flex flex-col items-center justify-center text-center relative z-10">
         
         {/* 2. Dialogue */}
         <WelcomeDialogue
-          name={content.name}
           lines={content.dialogue}
           skip={skipAnimation}
           onComplete={onDialogueComplete}
@@ -46,7 +57,7 @@ export function LandingPageMobile({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                className="font-['JetBrains_Mono',monospace] text-[12px] text-[#555555] tracking-[0.02em] flex items-center"
+                className="text-[12px] text-[#555555] tracking-[0.02em] flex items-center"
               >
                 Tap to continue 
                 <motion.span 
@@ -64,7 +75,7 @@ export function LandingPageMobile({
                 animate={{ opacity: 0.4 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.6 }}
-                className="font-['JetBrains_Mono',monospace] text-[12px] text-[#555555] tracking-[0.02em]"
+                className="text-[12px] text-[#555555] tracking-[0.02em]"
               >
                 Tap twice to skip
               </motion.p>

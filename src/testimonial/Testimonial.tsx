@@ -40,14 +40,14 @@ export default function Testimonial() {
           onClick={() => navigate('/hub')}
           className="
             text-sm text-theme-muted
-            hover:text-theme-primary
+            hover:text-theme-secondary
             transition-colors duration-150 mb-8
           "
         >
           {content.backLabel}
         </button>
 
-        <h1 className="text-2xl font-bold text-theme-primary mb-2 tracking-tight">
+        <h1 className="text-2xl font-bold text-white mb-2 tracking-tight">
           {content.pageTitle}
         </h1>
         <p className="text-sm text-theme-secondary mb-8">

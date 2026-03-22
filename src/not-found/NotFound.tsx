@@ -32,7 +32,7 @@ export default function NotFound() {
   return (
     <div className="min-h-screen bg-theme-primary flex items-center justify-center p-6">
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-theme-primary mb-2">{content.heading}</h1>
+        <h1 className="text-4xl font-bold text-white mb-2">{content.heading}</h1>
         <p className="text-theme-secondary mb-8">{content.body}</p>
         <button
           type="button"
@@ -40,7 +40,7 @@ export default function NotFound() {
           className="
             text-sm
             text-theme-secondary
-            hover:text-theme-primary
+            hover:text-theme-secondary
             transition-colors duration-150
           "
         >
