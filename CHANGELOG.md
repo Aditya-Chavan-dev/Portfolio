@@ -1,3 +1,13 @@
+## [173] Refactor project details layouts and optimize metrics mapping
+**Date:** 22 Mar 2026
+**Type:** Feature
+
+### What was built / What was the issue
+Refactor project details layouts and optimize metrics mapping (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
 ## [172] GitHub Metadata Sync & Curation Overlay
 **Date:** 22 Mar 2026
 **Type:** Feature
