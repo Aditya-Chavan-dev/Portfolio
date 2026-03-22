@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { collection, onSnapshot } from 'firebase/firestore'
+import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../shared/firebase'
 import {
   fetchAllRepos,
@@ -34,58 +34,50 @@ export function useFeaturedProjects() {
       }
     }
 
-    // Step 1 — listen to Firestore featured list in real time
-    const unsub = onSnapshot(
-      collection(db, 'projects'),
-      async snapshot => {
-        try {
-          const featured = snapshot.docs
-            .map(d => d.data())
-            .filter(d => d.featured)
-            .sort((a, b) => a.order - b.order)
+    const fetchFirestore = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, 'projects'))
+        const featured = snapshot.docs
+          .map(d => d.data())
+          .filter((d: any) => d.featured)
+          .sort((a: any, b: any) => a.order - b.order)
 
-          if (featured.length === 0) {
-            await loadFallback()
-            return
-          }
-
-          // Step 2 — fetch all repos once (cached after first call)
-          const allRepos = await fetchAllRepos()
-
-          // Step 3 — match featured list against GitHub repos
-          const matched = featured
-            .map(f => allRepos.find(r => r.name === f.repoName))
-            .filter(Boolean) as any[]
-
-          // Step 4 — enrich each matched repo in parallel
-          const enriched: EnrichedProject[] = await Promise.all(
-            matched.map(async (repo, i) => {
-              const [commitCount, languages, meta] = await Promise.all([
-                fetchCommitCount(repo.name),
-                fetchLanguages(repo.name),
-                fetchProjectMeta(repo.name),
-              ])
-              return {
-                ...repo,
-                commitCount,
-                languages,
-                meta,
-                featured: true,
-                order: featured[i].order,
-              }
-            })
-          )
-
-          setProjects(enriched)
-        } catch (err: any) {
+        if (featured.length === 0) {
           await loadFallback()
+          return
         }
-      },
-      err => {
-        loadFallback()
+
+        const allRepos = await fetchAllRepos()
+
+        const matched = featured
+          .map((f: any) => allRepos.find(r => r.name === f.repoName))
+          .filter(Boolean) as any[]
+
+        const enriched: EnrichedProject[] = await Promise.all(
+          matched.map(async (repo, i) => {
+            const [commitCount, languages, meta] = await Promise.all([
+              fetchCommitCount(repo.name),
+              fetchLanguages(repo.name),
+              fetchProjectMeta(repo.name),
+            ])
+            return {
+              ...repo,
+              commitCount,
+              languages,
+              meta,
+              featured: true,
+              order: featured[i].order,
+            }
+          })
+        )
+
+        setProjects(enriched)
+      } catch (err: any) {
+        await loadFallback()
       }
-    )
-    return () => unsub()
+    }
+
+    fetchFirestore()
   }, [])
 
   return { projects, loading, error }
