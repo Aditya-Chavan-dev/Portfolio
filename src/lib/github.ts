@@ -28,6 +28,11 @@ export async function fetchAllRepos(): Promise<Project[]> {
     const data = raw
       .filter((r: any) => !r.fork && !r.archived)
       .map(mapGithubRepo)
+      
+    if (data.length === 0) {
+      throw new Error("Zero projects found after map-filtering forks and archives.")
+    }
+      
     repoCache = { data, fetchedAt: Date.now() }
     return data
   } catch (err) {
