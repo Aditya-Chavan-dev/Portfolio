@@ -15,6 +15,25 @@ export function useFeaturedProjects() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    const loadFallback = async () => {
+      try {
+        const allRepos = await fetchAllRepos()
+        const fallbackData = allRepos.map((repo, i) => ({
+          ...repo,
+          commitCount: 0,
+          languages: {},
+          meta: null,
+          featured: true,
+          order: i,
+        })) as EnrichedProject[]
+        setProjects(fallbackData)
+      } catch (e) {
+        setError('Failed to load any project data.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
     // Step 1 — listen to Firestore featured list in real time
     const unsub = onSnapshot(
       collection(db, 'projects'),
@@ -26,8 +45,7 @@ export function useFeaturedProjects() {
             .sort((a, b) => a.order - b.order)
 
           if (featured.length === 0) {
-            setProjects([])
-            setLoading(false)
+            await loadFallback()
             return
           }
 
@@ -60,14 +78,11 @@ export function useFeaturedProjects() {
 
           setProjects(enriched)
         } catch (err: any) {
-          setError(err.message)
-        } finally {
-          setLoading(false)
+          await loadFallback()
         }
       },
       err => {
-        setError(err.message)
-        setLoading(false)
+        loadFallback()
       }
     )
     return () => unsub()
