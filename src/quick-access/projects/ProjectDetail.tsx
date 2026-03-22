@@ -23,8 +23,9 @@ export default function ProjectDetail() {
     return (
       <div className="min-h-screen bg-theme-primary">
         <SectionNav />
-        <div className="max-w-3xl mx-auto px-8 py-20 text-center text-red-500">
-          Failed to load projects.
+        <div className="max-w-3xl mx-auto px-8 py-20 text-center text-red-500 text-sm">
+          Failed to load projects. <br/>
+          {error ? `Debug: ${error}` : 'Debug: Zero non-forked non-archived repositories found.'}
         </div>
       </div>
     )
@@ -65,7 +66,7 @@ export default function ProjectDetail() {
           <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to Projects
         </Link>
 
-        {/* COMBINED HEADER CARD */}
+        {/* COMBINED HEADER CARD  */}
         <div className="bg-white dark:bg-[#131315] rounded-2xl p-7 grid grid-cols-1 md:grid-cols-3 gap-8 border border-black/[0.03] dark:border-white/[0.03] shadow-sm w-full">
           {/* Left Column (Details) - 1/3 Width */}
           <div className="md:col-span-1 flex flex-col gap-4">
