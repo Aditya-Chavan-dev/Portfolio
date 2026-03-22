@@ -1,9 +1,13 @@
 import { SectionNav }       from '@/shared/SectionNav'
 import { useSkillsContent } from './useSkillsContent'
 import { SkillCategoryBlock } from './SkillCategoryBlock'
+import { useFeaturedProjects } from '@/hooks/useFeaturedProjects'
 
 export default function Skills() {
-  const { content, loading } = useSkillsContent()
+  const { content, loading: contentLoading } = useSkillsContent()
+  const { projects, loading: projectsLoading } = useFeaturedProjects()
+
+  const loading = contentLoading || projectsLoading
 
   if (loading || !content) {
     return (
@@ -30,7 +34,7 @@ export default function Skills() {
         {content.categories.length > 0 ? (
           <div className="space-y-10">
             {content.categories.map((cat) => (
-              <SkillCategoryBlock key={cat.name} category={cat} />
+              <SkillCategoryBlock key={cat.name} category={cat} projects={projects} />
             ))}
           </div>
         ) : (
