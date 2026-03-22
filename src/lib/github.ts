@@ -1,4 +1,5 @@
 import { mapGithubRepo, type Project } from '../types/project'
+import { projectMetadata } from './projectMetadata'
 
 const USERNAME = import.meta.env.VITE_GITHUB_USERNAME
 const TOKEN = import.meta.env.VITE_GITHUB_TOKEN
@@ -17,17 +18,34 @@ export async function fetchAllRepos(): Promise<Project[]> {
   if (repoCache && Date.now() - repoCache.fetchedAt < CACHE_TTL) {
     return repoCache.data
   }
-  const res = await fetch(
-    `${BASE}/users/${USERNAME}/repos?sort=updated&per_page=100`,
-    { headers }
-  )
-  if (!res.ok) throw new Error(`GitHub API ${res.status}`)
-  const raw = await res.json()
-  const data = raw
-    .filter((r: any) => !r.fork && !r.archived)
-    .map(mapGithubRepo)
-  repoCache = { data, fetchedAt: Date.now() }
-  return data
+  try {
+    const res = await fetch(
+      `${BASE}/users/${USERNAME}/repos?sort=updated&per_page=100`,
+      { headers }
+    )
+    if (!res.ok) throw new Error(`GitHub API ${res.status}`)
+    const raw = await res.json()
+    const data = raw
+      .filter((r: any) => !r.fork && !r.archived)
+      .map(mapGithubRepo)
+    repoCache = { data, fetchedAt: Date.now() }
+    return data
+  } catch (err) {
+    console.warn("GitHub API blocked or failed, using local metadata fallback:", err)
+    return Object.keys(projectMetadata).map((name, index) => ({
+      id: index + 1000,
+      name,
+      description: "Local descriptive fallback enabled Node absolute.",
+      topics: (projectMetadata[name] as any).techStack || [],
+      language: "TypeScript",
+      githubUrl: "https://github.com",
+      liveUrl: null,
+      stars: 0,
+      createdAt: "2024-01-01",
+      updatedAt: "2024-03-22",
+      isFork: false
+    }))
+  }
 }
 
 export async function fetchCommitCount(repoName: string): Promise<number | null> {
