@@ -2,5 +2,32 @@
   "pageTitle": "Experience",
   "pageSubtitle": "Where I've worked",
   "emptyState": "Experience will appear here.",
-  "items": []
+  "items": [
+    {
+      "id": "internship_01",
+      "company": "Tech Innovations Inc.",
+      "role": "Software Engineering Intern",
+      "duration": "Jun 2024 – Sep 2024 · 4 months",
+      "description": "Collaborated with the core engine team on performance tuning and bug fixes.",
+      "bulletPoints": [
+        "Built dynamic absolute triggering modules using React frameworks.",
+        "Optimized database indexing improving retrieval speeds by 40%.",
+        "Participated in agile sprints reviewing PR logs transparently."
+      ],
+      "tags": ["React", "TypeScript", "Node.js", "Firebase"]
+    },
+    {
+      "id": "freelance_01",
+      "company": "Freelance Client / Fintech",
+      "role": "Full Stack Developer",
+      "duration": "Sep 2024 – Present · 6 months",
+      "description": "Developed dynamic dashboard mechanics catering custom analytics triggers.",
+      "bulletPoints": [
+        "Architected secure responsive dashboard layouts absolute breakpoints frames.",
+        "Integrated custom charting modules feeding live WebSockets endpoints loops.",
+        "Created fallback triggers guaranteeing uptime failsafe mechanics securely."
+      ],
+      "tags": ["Next.js", "PostgreSQL", "TailwindCSS", "Socket.io"]
+    }
+  ]
 }

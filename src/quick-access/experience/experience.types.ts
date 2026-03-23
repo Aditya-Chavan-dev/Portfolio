@@ -4,6 +4,7 @@ export interface ExperienceItem {
   role:        string
   duration:    string
   description: string
+  bulletPoints?: string[]
   tags:        string[]
   logoUrl?:    string
 }
