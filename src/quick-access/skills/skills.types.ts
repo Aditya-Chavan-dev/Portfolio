@@ -1,8 +1,7 @@
-export type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced'
-
 export interface SkillItem {
   name:  string
-  level: SkillLevel
+  color?: string
+  iconSlug?: string
 }
 
 export interface SkillCategory {

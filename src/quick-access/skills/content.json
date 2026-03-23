@@ -6,16 +6,32 @@
     {
       "name": "Frontend",
       "items": [
-        { "name": "React",        "level": "Advanced"      },
-        { "name": "TypeScript",   "level": "Intermediate"  },
-        { "name": "Tailwind CSS", "level": "Advanced"      }
+        { "name": "React", "color": "#61DAFB", "iconSlug": "react" },
+        { "name": "TypeScript", "color": "#3178C6", "iconSlug": "typescript" },
+        { "name": "Tailwind CSS", "color": "#38BDF8", "iconSlug": "tailwindcss" },
+        { "name": "Next.js", "color": "#ffffff", "iconSlug": "nextjs" }
       ]
     },
     {
       "name": "Backend",
       "items": [
-        { "name": "Node.js",  "level": "Intermediate" },
-        { "name": "Firebase", "level": "Intermediate" }
+        { "name": "Node.js", "color": "#339933", "iconSlug": "nodejs" },
+        { "name": "Python", "color": "#3776AB", "iconSlug": "python" }
+      ]
+    },
+    {
+      "name": "Database & Cloud",
+      "items": [
+        { "name": "PostgreSQL", "color": "#4169E1", "iconSlug": "postgresql" },
+        { "name": "Firebase", "color": "#FFCA28", "iconSlug": "firebase" },
+        { "name": "Docker", "color": "#2496ED", "iconSlug": "docker" }
+      ]
+    },
+    {
+      "name": "Tools",
+      "items": [
+        { "name": "Git", "color": "#F05032", "iconSlug": "git" },
+        { "name": "Figma", "color": "#F24E1E", "iconSlug": "figma" }
       ]
     }
   ]
