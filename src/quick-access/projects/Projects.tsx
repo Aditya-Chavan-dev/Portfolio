@@ -1,13 +1,12 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useFeaturedProjects } from '@/hooks/useFeaturedProjects'
 import { ProjectCard } from './ProjectCard'
 import { SectionNav } from '@/shared/SectionNav'
-import ProjectDetailOverlay from './ProjectDetailOverlay' // assuming overlay exists or creating it
-import type { EnrichedProject } from '@/types/project'
+
 
 export default function Projects() {
   const { projects, loading, error } = useFeaturedProjects()
-  const [selectedProject, setSelectedProject] = useState<EnrichedProject | null>(null)
+  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-theme-primary font-sans">
@@ -38,7 +37,7 @@ export default function Projects() {
         {!loading && !error && projects.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((project) => (
-              <div key={project.id} onClick={() => setSelectedProject(project)} className="cursor-pointer">
+              <div key={project.id} onClick={() => navigate(`/projects/${project.name}`)} className="cursor-pointer">
                 <ProjectCard project={project} />
               </div>
             ))}
@@ -46,13 +45,6 @@ export default function Projects() {
         )}
       </main>
 
-      {/* DETAIL MODAL */}
-      {selectedProject && (
-        <ProjectDetailOverlay 
-          project={selectedProject} 
-          onClose={() => setSelectedProject(null)} 
-        />
-      )}
     </div>
   )
 }
