@@ -4,6 +4,7 @@ import { useTheme } from '@/shared/useTheme'
 interface ThemeContextValue {
   readonly theme:  'light' | 'dark'
   readonly toggle: () => void
+  readonly setTheme: (t: 'light' | 'dark') => void
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)

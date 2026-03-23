@@ -10,7 +10,7 @@ import ImmersiveJourney from '@/immersive-journey/ImmersiveJourney'
 import Projects         from '@/quick-access/projects/Projects'
 import Skills           from '@/quick-access/skills/Skills'
 import Experience       from '@/quick-access/experience/Experience'
-import About            from '@/quick-access/about/About'
+import Certifications   from '@/quick-access/certifications/Certifications'
 import ProjectDetail    from '@/quick-access/projects/ProjectDetail'
 import Testimonial      from '@/testimonial/Testimonial'
 import NotFound         from '@/not-found/NotFound'
@@ -48,7 +48,7 @@ export default function App() {
           <Route path="/projects/:projectId" element={<PageTransition><ProjectDetail /></PageTransition>} />
           <Route path="/skills"     element={<PageTransition><Skills /></PageTransition>}           />
           <Route path="/experience" element={<PageTransition><Experience /></PageTransition>}       />
-          <Route path="/about"      element={<PageTransition><About /></PageTransition>}            />
+          <Route path="/certifications" element={<PageTransition><Certifications /></PageTransition>} />
           <Route path="/testimonial" element={<PageTransition><Testimonial /></PageTransition>}     />
           <Route path="/404"        element={<PageTransition><NotFound /></PageTransition>}         />
 

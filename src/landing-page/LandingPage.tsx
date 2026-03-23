@@ -5,6 +5,7 @@ import { useIsMobile } from '@/shared/useIsMobile'
 import { useWelcomeContent } from './useWelcomeContent'
 import { LandingPageDesktop } from './LandingPage.desktop'
 import { LandingPageMobile }  from './LandingPage.mobile'
+import { useThemeContext } from '@/shared/ThemeProvider'
 
 const SESSION_KEY = 'has_seen_welcome' as const
 
@@ -12,6 +13,12 @@ export default function LandingPage() {
   const isMobile               = useIsMobile()
   const { content, loading }   = useWelcomeContent()
   const navigate               = useNavigate()
+  const { setTheme }           = useThemeContext()
+
+  // Force dark theme for the cinematic intro
+  useEffect(() => {
+    setTheme('dark')
+  }, [setTheme])
 
   const [showCTA,        setShowCTA       ] = useState(false)
   const [skipAnimation,  setSkipAnimation ] = useState(false)

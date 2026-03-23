@@ -2,10 +2,10 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { ThemeToggle } from '@/shared/ThemeToggle'
 
 const SECTIONS = [
-  { label: 'Projects',   route: '/projects'   },
-  { label: 'Skills',     route: '/skills'     },
-  { label: 'Experience', route: '/experience' },
-  { label: 'About',      route: '/about'      },
+  { label: 'Projects',       route: '/projects'   },
+  { label: 'Skills',         route: '/skills'     },
+  { label: 'Experience',     route: '/experience' },
+  { label: 'Certifications', route: '/certifications' },
 ] as const
 
 export function SectionNav() {
