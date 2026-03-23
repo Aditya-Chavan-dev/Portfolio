@@ -10,7 +10,7 @@
     { "title": "Projects",    "description": "What I've built",   "route": "/projects",   "icon": "Folder" },
     { "title": "Skills",      "description": "What I work with",  "route": "/skills",     "icon": "Diamond" },
     { "title": "Experience",  "description": "Where I've worked", "route": "/experience", "icon": "Briefcase" },
-    { "title": "About",       "description": "Who I am",          "route": "/about",      "icon": "User" }
+    { "title": "Certifications", "description": "What I have achieved", "route": "/certifications", "icon": "Award" }
   ],
   "testimonialsLabel": "Testimonials",
   "testimonialsEmptyState": "Testimonials will appear here once approved",

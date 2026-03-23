@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Folder, Diamond, Briefcase, User } from 'lucide-react'
+import { Folder, Diamond, Briefcase, User, Award } from 'lucide-react'
 
 interface QuickAccessCardProps {
   readonly title:       string
@@ -12,14 +12,16 @@ const iconMap: Record<string, any> = {
   Folder,
   Diamond,
   Briefcase,
-  User
+  User,
+  Award
 }
 
 const fallbackIconMap: Record<string, any> = {
   Projects: Folder,
   Skills: Diamond,
   Experience: Briefcase,
-  About: User
+  About: User,
+  Certifications: Award
 }
 
 export function QuickAccessCard({ title, description, route, icon }: QuickAccessCardProps) {
