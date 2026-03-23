@@ -1,3 +1,93 @@
+## [182] Add Certifications section and components
+**Date:** 23 Mar 2026
+**Type:** Feature
+
+### What was built / What was the issue
+Add Certifications section and components (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
+## [181] Maintain offline state resilience in Firestore providers
+**Date:** 23 Mar 2026
+**Type:** Fix
+
+### What was built / What was the issue
+Maintain offline state resilience in Firestore providers (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
+## [180] Global Dark/Light Theme floating toggle integration
+**Date:** 23 Mar 2026
+**Type:** Feature
+
+### What was built / What was the issue
+Global Dark/Light Theme floating toggle integration (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
+## [179] Enhance Experience Card layout with absolute transparent offsets
+**Date:** 23 Mar 2026
+**Type:** Feature
+
+### What was built / What was the issue
+Enhance Experience Card layout with absolute transparent offsets (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
+## [178] Upgrade Skills Section layout and interactive categories
+**Date:** 23 Mar 2026
+**Type:** Feature
+
+### What was built / What was the issue
+Upgrade Skills Section layout and interactive categories (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
+## [177] Update Projects Navigation to use dedicated routes
+**Date:** 23 Mar 2026
+**Type:** Feature
+
+### What was built / What was the issue
+Update Projects Navigation to use dedicated routes (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
+## [176] Remove old dead code and references for the About section
+**Date:** 23 Mar 2026
+**Type:** Fix
+
+### What was built / What was the issue
+Remove old dead code and references for the About section (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
+## [175] Update Hub item 'About' to 'Certifications' with Award icon
+**Date:** 23 Mar 2026
+**Type:** Feature
+
+### What was built / What was the issue
+Update Hub item 'About' to 'Certifications' with Award icon (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
+## [174] Fix projectMetadata type mismatch that blocked build
+**Date:** 23 Mar 2026
+**Type:** Fix
+
+### What was built / What was the issue
+Fix projectMetadata type mismatch that blocked build (Automated entry)
+
+### Files changed
+- Automated (Review git status)
+
 ## [173] Refactor project details layouts and optimize metrics mapping
 **Date:** 22 Mar 2026
 **Type:** Feature
