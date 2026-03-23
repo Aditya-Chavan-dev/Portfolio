@@ -1,5 +1,5 @@
 import { initializeApp, getApps, type FirebaseApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore'
 import { getDatabase } from 'firebase/database'
 import { getAuth } from 'firebase/auth'
 import { getStorage } from 'firebase/storage'
@@ -19,6 +19,15 @@ const app: FirebaseApp =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
 
 export const db      = getFirestore(app)
+
+// Enable offline persistence
+enableIndexedDbPersistence(db).catch((err) => {
+  if (err.code === 'failed-precondition') {
+    console.warn('Firestore multi-tab persistence failed precondition')
+  } else if (err.code === 'unimplemented') {
+    console.warn('Firestore persistence unimplemented')
+  }
+})
 export const rtdb    = getDatabase(app)
 export const auth    = getAuth(app)
 export const storage = getStorage(app)
