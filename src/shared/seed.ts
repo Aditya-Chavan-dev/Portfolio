@@ -16,7 +16,6 @@ import hubContent        from '../hub/content.json'
 import projectsContent   from '../quick-access/projects/content.json'
 import skillsContent     from '../quick-access/skills/content.json'
 import experienceContent from '../quick-access/experience/content.json'
-import aboutContent      from '../quick-access/about/content.json'
 import testimonialContent from '../testimonial/content.json'
 import notFoundContent   from '../not-found/content.json'
 
@@ -37,7 +36,6 @@ const pages: Record<string, unknown> = {
   projects:    projectsContent,
   skills:      skillsContent,
   experience:  experienceContent,
-  about:       aboutContent,
   testimonial: testimonialContent,
   notFound:    notFoundContent,
 }

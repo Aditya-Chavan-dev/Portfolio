@@ -15,7 +15,6 @@ import type { HubContent }             from '@/hub/hub.types'
 import type { ProjectsContent }        from '@/quick-access/projects/projects.types'
 import type { SkillsContent }          from '@/quick-access/skills/skills.types'
 import type { ExperienceContent }      from '@/quick-access/experience/experience.types'
-import type { AboutContent }           from '@/quick-access/about/about.types'
 import type { TestimonialPageContent } from '@/testimonial/testimonial.types'
 import type { PublicTestimonial }      from '@/shared/testimonial.types'
 import type { GitHubCache }            from '@/shared/github.types'
@@ -56,7 +55,6 @@ export const getHubContent             = (): Promise<HubContent | null>         
 export const getProjectsContent        = (): Promise<ProjectsContent | null>        => getLiveDoc('projects')
 export const getSkillsContent          = (): Promise<SkillsContent | null>          => getLiveDoc('skills')
 export const getExperienceContent      = (): Promise<ExperienceContent | null>      => getLiveDoc('experience')
-export const getAboutContent           = (): Promise<AboutContent | null>           => getLiveDoc('about')
 export const getTestimonialPageContent = (): Promise<TestimonialPageContent | null> => getLiveDoc('testimonial')
 export const getNotFoundContent        = (): Promise<{ heading: string; body: string; backLabel: string } | null> => getLiveDoc('notFound')
 
