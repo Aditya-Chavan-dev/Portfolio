@@ -1,6 +1,4 @@
-import type { Project } from '@/types/project'
-
-export const projectMetadata: Record<string, Partial<Project>> = {
+export const projectMetadata: Record<string, any> = {
   'Portfolio': {
     startDate: 'Jan 2024',
     endDate: 'Mar 2024',
