@@ -2,6 +2,7 @@ import { WelcomeDialogue } from './WelcomeDialogue'
 import type { WelcomeConfig } from './landing.types'
 import { AmbientDust } from './AmbientDust'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useEditMode } from '@/admin/EditModeContext'
 
 interface Props {
   readonly content:        WelcomeConfig
@@ -20,9 +21,10 @@ export function LandingPageMobile({
   onDialogueComplete,
   onNavigateHub,
 }: Props) {
+  const { mode } = useEditMode()
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (showCTA && (e.key === 'Enter' || e.key === ' ')) {
+    if (showCTA && mode !== 'edit' && (e.key === 'Enter' || e.key === ' ')) {
       if (e.key === ' ') e.preventDefault()
       onNavigateHub()
     }
@@ -30,7 +32,7 @@ export function LandingPageMobile({
 
   return (
     <div
-      onClick={() => showCTA && onNavigateHub()}
+      onClick={() => showCTA && mode !== 'edit' && onNavigateHub()}
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}

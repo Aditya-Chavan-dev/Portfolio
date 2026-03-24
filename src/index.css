@@ -312,3 +312,66 @@ html[data-theme="dark"] {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
+
+/* ─── Toast Notification Animation ─────────────────────────── */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* ─── Admin-Only Classes ───────────────────────────────────── */
+
+.admin-editable {
+  outline: 2px dashed #3B82F6;
+  outline-offset: 2px;
+  border-radius: 4px;
+  cursor: text;
+  transition: outline-color 0.15s;
+}
+
+.admin-editable:hover {
+  outline-color: #1D4ED8;
+}
+
+.admin-editable:focus {
+  outline-style: solid;
+  outline-color: #1D4ED8;
+}
+
+.admin-archived {
+  opacity: 0.5;
+  position: relative;
+}
+
+.admin-archived-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #6B7280;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-char-counter {
+  font-size: 11px;
+  color: #6B7280;
+  text-align: right;
+  margin-top: 2px;
+}
+
+.admin-char-counter.over-limit {
+  color: #EF4444;
+  font-weight: 600;
+}
+

@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useEditMode } from '@/admin/EditModeContext'
+import EditableText from '@/admin/components/EditableText'
 
 interface WelcomeDialogueProps {
   readonly lines: string[]
@@ -16,6 +18,7 @@ export function WelcomeDialogue({
   highlightIndex,
   onComplete,
 }: WelcomeDialogueProps) {
+  const { mode } = useEditMode()
   const [state, setState] = useState<WelcomeState>('READY')
   const [currentLine, setCurrentLine] = useState(0)
   const [currentLineText, setCurrentLineText] = useState('')
@@ -31,7 +34,8 @@ export function WelcomeDialogue({
 
   // Skip behaviour triggers
   useEffect(() => {
-    if (skip && !completedRef.current && state !== 'COMPLETE' && state !== 'PROMPT') {
+    const forceSkip = skip
+    if (forceSkip && !completedRef.current && state !== 'COMPLETE' && state !== 'PROMPT') {
       completedRef.current = true
       setState('COMPLETE')
       onComplete()
@@ -40,7 +44,8 @@ export function WelcomeDialogue({
 
   // Core State Machine Typewriter Controller
   useEffect(() => {
-    if (skip || state === 'COMPLETE' || state === 'PROMPT' || state === 'EXITING') return
+    const forceSkip = skip
+    if (forceSkip || state === 'COMPLETE' || state === 'PROMPT' || state === 'EXITING') return
 
     if (state === 'READY') {
       const t = setTimeout(() => setState('TYPING_LINE'), 400)
@@ -94,7 +99,7 @@ export function WelcomeDialogue({
       return () => clearTimeout(t)
     }
 
-  }, [state, currentLineText, currentLine, currentContent, skip, onComplete])
+  }, [state, currentLineText, currentLine, currentContent, skip, mode, onComplete])
 
 
 
@@ -148,11 +153,14 @@ export function WelcomeDialogue({
           return (
             <motion.p
               key={i}
+              initial={skip ? { opacity: 0, y: 8, filter: 'blur(3px)' } : undefined}
+              animate={skip ? { opacity: 1, y: 0, filter: 'blur(0px)' } : undefined}
+              transition={skip ? { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.04 } : undefined}
               className={`text-[13px] md:text-[18px] font-serif tracking-[0.02em] leading-[1.8] font-bold ${colorClass} text-center`}
               style={{ marginTop }}
             >
               {isCompleted ? (
-                text
+                <EditableText id={`welcome.dialogue.${i}`} value={text} />
               ) : (
                 <>
                   {isTyping && currentLineText.length === 0 && (

@@ -3,6 +3,7 @@ import { WelcomeDialogue } from './WelcomeDialogue'
 import type { WelcomeConfig } from './landing.types'
 import { AmbientDust } from './AmbientDust'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useEditMode } from '@/admin/EditModeContext'
 
 interface Props {
   readonly content:        WelcomeConfig
@@ -21,10 +22,11 @@ export function LandingPageDesktop({
   onDialogueComplete,
   onNavigateHub,
 }: Props) {
+  const { mode } = useEditMode()
 
   // Support "Press any key to continue" once dialogue is complete
   useEffect(() => {
-    if (!showCTA) return
+    if (!showCTA || mode === 'edit') return
 
     const handleAnyKey = () => {
       onNavigateHub()
@@ -32,7 +34,7 @@ export function LandingPageDesktop({
 
     window.addEventListener('keydown', handleAnyKey)
     return () => window.removeEventListener('keydown', handleAnyKey)
-  }, [showCTA, onNavigateHub])
+  }, [showCTA, mode, onNavigateHub])
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center select-none overflow-hidden py-[48px] relative">

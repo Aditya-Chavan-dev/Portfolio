@@ -3,6 +3,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from '@/shared/ThemeProvider'
 import { ProtectedRoute } from '@/shared/ProtectedRoute'
 import { FloatingThemeToggle } from '@/shared/FloatingThemeToggle'
+import BottomDock from '@/admin/BottomDock'
+import { usePresence } from '@/hooks/usePresence'
+import { useRecordVisit } from '@/hooks/useRecordVisit'
 
 import LandingPage      from '@/landing-page/LandingPage'
 import Hub              from '@/hub/Hub'
@@ -31,6 +34,19 @@ function PageTransition({ children }: { readonly children: React.ReactNode }) {
   )
 }
 
+/** Runs visitor tracking hooks on public routes only */
+function PublicTracker() {
+  const location = useLocation()
+  const isAdminRoute = location.pathname.startsWith('/amgl')
+
+  // Hooks must always be called — but they no-op internally when conditions are wrong
+  usePresence()
+  useRecordVisit()
+
+  // Return null if admin route — the hooks still run but won't re-run on navigation
+  return isAdminRoute ? null : null
+}
+
 export default function App() {
   const location = useLocation()
   const isWelcomeScreen = location.pathname === '/'
@@ -38,34 +54,38 @@ export default function App() {
   return (
     <ThemeProvider>
       {!isWelcomeScreen && <FloatingThemeToggle />}
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          {/* ── Public routes ─────────────────────────────────── */}
-          <Route path="/"           element={<PageTransition><LandingPage /></PageTransition>}      />
-          <Route path="/hub"        element={<PageTransition><Hub /></PageTransition>}              />
-          <Route path="/journey"    element={<PageTransition><ImmersiveJourney /></PageTransition>} />
-          <Route path="/projects"   element={<PageTransition><Projects /></PageTransition>}         />
-          <Route path="/projects/:projectId" element={<PageTransition><ProjectDetail /></PageTransition>} />
-          <Route path="/skills"     element={<PageTransition><Skills /></PageTransition>}           />
-          <Route path="/experience" element={<PageTransition><Experience /></PageTransition>}       />
-          <Route path="/certifications" element={<PageTransition><Certifications /></PageTransition>} />
-          <Route path="/testimonial" element={<PageTransition><Testimonial /></PageTransition>}     />
-          <Route path="/404"        element={<PageTransition><NotFound /></PageTransition>}         />
+      <BottomDock />
+      <PublicTracker />
+      <div>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            {/* ── Public routes ─────────────────────────────────── */}
+            <Route path="/"           element={<PageTransition><LandingPage /></PageTransition>}      />
+            <Route path="/hub"        element={<PageTransition><Hub /></PageTransition>}              />
+            <Route path="/journey"    element={<PageTransition><ImmersiveJourney /></PageTransition>} />
+            <Route path="/projects"   element={<PageTransition><Projects /></PageTransition>}         />
+            <Route path="/projects/:projectId" element={<PageTransition><ProjectDetail /></PageTransition>} />
+            <Route path="/skills"     element={<PageTransition><Skills /></PageTransition>}           />
+            <Route path="/experience" element={<PageTransition><Experience /></PageTransition>}       />
+            <Route path="/certifications" element={<PageTransition><Certifications /></PageTransition>} />
+            <Route path="/testimonial" element={<PageTransition><Testimonial /></PageTransition>}     />
+            <Route path="/404"        element={<PageTransition><NotFound /></PageTransition>}         />
 
-          {/* ── Admin routes ─────────────────────────────────── */}
-          <Route path="/amgl-3-10"  element={<PageTransition><AdminLogin /></PageTransition>} />
-          <Route path="/amgl-panel" element={
-            <PageTransition>
-              <ProtectedRoute>
-                <AdminPanel />
-              </ProtectedRoute>
-            </PageTransition>
-          } />
+            {/* ── Admin routes ─────────────────────────────────── */}
+            <Route path="/amgl-3-10"  element={<PageTransition><AdminLogin /></PageTransition>} />
+            <Route path="/amgl-panel" element={
+              <PageTransition>
+                <ProtectedRoute>
+                  <AdminPanel />
+                </ProtectedRoute>
+              </PageTransition>
+            } />
 
-          {/* ── Catch-all ────────────────────────────────────── */}
-          <Route path="*" element={<Navigate to="/404" replace />} />
-        </Routes>
-      </AnimatePresence>
+            {/* ── Catch-all ────────────────────────────────────── */}
+            <Route path="*" element={<Navigate to="/404" replace />} />
+          </Routes>
+        </AnimatePresence>
+      </div>
     </ThemeProvider>
   )
 }

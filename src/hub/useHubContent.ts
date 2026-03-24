@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { getHubContent } from '@/shared/firestore.service'
+import { doc, onSnapshot } from 'firebase/firestore'
+import { db } from '@/shared/firebase'
 import type { HubContent } from './hub.types'
 import fallbackContent from './content.json'
 
@@ -8,16 +9,37 @@ export function useHubContent() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    let cancelled = false
-    getHubContent()
-      .then((data) => {
-        if (!cancelled) setContent(data ?? (fallbackContent as unknown as HubContent))
-      })
-      .catch(() => {
-        if (!cancelled) setContent(fallbackContent as unknown as HubContent)
-      })
-      .finally(() => { if (!cancelled) setLoading(false) })
-    return () => { cancelled = true }
+    const docRef = doc(db, 'live', 'hub')
+
+    // Safety timer to force fallback if onSnapshot hangs (e.g., due to Adblocker)
+    const timeoutTimer = setTimeout(() => {
+      setContent(fallbackContent as unknown as HubContent)
+      setLoading(false)
+    }, 2500)
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (snap) => {
+        clearTimeout(timeoutTimer)
+        if (snap.exists()) {
+          setContent(snap.data() as HubContent)
+        } else {
+          setContent(fallbackContent as unknown as HubContent)
+        }
+        setLoading(false)
+      },
+      (error) => {
+        clearTimeout(timeoutTimer)
+        console.error('Hub content subscription error:', error)
+        setContent(fallbackContent as unknown as HubContent)
+        setLoading(false)
+      }
+    )
+
+    return () => {
+      clearTimeout(timeoutTimer)
+      unsubscribe()
+    }
   }, [])
 
   return { content, loading } as const
