@@ -14,6 +14,10 @@
       ".read": true,
       ".write": false
     },
+    "presence": {
+      ".read": true,
+      ".write": true
+    },
     "paths": {
       ".read": true,
       ".write": false
