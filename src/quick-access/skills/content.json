@@ -6,32 +6,32 @@
     {
       "name": "Frontend",
       "items": [
-        { "name": "React", "color": "#61DAFB", "iconSlug": "react" },
-        { "name": "TypeScript", "color": "#3178C6", "iconSlug": "typescript" },
-        { "name": "Tailwind CSS", "color": "#38BDF8", "iconSlug": "tailwindcss" },
-        { "name": "Next.js", "color": "#ffffff", "iconSlug": "nextjs" }
+        { "id": "skill-1", "name": "React", "level": "Advanced", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg", "iconSource": "devicons" },
+        { "id": "skill-2", "name": "TypeScript", "level": "Advanced", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg", "iconSource": "devicons" },
+        { "id": "skill-3", "name": "Tailwind CSS", "level": "Advanced", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg", "iconSource": "devicons" },
+        { "id": "skill-4", "name": "Next.js", "level": "Intermediate", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg", "iconSource": "devicons" }
       ]
     },
     {
       "name": "Backend",
       "items": [
-        { "name": "Node.js", "color": "#339933", "iconSlug": "nodejs" },
-        { "name": "Python", "color": "#3776AB", "iconSlug": "python" }
+        { "id": "skill-5", "name": "Node.js", "level": "Advanced", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg", "iconSource": "devicons" },
+        { "id": "skill-6", "name": "Python", "level": "Intermediate", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg", "iconSource": "devicons" }
       ]
     },
     {
       "name": "Database & Cloud",
       "items": [
-        { "name": "PostgreSQL", "color": "#4169E1", "iconSlug": "postgresql" },
-        { "name": "Firebase", "color": "#FFCA28", "iconSlug": "firebase" },
-        { "name": "Docker", "color": "#2496ED", "iconSlug": "docker" }
+        { "id": "skill-7", "name": "PostgreSQL", "level": "Intermediate", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg", "iconSource": "devicons" },
+        { "id": "skill-8", "name": "Firebase", "level": "Advanced", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg", "iconSource": "devicons" },
+        { "id": "skill-9", "name": "Docker", "level": "Intermediate", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg", "iconSource": "devicons" }
       ]
     },
     {
       "name": "Tools",
       "items": [
-        { "name": "Git", "color": "#F05032", "iconSlug": "git" },
-        { "name": "Figma", "color": "#F24E1E", "iconSlug": "figma" }
+        { "id": "skill-10", "name": "Git", "level": "Advanced", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg", "iconSource": "devicons" },
+        { "id": "skill-11", "name": "Figma", "level": "Intermediate", "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg", "iconSource": "devicons" }
       ]
     }
   ]

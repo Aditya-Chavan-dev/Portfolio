@@ -7,6 +7,7 @@ export interface CertificationItem {
   tags:           string[]
   imageUrl:       string
   credentialUrl?: string
+  archived?:      boolean
 }
 
 export interface CertificationsContent {

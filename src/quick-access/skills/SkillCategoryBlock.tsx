@@ -3,7 +3,7 @@ import type { EnrichedProject } from '@/types/project'
 
 interface Props {
   readonly category: SkillCategory
-  readonly projects?: EnrichedProject[] // made optional just in case
+  readonly projects?: EnrichedProject[]
 }
 
 export function SkillCategoryBlock({ category }: Props) {
@@ -16,29 +16,26 @@ export function SkillCategoryBlock({ category }: Props) {
       
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 pt-1">
         {category.items.map((skill) => {
-          const slug = skill.iconSlug || skill.name.toLowerCase().replace(' ', '')
-          const color = skill.color || '#38BDF8'
-
           return (
             <div 
-              key={skill.name}
-              style={{ '--glow-color': color } as React.CSSProperties}
+              key={skill.id}
               className="
                 bg-white dark:bg-[#131315] border border-black/[0.03] dark:border-white/[0.04] rounded-xl p-1.5 
                 flex flex-col items-center justify-center gap-1 text-center h-16
-                hover:scale-105 hover:shadow-[0_0_20px_-3px_var(--glow-color)]
+                hover:scale-105 hover:shadow-md
                 transition-all duration-200 cursor-default group
               "
             >
               <img 
-                src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${slug}/${slug}-original.svg`} 
+                src={skill.iconUrl} 
                 className="w-7 h-7 object-contain transition-transform group-hover:scale-105" 
                 alt={`${skill.name} icon`}
                 onError={(e) => {
-                  // Fallback to devicon line if original failing absolute triggers or missing
+                  // Fallback: try -plain variant if -original fails
                   const target = e.target as HTMLImageElement
-                  if (!target.src.includes('-line.svg')) {
-                    target.src = target.src.replace('-original.svg', '-line.svg')
+                  if (target.src.includes('-original.svg') && !target.dataset.fallbackAttempted) {
+                    target.dataset.fallbackAttempted = 'true'
+                    target.src = target.src.replace('-original.svg', '-plain.svg')
                   }
                 }}
               />

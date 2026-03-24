@@ -1,7 +1,9 @@
 export interface SkillItem {
-  name:  string
-  color?: string
-  iconSlug?: string
+  id:         string
+  name:       string
+  level:      string
+  iconUrl:    string
+  iconSource: string
 }
 
 export interface SkillCategory {

@@ -7,6 +7,7 @@ export interface ExperienceItem {
   bulletPoints?: string[]
   tags:        string[]
   logoUrl?:    string
+  archived?:   boolean
 }
 
 export interface ExperienceContent {

@@ -27,19 +27,23 @@ export default function Experience() {
           {content.pageSubtitle}
         </p>
 
-        {content.items.length > 0 ? (
+        {/* Filter out archived items for public view */}
+        {(() => {
+          const visibleItems = content.items.filter(item => !item.archived)
+          return visibleItems.length > 0 ? (
           <div>
-            {content.items.map((item, i) => (
+            {visibleItems.map((item, i) => (
               <ExperienceCard
                 key={item.id}
                 item={item}
-                isLast={i === content.items.length - 1}
+                isLast={i === visibleItems.length - 1}
               />
             ))}
           </div>
         ) : (
           <p className="text-theme-muted text-sm">{content.emptyState}</p>
-        )}
+        )
+        })()}
       </main>
     </div>
   )

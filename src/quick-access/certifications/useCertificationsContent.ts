@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
 import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/shared/firebase'
-import type { ExperienceContent } from './experience.types'
+import type { CertificationsContent } from './certifications.types'
 import fallbackContent from './content.json'
 
-export function useExperienceContent() {
-  const [content, setContent] = useState<ExperienceContent | null>(null)
+export function useCertificationsContent() {
+  const [content, setContent] = useState<CertificationsContent | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const docRef = doc(db, 'live', 'experience')
+    const docRef = doc(db, 'live', 'certifications')
 
     const timeoutTimer = setTimeout(() => {
-      setContent(fallbackContent as unknown as ExperienceContent)
+      setContent(fallbackContent as unknown as CertificationsContent)
       setLoading(false)
     }, 2500)
 
@@ -21,16 +21,16 @@ export function useExperienceContent() {
       (snap) => {
         clearTimeout(timeoutTimer)
         if (snap.exists()) {
-          setContent(snap.data() as ExperienceContent)
+          setContent(snap.data() as CertificationsContent)
         } else {
-          setContent(fallbackContent as unknown as ExperienceContent)
+          setContent(fallbackContent as unknown as CertificationsContent)
         }
         setLoading(false)
       },
       (error) => {
         clearTimeout(timeoutTimer)
-        console.error('Experience content subscription error:', error)
-        setContent(fallbackContent as unknown as ExperienceContent)
+        console.error('Certifications content subscription error:', error)
+        setContent(fallbackContent as unknown as CertificationsContent)
         setLoading(false)
       }
     )

@@ -14,7 +14,8 @@
         "Optimized database indexing improving retrieval speeds by 40%.",
         "Participated in agile sprints reviewing PR logs transparently."
       ],
-      "tags": ["React", "TypeScript", "Node.js", "Firebase"]
+      "tags": ["React", "TypeScript", "Node.js", "Firebase"],
+      "archived": false
     },
     {
       "id": "freelance_01",
@@ -27,7 +28,8 @@
         "Integrated custom charting modules feeding live WebSockets endpoints loops.",
         "Created fallback triggers guaranteeing uptime failsafe mechanics securely."
       ],
-      "tags": ["Next.js", "PostgreSQL", "TailwindCSS", "Socket.io"]
+      "tags": ["Next.js", "PostgreSQL", "TailwindCSS", "Socket.io"],
+      "archived": false
     }
   ]
 }
