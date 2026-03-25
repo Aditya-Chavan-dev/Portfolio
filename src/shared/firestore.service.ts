@@ -10,7 +10,7 @@ import {
   type Unsubscribe,
 } from 'firebase/firestore'
 import { db } from '@/shared/firebase'
-import type { WelcomeContent, WelcomeConfig } from '@/landing-page/landing.types'
+import type { WelcomeConfig } from '@/landing-page/landing.types'
 import type { HubContent }             from '@/hub/hub.types'
 import type { ProjectsContent }        from '@/quick-access/projects/projects.types'
 import type { TestimonialPageContent } from '@/testimonial/testimonial.types'
@@ -42,7 +42,7 @@ async function getConfigDoc<T>(config: string): Promise<T | null> {
 
 // ─── Page content reads — each maps to one Firestore document ─────────────
 
-export const getWelcomeContent         = (): Promise<WelcomeContent | null>         => getLiveDoc('welcome')
+export const getWelcomeContent         = (): Promise<WelcomeConfig | null>         => getLiveDoc('welcome')
 export const getWelcomeConfig          = (): Promise<WelcomeConfig | null>         => getConfigDoc('welcomeScreen')
 
 export async function updateWelcomeConfig(data: WelcomeConfig): Promise<void> {
