@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate }          from 'react-router-dom'
 import { getTestimonialPageContent } from '@/shared/firestore.service'
 import { TestimonialForm }      from './TestimonialForm'
+import EditableText from '@/admin/components/EditableText'
 import type { TestimonialPageContent } from './testimonial.types'
 import fallbackContent from './content.json'
 
@@ -44,14 +45,14 @@ export default function Testimonial() {
             transition-colors duration-150 mb-8
           "
         >
-          {content.backLabel}
+          <EditableText id="testimonial.backLabel" value={content.backLabel} />
         </button>
 
         <h1 className="text-2xl font-bold text-white mb-2 tracking-tight">
-          {content.pageTitle}
+          <EditableText id="testimonial.pageTitle" value={content.pageTitle} />
         </h1>
         <p className="text-sm text-theme-secondary mb-8">
-          {content.pageSubtitle}
+          <EditableText id="testimonial.pageSubtitle" value={content.pageSubtitle} />
         </p>
 
         <TestimonialForm
