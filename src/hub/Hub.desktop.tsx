@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import { QuickAccessGrid } from './QuickAccessGrid'
 import { TestimonialsStrip } from './TestimonialsStrip'
 import EditableText from '@/admin/components/EditableText'
+import ImageUpload from '@/admin/components/ImageUpload'
+import { useEditMode } from '@/admin/EditModeContext'
 import type { HubContent } from './hub.types'
 import { motion } from 'framer-motion'
 
@@ -11,6 +13,12 @@ interface Props {
 
 export function HubDesktop({ content }: Props) {
   const navigate = useNavigate()
+  const { draftData } = useEditMode()
+  
+  // Resolve current display photo (Draft > Live)
+  const photoUrl = draftData['hub.ownerPhotoUrl'] !== undefined 
+    ? (draftData['hub.ownerPhotoUrl'] as string) 
+    : content.ownerPhotoUrl
 
   return (
     <div className="h-screen bg-ambient-light dark:bg-ambient-dark flex flex-col antialiased overflow-hidden">
@@ -35,16 +43,16 @@ export function HubDesktop({ content }: Props) {
               </div>
  
               {/* Profile Image Mask */}
-              <div 
-                className="w-52 h-52 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-xl flex items-center justify-center text-gray-400 text-xs border-2 border-theme-muted"
-                aria-label="Profile photo"
+              <ImageUpload 
+                id="hub.ownerPhotoUrl"
+                className="w-52 h-52 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-xl flex items-center justify-center border-2 border-theme-muted"
               >
-                {content.ownerPhotoUrl ? (
-                  <img src={content.ownerPhotoUrl} className="w-full h-full rounded-full object-cover" alt={content.ownerName} />
+                {photoUrl ? (
+                  <img src={photoUrl} className="w-full h-full rounded-full object-cover" alt={content.ownerName} />
                 ) : (
-                  <span>[ Profile ]</span>
+                  <span className="text-gray-400 text-xs">[ Profile ]</span>
                 )}
-              </div>
+              </ImageUpload>
             </div>
  
             {/* 2. Journey Bar */}

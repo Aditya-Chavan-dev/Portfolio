@@ -23,7 +23,7 @@ export function useHubContent() {
         clearTimeout(timeoutTimer)
         if (snap.exists()) {
           setContent(snap.data() as HubContent)
-        } else {
+        } else if (loading) {
           setContent(fallbackContent as unknown as HubContent)
         }
         setLoading(false)
@@ -31,7 +31,9 @@ export function useHubContent() {
       (error) => {
         clearTimeout(timeoutTimer)
         console.error('Hub content subscription error:', error)
-        setContent(fallbackContent as unknown as HubContent)
+        if (loading) {
+          setContent(fallbackContent as unknown as HubContent)
+        }
         setLoading(false)
       }
     )

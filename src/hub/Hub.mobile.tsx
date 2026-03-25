@@ -3,6 +3,8 @@ import { ThemeToggle } from '@/shared/ThemeToggle'
 import { QuickAccessGrid } from './QuickAccessGrid'
 import { TestimonialsStrip } from './TestimonialsStrip'
 import EditableText from '@/admin/components/EditableText'
+import ImageUpload from '@/admin/components/ImageUpload'
+import { useEditMode } from '@/admin/EditModeContext'
 import type { HubContent } from './hub.types'
 import { motion } from 'framer-motion'
 
@@ -12,6 +14,12 @@ interface Props {
 
 export function HubMobile({ content }: Props) {
   const navigate = useNavigate()
+  const { draftData } = useEditMode()
+
+  // Resolve current display photo (Draft > Live)
+  const photoUrl = draftData['hub.ownerPhotoUrl'] !== undefined 
+    ? (draftData['hub.ownerPhotoUrl'] as string) 
+    : content.ownerPhotoUrl
 
   return (
     <div className="min-h-dvh bg-ambient-light dark:bg-ambient-dark pb-8 flex flex-col antialiased overflow-x-hidden">
@@ -28,16 +36,16 @@ export function HubMobile({ content }: Props) {
         className="px-6 pt-16 flex flex-col items-center space-y-8 flex-1 w-full max-w-md mx-auto"
       >
         {/* 1. Photo Top */}
-        <div 
-          className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-xl flex items-center justify-center text-gray-400 text-xs border-2 border-theme-muted"
-          aria-label="Profile photo"
+        <ImageUpload 
+          id="hub.ownerPhotoUrl"
+          className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-rose-500 shrink-0 shadow-xl flex items-center justify-center border-2 border-theme-muted"
         >
-          {content.ownerPhotoUrl ? (
-            <img src={content.ownerPhotoUrl} className="w-full h-full rounded-full object-cover" alt={content.ownerName} />
+          {photoUrl ? (
+            <img src={photoUrl} className="w-full h-full rounded-full object-cover" alt={content.ownerName} />
           ) : (
-            <span>[ Profile ]</span>
+            <span className="text-gray-400 text-xs">[ Profile ]</span>
           )}
-        </div>
+        </ImageUpload>
 
         {/* 2. Hero Section (Centered) */}
         <div className="text-center space-y-2">
