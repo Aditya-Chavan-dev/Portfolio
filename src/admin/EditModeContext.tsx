@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react'
+import { SESSION_KEYS, ADMIN_ROUTES } from '@/shared/constants'
 
 type EditMode = 'idle' | 'edit' | 'preview'
 
@@ -46,10 +47,10 @@ export function EditModeProvider({ children }: Props) {
   }, [])
 
   const exitEditSession = useCallback(() => {
-    sessionStorage.removeItem('admin_edit_session')
+    sessionStorage.removeItem(SESSION_KEYS.ADMIN_EDIT_SESSION)
     setMode('idle')
     clearDraft()
-    window.location.href = '/amgl-panel' // Force reload to clear any local draft states
+    window.location.href = ADMIN_ROUTES.PANEL // Force reload to clear any local draft states
   }, [clearDraft])
 
   return (

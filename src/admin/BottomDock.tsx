@@ -4,8 +4,7 @@ import { useLocation } from 'react-router-dom'
 import { useEditSessionLock } from '@/hooks/useEditSessionLock'
 import { useEffect, useState } from 'react'
 import DeployModal from './components/DeployModal'
-
-const ADMIN_ROUTES = ['/amgl-3-10', '/amgl-panel']
+import { ADMIN_ROUTES, SESSION_KEYS } from '@/shared/constants'
 
 /**
  * BottomDock Component — Fixed floating dock at the bottom of the screen.
@@ -16,8 +15,8 @@ export default function BottomDock() {
   const [isDeployModalOpen, setIsDeployModalOpen] = useState(false)
   const { isAdmin } = useAuth()
   const location = useLocation()
-  const isAdminRoute = ADMIN_ROUTES.some(r => location.pathname.startsWith(r))
-  const hasEditSession = typeof window !== 'undefined' && sessionStorage.getItem('admin_edit_session') === 'true'
+  const isAdminRoute = Object.values(ADMIN_ROUTES).some(r => location.pathname.startsWith(r))
+  const hasEditSession = typeof window !== 'undefined' && sessionStorage.getItem(SESSION_KEYS.ADMIN_EDIT_SESSION) === 'true'
 
   const { lockHeldByMe, lockHeldByOther, acquireLock, releaseLock } = useEditSessionLock(isAdmin && hasEditSession)
 
