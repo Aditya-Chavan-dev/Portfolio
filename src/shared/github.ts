@@ -8,3 +8,4 @@ const _parsedTTL = Number(import.meta.env.VITE_GITHUB_CACHE_TTL_HOURS)
 export const GITHUB_CACHE_TTL_HOURS = Number.isNaN(_parsedTTL) ? 6 : _parsedTTL
 
 export const GITHUB_API_BASE = 'https://api.github.com' as const
+export const GITHUB_TOKEN    = import.meta.env.VITE_GITHUB_TOKEN as string | undefined

@@ -1,4 +1,4 @@
-import { GITHUB_USERNAME, GITHUB_API_BASE, GITHUB_CACHE_TTL_HOURS } from '@/shared/github'
+import { GITHUB_USERNAME, GITHUB_API_BASE, GITHUB_CACHE_TTL_HOURS, GITHUB_TOKEN } from '@/shared/github'
 import { getGitHubCache, setGitHubCache } from '@/shared/firestore.service'
 import type { GitHubRepo, GitHubActivity, GitHubCache } from '@/shared/github.types'
 
@@ -21,10 +21,53 @@ async function fetchRepos(): Promise<GitHubRepo[]> {
 
 /**
  * Full contribution graph requires GitHub GraphQL API + a personal access token.
- * Returns null until VITE_GITHUB_TOKEN is added to .env.
  */
 async function fetchActivity(): Promise<GitHubActivity | null> {
-  return null
+  if (!GITHUB_TOKEN) return null
+
+  const query = `
+    query($username: String!) {
+      user(login: $username) {
+        contributionsCollection {
+          contributionCalendar {
+            totalContributions
+            weeks {
+              contributionDays {
+                contributionCount
+                date
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+
+  try {
+    const res = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query, variables: { username: GITHUB_USERNAME } }),
+    })
+
+    if (!res.ok) return null
+    
+    const { data } = await res.json()
+    const calendar = data?.user?.contributionsCollection?.contributionCalendar
+    
+    if (!calendar) return null
+
+    return {
+      totalContributions: calendar.totalContributions,
+      weeks: calendar.weeks
+    }
+  } catch (err) {
+    console.error('[github] fetchActivity failed:', err)
+    return null
+  }
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────
