@@ -1,12 +1,27 @@
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { onSnapshot, doc } from 'firebase/firestore'
+import { db } from '@/shared/firebase'
 import { useGithubProjects } from '@/hooks/useGithubProjects'
 import { projectMetadata } from '@/lib/projectMetadata'
 import { SectionNav } from '@/shared/SectionNav'
+import EditableText from '@/admin/components/EditableText'
 
 export default function ProjectDetail() {
   const { projectId } = useParams<{ projectId: string }>()
   const { projects, loading, error } = useGithubProjects()
+  const [firestoreOverrides, setFirestoreOverrides] = useState<Record<string, any>>({})
+
+  // Subscribe to Firestore for saved God Mode edits
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'live', 'projects'), (snap) => {
+      if (snap.exists()) {
+        setFirestoreOverrides(snap.data() || {})
+      }
+    })
+    return unsub
+  }, [])
 
   if (loading) {
     return (
@@ -46,7 +61,9 @@ export default function ProjectDetail() {
   }
 
   const meta = projectMetadata[project.name] || {}
-  const mergedProject = { ...project, ...meta } as any
+  const fsOverrides = firestoreOverrides[project.name] || {}
+  // Merge: GitHub base → local metadata → Firestore overrides (highest priority)
+  const mergedProject = { ...project, ...meta, ...fsOverrides } as any
 
   return (
     <div className="h-screen w-full bg-theme-primary flex flex-col overflow-hidden font-sans">
@@ -91,9 +108,12 @@ export default function ProjectDetail() {
 
           {/* Right Column (Description) - 2/3 Width */}
           <div className="md:col-span-2 flex items-center border-t md:border-t-0 md:border-l border-black/[0.05] dark:border-white/[0.05] pt-4 md:pt-0 md:pl-8">
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-              {mergedProject.description || "A premium layout showcasing dynamic visual grid and limits framing accurately streams efficiently without threshold triggers."}
-            </p>
+            <EditableText 
+              id={`projects.${project.name}.description`} 
+              value={mergedProject.description || "No description provided."} 
+              as="p" 
+              className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed" 
+            />
           </div>
         </div>
 
@@ -104,17 +124,12 @@ export default function ProjectDetail() {
           <div className="bg-white dark:bg-[#131315] rounded-2xl p-6 flex flex-col gap-3 border border-black/[0.03] dark:border-white/[0.03] overflow-y-auto">
             <h2 className="text-xs font-bold tracking-wider text-gray-400 dark:text-gray-500 uppercase">1. TECH STACK</h2>
             <div className="flex flex-wrap gap-2">
-              {mergedProject.language && (
-                <span className="px-3 py-1.5 bg-black/[0.04] dark:bg-white/[0.04] rounded-md text-xs font-medium text-gray-800 dark:text-gray-200">
-                  {mergedProject.language}
-                </span>
-              )}
-              {mergedProject.topics.map((topic: string) => (
-                <span key={topic} className="px-3 py-1.5 bg-black/[0.04] dark:bg-white/[0.04] rounded-md text-xs font-medium text-gray-800 dark:text-gray-200">
-                  {topic}
+              {(mergedProject.meta?.techStack || mergedProject.topics || []).map((tech: string, i: number) => (
+                <span key={i} className="px-3 py-1.5 bg-black/[0.04] dark:bg-white/[0.04] rounded-md text-xs font-medium text-gray-800 dark:text-gray-200">
+                  <EditableText id={`projects.${project.name}.techStack.${i}`} value={tech} as="span" />
                 </span>
               ))}
-              {!mergedProject.language && mergedProject.topics.length === 0 && (
+              {(!mergedProject.meta?.techStack && (!mergedProject.topics || mergedProject.topics.length === 0)) && (
                 <p className="text-sm text-gray-500 dark:text-gray-400">No tech stack listed.</p>
               )}
             </div>
@@ -147,8 +162,8 @@ export default function ProjectDetail() {
                 <li key={i} className="flex gap-3 text-sm text-gray-600 dark:text-gray-300 items-start">
                   <span className="font-bold text-amber-600 dark:text-amber-400 text-xs pt-0.5">0{i+1}</span>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-800 dark:text-gray-200">{feat.title}</span>
-                    <span className="text-gray-500 dark:text-gray-400 text-xs">{feat.description}</span>
+                    <EditableText id={`projects.${project.name}.flagshipFeatures.${i}.title`} value={feat.title} as="span" className="font-semibold text-gray-800 dark:text-gray-200" />
+                    <EditableText id={`projects.${project.name}.flagshipFeatures.${i}.description`} value={feat.description} as="span" className="text-gray-500 dark:text-gray-400 text-xs" />
                   </div>
                 </li>
               ))}
@@ -166,8 +181,8 @@ export default function ProjectDetail() {
                 <li key={i} className="flex gap-3 text-sm text-gray-600 dark:text-gray-300 items-start">
                   <span className="font-bold text-amber-600 dark:text-amber-400 text-xs pt-0.5">0{i+1}</span>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-800 dark:text-gray-200">{learn.title}</span>
-                    <span className="text-gray-500 dark:text-gray-400 text-xs">{learn.description}</span>
+                    <EditableText id={`projects.${project.name}.learningsIssues.${i}.title`} value={learn.title} as="span" className="font-semibold text-gray-800 dark:text-gray-200" />
+                    <EditableText id={`projects.${project.name}.learningsIssues.${i}.description`} value={learn.description} as="span" className="text-gray-500 dark:text-gray-400 text-xs" />
                   </div>
                 </li>
               ))}
