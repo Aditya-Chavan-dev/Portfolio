@@ -3,6 +3,7 @@ import { SectionNav } from '@/shared/SectionNav'
 import { CertificationCard } from './CertificationCard'
 import { CertificationModal } from './CertificationModal'
 import { useCertificationsContent } from './useCertificationsContent'
+import EditableText from '@/admin/components/EditableText'
 import type { CertificationItem } from './certifications.types'
 
 export default function Certifications() {
@@ -42,19 +43,16 @@ export default function Certifications() {
     <div className="min-h-screen bg-theme-primary pb-24 md:pb-0">
       <SectionNav />
       <main className="max-w-4xl mx-auto px-6 md:px-8 py-8 md:py-12">
-        <h1 className="text-2xl md:text-3xl font-bold text-theme-primary mb-2 tracking-tight">
-          {content.pageTitle}
-        </h1>
-        <p className="text-sm md:text-base text-theme-secondary mb-10">
-          {content.pageSubtitle}
-        </p>
+        <EditableText id="certifications.pageTitle" value={content.pageTitle} as="h1" className="text-2xl md:text-3xl font-bold text-theme-primary mb-2 tracking-tight" />
+        <EditableText id="certifications.pageSubtitle" value={content.pageSubtitle} as="p" className="text-sm md:text-base text-theme-secondary mb-10" />
 
         {visibleItems.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {visibleItems.map((item) => (
+            {visibleItems.map((item, i) => (
               <CertificationCard
                 key={item.id}
                 item={item}
+                itemIndex={i}
                 onClick={() => setSelectedCert(item)}
               />
             ))}

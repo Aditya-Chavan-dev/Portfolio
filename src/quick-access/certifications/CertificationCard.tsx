@@ -1,11 +1,13 @@
 import type { CertificationItem } from './certifications.types'
+import EditableText from '@/admin/components/EditableText'
 
 interface Props {
   readonly item: CertificationItem
+  readonly itemIndex: number
   readonly onClick: () => void
 }
 
-export function CertificationCard({ item, onClick }: Props) {
+export function CertificationCard({ item, itemIndex, onClick }: Props) {
   return (
     <article 
       className="bg-white dark:bg-[#131315] rounded-xl p-5 border border-black/[0.03] dark:border-white/[0.03] shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between h-full"
@@ -15,15 +17,9 @@ export function CertificationCard({ item, onClick }: Props) {
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
     >
       <div>
-        <h3 className="font-semibold text-theme-primary leading-snug group-hover:text-amber-500 transition-colors">
-          {item.name}
-        </h3>
-        <p className="text-xs text-theme-muted mt-1">
-          {item.issuer}
-        </p>
-        <p className="text-xs text-theme-secondary mt-1">
-          {item.date}
-        </p>
+        <EditableText id={`certifications.items.${itemIndex}.name`} value={item.name} as="h3" className="font-semibold text-theme-primary leading-snug group-hover:text-amber-500 transition-colors" />
+        <EditableText id={`certifications.items.${itemIndex}.issuer`} value={item.issuer} as="p" className="text-xs text-theme-muted mt-1" />
+        <EditableText id={`certifications.items.${itemIndex}.date`} value={item.date} as="p" className="text-xs text-theme-secondary mt-1" />
       </div>
 
       {item.tags.length > 0 && (
