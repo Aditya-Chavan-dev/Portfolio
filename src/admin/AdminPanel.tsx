@@ -1,30 +1,13 @@
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthProvider'
 import { useToastContext } from '@/shared/Toast'
 import MetricsDashboard from './components/MetricsDashboard'
-import AdminProjectsTab from './components/AdminProjectsTab'
-
-type Tab = 'metrics' | 'projects' | 'deploy' | 'rollback' | 'audit' | 'skills'
-
-const TABS: { id: Tab; icon: string; label: string }[] = [
-  { id: 'metrics',  icon: '📊', label: 'Metrics' },
-  { id: 'projects', icon: '📁', label: 'Projects Catalog' },
-  { id: 'skills',   icon: '🛠',  label: 'Skills' },
-  { id: 'deploy',   icon: '🚀', label: 'Deploy' },
-  { id: 'rollback', icon: '🔄', label: 'Rollback' },
-  { id: 'audit',    icon: '📋', label: 'Audit Log' },
-]
+import { SESSION_KEYS } from '@/shared/constants'
 
 export default function AdminPanel() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const activeTab = (searchParams.get('tab') as Tab) || 'metrics'
   const { user, logout } = useAuth()
   const { addToast } = useToastContext()
   const navigate = useNavigate()
-
-  function setTab(tab: Tab) {
-    setSearchParams({ tab })
-  }
 
   async function handleLogout() {
     try {
@@ -36,127 +19,73 @@ export default function AdminPanel() {
     }
   }
 
-  function handleEditPortfolio() {
-    sessionStorage.setItem('admin_edit_session', 'true')
-    sessionStorage.removeItem('has_seen_welcome')
+  function handleGodMode() {
+    sessionStorage.setItem(SESSION_KEYS.ADMIN_EDIT_SESSION, 'true')
+    sessionStorage.removeItem(SESSION_KEYS.HAS_SEEN_WELCOME)
     navigate('/')
   }
 
   return (
-    <div className="min-h-screen bg-theme-primary flex font-sans">
-      {/* ── Sidebar ─────────────────────────────────────── */}
-      <aside className="hidden md:flex flex-col w-56 bg-white dark:bg-[#131315] border-r border-black/[0.04] dark:border-white/[0.04] shadow-sm">
-        {/* Logo area */}
-        <div className="px-5 py-5 border-b border-black/[0.04] dark:border-white/[0.04]">
-          <h1 className="text-sm font-bold text-theme-primary tracking-tight">Admin Panel</h1>
-          {user?.email && (
-            <p className="text-[10px] text-theme-muted font-mono mt-0.5 truncate">{user.email}</p>
-          )}
+    <div className="min-h-screen bg-theme-primary flex flex-col font-sans max-w-5xl mx-auto px-6 py-12 lg:py-16">
+      {/* Header */}
+      <header className="flex items-center justify-between mb-12 md:mb-16 border-b border-black/[0.04] dark:border-white/[0.04] pb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-theme-primary tracking-tight font-serif">
+            Admin Dashboard
+          </h1>
+          <p className="text-[10px] sm:text-xs text-theme-muted mt-1 font-mono tracking-widest uppercase truncate max-w-[200px] sm:max-w-none">
+            Authorized: {user?.email}
+          </p>
         </div>
+        
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 rounded-xl text-xs font-semibold text-red-500 hover:bg-red-500/10 border border-red-500/20 transition-all cursor-pointer whitespace-nowrap"
+        >
+          Sign Out
+        </button>
+      </header>
 
-        {/* Nav links */}
-        <nav className="flex-1 py-3 px-2 space-y-0.5 overflow-y-auto">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setTab(tab.id)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer flex items-center gap-2.5 ${
-                activeTab === tab.id
-                  ? 'bg-amber-600/10 text-amber-600 dark:text-amber-400'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-black/[0.03] dark:hover:bg-white/[0.03]'
-              }`}
-            >
-              <span className="text-base">{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+      {/* Metrics Section */}
+      <section className="mb-12 md:mb-20">
+        <MetricsDashboard />
+      </section>
 
-        {/* Bottom actions */}
-        <div className="px-3 py-4 border-t border-black/[0.04] dark:border-white/[0.04] space-y-2">
-          <button
-            onClick={handleEditPortfolio}
-            className="w-full px-3 py-2.5 rounded-lg text-sm font-semibold bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-2 justify-center"
-          >
-            ✏️ Edit Portfolio →
-          </button>
-          <button
-            onClick={handleLogout}
-            className="w-full px-3 py-2 rounded-lg text-xs font-medium text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer border border-red-500/20"
-          >
-            Sign Out
-          </button>
-        </div>
-      </aside>
+      {/* God Mode Entry */}
+      <section className="flex flex-col items-center justify-center p-8 md:p-16 rounded-[2.5rem] bg-gradient-to-br from-white to-gray-50 dark:from-[#131315] dark:to-[#0a0a0c] border border-black/[0.04] dark:border-white/[0.04] shadow-2xl relative overflow-hidden group">
+        {/* Decorative background glow */}
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl group-hover:bg-amber-500/20 transition-all duration-700" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-orange-600/10 rounded-full blur-3xl group-hover:bg-orange-600/20 transition-all duration-700" />
 
-      {/* ── Mobile top bar ──────────────────────────────── */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-[#131315] border-b border-black/[0.04] dark:border-white/[0.04] shadow-sm">
-        <div className="flex items-center justify-between px-4 py-3">
-          <h1 className="text-sm font-bold text-theme-primary">Admin</h1>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleEditPortfolio}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-600 text-white cursor-pointer"
-            >
-              ✏️ Edit
-            </button>
-            <button
-              onClick={handleLogout}
-              className="px-2.5 py-1.5 rounded-lg text-xs text-red-500 cursor-pointer border border-red-500/20"
-            >
-              Out
-            </button>
+        <div className="relative z-10 text-center max-w-md">
+          <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-600 rounded-[1.25rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-amber-500/20">
+            <span className="text-3xl text-white">✨</span>
           </div>
+          
+          <h2 className="text-3xl font-bold text-theme-primary mb-3">God Mode</h2>
+          <p className="text-theme-muted text-sm mb-10 leading-relaxed px-4">
+            Enter the visual editor to modify your portfolio in real-time. 
+            All changes remain in your draft until you deploy globally.
+          </p>
+
+          <button
+            onClick={handleGodMode}
+            className="group relative px-10 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full text-base font-bold shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <span className="relative z-10 group-hover:text-white transition-colors duration-200">
+              Enter God Mode →
+            </span>
+          </button>
         </div>
-        <div className="flex overflow-x-auto px-2 pb-2 gap-1 scrollbar-hide">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setTab(tab.id)}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer whitespace-nowrap transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-amber-600 text-white'
-                  : 'text-gray-500 bg-black/[0.03] dark:bg-white/[0.03]'
-              }`}
-            >
-              {tab.icon} {tab.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      </section>
 
-      {/* ── Main content ────────────────────────────────── */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-8 pt-28 md:pt-8">
-        <TabContent tab={activeTab} />
-      </main>
-    </div>
-  )
-}
-
-function TabContent({ tab }: { tab: Tab }) {
-  switch (tab) {
-    case 'metrics':
-      return <MetricsDashboard />
-    case 'projects':
-      return <AdminProjectsTab />
-    case 'skills':
-      return <PlaceholderTab name="Skills Manager" description="Coming in Phase 6" />
-    case 'deploy':
-      return <PlaceholderTab name="Deploy" description="Coming in Phase 7" />
-    case 'rollback':
-      return <PlaceholderTab name="Rollback" description="Coming in Phase 8" />
-    case 'audit':
-      return <PlaceholderTab name="Audit Log" description="Coming in Phase 6" />
-    default:
-      return <MetricsDashboard />
-  }
-}
-
-function PlaceholderTab({ name, description }: { name: string; description: string }) {
-  return (
-    <div className="max-w-md">
-      <h2 className="text-lg font-bold text-theme-primary mb-2">{name}</h2>
-      <p className="text-sm text-theme-muted">{description}</p>
+      {/* Footer Info */}
+      <footer className="mt-auto pt-16 text-center">
+        <p className="text-[10px] text-theme-muted uppercase tracking-[0.2em] font-medium opacity-50">
+          Antigravity Standard — Portfolio OS v2.4
+        </p>
+      </footer>
     </div>
   )
 }
