@@ -1,6 +1,7 @@
 import { SectionNav }            from '@/shared/SectionNav'
 import { useExperienceContent }  from './useExperienceContent'
 import { ExperienceCard }        from './ExperienceCard'
+import EditableText from '@/admin/components/EditableText'
 
 export default function Experience() {
   const { content, loading } = useExperienceContent()
@@ -20,12 +21,8 @@ export default function Experience() {
     <div className="min-h-screen bg-theme-primary pb-24 md:pb-0">
       <SectionNav />
       <main className="max-w-3xl mx-auto px-6 md:px-8 py-8 md:py-12">
-        <h1 className="text-2xl md:text-3xl font-bold text-theme-primary mb-2 tracking-tight">
-          {content.pageTitle}
-        </h1>
-        <p className="text-sm md:text-base text-theme-secondary mb-10">
-          {content.pageSubtitle}
-        </p>
+        <EditableText id="experience.pageTitle" value={content.pageTitle} as="h1" className="text-2xl md:text-3xl font-bold text-theme-primary mb-2 tracking-tight" />
+        <EditableText id="experience.pageSubtitle" value={content.pageSubtitle} as="p" className="text-sm md:text-base text-theme-secondary mb-10" />
 
         {/* Filter out archived items for public view */}
         {(() => {
@@ -36,6 +33,7 @@ export default function Experience() {
               <ExperienceCard
                 key={item.id}
                 item={item}
+                itemIndex={i}
                 isLast={i === visibleItems.length - 1}
               />
             ))}

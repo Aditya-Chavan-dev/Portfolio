@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import type { ExperienceItem } from './experience.types'
+import EditableText from '@/admin/components/EditableText'
 
 interface Props {
   readonly item:   ExperienceItem
+  readonly itemIndex: number
   readonly isLast: boolean
 }
 
-export function ExperienceCard({ item, isLast }: Props) {
+export function ExperienceCard({ item, itemIndex, isLast }: Props) {
   const [expanded, setExpanded] = useState(false)
 
   const hasBullets = item.bulletPoints && item.bulletPoints.length > 0
@@ -36,7 +38,7 @@ export function ExperienceCard({ item, isLast }: Props) {
           aria-expanded={hasBullets ? expanded : undefined}
         >
           <h3 className="font-semibold text-theme-primary leading-snug group-hover:text-amber-500 transition-colors flex items-center gap-2">
-            {item.role}
+            <EditableText id={`experience.items.${itemIndex}.role`} value={item.role} as="span" />
             {hasBullets && (
               <span className="text-[10px] text-theme-muted font-normal tracking-wide bg-theme-secondary px-1.5 py-0.5 rounded border border-theme-default">
                 {expanded ? '▲ Collapse' : '▼ Expand'}
@@ -44,11 +46,9 @@ export function ExperienceCard({ item, isLast }: Props) {
             )}
           </h3>
           <p className="text-sm text-theme-secondary">
-            {item.company} · {item.duration}
+            <EditableText id={`experience.items.${itemIndex}.company`} value={item.company} as="span" /> · <EditableText id={`experience.items.${itemIndex}.duration`} value={item.duration} as="span" />
           </p>
-          <p className="text-sm text-theme-secondary mt-2 leading-relaxed">
-            {item.description}
-          </p>
+          <EditableText id={`experience.items.${itemIndex}.description`} value={item.description} as="p" className="text-sm text-theme-secondary mt-2 leading-relaxed" />
         </div>
 
         {/* Bullet Points Expansion */}
@@ -57,7 +57,7 @@ export function ExperienceCard({ item, isLast }: Props) {
             <ul className="list-disc pl-4 space-y-2 text-sm text-theme-secondary">
               {item.bulletPoints!.map((point, i) => (
                 <li key={i} className="leading-relaxed">
-                  {point}
+                  <EditableText id={`experience.items.${itemIndex}.bulletPoints.${i}`} value={point} as="span" />
                 </li>
               ))}
             </ul>
