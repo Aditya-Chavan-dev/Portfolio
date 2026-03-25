@@ -36,15 +36,11 @@ function PageTransition({ children }: { readonly children: React.ReactNode }) {
 
 /** Runs visitor tracking hooks on public routes only */
 function PublicTracker() {
-  const location = useLocation()
-  const isAdminRoute = location.pathname.startsWith('/amgl')
-
   // Hooks must always be called — but they no-op internally when conditions are wrong
   usePresence()
   useRecordVisit()
 
-  // Return null if admin route — the hooks still run but won't re-run on navigation
-  return isAdminRoute ? null : null
+  return null
 }
 
 export default function App() {
