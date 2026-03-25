@@ -4,6 +4,7 @@ import type { WelcomeConfig } from './landing.types'
 import { AmbientDust } from './AmbientDust'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEditMode } from '@/admin/EditModeContext'
+import EditableText from '@/admin/components/EditableText'
 
 interface Props {
   readonly content:        WelcomeConfig
@@ -53,7 +54,7 @@ export function LandingPageDesktop({
         <div className="mt-[56px] flex flex-col items-center justify-center h-[60px] relative">
           <AnimatePresence mode="wait">
             {showCTA ? (
-              <motion.p
+              <motion.div
                 key="continue"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -62,7 +63,7 @@ export function LandingPageDesktop({
                 onClick={onNavigateHub}
                 className="text-[13px] text-[#555555] tracking-[0.02em] hover:text-[#FFFFFF] transition-colors duration-200 cursor-pointer flex items-center"
               >
-                Press any key to continue 
+                <EditableText id="welcome.ctaDesktop" value={content.ctaDesktop} />
                 <motion.span 
                   animate={{ opacity: [1, 0.3, 1] }} 
                   transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
@@ -70,7 +71,7 @@ export function LandingPageDesktop({
                 >
                   ▋
                 </motion.span>
-              </motion.p>
+              </motion.div>
             ) : showSkipHint ? (
               <motion.p
                 key="skip"
@@ -80,7 +81,7 @@ export function LandingPageDesktop({
                 transition={{ duration: 0.6 }}
                 className="text-[13px] text-[#555555] tracking-[0.02em]"
               >
-                Press Enter twice to skip
+                <EditableText id="welcome.skipHintDesktop" value={content.skipHintDesktop} />
               </motion.p>
             ) : null}
           </AnimatePresence>

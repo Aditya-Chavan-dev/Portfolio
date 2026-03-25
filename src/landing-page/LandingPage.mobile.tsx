@@ -3,6 +3,7 @@ import type { WelcomeConfig } from './landing.types'
 import { AmbientDust } from './AmbientDust'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEditMode } from '@/admin/EditModeContext'
+import EditableText from '@/admin/components/EditableText'
 
 interface Props {
   readonly content:        WelcomeConfig
@@ -53,7 +54,7 @@ export function LandingPageMobile({
         <div className="mt-[42px] flex flex-col items-center justify-center h-[50px] relative">
           <AnimatePresence mode="wait">
             {showCTA ? (
-              <motion.p
+              <motion.div
                 key="continue"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -61,7 +62,7 @@ export function LandingPageMobile({
                 transition={{ duration: 0.4 }}
                 className="text-[12px] text-[#555555] tracking-[0.02em] flex items-center"
               >
-                Tap to continue 
+                <EditableText id="welcome.ctaMobile" value={content.ctaMobile} />
                 <motion.span 
                   animate={{ opacity: [1, 0.3, 1] }} 
                   transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
@@ -69,7 +70,7 @@ export function LandingPageMobile({
                 >
                   ▋
                 </motion.span>
-              </motion.p>
+              </motion.div>
             ) : showSkipHint ? (
               <motion.p
                 key="skip"
@@ -79,7 +80,7 @@ export function LandingPageMobile({
                 transition={{ duration: 0.6 }}
                 className="text-[12px] text-[#555555] tracking-[0.02em]"
               >
-                Tap twice to skip
+                <EditableText id="welcome.skipHintMobile" value={content.skipHintMobile} />
               </motion.p>
             ) : null}
           </AnimatePresence>
