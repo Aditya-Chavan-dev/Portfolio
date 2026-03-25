@@ -9,7 +9,7 @@ export function useWelcomeContent() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const docRef = doc(db, 'adminConfig', 'welcomeScreen')
+    const docRef = doc(db, 'live', 'welcome')
     
     // Safety timer to force fallback if onSnapshot hangs/crashes (e.g., due to Adblocker)
     const timeoutTimer = setTimeout(() => {
