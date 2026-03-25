@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { ThemeToggle } from '@/shared/ThemeToggle'
 import { QuickAccessGrid } from './QuickAccessGrid'
 import { TestimonialsStrip } from './TestimonialsStrip'
+import EditableText from '@/admin/components/EditableText'
 import type { HubContent } from './hub.types'
 import { motion } from 'framer-motion'
 
@@ -40,16 +41,10 @@ export function HubMobile({ content }: Props) {
 
         {/* 2. Hero Section (Centered) */}
         <div className="text-center space-y-2">
-          <p className="text-xs uppercase tracking-widest text-theme-secondary font-medium">
-            {content.ownerRole}
-          </p>
-          <h1 className="text-3xl font-bold text-theme-primary tracking-tight">
-            {content.ownerName}
-          </h1>
+          <EditableText id="hub.ownerRole" value={content.ownerRole} as="p" className="text-xs uppercase tracking-widest text-theme-secondary font-medium" />
+          <EditableText id="hub.ownerName" value={content.ownerName} as="h1" className="text-3xl font-bold text-theme-primary tracking-tight" />
           {content.ownerQuote && (
-            <p className="text-sm italic text-gray-600 dark:text-gray-300 font-serif px-2">
-              &ldquo;{content.ownerQuote}&rdquo;
-            </p>
+            <EditableText id="hub.ownerQuote" value={content.ownerQuote} as="p" className="text-sm italic text-gray-600 dark:text-gray-300 font-serif px-2" />
           )}
         </div>
 
@@ -65,12 +60,8 @@ export function HubMobile({ content }: Props) {
           "
         >
           <div>
-            <p className="font-semibold text-theme-primary font-serif text-sm">
-              {content.journeyButtonLabel}
-            </p>
-            <p className="text-xs text-theme-muted mt-1 uppercase tracking-wider">
-              {content.journeyButtonSubtext}
-            </p>
+            <EditableText id="hub.journeyButtonLabel" value={content.journeyButtonLabel} as="p" className="font-semibold text-theme-primary font-serif text-sm" />
+            <EditableText id="hub.journeyButtonSubtext" value={content.journeyButtonSubtext} as="p" className="text-xs text-theme-muted mt-1 uppercase tracking-wider" />
           </div>
           <span className="text-lg text-theme-secondary">→</span>
         </button>
@@ -86,9 +77,7 @@ export function HubMobile({ content }: Props) {
 
         {/* 5. Testimonials Section */}
         <section className="w-full space-y-4" aria-label={content.testimonialsLabel}>
-          <p className="text-xs font-semibold text-theme-secondary uppercase tracking-wider text-center">
-            {content.testimonialsLabel}
-          </p>
+          <EditableText id="hub.testimonialsLabel" value={content.testimonialsLabel} as="p" className="text-xs font-semibold text-theme-secondary uppercase tracking-wider text-center" />
           <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
           <button
             type="button"
@@ -99,7 +88,7 @@ export function HubMobile({ content }: Props) {
               transition-colors duration-150 cursor-pointer
             "
           >
-            {content.leaveTestimonialLabel}
+            <EditableText id="hub.leaveTestimonialLabel" value={content.leaveTestimonialLabel} as="span" />
           </button>
         </section>
       </motion.main>

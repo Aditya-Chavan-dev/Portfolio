@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { QuickAccessGrid } from './QuickAccessGrid'
 import { TestimonialsStrip } from './TestimonialsStrip'
+import EditableText from '@/admin/components/EditableText'
 import type { HubContent } from './hub.types'
 import { motion } from 'framer-motion'
 
@@ -26,16 +27,10 @@ export function HubDesktop({ content }: Props) {
             {/* 1. Upper Row: Hero + Photo Side-By-Side */}
             <div className="flex items-center justify-between gap-8">
               <div className="space-y-2 flex-1">
-                <p className="text-sm uppercase tracking-widest text-theme-secondary font-medium">
-                  {content.ownerRole}
-                </p>
-                <h1 className="text-5xl font-bold text-theme-primary tracking-tight">
-                  {content.ownerName}
-                </h1>
+                <EditableText id="hub.ownerRole" value={content.ownerRole} as="p" className="text-sm uppercase tracking-widest text-theme-secondary font-medium" />
+                <EditableText id="hub.ownerName" value={content.ownerName} as="h1" className="text-5xl font-bold text-theme-primary tracking-tight" />
                 {content.ownerQuote && (
-                  <p className="text-base text-gray-600 dark:text-gray-300 font-quote italic leading-relaxed pr-8">
-                    &ldquo;{content.ownerQuote}&rdquo;
-                  </p>
+                  <EditableText id="hub.ownerQuote" value={content.ownerQuote} as="p" className="text-base text-gray-600 dark:text-gray-300 font-quote italic leading-relaxed pr-8" />
                 )}
               </div>
  
@@ -65,12 +60,8 @@ export function HubDesktop({ content }: Props) {
                 "
               >
               <div>
-                <p className="font-semibold text-sm text-theme-primary font-serif">
-                  {content.journeyButtonLabel}
-                </p>
-                <p className="text-[10px] text-theme-muted mt-0.5 uppercase tracking-wider">
-                  {content.journeyButtonSubtext}
-                </p>
+                <EditableText id="hub.journeyButtonLabel" value={content.journeyButtonLabel} as="p" className="font-semibold text-sm text-theme-primary font-serif" />
+                <EditableText id="hub.journeyButtonSubtext" value={content.journeyButtonSubtext} as="p" className="text-[10px] text-theme-muted mt-0.5 uppercase tracking-wider" />
               </div>
               <span className="text-lg text-gray-500">→</span>
             </button>
@@ -89,9 +80,7 @@ export function HubDesktop({ content }: Props) {
  
         {/* Right Column (Sidebar Testimonials) */}
         <aside className="w-80 p-6 bg-gradient-to-b from-transparent to-theme-nav/10 rounded-2xl space-y-6 flex flex-col shrink-0 border border-theme-muted/20">
-          <p className="text-xs font-semibold text-theme-secondary uppercase tracking-wider">
-            {content.testimonialsLabel}
-          </p>
+          <EditableText id="hub.testimonialsLabel" value={content.testimonialsLabel} as="p" className="text-xs font-semibold text-theme-secondary uppercase tracking-wider" />
           <div className="flex-1">
             <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
           </div>
@@ -105,7 +94,7 @@ export function HubDesktop({ content }: Props) {
               transition-colors duration-150 cursor-pointer
             "
           >
-            {content.leaveTestimonialLabel}
+            <EditableText id="hub.leaveTestimonialLabel" value={content.leaveTestimonialLabel} as="span" />
           </button>
         </aside>
       </motion.main>
