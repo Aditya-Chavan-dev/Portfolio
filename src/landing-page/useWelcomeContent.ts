@@ -21,14 +21,17 @@ export function useWelcomeContent() {
       clearTimeout(timeoutTimer)
       if (docSnap.exists()) {
          setContent(docSnap.data() as WelcomeConfig)
-      } else {
+      } else if (loading) {
+         // Only set fallback if we've never loaded anything yet
          setContent(fallbackContent as unknown as WelcomeConfig)
       }
       setLoading(false)
     }, (error) => {
       clearTimeout(timeoutTimer)
       console.error('Welcome screen content subscription error:', error)
-      setContent(fallbackContent as unknown as WelcomeConfig)
+      if (loading) {
+        setContent(fallbackContent as unknown as WelcomeConfig)
+      }
       setLoading(false)
     })
 

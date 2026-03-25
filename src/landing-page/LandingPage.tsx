@@ -6,8 +6,7 @@ import { useWelcomeContent } from './useWelcomeContent'
 import { LandingPageDesktop } from './LandingPage.desktop'
 import { LandingPageMobile }  from './LandingPage.mobile'
 import { useThemeContext } from '@/shared/ThemeProvider'
-
-const SESSION_KEY = 'has_seen_welcome' as const
+import { SESSION_KEYS } from '@/shared/constants'
 
 export default function LandingPage() {
   const isMobile               = useIsMobile()
@@ -30,7 +29,7 @@ export default function LandingPage() {
 
   // SSR-safe: read sessionStorage client-side only
   useEffect(() => {
-    const seen = sessionStorage.getItem(SESSION_KEY) === 'true'
+    const seen = sessionStorage.getItem(SESSION_KEYS.HAS_SEEN_WELCOME) === 'true'
     if (seen) {
       setShowCTA(true)
       setSkipAnimation(true)
@@ -71,9 +70,14 @@ export default function LandingPage() {
   }, [])
 
   const handleDialogueComplete = useCallback(() => {
-    sessionStorage.setItem(SESSION_KEY, 'true')
-    ctaTimeoutRef.current = window.setTimeout(() => setShowCTA(true), 2000)
-  }, [])
+    sessionStorage.setItem(SESSION_KEYS.HAS_SEEN_WELCOME, 'true')
+    // If we're skipping, show CTA immediately. Otherwise, wait for cinematic effect.
+    if (skipAnimation) {
+      setShowCTA(true)
+    } else {
+      ctaTimeoutRef.current = window.setTimeout(() => setShowCTA(true), 2000)
+    }
+  }, [skipAnimation])
 
   const handleNavigateHub = useCallback(() => {
     setIsExiting(true)
