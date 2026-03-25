@@ -3,6 +3,33 @@ import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { db } from '@/shared/firebase'
 import { useEditMode } from '../EditModeContext'
 import { useToastContext } from '@/shared/Toast'
+import welcomeFallback from '@/landing-page/content.json'
+import hubFallback from '@/hub/content.json'
+import skillsFallback from '@/quick-access/skills/content.json'
+import experienceFallback from '@/quick-access/experience/content.json'
+import certificationsFallback from '@/quick-access/certifications/content.json'
+
+const FALLBACKS: Record<string, any> = {
+  welcome: welcomeFallback,
+  hub: hubFallback,
+  skills: skillsFallback,
+  experience: experienceFallback,
+  certifications: certificationsFallback,
+  projects: {},
+}
+
+function setNestedPath(obj: any, path: string, value: any) {
+  const parts = path.split('.')
+  let current = obj
+  for (let i = 0; i < parts.length - 1; i++) {
+    const part = parts[i]
+    if (current[part] === undefined) {
+      current[part] = !isNaN(Number(parts[i+1])) ? [] : {}
+    }
+    current = current[part]
+  }
+  current[parts[parts.length - 1]] = value
+}
 
 interface DeployModalProps {
   isOpen: boolean
@@ -70,24 +97,25 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
       
       // Step A: Group keys
       for (const key in draftData) {
-        if (key.startsWith('welcome.dialogue.')) {
-          if (!updatesByDoc['welcome']) {
-            const currentSnap = await getDoc(doc(db, 'live', 'welcome'))
-            updatesByDoc['welcome'] = currentSnap.data() || {}
-          }
-          const index = parseInt(key.replace('welcome.dialogue.', ''), 10)
-          const lines = [...(updatesByDoc['welcome'].dialogue || [])]
+        const parts = key.split('.')
+        const docId = parts[0]
+        const pathInsideDoc = parts.slice(1).join('.')
+        
+        if (!docId || !pathInsideDoc) continue
+
+        if (!updatesByDoc[docId]) {
+          const currentSnap = await getDoc(doc(db, 'live', docId))
+          const currentData = currentSnap.data() || {}
+          const fallback = FALLBACKS[docId] || {}
           
-          // Fill gaps to avoid sparse arrays (which create unsupported undefined indices for Firestore)
-          while (lines.length <= index) {
-            lines.push('')
+          // Spread guarantees all baseline items exist correctly
+          updatesByDoc[docId] = {
+            ...fallback,
+            ...currentData
           }
-          
-          lines[index] = draftData[key]
-          updatesByDoc['welcome'].dialogue = lines
         }
-        // Future expands:
-        // if (key.startsWith('hub.')) { ... }
+        
+        setNestedPath(updatesByDoc[docId], pathInsideDoc, draftData[key])
       }
 
       // Step B: Push to Firestore

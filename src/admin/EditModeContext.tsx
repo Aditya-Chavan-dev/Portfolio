@@ -8,8 +8,8 @@ interface EditModeContextType {
   hasUnsavedChanges: boolean
   setHasUnsavedChanges: (val: boolean) => void
   exitEditSession: () => void
-  draftData: Record<string, string>
-  updateDraft: (id: string, value: string) => void
+  draftData: Record<string, any>
+  updateDraft: (id: string, value: any) => void
   clearDraft: () => void
 }
 
@@ -33,9 +33,9 @@ interface Props {
 export function EditModeProvider({ children }: Props) {
   const [mode, setMode] = useState<EditMode>('idle')
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
-  const [draftData, setDraftData] = useState<Record<string, string>>({})
+  const [draftData, setDraftData] = useState<Record<string, any>>({})
 
-  const updateDraft = useCallback((id: string, value: string) => {
+  const updateDraft = useCallback((id: string, value: any) => {
     setDraftData((prev) => ({ ...prev, [id]: value }))
     setHasUnsavedChanges(true)
   }, [])
