@@ -35,11 +35,14 @@ export function useMetrics(): Metrics {
 
   // Firestore daily visits
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'analytics', 'daily'), (snap) => {
+    const today = new Date().toISOString().split('T')[0]
+    const dailyDocId = `daily_${today}`
+    
+    const unsub = onSnapshot(doc(db, 'analytics', dailyDocId), (snap) => {
       if (snap.exists()) {
         const data = snap.data()
-        const today = new Date().toISOString().split('T')[0]
-        setTodayVisits(data.date === today ? (data.visits ?? 0) : 0)
+        // No need to check date inside, as the docId is the date
+        setTodayVisits(data.visits ?? 0)
       } else {
         setTodayVisits(0)
       }

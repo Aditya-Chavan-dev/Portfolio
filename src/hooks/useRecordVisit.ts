@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
-import { doc, getDoc, setDoc, updateDoc, increment } from 'firebase/firestore'
+import { doc, setDoc, increment } from 'firebase/firestore'
 import { db } from '@/shared/firebase'
 import { useAuth } from '@/admin/AuthProvider'
+import { SESSION_KEYS } from '@/shared/constants'
 
 /**
  * Records a single visit per browser session.
@@ -15,8 +16,8 @@ export function useRecordVisit() {
     if (loading) return // Wait for auth state to resolve
     
     // Only count once per session
-    if (sessionStorage.getItem('visit_recorded')) return
-    sessionStorage.setItem('visit_recorded', 'true')
+    if (sessionStorage.getItem(SESSION_KEYS.VISIT_RECORDED)) return
+    sessionStorage.setItem(SESSION_KEYS.VISIT_RECORDED, 'true')
 
     recordVisit(isAdmin || false).catch(console.error)
   }, [loading, isAdmin])
@@ -24,47 +25,28 @@ export function useRecordVisit() {
 
 async function recordVisit(isAdmin: boolean) {
   const today = new Date().toISOString().split('T')[0] // "YYYY-MM-DD"
+  const dailyDocId = `daily_${today}`
+  
+  const dailyRef = doc(db, 'analytics', dailyDocId)
+  const allTimeRef = doc(db, 'analytics', 'allTime')
+
+  const field = isAdmin ? 'adminVisits' : 'visits'
+  const totalField = isAdmin ? 'totalAdminVisits' : 'totalVisits'
 
   try {
-    // --- Daily counter ---
-    const dailyRef = doc(db, 'analytics', 'daily')
-    const dailySnap = await getDoc(dailyRef)
-    const fieldName = isAdmin ? 'adminVisits' : 'visits'
+    // 1. Atomic Daily Increment (Date-sharded doc prevents logic resets)
+    await setDoc(dailyRef, {
+      date: today,
+      [field]: increment(1)
+    }, { merge: true })
 
-    if (!dailySnap.exists()) {
-      // First ever visit — create the doc
-      await setDoc(dailyRef, { 
-        date: today, 
-        visits: isAdmin ? 0 : 1, 
-        adminVisits: isAdmin ? 1 : 0 
-      })
-    } else if (dailySnap.data().date !== today) {
-      // New day — reset
-      await setDoc(dailyRef, { 
-        date: today, 
-        visits: isAdmin ? 0 : 1, 
-        adminVisits: isAdmin ? 1 : 0 
-      })
-    } else {
-      // Same day — increment
-      await updateDoc(dailyRef, { [fieldName]: increment(1) })
-    }
+    // 2. Atomic All-Time Increment
+    await setDoc(allTimeRef, {
+      [totalField]: increment(1)
+    }, { merge: true })
 
-    // --- All-time counter ---
-    const allTimeRef = doc(db, 'analytics', 'allTime')
-    const allTimeSnap = await getDoc(allTimeRef)
-
-    if (!allTimeSnap.exists()) {
-      await setDoc(allTimeRef, { 
-        totalVisits: isAdmin ? 0 : 1, 
-        totalAdminVisits: isAdmin ? 1 : 0 
-      })
-    } else {
-      await updateDoc(allTimeRef, { 
-        [isAdmin ? 'totalAdminVisits' : 'totalVisits']: increment(1) 
-      })
-    }
   } catch (err) {
-    console.error('Failed to record visit:', err)
+    // Silently fail to not interrupt user session, but log for admin
+    console.error('[Analytics] Failed to record visit:', err)
   }
 }
