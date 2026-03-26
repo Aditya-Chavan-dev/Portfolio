@@ -44,6 +44,8 @@ serviceAccountKey.json
 # Dump
 dump/
 tasks/
+issues/
+uid.txt
 
 # Learning documentation (personal reference only)
 LEARNING_DOCS/
