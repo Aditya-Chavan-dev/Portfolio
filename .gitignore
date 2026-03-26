@@ -43,6 +43,7 @@ serviceAccountKey.json
 
 # Dump
 dump/
+tasks/
 
 # Learning documentation (personal reference only)
 LEARNING_DOCS/

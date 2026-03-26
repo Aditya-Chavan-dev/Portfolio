@@ -3,10 +3,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: Checks if the user is the authorized administrator
+    // Helper: Checks if the user has the hidden administrative badge
     function isAdmin() {
-      return request.auth != null && 
-             request.auth.token.email == 'adityagchavan310@gmail.com';
+      return request.auth != null && request.auth.token.admin == true;
     }
 
     // 1. Welcome Screen
@@ -37,16 +36,26 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // 4. Analytics (Public increment)
+    // 4. Analytics (Surgically restricted public increments)
     match /analytics/{docId} {
       allow read: if true;
-      allow update: if true; // support anonymous visits securely
+      
+      // Public UPDATE: Only allow +1 increments on 'visits' or 'adminVisits' fields
+      allow update: if 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visits', 'adminVisits']) &&
+        (
+          (request.resource.data.get('visits', 0) == resource.data.get('visits', 0) + 1) ||
+          (request.resource.data.get('adminVisits', 0) == resource.data.get('adminVisits', 0) + 1)
+        ) &&
+        request.resource.data.get('visits', 0) is int;
+
+      // Only admins can initialize or wipe analytics
+      allow create, delete: if isAdmin();
     }
 
-    // Default: Only admin can touch everything else
+    // Default: Deny all by default, only allow admin access
     match /{document=**} {
-      allow read: if isAdmin();
-      allow write: if isAdmin();
+      allow read, write: if isAdmin();
     }
   }
 }

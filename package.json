@@ -12,7 +12,8 @@
     "prepare": "husky",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "admin:set-claim": "node scripts/set-admin-claim.js"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

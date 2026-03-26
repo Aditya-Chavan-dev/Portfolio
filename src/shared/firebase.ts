@@ -15,9 +15,18 @@ const firebaseConfig = {
 
 // Prevent duplicate initialization in Vite HMR
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore'
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check'
 
 const app: FirebaseApp =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+
+// Initialize App Check (Invisible Shield)
+if (import.meta.env.PROD) {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_RECAPTCHA_SITE_KEY as string),
+    isTokenAutoRefreshEnabled: true
+  });
+}
 
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,

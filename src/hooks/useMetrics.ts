@@ -16,6 +16,21 @@ interface Metrics {
  * - Firestore analytics/daily (today's visits)
  * - Firestore analytics/allTime (total visits)
  */
+/**
+ * Schema-Guard: Validates numeric data from Firestore
+ * Falls back to LocalStorage cache if data is missing or corrupted (Vandalism protection)
+ */
+function validateCount(val: any, cacheKey: string): number {
+  if (typeof val === 'number' && val >= 0) {
+    localStorage.setItem(cacheKey, val.toString());
+    return val;
+  }
+  
+  // Fallback to Last Known Good State from Cache
+  const cachedValue = localStorage.getItem(cacheKey);
+  return cachedValue ? parseInt(cachedValue, 10) : 0;
+}
+
 export function useMetrics(): Metrics {
   const [liveNow, setLiveNow] = useState(0)
   const [todayVisits, setTodayVisits] = useState(0)
@@ -27,7 +42,9 @@ export function useMetrics(): Metrics {
     const presenceRef = ref(rtdb, 'presence')
     const unsub = onValue(presenceRef, (snapshot) => {
       const val = snapshot.val()
-      setLiveNow(val ? Object.keys(val).length : 0)
+      // Presence is a map of userIDs
+      const count = val ? Object.keys(val).length : 0
+      setLiveNow(validateCount(count, 'cache_live_now'))
       setLoadCount(c => c + 1)
     })
     return () => unsub()
@@ -39,13 +56,9 @@ export function useMetrics(): Metrics {
     const dailyDocId = `daily_${today}`
     
     const unsub = onSnapshot(doc(db, 'analytics', dailyDocId), (snap) => {
-      if (snap.exists()) {
-        const data = snap.data()
-        // No need to check date inside, as the docId is the date
-        setTodayVisits(data.visits ?? 0)
-      } else {
-        setTodayVisits(0)
-      }
+      const data = snap.data()
+      // Ensure we hit the cache if the document was deleted or sabotaged
+      setTodayVisits(validateCount(data?.visits, `cache_visits_${today}`))
       setLoadCount(c => c + 1)
     })
     return () => unsub()
@@ -54,11 +67,8 @@ export function useMetrics(): Metrics {
   // Firestore all-time visits
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'analytics', 'allTime'), (snap) => {
-      if (snap.exists()) {
-        setAllTimeVisits(snap.data().totalVisits ?? 0)
-      } else {
-        setAllTimeVisits(0)
-      }
+      const data = snap.data()
+      setAllTimeVisits(validateCount(data?.totalVisits, 'cache_all_time_visits'))
       setLoadCount(c => c + 1)
     })
     return () => unsub()
