@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
+import { db } from '@/lib/firebase'
+import { incrementLocalCounter } from '@/lib/metrics'
 import type { WelcomeConfig } from './landing.types'
 import fallbackContent from './content.json'
 
@@ -19,6 +20,7 @@ export function useWelcomeContent() {
 
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       clearTimeout(timeoutTimer)
+      incrementLocalCounter('reads')
       if (docSnap.exists()) {
          setContent(docSnap.data() as WelcomeConfig)
       } else if (loading) {
