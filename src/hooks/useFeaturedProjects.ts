@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { collection, getDocs } from 'firebase/firestore'
-import { db } from '../shared/firebase'
+import { db } from '../lib/firebase'
+import { tracedCall } from '../lib/metrics'
 import {
   fetchAllRepos,
   fetchCommitCount,
@@ -17,7 +18,7 @@ export function useFeaturedProjects() {
   useEffect(() => {
     const loadFallback = async () => {
       try {
-        const allRepos = await fetchAllRepos()
+        const allRepos = await tracedCall('github/fetchAllRepos/fallback', () => fetchAllRepos())
         const fallbackData = allRepos.map((repo, i) => ({
           ...repo,
           commitCount: 0,
@@ -36,7 +37,9 @@ export function useFeaturedProjects() {
 
     const fetchFirestore = async () => {
       try {
-        const snapshot = await getDocs(collection(db, 'projects'))
+        const snapshot = await tracedCall('firestore/projects/featured', () => 
+          getDocs(collection(db, 'projects'))
+        )
         const featured = snapshot.docs
           .map(d => d.data())
           .filter((d: any) => d.featured)
@@ -47,7 +50,7 @@ export function useFeaturedProjects() {
           return
         }
 
-        const allRepos = await fetchAllRepos()
+        const allRepos = await tracedCall('github/fetchAllRepos', () => fetchAllRepos())
 
         const matched = featured
           .map((f: any) => allRepos.find(r => r.name === f.repoName))
@@ -56,9 +59,9 @@ export function useFeaturedProjects() {
         const enriched: EnrichedProject[] = await Promise.all(
           matched.map(async (repo, i) => {
             const [commitCount, languages, meta] = await Promise.all([
-              fetchCommitCount(repo.name),
-              fetchLanguages(repo.name),
-              fetchProjectMeta(repo.name),
+              tracedCall(`github/commitCount/${repo.name}`, () => fetchCommitCount(repo.name)),
+              tracedCall(`github/languages/${repo.name}`, () => fetchLanguages(repo.name)),
+              tracedCall(`github/projectMeta/${repo.name}`, () => fetchProjectMeta(repo.name)),
             ])
             return {
               ...repo,
