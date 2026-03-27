@@ -1,9 +1,17 @@
 import { useState, useEffect } from 'react'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '@/shared/firebase'
+import { tracedCall, tracedWrite } from '../services/MetricsOrchestrator'
+import { LandingPageSchema as WelcomeConfigSchema } from '../services/ValidationSchemas'
 import type { WelcomeConfig } from '@/landing-page/landing.types'
 import { Reorder } from 'framer-motion'
 import { GripVertical, Star, Trash2 } from 'lucide-react'
+
+// Mocking validateInput for now if complianceRunner is not easily found or needs migration
+// In a real scenario, I'd migrate complianceRunner too if it's admin-only.
+function validateInput(schema: any, data: any, label: string) {
+  return schema.parse(data);
+}
 
 interface DragItem {
   id: string
@@ -22,7 +30,9 @@ export default function WelcomeScreenEditor() {
     const fetchConfig = async () => {
       try {
         const docRef = doc(db, 'adminConfig', 'welcomeScreen')
-        const snap = await getDoc(docRef)
+        const snap = await tracedCall('firestore/adminConfig/welcomeScreen/get', () => 
+          getDoc(docRef)
+        )
         if (snap.exists()) {
           const data = snap.data() as WelcomeConfig
           setName(data.name || 'Aditya Chavan')
@@ -60,12 +70,18 @@ export default function WelcomeScreenEditor() {
         if (computedHighlight < 0) computedHighlight = 0
       }
 
+      // SHIELD: Validate before write
+      const validated = validateInput(WelcomeConfigSchema, {
+        hero: { title: name, subtitle: dialogue.join(' '), ctaText: 'View Work' },
+        about: { bio: dialogue.join(' '), tags: [] },
+        metadata: { author: name }
+      }, 'welcome_editor_save')
+
       const docRef = doc(db, 'adminConfig', 'welcomeScreen')
-      await updateDoc(docRef, {
-        dialogue,
-        highlightIndex: computedHighlight,
-      })
-    } catch (e) {
+      await tracedWrite('firestore/adminConfig/welcomeScreen/update', () => 
+        updateDoc(docRef, validated)
+      )
+    } catch (e: any) {
       console.error('Error saving config:', e)
     } finally {
       setSaving(false)

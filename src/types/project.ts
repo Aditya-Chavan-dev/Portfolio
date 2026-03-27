@@ -7,6 +7,8 @@ export interface Project {
   githubUrl: string
   liveUrl: string | null
   stars: number
+  forksCount?: number
+  openIssuesCount?: number
   createdAt: string
   updatedAt: string
   isFork: boolean
@@ -45,6 +47,8 @@ export function mapGithubRepo(raw: any): Project {
     githubUrl: raw.html_url,
     liveUrl: raw.homepage || null,
     stars: raw.stargazers_count,
+    forksCount: raw.forks_count,
+    openIssuesCount: raw.open_issues_count,
     createdAt: raw.created_at,
     updatedAt: raw.updated_at,
     isFork: raw.fork,

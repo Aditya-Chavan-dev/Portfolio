@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
+import { db } from '@/lib/firebase'
+import { tracedCall, tracedWrite } from '@/lib/metrics'
 import { useEditMode } from '../EditModeContext'
 import { useToastContext } from '@/shared/Toast'
 import welcomeFallback from '@/landing-page/content.json'
@@ -42,11 +43,6 @@ interface LockConfig {
   answer: string
 }
 
-/**
- * DeployModal — Security Gate modal.
- * Fetches question from `adminOnly/deployLock`.
- * Verifies answer before executing batch writes to Firestore.
- */
 export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalProps) {
   const [loading, setLoading] = useState(false)
   const [lock, setLock] = useState<LockConfig | null>(null)
@@ -55,7 +51,6 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
   const { draftData, clearDraft } = useEditMode()
   const { addToast } = useToastContext()
 
-  // 1. Fetch Question from Firestore
   useEffect(() => {
     if (!isOpen) return
 
@@ -63,13 +58,16 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
       setLoading(true)
       setError('')
       try {
-        const snap = await getDoc(doc(db, 'adminOnly', 'deployLock'))
+        const snap = await tracedCall('firestore/adminOnly/deployLock', () => 
+          getDoc(doc(db, 'adminOnly', 'deployLock'))
+        )
         if (snap.exists()) {
           setLock(snap.data() as LockConfig)
         } else {
-          // First-time fallback seeder
           const fallback = { question: 'What is 2+2?', answer: 'Apples' }
-          await setDoc(doc(db, 'adminOnly', 'deployLock'), fallback)
+          await tracedWrite('firestore/adminOnly/deployLock/seed', () => 
+            setDoc(doc(db, 'adminOnly', 'deployLock'), fallback)
+          )
           setLock(fallback)
         }
       } catch (err) {
@@ -85,17 +83,11 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
 
   if (!isOpen) return null
 
-  // 2. Execute Updates to Firestore
   async function executeDeploy() {
     setLoading(true)
     try {
-      // Group draft changes by document
-      // Right now we only have 'welcome.dialogue.i' support
-      // Let's build a generalized list consolidator:
-      
       const updatesByDoc: Record<string, any> = {}
       
-      // Step A: Group keys
       for (const key in draftData) {
         const parts = key.split('.')
         const docId = parts[0]
@@ -104,11 +96,12 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
         if (!docId || !pathInsideDoc) continue
 
         if (!updatesByDoc[docId]) {
-          const currentSnap = await getDoc(doc(db, 'live', docId))
+          const currentSnap = await tracedCall(`firestore/live/${docId}/preDeploy`, () => 
+            getDoc(doc(db, 'live', docId))
+          )
           const currentData = currentSnap.data() || {}
           const fallback = FALLBACKS[docId] || {}
           
-          // Spread guarantees all baseline items exist correctly
           updatesByDoc[docId] = {
             ...fallback,
             ...currentData
@@ -118,9 +111,10 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
         setNestedPath(updatesByDoc[docId], pathInsideDoc, draftData[key])
       }
 
-      // Step B: Push to Firestore
       for (const docId in updatesByDoc) {
-        await setDoc(doc(db, 'live', docId), updatesByDoc[docId], { merge: true })
+        await tracedWrite(`firestore/live/${docId}/deploy`, () => 
+          setDoc(doc(db, 'live', docId), updatesByDoc[docId], { merge: true })
+        )
       }
 
       addToast('Changes deployed successfully!', 'success')

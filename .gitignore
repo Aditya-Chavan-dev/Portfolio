@@ -1,3 +1,25 @@
+# Agent Architecture & GSD
+.planning/
+.agent/
+.claude/
+.antigravity/
+.gemini/
+.agent/brain/
+.agent/logs/
+
+# Root Cleanup
+progress.txt
+commit_msg.txt
+uid.txt
+test_results/
+coverage/
+node_modules/
+dist/
+build/
+.cache/
+.firebase/
+firebaserc
+# (keeping existing ignores below for safety)
 # Environment variables
 .env
 *.env

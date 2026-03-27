@@ -1,5 +1,6 @@
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
+import { db } from '@/lib/firebase'
+import { tracedWrite } from '@/lib/metrics'
 
 type AuditEvent =
   | 'login_success'
@@ -15,11 +16,13 @@ export async function writeAuditLog(
   details: Record<string, unknown> = {}
 ): Promise<void> {
   try {
-    await addDoc(collection(db, 'auditLog'), {
-      event,
-      timestamp: serverTimestamp(),
-      details,
-    })
+    await tracedWrite(`firestore/auditLog/${event}`, () => 
+      addDoc(collection(db, 'auditLog'), {
+        event,
+        timestamp: serverTimestamp(),
+        details,
+      })
+    )
   } catch (err) {
     console.error('Failed to write audit log:', err)
   }

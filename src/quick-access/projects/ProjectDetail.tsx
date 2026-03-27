@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { onSnapshot, doc } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
+import { db } from '@/lib/firebase'
+import { incrementLocalCounter } from '@/lib/metrics'
 import { useGithubProjects } from '@/hooks/useGithubProjects'
 import { projectMetadata } from '@/lib/projectMetadata'
 import { SectionNav } from '@/shared/SectionNav'
@@ -13,9 +14,9 @@ export default function ProjectDetail() {
   const { projects, loading, error } = useGithubProjects()
   const [firestoreOverrides, setFirestoreOverrides] = useState<Record<string, any>>({})
 
-  // Subscribe to Firestore for saved God Mode edits
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'live', 'projects'), (snap) => {
+      incrementLocalCounter('reads')
       if (snap.exists()) {
         setFirestoreOverrides(snap.data() || {})
       }

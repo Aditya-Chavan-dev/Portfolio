@@ -9,7 +9,8 @@ import {
   onSnapshot,
   type Unsubscribe,
 } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
+import { db } from '@/lib/firebase'
+import { tracedCall, tracedWrite } from '@/lib/metrics'
 import type { WelcomeConfig } from '@/landing-page/landing.types'
 import type { HubContent }             from '@/hub/hub.types'
 import type { ProjectsContent }        from '@/quick-access/projects/projects.types'
@@ -31,12 +32,16 @@ function withTimeout<T>(promise: Promise<T>, ms = FIRESTORE_TIMEOUT_MS): Promise
 }
 
 async function getLiveDoc<T>(page: string): Promise<T | null> {
-  const snap = await withTimeout(getDoc(doc(db, 'live', page)))
+  const snap = await tracedCall(`firestore/live/${page}`, () => 
+    withTimeout(getDoc(doc(db, 'live', page)))
+  )
   return snap.exists() ? (snap.data() as T) : null
 }
 
 async function getConfigDoc<T>(config: string): Promise<T | null> {
-  const snap = await withTimeout(getDoc(doc(db, 'adminConfig', config)))
+  const snap = await tracedCall(`firestore/config/${config}`, () => 
+    withTimeout(getDoc(doc(db, 'adminConfig', config)))
+  )
   return snap.exists() ? (snap.data() as T) : null
 }
 
@@ -46,7 +51,9 @@ export const getWelcomeContent         = (): Promise<WelcomeConfig | null>      
 export const getWelcomeConfig          = (): Promise<WelcomeConfig | null>         => getConfigDoc('welcomeScreen')
 
 export async function updateWelcomeConfig(data: WelcomeConfig): Promise<void> {
-  await setDoc(doc(db, 'adminConfig', 'welcomeScreen'), data)
+  await tracedWrite('firestore/updateWelcomeConfig', () => 
+    setDoc(doc(db, 'adminConfig', 'welcomeScreen'), data)
+  )
 }
 
 export const getHubContent             = (): Promise<HubContent | null>             => getLiveDoc('hub')
@@ -86,10 +93,14 @@ export function subscribeToApprovedTestimonials(
 // ─── GitHub cache ──────────────────────────────────────────────────────────
 
 export async function getGitHubCache(): Promise<GitHubCache | null> {
-  const snap = await withTimeout(getDoc(doc(db, 'cache', 'github')))
+  const snap = await tracedCall('firestore/cache/github', () => 
+    withTimeout(getDoc(doc(db, 'cache', 'github')))
+  )
   return snap.exists() ? (snap.data() as GitHubCache) : null
 }
 
 export async function setGitHubCache(data: GitHubCache): Promise<void> {
-  await setDoc(doc(db, 'cache', 'github'), data)
+  await tracedWrite('firestore/cache/github', () => 
+    setDoc(doc(db, 'cache', 'github'), data)
+  )
 }
