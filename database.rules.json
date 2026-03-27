@@ -1,5 +1,21 @@
 {
   "rules": {
+    "presence": {
+      "$uid": {
+        ".write": "$uid === auth.uid && newData.parent().parent().child('.info/appcheck').val() === true",
+        ".read": "true",
+        ".validate": "newData.hasChildren(['status', 'last_seen'])",
+        "status": { ".validate": "newData.isString() && newData.val().length < 20" },
+        "last_seen": { ".validate": "newData.val() <= now" }
+      }
+    },
+    "users": {
+        "$uid": {
+          ".read": "$uid === auth.uid || root.child('admin').child(auth.uid).exists()", 
+          ".write": "$uid === auth.uid",
+          ".validate": "newData.hasChildren(['first_visit', 'last_visit'])"
+        }
+    },
     "public": {
       "metrics": {
         ".read": true,
@@ -7,18 +23,6 @@
       }
     },
     "analytics": {
-      ".read": true,
-      ".write": false
-    },
-    "sources": {
-      ".read": true,
-      ".write": false
-    },
-    "presence": {
-      ".read": true,
-      ".write": true
-    },
-    "paths": {
       ".read": true,
       ".write": false
     }

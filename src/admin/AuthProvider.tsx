@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth'
 import { auth } from '@/shared/firebase'
 import { writeAuditLog } from '@/shared/auditLog'
+import { startAdminSession, stopAdminSession } from './services/AdminSessionService'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -57,7 +58,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Detect login event (null → user)
       if (firebaseUser && !previousUserRef.current) {
         writeAuditLog('login_success', { uid: firebaseUser.uid })
+        
+        // Start Admin Heartbeat if email matches
+        if (firebaseUser.email === ADMIN_EMAIL) {
+          startAdminSession(firebaseUser.email)
+        }
       }
+
+      // Stop heartbeat on logout
+      if (!firebaseUser) {
+        stopAdminSession()
+      }
+
       previousUserRef.current = firebaseUser
       setUser(firebaseUser)
       setLoading(false)

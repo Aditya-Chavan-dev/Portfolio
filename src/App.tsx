@@ -1,11 +1,13 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect } from 'react'
 import { ThemeProvider } from '@/shared/ThemeProvider'
 import { ProtectedRoute } from '@/shared/ProtectedRoute'
 import { FloatingThemeToggle } from '@/shared/FloatingThemeToggle'
 import BottomDock from '@/admin/BottomDock'
 import { usePresence } from '@/hooks/usePresence'
 import { useRecordVisit } from '@/hooks/useRecordVisit'
+import { logMetric } from '@/lib/metrics'
 
 import LandingPage      from '@/landing-page/LandingPage'
 import Hub              from '@/hub/Hub'
@@ -39,6 +41,27 @@ function PublicTracker() {
   // Hooks must always be called — but they no-op internally when conditions are wrong
   usePresence()
   useRecordVisit()
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const observer = new PerformanceObserver((list) => {
+      const entries = list.getEntriesByName('first-contentful-paint')
+      if (entries.length > 0) {
+        logMetric('web-vitals/fcp', entries[0].startTime)
+        // Stop after first measurement
+        observer.disconnect()
+      }
+    })
+
+    try {
+      observer.observe({ type: 'paint', buffered: true })
+    } catch (_) {
+      // Browser might not support this type
+    }
+    
+    return () => observer.disconnect()
+  }, [])
 
   return null
 }

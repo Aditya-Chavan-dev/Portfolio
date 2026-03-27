@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchGithubRepos } from '../lib/github'
+import { tracedCall } from '../lib/metrics'
 import type { Project } from '../types/project'
 
 export function useGithubProjects() {
@@ -8,7 +9,7 @@ export function useGithubProjects() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchGithubRepos()
+    tracedCall('github/fetchRepos', () => fetchGithubRepos())
       .then(setProjects)
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))

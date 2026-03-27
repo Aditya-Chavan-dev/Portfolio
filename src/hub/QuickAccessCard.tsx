@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { Folder, Diamond, Briefcase, User, Award } from 'lucide-react'
+import { logMetric } from '../admin/services/MetricsOrchestrator'
 
 interface QuickAccessCardProps {
   readonly title:       string
@@ -28,10 +29,15 @@ export function QuickAccessCard({ title, description, route, icon }: QuickAccess
   const navigate = useNavigate()
   const IconComponent = icon ? iconMap[icon] : (fallbackIconMap[title] || null)
 
+  const handleClick = () => {
+    logMetric('click', { target: title, route })
+    navigate(route)
+  }
+
   return (
     <button
       type="button"
-      onClick={() => navigate(route)}
+      onClick={handleClick}
       className="
         w-full p-4 text-left rounded-xl
         bg-theme-secondary dark:bg-[#090909] border border-theme-default hover:border-theme-hover

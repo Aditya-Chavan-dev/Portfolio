@@ -3,7 +3,8 @@ import {
   collection, onSnapshot, doc,
   setDoc, deleteDoc, serverTimestamp
 } from 'firebase/firestore'
-import { db } from '../shared/firebase'
+import { db } from '../lib/firebase'
+import { tracedCall, tracedWrite } from '../lib/metrics'
 import { fetchAllRepos } from '../lib/github'
 import type { Project } from '../types/project'
 
@@ -18,12 +19,13 @@ export function useAdminProjects() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // onSnapshot is a stream, so we track the initial/subsequent repo fetches
     const unsub = onSnapshot(collection(db, 'projects'), async snapshot => {
       try {
         const firestoreMap = new Map(
           snapshot.docs.map(d => [d.id, d.data()])
         )
-        const allRepos = await fetchAllRepos()
+        const allRepos = await tracedCall('github/fetchAllRepos/admin', () => fetchAllRepos())
         const merged: AdminProject[] = allRepos.map(repo => {
           const fs = firestoreMap.get(repo.name) as any
           return {
@@ -50,22 +52,26 @@ export function useAdminProjects() {
   async function toggleFeatured(repoName: string, current: boolean, order: number) {
     const ref = doc(db, 'projects', repoName)
     if (current) {
-      await deleteDoc(ref)
+      await tracedWrite(`firestore/projects/delete/${repoName}`, () => deleteDoc(ref))
     } else {
-      await setDoc(ref, {
-        repoName,
-        featured: true,
-        order,
-        addedAt: serverTimestamp(),
-      })
+      await tracedWrite(`firestore/projects/create/${repoName}`, () => 
+        setDoc(ref, {
+          repoName,
+          featured: true,
+          order,
+          addedAt: serverTimestamp(),
+        })
+      )
     }
   }
 
   async function updateOrder(repoName: string, order: number) {
-    await setDoc(
-      doc(db, 'projects', repoName),
-      { order },
-      { merge: true }
+    await tracedWrite(`firestore/projects/updateOrder/${repoName}`, () => 
+      setDoc(
+        doc(db, 'projects', repoName),
+        { order },
+        { merge: true }
+      )
     )
   }
 
