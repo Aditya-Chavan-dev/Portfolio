@@ -1,30 +1,27 @@
-import { useEffect, useRef } from 'react'
-import { ref, push, set, remove, onDisconnect } from 'firebase/database'
-import { rtdb } from '@/shared/firebase'
-import { useAuth } from '@/admin/AuthProvider'
+import { useEffect } from 'react'
+import { ref, set, onDisconnect, serverTimestamp } from 'firebase/database'
+import { rtdb, auth } from '@/shared/firebase'
+import { onAuthStateChanged } from 'firebase/auth'
+import { useLocation } from 'react-router-dom'
 
-/**
- * RTDB presence hook — writes a session node to /presence/{sessionId}
- * that auto-removes on disconnect (tab close / network drop).
- * Only runs once per app mount — not per page.
- */
 export function usePresence() {
-  const { isAdmin, loading } = useAuth()
-  const presenceRef = useRef<ReturnType<typeof ref> | null>(null)
-
+  const { pathname } = useLocation()
+  
   useEffect(() => {
-    if (loading || isAdmin) return // Skip counting Admins in general live counts
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) return
 
-    const sessionRef = push(ref(rtdb, 'presence'))
-    presenceRef.current = sessionRef
+      const presenceRef = ref(rtdb, `presence/${user.uid}`)
 
-    set(sessionRef, { connectedAt: Date.now() }).catch(() => {})
-    onDisconnect(sessionRef).remove()
+      set(presenceRef, { 
+        status: 'online',
+        page: pathname,
+        last_seen: serverTimestamp() 
+      }).catch(() => {})
 
-    return () => {
-      if (presenceRef.current) {
-        remove(presenceRef.current).catch(() => {})
-      }
-    }
-  }, [loading, isAdmin])
+      onDisconnect(presenceRef).remove()
+    })
+
+    return () => unsubscribe()
+  }, [pathname])
 }
