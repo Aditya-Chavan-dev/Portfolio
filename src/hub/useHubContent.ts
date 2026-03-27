@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
+import { db } from '@/lib/firebase'
+import { incrementLocalCounter } from '@/lib/metrics'
 import type { HubContent } from './hub.types'
 import fallbackContent from './content.json'
 
@@ -21,6 +22,7 @@ export function useHubContent() {
       docRef,
       (snap) => {
         clearTimeout(timeoutTimer)
+        incrementLocalCounter('reads')
         if (snap.exists()) {
           setContent(snap.data() as HubContent)
         } else if (loading) {
