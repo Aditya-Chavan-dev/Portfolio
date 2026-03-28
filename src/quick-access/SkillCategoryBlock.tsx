@@ -40,7 +40,7 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
   }
 
   return (
-    <section aria-label={category.name} className="flex flex-col gap-4 mb-8">
+    <section aria-label={category.name} className="flex flex-col gap-4 mb-2">
       <div className="flex items-center justify-between border-b border-white/5 pb-2">
         <div className="flex items-center gap-3">
             <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
@@ -48,7 +48,7 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
                 <EditableText id={`skills.categories.${categoryIndex}.name`} value={category.name} as="span" />
             </h2>
         </div>
-        <div className="mono-label !opacity-20 !text-[8px]">SUB_SYS_0x{categoryIndex + 1} // STATUS: OPERATIONAL</div>
+        <div className="mono-label !opacity-20 !text-[8px]">SUB_SYS_0x{categoryIndex + 1}</div>
         {isEditing && (
           <button
             onClick={handleDeleteCategory}
@@ -60,7 +60,7 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
         )}
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 pt-1">
         {category.items.map((skill, skillIndex) => {
           return (
             <div 
