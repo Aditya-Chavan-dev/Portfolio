@@ -125,9 +125,9 @@ export function WelcomeDialogue({
 
           const isMuted = text.includes('(They all say passionate.)')
 
-          let colorClass = 'text-[#FFFFFF]'
-          if (isBatmanLine) colorClass = 'text-[#FFFF00]'
-          else if (isMuted) colorClass = 'text-[#555555]'
+          let colorClass = 'text-theme-primary'
+          if (isBatmanLine) colorClass = 'text-amber-600 dark:text-amber-400'
+          else if (isMuted) colorClass = 'text-theme-muted'
 
           if (text.trim() === '') {
             return <div key={i} className="h-0" />
@@ -166,8 +166,8 @@ export function WelcomeDialogue({
             >
                {/* Technical Identifier */}
                <div className="flex items-center gap-2 mb-1">
-                 <span className="mono-label !text-[8px] text-white/20">LOG_{String(i).padStart(2, '0')}</span>
-                 <div className="w-1 h-1 bg-white/20 rounded-full" />
+                 <span className="mono-label !text-[8px] text-theme-muted">LOG_{String(i).padStart(2, '0')}</span>
+                 <div className="w-1 h-1 bg-theme-muted/20 rounded-full" />
                  {isBatmanLine && (
                    <motion.span 
                     animate={{ opacity: [1, 0.4, 1] }}

@@ -76,13 +76,13 @@ export default function Skills() {
                 id="skills.pageTitle" 
                 value={content.pageTitle} 
                 as="h1" 
-                className="text-4xl font-black text-white mb-2 tracking-tighter" 
+                className="text-4xl font-black text-theme-primary mb-2 tracking-tighter" 
             />
             <EditableText 
                 id="skills.pageSubtitle" 
                 value={content.pageSubtitle} 
                 as="p" 
-                className="text-sm text-white/40 font-serif italic max-w-2xl leading-relaxed" 
+                className="text-sm text-theme-secondary font-serif italic max-w-2xl leading-relaxed" 
             />
         </header>
 

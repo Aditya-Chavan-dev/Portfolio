@@ -38,7 +38,7 @@ export function LandingPageDesktop({
   }, [showCTA, mode, onNavigateHub])
 
   return (
-    <div className="h-screen w-screen !bg-[#03040b] flex flex-col items-center justify-center select-none overflow-hidden py-12 relative text-white">
+    <div className="h-screen w-screen bg-theme-base flex flex-col items-center justify-center select-none overflow-hidden py-12 relative text-theme-primary">
       <AmbientDust count={120} />
       
       {/* Background HUD Layer */}

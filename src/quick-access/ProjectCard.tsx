@@ -8,9 +8,9 @@ export function ProjectCard({ project }: Props) {
   const meta = project.meta
 
   return (
-    <div className="w-full p-6 text-left rounded-2xl bg-white dark:bg-[#131315] border border-black/[0.03] dark:border-white/[0.03] shadow-sm hover:shadow-md transition-shadow flex flex-col h-full font-sans">
+    <div className="w-full p-6 text-left rounded-2xl glass-card transition-all duration-300 flex flex-col h-full font-sans group hover:border-amber-500/30">
       <div className="flex justify-between items-start">
-        <h3 className="font-bold text-lg text-gray-900 dark:text-white leading-snug tracking-tight">
+        <h3 className="font-bold text-lg text-theme-primary leading-snug tracking-tight group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">
           {project.name}
         </h3>
         {project.stars > 0 && (
@@ -19,19 +19,19 @@ export function ProjectCard({ project }: Props) {
           </span>
         )}
       </div>
-      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2 leading-relaxed flex-1">
+      <p className="text-sm text-theme-secondary mt-2 line-clamp-2 leading-relaxed flex-1">
         {meta?.shortDescription || project.description || "No description provided."}
       </p>
 
       {/* Tech tags */}
-      <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-black/[0.02] dark:border-white/[0.02]">
+      <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-theme-default">
         {project.language && (
-          <span className="text-xs px-2.5 py-1 rounded bg-black/[0.04] dark:bg-white/[0.04] text-gray-800 dark:text-gray-200 font-semibold">
+          <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-theme-muted/5 text-theme-primary font-bold uppercase tracking-wider">
             {project.language}
           </span>
         )}
         {project.topics.slice(0, 3).map((topic) => (
-          <span key={topic} className="text-xs px-2 py-1 rounded bg-black/[0.02] dark:bg-white/[0.02] text-gray-500 dark:text-gray-400">
+          <span key={topic} className="text-[10px] font-mono px-2 py-1 rounded bg-theme-muted/5 text-theme-muted uppercase tracking-wider">
             {topic}
           </span>
         ))}

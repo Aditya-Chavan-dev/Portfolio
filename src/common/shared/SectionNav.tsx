@@ -24,16 +24,16 @@ export function SectionNav() {
           hidden md:flex sticky top-0 z-50
           items-center justify-between
           px-12 py-5
-          glass-premium !bg-white/5 !rounded-none
+          glass-premium !rounded-none
           backdrop-blur-xl
-          border-b border-white/5
+          border-b border-theme-default
         "
       >
         <button
           type="button"
           onClick={goToHub}
           aria-label="Back to Hub"
-          className="mono-label !opacity-40 hover:!opacity-100 hover:text-amber-500 transition-all flex items-center gap-2 group"
+          className="mono-label !opacity-40 hover:!opacity-100 hover:text-amber-600 dark:hover:text-amber-500 transition-all flex items-center gap-2 group"
         >
           <span className="group-hover:-translate-x-1 transition-transform">←</span> SYSTEM_HUB
         </button>
@@ -51,8 +51,8 @@ export function SectionNav() {
                 className={`
                   relative pb-1 text-[10px] font-mono uppercase tracking-[0.2em] transition-all duration-300
                   ${isActive
-                    ? 'text-white opacity-100'
-                    : 'text-white/30 hover:text-amber-500/80'
+                    ? 'text-theme-primary opacity-100'
+                    : 'text-theme-secondary hover:text-amber-600 dark:hover:text-amber-500'
                   }
                 `}
               >
@@ -84,9 +84,9 @@ export function SectionNav() {
           md:hidden fixed bottom-0 left-0 right-0 z-50
           flex items-center justify-around
           py-4 px-2
-          glass-premium !bg-white/5 !rounded-none
+          glass-premium !rounded-none
           backdrop-blur-xl
-          border-t border-white/5
+          border-t border-theme-default
         "
       >
         <button
@@ -95,7 +95,7 @@ export function SectionNav() {
           aria-label="Back to Hub"
           className="flex flex-col items-center gap-1.5 transition-all group"
         >
-          <span aria-hidden="true" className="mono-label !opacity-40 group-hover:!opacity-100 group-hover:text-amber-500">←</span>
+          <span aria-hidden="true" className="mono-label !opacity-40 group-hover:!opacity-100 group-hover:text-amber-600 dark:group-hover:text-amber-500">←</span>
           <span className="mono-label !text-[8px] !opacity-20 uppercase">HUB</span>
         </button>
 
@@ -110,8 +110,8 @@ export function SectionNav() {
               className={`
                 flex flex-col items-center gap-1.5 min-w-[60px] py-1 transition-all
                   ${isActive
-                    ? 'text-white'
-                    : 'text-white/20'
+                    ? 'text-theme-primary'
+                    : 'text-theme-secondary/40'
                   }
               `}
             >

@@ -84,11 +84,11 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
                 </button>
               )}
 
-              <div className="w-10 h-10 flex-shrink-0 glass-premium !bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-amber-500/30 transition-colors relative">
+              <div className="w-10 h-10 flex-shrink-0 glass-premium flex items-center justify-center transition-colors relative">
                 {skill.iconUrl ? (
                     <img 
                     src={skill.iconUrl} 
-                    className="w-6 h-6 object-contain opacity-100 transition-all duration-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]" 
+                    className="w-6 h-6 object-contain opacity-100 transition-all duration-500 drop-shadow-[0_0_8px_var(--gold3)]" 
                     alt={`${skill.name} icon`}
                     onError={(e) => {
                         const target = e.target as HTMLImageElement
@@ -99,7 +99,7 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
                     }}
                     />
                 ) : (
-                    <div className="mono-label !text-[8px] opacity-20">NULL</div>
+                    <div className="mono-label !text-[8px]">NULL</div>
                 )}
               </div>
 
@@ -109,7 +109,7 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
                         id={`skills.categories.${categoryIndex}.items.${skillIndex}.name`} 
                         value={skill.name} 
                         as="span" 
-                        className="text-[11px] text-white/90 font-mono tracking-wider group-hover:text-amber-500 transition-colors" 
+                        className="text-[11px] text-theme-primary font-mono tracking-wider group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors" 
                     />
                 </div>
               </div>

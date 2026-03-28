@@ -72,17 +72,17 @@ export function QuickAccessCard({ title, description, route, icon, index }: Quic
         </div>
         
         <div className="space-y-1">
-            <p className="font-black text-lg font-serif text-white leading-tight tracking-tight group-hover:text-amber-500 transition-colors">
+            <p className="font-black text-lg font-serif text-theme-primary leading-tight tracking-tight group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">
             {title}
             </p>
-            <p className="text-[10px] font-medium text-white/40 leading-relaxed">
+            <p className="text-[10px] font-medium text-theme-secondary leading-relaxed">
             {description}
             </p>
         </div>
       </div>
 
       <div className="relative z-10 mt-4 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0 duration-500">
-         <span className="mono-label !text-amber-500/60 font-black text-[8px]">ACCESS_GRANTED</span>
+         <span className="mono-label !text-amber-600 dark:!text-amber-500/60 font-black text-[8px]">ACCESS_GRANTED</span>
          <div className="w-8 h-[1px] bg-amber-500/20" />
       </div>
     </button>

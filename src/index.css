@@ -25,20 +25,21 @@ html[data-theme="light"] {
   --text-primary: #1A1917;
   --text-secondary: #6B6863;
   --text-muted: #A09C98;
-  --border-subtle: rgba(0, 0, 0, 0.07);
-  --border-default: rgba(0, 0, 0, 0.12);
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-default: rgba(0, 0, 0, 0.1);
   --accent: #2A2A2A;
   --accent-text: #FFFFFF;
   --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   --overlay: rgba(0, 0, 0, 0.4);
 
-  /* Semantic fallback/accent constants */
-  --gold:  #b6924d;
-  --gold2: #d8b26a;
-  --gold3: rgba(182,146,77,0.09);
+  /* Semantic fallback/accent constants — Darker for contrast */
+  --gold:  #8b6c2f;
+  --gold2: #b6924d;
+  --gold3: rgba(139, 108, 47, 0.1);
   --r: 12px;
   --r2: 8px;
-  --glow-hover: 0 12px 40px rgba(182, 146, 77, 0.45);
+  --glow-hover: 0 12px 40px rgba(139, 108, 47, 0.2);
+  --grid-color: rgba(0, 0, 0, 0.03);
 }
 
 html[data-theme="dark"] {
@@ -62,6 +63,7 @@ html[data-theme="dark"] {
   --gold3: rgba(245, 158, 11, 0.1);
   --emerald: #10B981;
   --glow-hover: 0 0 30px rgba(245, 158, 11, 0.15);
+  --grid-color: rgba(255, 255, 255, 0.02);
 }
 
 /* ─── Premium System HUD Effects ─────────────────────────── */
@@ -69,8 +71,8 @@ html[data-theme="dark"] {
 .bg-system-grid {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
 }
 
 .scanline::before {
@@ -85,8 +87,12 @@ html[data-theme="dark"] {
   opacity: 0.15;
 }
 
+/* Theme-aware glass effect */
 .glass-premium {
-  @apply backdrop-blur-xl bg-white/[0.03] border border-white/[0.08] shadow-2xl;
+  background-color: color-mix(in srgb, var(--bg-card), transparent 50%);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow);
   transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -96,7 +102,7 @@ html[data-theme="dark"] {
 
 /* ─── Base theme transition utility ─── */
 .theme-transition {
-  transition: background-color 0.4s ease, color 0.3s ease, border-color 0.4s ease;
+  transition: background-color 0.4s ease, color 0.3s ease, border-color 0.4s ease, opacity 0.3s ease;
 }
 
 :root {

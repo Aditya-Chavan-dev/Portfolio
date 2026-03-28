@@ -13,10 +13,10 @@ export default function Projects() {
       <SectionNav />
       
       <main className="max-w-5xl mx-auto px-8 py-12">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight">
+        <h1 className="text-3xl font-bold text-theme-primary mb-2 tracking-tight">
           Featured Projects
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-10 font-medium">
+        <p className="text-theme-secondary mb-10 font-medium">
           A curated selection of what I've built, synchronized with GitHub.
         </p>
 
