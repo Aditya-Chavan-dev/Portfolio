@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import type { SkillCategory, SkillItem } from './skills.types'
 import type { EnrichedProject } from '@/common/types/project'
 import EditableText from '@/admin/EditableText'
@@ -63,9 +62,6 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
         {category.items.map((skill, skillIndex) => {
-          // Generate a pseudo-stable proficiency level based on name
-          const level = Math.floor(80 + (skill.name.length % 201) / 10) % 21 + 75; // 75-96%
-          
           return (
             <div 
               key={skill.id}
@@ -92,7 +88,7 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
                 {skill.iconUrl ? (
                     <img 
                     src={skill.iconUrl} 
-                    className="w-6 h-6 object-contain opacity-60 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500" 
+                    className="w-6 h-6 object-contain opacity-100 transition-all duration-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]" 
                     alt={`${skill.name} icon`}
                     onError={(e) => {
                         const target = e.target as HTMLImageElement
@@ -107,27 +103,14 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
                 )}
               </div>
 
-              <div className="flex-1 flex flex-col gap-2">
+              <div className="flex-1 flex flex-col justify-center">
                 <div className="flex items-center justify-between">
                     <EditableText 
                         id={`skills.categories.${categoryIndex}.items.${skillIndex}.name`} 
                         value={skill.name} 
                         as="span" 
-                        className="text-[11px] text-white/80 font-mono tracking-wider group-hover:text-amber-500 transition-colors" 
+                        className="text-[11px] text-white/90 font-mono tracking-wider group-hover:text-amber-500 transition-colors" 
                     />
-                    <span className="mono-label !text-[8px] !opacity-30">{level}%_STABLE</span>
-                </div>
-                
-                {/* Holographic Gauge */}
-                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                    <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${level}%` }}
-                        transition={{ duration: 1.5, ease: "easeOut", delay: skillIndex * 0.1 }}
-                        className="h-full bg-gradient-to-r from-amber-500/20 to-amber-500 relative"
-                    >
-                        <div className="absolute inset-0 bg-system-grid opacity-20" />
-                    </motion.div>
                 </div>
               </div>
             </div>
