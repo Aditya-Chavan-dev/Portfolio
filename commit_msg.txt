@@ -1,1 +1,0 @@
-[Feature] Refactor project details layouts and optimize metrics mapping
