@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { SectionNav } from '@/shared/SectionNav'
+import { SectionNav } from '@/common/shared/SectionNav'
 import { CertificationCard } from './CertificationCard'
 import { CertificationModal } from './CertificationModal'
 import { useCertificationsContent } from './useCertificationsContent'
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 import type { CertificationItem } from './certifications.types'
 
 export default function Certifications() {
@@ -71,3 +71,5 @@ export default function Certifications() {
     </div>
   )
 }
+
+

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useEditMode } from '@/admin/EditModeContext'
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 
 interface WelcomeDialogueProps {
   readonly lines: string[]

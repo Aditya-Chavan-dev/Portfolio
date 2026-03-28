@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate }          from 'react-router-dom'
-import { getTestimonialPageContent } from '@/shared/firestore.service'
+import { getTestimonialPageContent } from '@/common/shared/firestore.service'
 import { TestimonialForm }      from './TestimonialForm'
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 import type { TestimonialPageContent } from './testimonial.types'
 import fallbackContent from './content.json'
 

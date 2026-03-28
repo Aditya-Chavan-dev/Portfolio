@@ -1,4 +1,4 @@
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 import { useEditMode } from '@/admin/EditModeContext'
 
 interface Props {

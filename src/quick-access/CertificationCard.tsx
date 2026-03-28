@@ -1,5 +1,5 @@
 import type { CertificationItem } from './certifications.types'
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 
 interface Props {
   readonly item: CertificationItem
@@ -36,3 +36,5 @@ export function CertificationCard({ item, itemIndex, onClick }: Props) {
     </article>
   )
 }
+
+

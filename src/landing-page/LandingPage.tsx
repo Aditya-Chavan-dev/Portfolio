@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useIsMobile } from '@/shared/useIsMobile'
+import { useIsMobile } from '@/common/shared/useIsMobile'
 import { useWelcomeContent } from './useWelcomeContent'
 import { LandingPageDesktop } from './LandingPage.desktop'
 import { LandingPageMobile }  from './LandingPage.mobile'
-import { useThemeContext } from '@/shared/ThemeProvider'
-import { SESSION_KEYS } from '@/shared/constants'
+import { useThemeContext } from '@/common/shared/ThemeProvider'
+import { SESSION_KEYS } from '@/common/shared/constants'
 
 export default function LandingPage() {
   const isMobile               = useIsMobile()

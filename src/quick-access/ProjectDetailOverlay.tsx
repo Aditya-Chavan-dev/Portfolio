@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { EnrichedProject } from '@/types/project'
+import type { EnrichedProject } from '@/common/types/project'
 
 interface Props {
   project: EnrichedProject
@@ -130,3 +130,5 @@ function ListSection({ title, items }: { title: string; items?: any[] }) {
 function Divider() {
   return <hr className="border-black/[0.04] dark:border-white/[0.04]" />
 }
+
+

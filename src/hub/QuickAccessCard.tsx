@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
+import { logMetric } from '@/admin/MetricsOrchestrator'
 import { Folder, Diamond, Briefcase, User, Award } from 'lucide-react'
-import { logMetric } from '../admin/services/MetricsOrchestrator'
 
 interface QuickAccessCardProps {
   readonly title:       string

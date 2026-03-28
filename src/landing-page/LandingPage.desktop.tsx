@@ -4,7 +4,7 @@ import type { WelcomeConfig } from './landing.types'
 import { AmbientDust } from './AmbientDust'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEditMode } from '@/admin/EditModeContext'
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 
 interface Props {
   readonly content:        WelcomeConfig

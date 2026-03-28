@@ -1,4 +1,4 @@
-import type { EnrichedProject } from '@/types/project'
+import type { EnrichedProject } from '@/common/types/project'
 
 interface Props {
   readonly project: EnrichedProject
@@ -39,3 +39,5 @@ export function ProjectCard({ project }: Props) {
     </div>
   )
 }
+
+

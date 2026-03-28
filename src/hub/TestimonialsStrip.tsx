@@ -1,5 +1,5 @@
 import { useTestimonials } from './useTestimonials'
-import type { PublicTestimonial } from '@/shared/testimonial.types'
+import type { PublicTestimonial } from '@/common/shared/testimonial.types'
 
 function TestimonialCard({ testimonial }: { readonly testimonial: PublicTestimonial }) {
   return (

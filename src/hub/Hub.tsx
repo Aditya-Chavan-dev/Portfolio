@@ -1,4 +1,4 @@
-import { useIsMobile }    from '@/shared/useIsMobile'
+import { useIsMobile }    from '@/common/shared/useIsMobile'
 import { useHubContent }  from './useHubContent'
 import { HubDesktop }     from './Hub.desktop'
 import { HubMobile }      from './Hub.mobile'

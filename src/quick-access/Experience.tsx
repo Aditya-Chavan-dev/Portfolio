@@ -1,7 +1,7 @@
-import { SectionNav }            from '@/shared/SectionNav'
+import { SectionNav }            from '@/common/shared/SectionNav'
 import { useExperienceContent }  from './useExperienceContent'
 import { ExperienceCard }        from './ExperienceCard'
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 
 export default function Experience() {
   const { content, loading } = useExperienceContent()
@@ -46,3 +46,5 @@ export default function Experience() {
     </div>
   )
 }
+
+

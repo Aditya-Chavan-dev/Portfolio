@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import { useFeaturedProjects } from '@/hooks/useFeaturedProjects'
+import { useFeaturedProjects } from '@/common/hooks/useFeaturedProjects'
 import { ProjectCard } from './ProjectCard'
-import { SectionNav } from '@/shared/SectionNav'
+import { SectionNav } from '@/common/shared/SectionNav'
 
 
 export default function Projects() {
@@ -66,3 +66,5 @@ function ProjectsSkeleton() {
     </div>
   )
 }
+
+

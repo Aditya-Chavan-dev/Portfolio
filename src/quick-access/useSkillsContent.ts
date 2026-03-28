@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import { incrementLocalCounter } from '@/lib/metrics'
-import type { ExperienceContent } from './experience.types'
+import { db } from '@/common/lib/firebase'
+import { incrementLocalCounter } from '@/common/lib/metrics'
+import type { SkillsContent } from './skills.types'
 import fallbackContent from './content.json'
 
-export function useExperienceContent() {
-  const [content, setContent] = useState<ExperienceContent | null>(null)
+export function useSkillsContent() {
+  const [content, setContent] = useState<SkillsContent | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const docRef = doc(db, 'live', 'experience')
+    const docRef = doc(db, 'live', 'skills')
 
     const timeoutTimer = setTimeout(() => {
-      setContent(fallbackContent as unknown as ExperienceContent)
+      setContent(fallbackContent as unknown as SkillsContent)
       setLoading(false)
     }, 2500)
 
@@ -23,16 +23,16 @@ export function useExperienceContent() {
         clearTimeout(timeoutTimer)
         incrementLocalCounter('reads')
         if (snap.exists()) {
-          setContent(snap.data() as ExperienceContent)
+          setContent(snap.data() as SkillsContent)
         } else {
-          setContent(fallbackContent as unknown as ExperienceContent)
+          setContent(fallbackContent as unknown as SkillsContent)
         }
         setLoading(false)
       },
       (error) => {
         clearTimeout(timeoutTimer)
-        console.error('Experience content subscription error:', error)
-        setContent(fallbackContent as unknown as ExperienceContent)
+        console.error('Skills content subscription error:', error)
+        setContent(fallbackContent as unknown as SkillsContent)
         setLoading(false)
       }
     )
@@ -45,3 +45,5 @@ export function useExperienceContent() {
 
   return { content, loading } as const
 }
+
+

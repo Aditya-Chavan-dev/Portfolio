@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import { incrementLocalCounter } from '@/lib/metrics'
+import { db } from '@/common/lib/firebase'
+import { incrementLocalCounter } from '@/common/lib/metrics'
 import type { CertificationsContent } from './certifications.types'
 import fallbackContent from './content.json'
 
@@ -45,3 +45,5 @@ export function useCertificationsContent() {
 
   return { content, loading } as const
 }
+
+

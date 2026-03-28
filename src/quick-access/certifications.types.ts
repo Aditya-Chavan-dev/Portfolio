@@ -15,3 +15,5 @@ export interface CertificationsContent {
   pageSubtitle: string
   items:       CertificationItem[]
 }
+
+

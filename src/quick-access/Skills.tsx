@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
-import { SectionNav }       from '@/shared/SectionNav'
+import { SectionNav }       from '@/common/shared/SectionNav'
 import { useSkillsContent } from './useSkillsContent'
 import { SkillCategoryBlock } from './SkillCategoryBlock'
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 import { useEditMode } from '@/admin/EditModeContext'
-import { useFeaturedProjects } from '@/hooks/useFeaturedProjects'
+import { useFeaturedProjects } from '@/common/hooks/useFeaturedProjects'
 import { Plus } from 'lucide-react'
 import type { SkillCategory } from './skills.types'
 
@@ -103,3 +103,5 @@ export default function Skills() {
     </div>
   )
 }
+
+

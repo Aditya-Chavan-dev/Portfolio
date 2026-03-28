@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ExperienceItem } from './experience.types'
-import EditableText from '@/admin/components/EditableText'
+import EditableText from '@/admin/EditableText'
 
 interface Props {
   readonly item:   ExperienceItem
@@ -79,3 +79,5 @@ export function ExperienceCard({ item, itemIndex, isLast }: Props) {
     </article>
   )
 }
+
+

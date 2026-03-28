@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import type { SkillCategory, SkillItem } from './skills.types'
-import type { EnrichedProject } from '@/types/project'
-import EditableText from '@/admin/components/EditableText'
-import AddSkillModal from '@/admin/components/AddSkillModal'
+import type { EnrichedProject } from '@/common/types/project'
+import EditableText from '@/admin/EditableText'
+import AddSkillModal from '@/admin/AddSkillModal'
 import { useEditMode } from '@/admin/EditModeContext'
 import { X, Plus } from 'lucide-react'
 
@@ -124,3 +124,5 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
     </section>
   )
 }
+
+

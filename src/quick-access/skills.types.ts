@@ -17,3 +17,5 @@ export interface SkillsContent {
   emptyState:  string
   categories:  SkillCategory[]
 }
+
+

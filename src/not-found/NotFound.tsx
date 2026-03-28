@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getNotFoundContent } from '@/shared/firestore.service'
+import { getNotFoundContent } from '@/common/shared/firestore.service'
 
 const FALLBACK = { heading: '404', body: 'Page not found.', backLabel: 'Back to Hub' } as const
 

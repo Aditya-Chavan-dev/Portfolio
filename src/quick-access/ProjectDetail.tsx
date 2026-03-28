@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { onSnapshot, doc } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import { incrementLocalCounter } from '@/lib/metrics'
-import { useGithubProjects } from '@/hooks/useGithubProjects'
-import { projectMetadata } from '@/lib/projectMetadata'
-import { SectionNav } from '@/shared/SectionNav'
-import EditableText from '@/admin/components/EditableText'
+import { db } from '@/common/lib/firebase'
+import { incrementLocalCounter } from '@/common/lib/metrics'
+import { useGithubProjects } from '@/common/hooks/useGithubProjects'
+import { projectMetadata } from '@/common/lib/projectMetadata'
+import { SectionNav } from '@/common/shared/SectionNav'
+import EditableText from '@/admin/EditableText'
 
 export default function ProjectDetail() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -199,3 +199,5 @@ export default function ProjectDetail() {
 
   )
 }
+
+
