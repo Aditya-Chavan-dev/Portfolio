@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from '@/App'
-import { ToastProvider } from '@/shared/Toast'
+import { ToastProvider } from '@/common/shared/Toast'
 import { AuthProvider } from '@/admin/AuthProvider'
 import { EditModeProvider } from '@/admin/EditModeContext'
 
