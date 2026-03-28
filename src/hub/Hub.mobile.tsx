@@ -78,7 +78,6 @@ export function HubMobile({ content }: Props) {
         <div className="w-full space-y-5">
           <div className="h-px bg-theme-muted w-full" />
           <QuickAccessGrid
-            label="QUICK ACCESS"
             items={content.quickAccessItems}
           />
         </div>

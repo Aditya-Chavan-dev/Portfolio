@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import type { SkillCategory, SkillItem } from './skills.types'
 import type { EnrichedProject } from '@/common/types/project'
 import EditableText from '@/admin/EditableText'
@@ -40,12 +41,15 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
   }
 
   return (
-    <section aria-label={category.name} className="flex flex-col gap-1">
-      <div className="flex items-center gap-2">
-        <h2 className="text-[10px] font-bold text-gray-400 dark:text-gray-500 flex items-center gap-1 uppercase tracking-wider">
-          <span className="w-1 h-1 bg-amber-500 rounded-full" />
-          <EditableText id={`skills.categories.${categoryIndex}.name`} value={category.name} as="span" />
-        </h2>
+    <section aria-label={category.name} className="flex flex-col gap-4 mb-8">
+      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+        <div className="flex items-center gap-3">
+            <div className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
+            <h2 className="mono-label !opacity-80 !text-[10px] tracking-[0.2em] uppercase">
+                <EditableText id={`skills.categories.${categoryIndex}.name`} value={category.name} as="span" />
+            </h2>
+        </div>
+        <div className="mono-label !opacity-20 !text-[8px]">SUB_SYS_0x{categoryIndex + 1} // STATUS: OPERATIONAL</div>
         {isEditing && (
           <button
             onClick={handleDeleteCategory}
@@ -57,18 +61,22 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
         )}
       </div>
       
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 pt-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
         {category.items.map((skill, skillIndex) => {
+          // Generate a pseudo-stable proficiency level based on name
+          const level = Math.floor(80 + (skill.name.length % 201) / 10) % 21 + 75; // 75-96%
+          
           return (
             <div 
               key={skill.id}
               className="
-                bg-white dark:bg-[#131315] border border-black/[0.03] dark:border-white/[0.04] rounded-xl p-1.5 
-                flex flex-col items-center justify-center gap-1 text-center h-16
-                hover:scale-105 hover:shadow-md
-                transition-all duration-200 cursor-default group relative
+                glass-premium p-4 flex items-center gap-4 relative overflow-hidden group 
+                hover:border-amber-500/20 transition-all duration-300 cursor-default
               "
             >
+              {/* Background scanning effect */}
+              <div className="absolute inset-x-0 top-0 h-[1px] bg-amber-500/20 opacity-0 group-hover:opacity-100 group-hover:animate-scan-line" />
+              
               {/* Delete button - visible only in edit mode */}
               {isEditing && (
                 <button
@@ -79,21 +87,49 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
                   <X size={10} className="text-white" />
                 </button>
               )}
-              {skill.iconUrl && (
-                <img 
-                  src={skill.iconUrl} 
-                  className="w-7 h-7 object-contain transition-transform group-hover:scale-105" 
-                  alt={`${skill.name} icon`}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    if (target.src.includes('-original.svg') && !target.dataset.fallbackAttempted) {
-                      target.dataset.fallbackAttempted = 'true'
-                      target.src = target.src.replace('-original.svg', '-plain.svg')
-                    }
-                  }}
-                />
-              )}
-              <EditableText id={`skills.categories.${categoryIndex}.items.${skillIndex}.name`} value={skill.name} as="span" className="text-xs text-gray-700 dark:text-gray-300 font-medium tracking-wide" />
+
+              <div className="w-10 h-10 flex-shrink-0 glass-premium !bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-amber-500/30 transition-colors relative">
+                {skill.iconUrl ? (
+                    <img 
+                    src={skill.iconUrl} 
+                    className="w-6 h-6 object-contain opacity-60 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500" 
+                    alt={`${skill.name} icon`}
+                    onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        if (target.src.includes('-original.svg') && !target.dataset.fallbackAttempted) {
+                        target.dataset.fallbackAttempted = 'true'
+                        target.src = target.src.replace('-original.svg', '-plain.svg')
+                        }
+                    }}
+                    />
+                ) : (
+                    <div className="mono-label !text-[8px] opacity-20">NULL</div>
+                )}
+              </div>
+
+              <div className="flex-1 flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                    <EditableText 
+                        id={`skills.categories.${categoryIndex}.items.${skillIndex}.name`} 
+                        value={skill.name} 
+                        as="span" 
+                        className="text-[11px] text-white/80 font-mono tracking-wider group-hover:text-amber-500 transition-colors" 
+                    />
+                    <span className="mono-label !text-[8px] !opacity-30">{level}%_STABLE</span>
+                </div>
+                
+                {/* Holographic Gauge */}
+                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${level}%` }}
+                        transition={{ duration: 1.5, ease: "easeOut", delay: skillIndex * 0.1 }}
+                        className="h-full bg-gradient-to-r from-amber-500/20 to-amber-500 relative"
+                    >
+                        <div className="absolute inset-0 bg-system-grid opacity-20" />
+                    </motion.div>
+                </div>
+              </div>
             </div>
           )
         })}
@@ -103,15 +139,15 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
           <button
             onClick={() => setShowAddModal(true)}
             className="
-              border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl h-16
-              flex flex-col items-center justify-center gap-1
-              text-gray-400 dark:text-gray-600 hover:text-amber-500 hover:border-amber-500
-              transition-all duration-200 cursor-pointer
+              glass-premium border-dashed !bg-transparent p-4
+              flex flex-col items-center justify-center gap-2
+              text-white/20 hover:text-amber-500 hover:border-amber-500/40
+              transition-all duration-300 cursor-pointer h-full
             "
             title="Add new skill"
           >
             <Plus size={18} />
-            <span className="text-[9px] font-medium">Add</span>
+            <span className="mono-label !text-[9px]">INIT_NEW_ENTRY</span>
           </button>
         )}
       </div>

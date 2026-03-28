@@ -148,38 +148,59 @@ export function WelcomeDialogue({
             (i === currentLine && (state === 'PAUSE_LINE' || state === 'PAUSE_BATMAN'))
           const isTyping = !skip && state === 'TYPING_LINE' && i === currentLine
 
-          if (!isCompleted && !isTyping) return null // Absolutely prevents layout stacking of future placeholders
+          // Instead of null, we return hidden to keep layout stable
+          const isVisible = isCompleted || isTyping;
 
           return (
-            <motion.p
+            <motion.div
               key={i}
-              initial={skip ? { opacity: 0, y: 8, filter: 'blur(3px)' } : undefined}
-              animate={skip ? { opacity: 1, y: 0, filter: 'blur(0px)' } : undefined}
-              transition={skip ? { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.04 } : undefined}
-              className={`text-[13px] md:text-[18px] font-serif tracking-[0.02em] leading-[1.8] font-bold ${colorClass} text-center`}
+              initial={skip ? { opacity: 0, x: -10, filter: 'blur(5px)' } : { opacity: 0, x: -10 }}
+              animate={{ 
+                opacity: isVisible ? 1 : 0, 
+                x: isVisible ? 0 : -10,
+                filter: isVisible ? 'blur(0px)' : 'blur(5px)'
+              }}
+              transition={skip ? { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.04 } : { duration: 0.5 }}
+              className={`flex flex-col gap-1 items-center mb-6 ${!isVisible ? 'pointer-events-none' : ''}`}
               style={{ marginTop }}
             >
-              {isCompleted ? (
-                <EditableText id={`welcome.dialogue.${i}`} value={text} />
-              ) : (
-                <>
-                  {isTyping && currentLineText.length === 0 && (
-                    <span className="text-[#555555] inline-block">▋</span>
-                  )}
-                  {text.split('').map((char, index) => {
-                    const isVisible = index < currentLineText.length;
-                    return (
-                      <span key={index} className={isVisible ? 'opacity-100' : 'opacity-0'}>
-                        {char}
-                        {isTyping && index === currentLineText.length - 1 && (
-                          <span className="ml-0.5 text-[#555555] inline-block">▋</span>
-                        )}
-                      </span>
-                    )
-                  })}
-                </>
-              )}
-            </motion.p>
+               {/* Technical Identifier */}
+               <div className="flex items-center gap-2 mb-1">
+                 <span className="mono-label !text-[8px] text-white/20">LOG_{String(i).padStart(2, '0')}</span>
+                 <div className="w-1 h-1 bg-white/20 rounded-full" />
+                 {isBatmanLine && (
+                   <motion.span 
+                    animate={{ opacity: [1, 0.4, 1] }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                    className="text-[8px] font-mono text-amber-500 uppercase tracking-widest"
+                   >
+                     Critical_Header
+                   </motion.span>
+                 )}
+               </div>
+
+              <p
+                className={`text-[15px] md:text-[20px] tracking-[0.02em] leading-[1.6] ${colorClass} text-center ${isBatmanLine ? 'font-serif font-black italic' : isMuted ? 'font-mono !text-[12px] opacity-40 italic' : 'font-serif font-bold'}`}
+              >
+                {isCompleted ? (
+                  <EditableText id={`welcome.dialogue.${i}`} value={text} />
+                ) : (
+                  <>
+                    {text.split('').map((char, index) => {
+                      const isVisible = index < currentLineText.length;
+                      return (
+                        <span key={index} className={isVisible ? 'opacity-100' : 'opacity-0'}>
+                          {char}
+                          {isTyping && index === currentLineText.length - 1 && (
+                            <span className="ml-0.5 text-amber-500 inline-block animate-pulse">▋</span>
+                          )}
+                        </span>
+                      )
+                    })}
+                  </>
+                )}
+              </p>
+            </motion.div>
           )
         })}
       </div>

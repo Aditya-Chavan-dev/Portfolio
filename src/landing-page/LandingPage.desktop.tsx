@@ -38,10 +38,22 @@ export function LandingPageDesktop({
   }, [showCTA, mode, onNavigateHub])
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center select-none overflow-hidden py-[48px] relative">
-      <AmbientDust count={80} />
-      <div className="max-w-[800px] w-full flex flex-col items-center justify-center text-center relative z-10">
-        
+    <div className="h-screen w-screen !bg-[#03040b] flex flex-col items-center justify-center select-none overflow-hidden py-12 relative text-white">
+      <AmbientDust count={120} />
+      
+      {/* Background HUD Layer */}
+      <div className="absolute inset-0 pointer-events-none opacity-20 bg-system-grid" />
+      
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        className="max-w-[800px] w-full flex flex-col items-center justify-center text-center relative z-10 glass-premium p-12 rounded-[2.5rem] magnetic-area"
+      >
+        <div className="mono-label !opacity-60 mb-8 border-b border-white/5 pb-2">
+          SYSTEM_VERSION :: v3.1.0_PROD
+        </div>
+
         {/* 2. Dialogue */}
         <WelcomeDialogue
           lines={content.dialogue}
@@ -56,37 +68,42 @@ export function LandingPageDesktop({
             {showCTA ? (
               <motion.div
                 key="continue"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4 }}
                 onClick={onNavigateHub}
-                className="text-[13px] text-[#555555] tracking-[0.02em] hover:text-[#FFFFFF] transition-colors duration-200 cursor-pointer flex items-center"
+                className="group relative cursor-pointer"
               >
-                <EditableText id="welcome.ctaDesktop" value={content.ctaDesktop} />
-                <motion.span 
-                  animate={{ opacity: [1, 0.3, 1] }} 
-                  transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-                  className="ml-1"
-                >
-                  ▋
-                </motion.span>
+                <div className="absolute -inset-4 bg-amber-500/5 blur-xl group-hover:bg-amber-500/10 transition-colors rounded-full" />
+                <div className="text-[13px] text-white/40 tracking-[0.2em] font-mono group-hover:text-amber-500 transition-colors duration-300 flex items-center gap-3">
+                  <EditableText id="welcome.ctaDesktop" value={content.ctaDesktop} />
+                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping" />
+                </div>
               </motion.div>
             ) : showSkipHint ? (
               <motion.p
                 key="skip"
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 0.4 }}
+                animate={{ opacity: 0.2 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-[13px] text-[#555555] tracking-[0.02em]"
+                className="mono-label text-[10px]"
               >
                 <EditableText id="welcome.skipHintDesktop" value={content.skipHintDesktop} />
               </motion.p>
             ) : null}
           </AnimatePresence>
         </div>
+      </motion.div>
 
+      {/* Aesthetic Metadata corners */}
+      <div className="absolute bottom-12 left-12 mono-label !opacity-30 flex flex-col gap-1 text-[8px]">
+        <span>X: [REDACTED]</span>
+        <span>Y: [REDACTED]</span>
+      </div>
+      <div className="absolute top-12 right-12 mono-label !opacity-30 text-[8px]">
+        LOC: SECTOR_7_G
       </div>
     </div>
   )

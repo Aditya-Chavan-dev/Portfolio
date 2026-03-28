@@ -29,7 +29,7 @@ function PageTransition({ children }: { readonly children: React.ReactNode }) {
       animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
       exit={{ opacity: 0, scale: 1.02, filter: 'blur(4px)' }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="w-full min-h-screen"
+      className="w-full h-full overflow-hidden"
     >
       {children}
     </motion.div>
@@ -66,16 +66,19 @@ function PublicTracker() {
   return null
 }
 
+import { CursorProbe } from '@/common/shared/CursorProbe'
+
 export default function App() {
   const location = useLocation()
   const isWelcomeScreen = location.pathname === '/'
 
   return (
     <ThemeProvider>
-      {!isWelcomeScreen && <FloatingThemeToggle />}
-      <BottomDock />
-      <PublicTracker />
-      <div>
+      <div className="scanline h-[100dvh] overflow-hidden bg-system-grid transition-colors duration-500">
+        <CursorProbe />
+        {!isWelcomeScreen && <FloatingThemeToggle />}
+        <BottomDock />
+        <PublicTracker />
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             {/* ── Public routes ─────────────────────────────────── */}

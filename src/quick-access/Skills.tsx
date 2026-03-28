@@ -61,11 +61,30 @@ export default function Skills() {
   const categories = localCategories || content.categories
 
   return (
-    <div className="min-h-screen bg-theme-primary pb-24 md:pb-0">
+    <div className="h-screen bg-transparent flex flex-col overflow-hidden relative">
+      <div className="absolute inset-0 pointer-events-none opacity-5 bg-system-grid" />
       <SectionNav />
-      <main className="max-w-3xl mx-auto px-6 md:px-8 py-4 md:py-6">
-        <EditableText id="skills.pageTitle" value={content.pageTitle} as="h1" className="text-2xl md:text-3xl font-bold text-theme-primary mb-2 tracking-tight" />
-        <EditableText id="skills.pageSubtitle" value={content.pageSubtitle} as="p" className="text-sm md:text-base text-theme-secondary mb-5" />
+      <main className="flex-1 overflow-y-auto scrollbar-hide max-w-7xl mx-auto px-12 py-12 relative z-10">
+        <header className="mb-16 border-l-2 border-amber-500 pl-8 relative">
+            <div className="absolute -left-[5px] top-0 w-2 h-2 bg-amber-500 rounded-full" />
+            <div className="absolute -left-[5px] bottom-0 w-2 h-2 bg-amber-500/20 rounded-full" />
+            
+            <div className="mono-label !text-amber-500 mb-2 !opacity-100 flex items-center gap-3">
+                <span className="animate-pulse">●</span> SYSTEM_COMPETENCIES
+            </div>
+            <EditableText 
+                id="skills.pageTitle" 
+                value={content.pageTitle} 
+                as="h1" 
+                className="text-6xl font-black text-white mb-4 tracking-tighter" 
+            />
+            <EditableText 
+                id="skills.pageSubtitle" 
+                value={content.pageSubtitle} 
+                as="p" 
+                className="text-lg text-white/40 font-serif italic max-w-2xl leading-relaxed" 
+            />
+        </header>
 
         {categories.length > 0 ? (
           <div className="space-y-5">

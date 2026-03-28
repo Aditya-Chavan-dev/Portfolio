@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { ThemeToggle } from '@/common/shared/ThemeToggle'
 
 const SECTIONS = [
@@ -22,26 +23,22 @@ export function SectionNav() {
         className="
           hidden md:flex sticky top-0 z-50
           items-center justify-between
-          px-8 py-4
-          bg-theme-nav
-          backdrop-blur-sm
-          border-b border-theme-muted
+          px-12 py-5
+          glass-premium !bg-white/5 !rounded-none
+          backdrop-blur-xl
+          border-b border-white/5
         "
       >
         <button
           type="button"
           onClick={goToHub}
           aria-label="Back to Hub"
-          className="
-            text-sm text-theme-secondary
-            hover:text-theme-primary
-            transition-colors duration-150
-          "
+          className="mono-label !opacity-40 hover:!opacity-100 hover:text-amber-500 transition-all flex items-center gap-2 group"
         >
-          ← Hub
+          <span className="group-hover:-translate-x-1 transition-transform">←</span> SYSTEM_HUB
         </button>
 
-        <div role="list" className="flex items-center gap-6">
+        <div role="list" className="flex items-center gap-10">
           {SECTIONS.map(({ label, route }) => {
             const isActive = pathname === route
             return (
@@ -52,21 +49,21 @@ export function SectionNav() {
                 onClick={() => navigate(route)}
                 aria-current={isActive ? 'page' : undefined}
                 className={`
-                  relative pb-1 text-sm transition-colors duration-150
+                  relative pb-1 text-[10px] font-mono uppercase tracking-[0.2em] transition-all duration-300
                   ${isActive
-                    ? 'text-theme-primary font-medium'
-                    : 'text-theme-secondary hover:text-theme-primary'
+                    ? 'text-white opacity-100'
+                    : 'text-white/30 hover:text-amber-500/80'
                   }
                 `}
               >
                 {label}
                 {isActive && (
-                  <span
+                  <motion.span
+                    layoutId="activeTab"
                     aria-hidden="true"
                     className="
-                      absolute bottom-0 left-1/2 -translate-x-1/2
-                      w-1 h-1 rounded-full
-                      bg-theme-primary
+                      absolute -bottom-2 left-0 right-0
+                      h-[1px] bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]
                     "
                   />
                 )}
@@ -75,7 +72,9 @@ export function SectionNav() {
           })}
         </div>
 
-        <ThemeToggle />
+        <div className="scale-75 origin-right">
+            <ThemeToggle />
+        </div>
       </nav>
 
       {/* ── Mobile: fixed bottom bar ─────────────────────────────── */}
@@ -84,20 +83,20 @@ export function SectionNav() {
         className="
           md:hidden fixed bottom-0 left-0 right-0 z-50
           flex items-center justify-around
-          py-3 px-2
-          bg-theme-nav
-          backdrop-blur-sm
-          border-t border-theme-muted
+          py-4 px-2
+          glass-premium !bg-white/5 !rounded-none
+          backdrop-blur-xl
+          border-t border-white/5
         "
       >
         <button
           type="button"
           onClick={goToHub}
           aria-label="Back to Hub"
-          className="flex flex-col items-center gap-0.5 text-xs text-theme-secondary min-w-[44px] py-1"
+          className="flex flex-col items-center gap-1.5 transition-all group"
         >
-          <span aria-hidden="true" className="text-base leading-none">←</span>
-          <span>Hub</span>
+          <span aria-hidden="true" className="mono-label !opacity-40 group-hover:!opacity-100 group-hover:text-amber-500">←</span>
+          <span className="mono-label !text-[8px] !opacity-20 uppercase">HUB</span>
         </button>
 
         {SECTIONS.map(({ label, route }) => {
@@ -109,27 +108,29 @@ export function SectionNav() {
               onClick={() => navigate(route)}
               aria-current={isActive ? 'page' : undefined}
               className={`
-                flex flex-col items-center gap-0.5 text-xs
-                min-w-[44px] py-1
-                transition-colors duration-150
+                flex flex-col items-center gap-1.5 min-w-[60px] py-1 transition-all
                   ${isActive
-                    ? 'text-theme-primary font-medium'
-                    : 'text-theme-secondary'
+                    ? 'text-white'
+                    : 'text-white/20'
                   }
               `}
             >
-              <span
+              <motion.span
                 aria-hidden="true"
-                className={`w-1 h-1 rounded-full ${
-                  isActive ? 'bg-theme-primary' : 'bg-transparent'
+                className={`w-1 h-1 rounded-full transition-shadow duration-500 ${
+                  isActive ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'bg-transparent'
                 }`}
               />
-              {label}
+              <span className={`mono-label !text-[9px] uppercase tracking-wider ${isActive ? '!opacity-100' : '!opacity-40'}`}>
+                {label.substring(0, 4)}
+              </span>
             </button>
           )
         })}
 
-        <ThemeToggle />
+        <div className="scale-75">
+            <ThemeToggle />
+        </div>
       </nav>
     </>
   )
