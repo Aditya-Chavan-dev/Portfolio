@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { getEngineHealth } from '../../services/EngineService'
-import type { EngineHealth } from '../../services/EngineService'
+import { getEngineHealth } from './EngineService'
+import type { EngineHealth } from './EngineService'
 import { HardDrive, Activity, Star, AlertCircle } from 'lucide-react'
 
 export default function EnginePanel() {
@@ -69,3 +69,6 @@ export default function EnginePanel() {
     </div>
   )
 }
+
+
+

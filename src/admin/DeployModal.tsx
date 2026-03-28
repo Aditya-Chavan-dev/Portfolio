@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import { tracedCall, tracedWrite } from '@/lib/metrics'
-import { useEditMode } from '../EditModeContext'
-import { useToastContext } from '@/shared/Toast'
+import { db } from '@/common/lib/firebase'
+import { tracedCall, tracedWrite } from '@/common/lib/metrics'
+import { useEditMode } from './EditModeContext'
+import { useToastContext } from '@/common/shared/Toast'
 import welcomeFallback from '@/landing-page/content.json'
 import hubFallback from '@/hub/content.json'
-import skillsFallback from '@/quick-access/skills/content.json'
-import experienceFallback from '@/quick-access/experience/content.json'
-import certificationsFallback from '@/quick-access/certifications/content.json'
+import skillsFallback from '@/quick-access/content.json'
+import experienceFallback from '@/quick-access/content.json'
+import certificationsFallback from '@/quick-access/content.json'
 
 const FALLBACKS: Record<string, any> = {
   welcome: welcomeFallback,
@@ -203,3 +203,6 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
     </div>
   )
 }
+
+
+

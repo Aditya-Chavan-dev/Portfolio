@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { doc, onSnapshot } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
+import { db } from '@/common/lib/firebase'
 import { Activity, Zap, AlertCircle, Clock } from 'lucide-react'
-import { tracedCall } from '../../services/MetricsOrchestrator'
 
 export default function PulsePanel() {
   const [metrics, setMetrics] = useState<any[]>([])
@@ -155,3 +154,6 @@ export default function PulsePanel() {
     </div>
   )
 }
+
+
+

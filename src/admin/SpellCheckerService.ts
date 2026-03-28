@@ -59,3 +59,6 @@ export function scanContent(docId: string, data: Record<string, any>): QualityIs
 
   return issues
 }
+
+
+

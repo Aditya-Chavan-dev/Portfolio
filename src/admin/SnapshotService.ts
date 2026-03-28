@@ -1,4 +1,4 @@
-import { db } from '@/shared/firebase';
+import { db } from '@/common/lib/firebase';
 import { collection, getDocs, doc, setDoc, serverTimestamp, query, orderBy, limit } from 'firebase/firestore';
 import { tracedCall, tracedWrite } from './MetricsOrchestrator';
 
@@ -74,3 +74,6 @@ export async function restoreSnapshot(snapshotId: string) {
     return true;
   });
 }
+
+
+

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { createSnapshot, getRecentSnapshots, restoreSnapshot } from '../../services/SnapshotService'
-import type { Snapshot } from '../../services/SnapshotService'
+import { createSnapshot, getRecentSnapshots, restoreSnapshot } from './SnapshotService'
+import type { Snapshot } from './SnapshotService'
 import { History, Save, RotateCcw, Clock, AlertTriangle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -163,3 +163,6 @@ export default function TimeMachinePanel() {
     </div>
   )
 }
+
+
+

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthProvider'
-import { useToastContext } from '@/shared/Toast'
+import { useToastContext } from '@/common/shared/Toast'
 
 export default function AdminLogin() {
   const navigate = useNavigate()

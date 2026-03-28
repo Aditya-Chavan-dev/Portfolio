@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/admin/AuthProvider'
-import { useEditSessionLock } from '@/hooks/useEditSessionLock'
+import { useEditSessionLock } from '@/common/hooks/useEditSessionLock'
 
 const ADMIN_ROUTES = ['/amgl-3-10', '/amgl-panel']
 

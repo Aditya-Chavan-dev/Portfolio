@@ -1,4 +1,4 @@
-import { useAdminProjects } from '@/hooks/useAdminProjects'
+import { useAdminProjects } from '@/common/hooks/useAdminProjects'
 
 export default function AdminProjectsTab() {
   const { items, loading, toggleFeatured, updateOrder } = useAdminProjects()
@@ -79,3 +79,6 @@ export default function AdminProjectsTab() {
     </div>
   )
 }
+
+
+

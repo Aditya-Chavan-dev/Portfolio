@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getLocalCounters } from '../../services/MetricsOrchestrator'
+import { getLocalCounters } from './MetricsOrchestrator'
 import { Wallet, TrendingUp, AlertCircle, CheckCircle2, Database } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -99,3 +99,6 @@ export default function BudgetPanel() {
     </div>
   )
 }
+
+
+

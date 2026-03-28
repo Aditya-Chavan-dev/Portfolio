@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { db } from '@/shared/firebase'
+import { db } from '@/common/lib/firebase'
 import { collection, getDocs } from 'firebase/firestore'
-import { scanContent } from '../../services/SpellCheckerService'
-import type { QualityIssue } from '../../services/SpellCheckerService'
+import { scanContent } from './SpellCheckerService'
+import type { QualityIssue } from './SpellCheckerService'
 import { Edit3, CheckCircle, AlertTriangle, Search, Sparkles } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -123,3 +123,6 @@ export default function QualityPanel() {
     </div>
   )
 }
+
+
+

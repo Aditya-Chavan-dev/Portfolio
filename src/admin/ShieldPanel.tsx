@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
+import { db } from '@/common/lib/firebase'
 import { ShieldCheck, UserCheck, Monitor, Globe } from 'lucide-react'
 
 export default function ShieldPanel() {
@@ -75,3 +75,6 @@ export default function ShieldPanel() {
     </div>
   )
 }
+
+
+

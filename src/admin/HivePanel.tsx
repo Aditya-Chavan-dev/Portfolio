@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ref, onValue } from 'firebase/database'
 import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore'
-import { rtdb, db } from '@/shared/firebase'
+import { rtdb, db } from '@/common/lib/firebase'
 import { Users, MousePointer2, Clock, Zap, Map as MapIcon } from 'lucide-react'
 
 export default function HivePanel() {
@@ -100,3 +100,6 @@ export default function HivePanel() {
     </div>
   )
 }
+
+
+

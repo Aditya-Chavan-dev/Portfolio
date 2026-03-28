@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getLocalCounters } from '../../services/MetricsOrchestrator'
+import { getLocalCounters } from './MetricsOrchestrator'
 import { Activity, Clock, Zap, AlertCircle } from 'lucide-react'
 
 export default function MetricsDashboard() {
@@ -39,3 +39,6 @@ export default function MetricsDashboard() {
     </div>
   )
 }
+
+
+

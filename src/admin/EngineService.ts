@@ -1,4 +1,4 @@
-import { db } from '@/shared/firebase';
+import { db } from '@/common/lib/firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { tracedCall } from './MetricsOrchestrator';
 
@@ -59,3 +59,6 @@ export async function getEngineHealth(): Promise<EngineHealth> {
 
   return payload;
 }
+
+
+

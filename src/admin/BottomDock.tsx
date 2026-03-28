@@ -1,10 +1,10 @@
 import { useEditMode } from './EditModeContext'
 import { useAuth } from './AuthProvider'
 import { useLocation } from 'react-router-dom'
-import { useEditSessionLock } from '@/hooks/useEditSessionLock'
+import { useEditSessionLock } from '@/common/hooks/useEditSessionLock'
 import { useEffect, useState } from 'react'
-import DeployModal from './components/DeployModal'
-import { ADMIN_ROUTES, SESSION_KEYS } from '@/shared/constants'
+import DeployModal from './DeployModal'
+import { ADMIN_ROUTES, SESSION_KEYS } from '@/common/shared/constants'
 
 /**
  * BottomDock Component — Fixed floating dock at the bottom of the screen.

@@ -210,3 +210,6 @@ export default function AddSkillModal({ isOpen, onClose, onAdd }: AddSkillModalP
     </div>
   )
 }
+
+
+

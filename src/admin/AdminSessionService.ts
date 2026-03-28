@@ -1,5 +1,5 @@
-import { db } from '@/shared/firebase';
-import { doc, setDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
+import { db } from '@/common/lib/firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 
 let heartbeatTimer: any = null;
 
@@ -29,3 +29,6 @@ export async function stopAdminSession() {
     heartbeatTimer = null;
   }
 }
+
+
+

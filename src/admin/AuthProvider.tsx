@@ -8,9 +8,9 @@ import {
   setPersistence,
   type User,
 } from 'firebase/auth'
-import { auth } from '@/shared/firebase'
-import { writeAuditLog } from '@/shared/auditLog'
-import { startAdminSession, stopAdminSession } from './services/AdminSessionService'
+import { auth } from '@/common/lib/firebase'
+import { writeAuditLog } from '@/common/shared/auditLog'
+import { startAdminSession, stopAdminSession } from './AdminSessionService'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

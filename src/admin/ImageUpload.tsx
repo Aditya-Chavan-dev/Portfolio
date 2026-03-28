@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage } from '@/shared/firebase'
+import { storage } from '@/common/lib/firebase'
 import { useEditMode } from '@/admin/EditModeContext'
-import { useToastContext } from '@/shared/Toast'
+import { useToastContext } from '@/common/shared/Toast'
 
 interface ImageUploadProps {
   id: string
@@ -110,3 +110,6 @@ export default function ImageUpload({ id, className = '', children }: Omit<Image
     </div>
   )
 }
+
+
+

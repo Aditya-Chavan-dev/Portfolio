@@ -1,4 +1,4 @@
-import { db } from '@/shared/firebase';
+import { db } from '@/common/lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 const buffer: any[] = [];
@@ -119,3 +119,6 @@ export function getLocalCounters() {
   if (stored.date !== today) return { reads: 0, writes: 0, deletes: 0 };
   return stored;
 }
+
+
+

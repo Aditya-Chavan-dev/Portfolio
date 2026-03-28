@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
-import { db } from '@/shared/firebase'
-import { tracedCall, tracedWrite } from '../services/MetricsOrchestrator'
-import { LandingPageSchema as WelcomeConfigSchema } from '../services/ValidationSchemas'
+import { db } from '@/common/lib/firebase'
+import { tracedCall, tracedWrite } from './MetricsOrchestrator'
+import { LandingPageSchema as WelcomeConfigSchema } from './ValidationSchemas'
 import type { WelcomeConfig } from '@/landing-page/landing.types'
 import { Reorder } from 'framer-motion'
 import { GripVertical, Star, Trash2 } from 'lucide-react'
 
 // Mocking validateInput for now if complianceRunner is not easily found or needs migration
 // In a real scenario, I'd migrate complianceRunner too if it's admin-only.
-function validateInput(schema: any, data: any, label: string) {
+function validateInput(schema: any, data: any, _label: string) {
   return schema.parse(data);
 }
 
@@ -221,3 +221,6 @@ export default function WelcomeScreenEditor() {
     </div>
   )
 }
+
+
+

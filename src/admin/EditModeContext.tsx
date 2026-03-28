@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react'
-import { SESSION_KEYS, ADMIN_ROUTES } from '@/shared/constants'
+import { SESSION_KEYS, ADMIN_ROUTES } from '@/common/shared/constants'
 
 type EditMode = 'idle' | 'edit' | 'preview'
 
