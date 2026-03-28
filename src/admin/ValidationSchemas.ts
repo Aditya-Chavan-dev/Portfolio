@@ -27,3 +27,6 @@ export const ProjectSchema = z.object({
 
 
 
+export const SettingsSchema = z.object({
+  isOpenToWork: z.boolean(),
+});

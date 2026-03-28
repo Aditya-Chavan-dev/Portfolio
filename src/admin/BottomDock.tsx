@@ -5,6 +5,7 @@ import { useEditSessionLock } from '@/common/hooks/useEditSessionLock'
 import { useEffect, useState } from 'react'
 import DeployModal from './DeployModal'
 import { ADMIN_ROUTES, SESSION_KEYS } from '@/common/shared/constants'
+import { Edit2, Eye, Rocket, X } from 'lucide-react'
 
 /**
  * BottomDock Component — Fixed floating dock at the bottom of the screen.
@@ -39,49 +40,62 @@ export default function BottomDock() {
 
   return (
     <>
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] w-[90%] max-w-lg">
-        <div className="bg-black/80 dark:bg-[#151518]/90 backdrop-blur-md border border-white/[0.08] rounded-full px-6 py-2.5 shadow-2xl flex items-center justify-between gap-4">
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] w-[95%] max-w-lg pointer-events-none">
+        <div className="bg-[#0D0D11]/90 backdrop-blur-xl border border-white/[0.08] rounded-2xl px-5 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-between gap-6 pointer-events-auto">
           
           {/* Left: Indicator */}
-          <div className="flex items-center gap-2">
-            {mode === 'edit' && <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />}
-            {mode === 'preview' && <span className="h-2 w-2 rounded-full bg-green-500" />}
-            {mode === 'idle' && <span className="h-2 w-2 rounded-full bg-gray-400" />}
-            <span className="text-xs font-semibold text-white uppercase tracking-wider">
-              {mode === 'edit' ? 'Editing' : mode === 'preview' ? 'Preview' : 'God Mode'}
-            </span>
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="relative">
+              <div className={`h-2 w-2 rounded-full ${
+                mode === 'edit' ? 'bg-amber-500' : mode === 'preview' ? 'bg-emerald-500' : 'bg-white/20'
+              }`} />
+              {mode === 'edit' && (
+                <div className="absolute inset-0 h-2 w-2 rounded-full bg-amber-500 animate-ping opacity-75" />
+              )}
+            </div>
+            <div className="flex flex-col -space-y-0.5">
+              <span className="text-[10px] font-bold text-white uppercase tracking-[0.15em] font-serif">
+                {mode === 'edit' ? 'Editing' : mode === 'preview' ? 'Ready' : 'God Mode'}
+              </span>
+              <span className="text-[8px] text-white/30 uppercase tracking-widest font-mono">
+                {mode === 'idle' ? 'Live Track' : 'Session Active'}
+              </span>
+            </div>
           </div>
 
-          <div className="h-4 w-px bg-white/[0.15]" />
+          <div className="h-6 w-px bg-white/[0.08]" />
 
           {/* Center: Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-1 justify-center">
             {mode === 'idle' && (
               <button
                 onClick={() => setMode('edit')}
                 disabled={lockHeldByOther}
                 title={lockHeldByOther ? 'Lock held by other device' : 'Edit this page'}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-600 text-white shadow hover:bg-amber-500 transition-colors cursor-pointer flex items-center gap-1"
+                className="group px-4 py-2 rounded-xl text-[11px] font-bold bg-amber-500 text-black shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_25px_rgba(245,158,11,0.4)] hover:bg-amber-400 active:scale-95 transition-all cursor-pointer flex items-center gap-2"
               >
-                ✏️ Edit
+                <Edit2 size={12} className="group-hover:rotate-12 transition-transform" />
+                <span>Edit Workspace</span>
               </button>
             )}
 
             {mode === 'edit' && (
               <button
                 onClick={() => setMode('preview')}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold bg-green-600 text-white shadow hover:bg-green-500 transition-colors cursor-pointer flex items-center gap-1"
+                className="group px-4 py-2 rounded-xl text-[11px] font-bold bg-indigo-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_25px_rgba(99,102,241,0.4)] hover:bg-indigo-400 active:scale-95 transition-all cursor-pointer flex items-center gap-2"
               >
-                👁️ Save & Preview
+                <Eye size={12} className="group-hover:scale-110 transition-transform" />
+                <span>Save & Preview</span>
               </button>
             )}
 
             {mode === 'preview' && (
               <button
                 onClick={() => setMode('edit')}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl text-[11px] font-bold bg-white/5 text-white/80 border border-white/10 hover:bg-white/10 hover:text-white active:scale-95 transition-all cursor-pointer flex items-center gap-2"
               >
-                ✏️ Back to Edit
+                <Edit2 size={12} />
+                <span>Back to Edit</span>
               </button>
             )}
 
@@ -89,21 +103,23 @@ export default function BottomDock() {
             {(mode === 'preview' || hasUnsavedChanges) && (
               <button
                 onClick={handleDeploy}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-1"
+                className="group px-4 py-2 rounded-xl text-[11px] font-bold bg-emerald-500 text-black shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] hover:bg-emerald-400 active:scale-95 transition-all cursor-pointer flex items-center gap-2"
               >
-                🚀 Deploy
+                <Rocket size={12} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+                <span>Ship Changes</span>
               </button>
             )}
           </div>
 
-          <div className="h-4 w-px bg-white/[0.15]" />
+          <div className="h-6 w-px bg-white/[0.08]" />
 
           {/* Right: Exit / Dashboard */}
           <button
             onClick={exitEditSession}
-            className="text-xs font-semibold text-gray-400 hover:text-white transition-colors cursor-pointer"
+            className="p-2 text-white/40 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all cursor-pointer group"
+            title="Exit God Mode"
           >
-            Exit
+            <X size={16} className="group-hover:rotate-90 transition-transform" />
           </button>
         </div>
       </div>

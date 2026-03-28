@@ -53,6 +53,17 @@ service cloud.firestore {
       allow create, delete: if isAdmin();
     }
 
+    // 5. Admin OS (Wing 2 Data & Telemetry)
+    match /admin_metrics/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    match /admin_sessions/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    match /admin_snapshots/{document=**} {
+      allow read, write: if isAdmin();
+    }
+
     // Default: Deny all by default, only allow admin access
     match /{document=**} {
       allow read, write: if isAdmin();

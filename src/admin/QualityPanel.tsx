@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { db } from '@/common/lib/firebase'
 import { collection, getDocs } from 'firebase/firestore'
+import { tracedCall } from './MetricsOrchestrator'
 import { scanContent } from './SpellCheckerService'
 import type { QualityIssue } from './SpellCheckerService'
 import { Edit3, CheckCircle, AlertTriangle, Search, Sparkles } from 'lucide-react'
@@ -15,7 +16,7 @@ export default function QualityPanel() {
     setScanning(true)
     try {
       const configCol = collection(db, 'adminConfig')
-      const snap = await getDocs(configCol)
+      const snap = await tracedCall('firestore/adminConfig/qualityScan', () => getDocs(configCol))
       
       const allIssues: QualityIssue[] = []
       snap.forEach(doc => {
@@ -60,11 +61,10 @@ export default function QualityPanel() {
             <div className="p-2 bg-amber-500/10 text-amber-500 rounded-lg">
               <Sparkles size={20} />
             </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight font-serif">Content Quality</h2>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Content Audit</h2>
           </div>
           <p className="text-sm text-theme-muted max-w-xl mb-8 leading-relaxed">
-            Automated linguistic audit of your landing page configuration. 
-            Detects typos, placeholder text, and structural anomalies.
+            Automated check for common typos, broken placeholders, and content quality.
           </p>
 
           <button

@@ -10,6 +10,12 @@ export default function AdminProjectsTab() {
 
   return (
     <div className="flex flex-col gap-8 max-w-4xl">
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-1">Project Portfolio</h2>
+        <p className="text-xs text-theme-muted opacity-70 mb-8">
+           Manage which GitHub repositories are showcased on your public landing page.
+        </p>
+      </div>
       {/* FEATURED SECTION */}
       <div>
         <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">

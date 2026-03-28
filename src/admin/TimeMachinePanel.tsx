@@ -76,7 +76,7 @@ export default function TimeMachinePanel() {
             <div className="p-2 bg-purple-500/10 text-purple-400 rounded-lg">
               <History size={20} />
             </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight font-serif">Time Machine</h2>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Backups & Recovery</h2>
           </div>
           <p className="text-sm text-theme-muted max-w-xl mb-8 leading-relaxed">
             Record point-in-time snapshots of your entire portfolio configuration. 

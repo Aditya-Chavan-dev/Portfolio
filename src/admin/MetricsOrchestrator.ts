@@ -34,7 +34,7 @@ export async function tracedCall<T>(label: string, fn: () => Promise<T>): Promis
  */
 export function tracedWrite<T>(label: string, fn: () => T): T {
   incrementLocalCounter('writes');
-  console.log(`[Metric] Write: ${label}`);
+  pushToBuffer({ label, latency: 0, status: 'ok', ts: Date.now() });
   return fn();
 }
 

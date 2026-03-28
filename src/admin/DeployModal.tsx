@@ -32,6 +32,8 @@ function setNestedPath(obj: any, path: string, value: any) {
   current[parts[parts.length - 1]] = value
 }
 
+import { createSnapshot } from './SnapshotService'
+
 interface DeployModalProps {
   isOpen: boolean
   onClose: () => void
@@ -86,6 +88,10 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
   async function executeDeploy() {
     setLoading(true)
     try {
+      // Step 1: Automate Snapshot for safety
+      addToast('Creating recovery snapshot...', 'info')
+      await createSnapshot('Post-Deploy Recovery Point')
+
       const updatesByDoc: Record<string, any> = {}
       
       for (const key in draftData) {

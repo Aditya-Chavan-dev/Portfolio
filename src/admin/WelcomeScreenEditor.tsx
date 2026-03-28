@@ -7,8 +7,6 @@ import type { WelcomeConfig } from '@/landing-page/landing.types'
 import { Reorder } from 'framer-motion'
 import { GripVertical, Star, Trash2 } from 'lucide-react'
 
-// Mocking validateInput for now if complianceRunner is not easily found or needs migration
-// In a real scenario, I'd migrate complianceRunner too if it's admin-only.
 function validateInput(schema: any, data: any, _label: string) {
   return schema.parse(data);
 }
