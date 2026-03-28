@@ -1,25 +1,30 @@
 import { useEffect, useState } from 'react'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../lib/firebase'
-import { tracedCall } from '../lib/metrics'
 import {
   fetchAllRepos,
   fetchCommitCount,
-  fetchLanguages,
-  fetchProjectMeta
+  fetchLanguages
 } from '../lib/github'
 import type { EnrichedProject } from '../types/project'
 
 export function useFeaturedProjects() {
   const [projects, setProjects] = useState<EnrichedProject[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error] = useState<string | null>(null)
 
   useEffect(() => {
-    const loadFallback = async () => {
+    let active = true
+
+    const loadFast = async () => {
       try {
-        const allRepos = await tracedCall('github/fetchAllRepos/fallback', () => fetchAllRepos())
-        const fallbackData = allRepos.map((repo, i) => ({
+        setLoading(true)
+        // 1. Kick off GitHub baseline (no firestore dependency yet) Node absolute
+        const allRepos = await fetchAllRepos()
+        if (!active) return
+
+        // Baseline data Node absolute
+        const baseline = allRepos.map((repo, i) => ({
           ...repo,
           commitCount: 0,
           languages: {},
@@ -27,60 +32,50 @@ export function useFeaturedProjects() {
           featured: true,
           order: i,
         })) as EnrichedProject[]
-        setProjects(fallbackData)
-      } catch (e) {
-        setError('Failed to load any project data.')
-      } finally {
+        
+        setProjects(baseline)
         setLoading(false)
-      }
-    }
 
-    const fetchFirestore = async () => {
-      try {
-        const snapshot = await tracedCall('firestore/projects/featured', () => 
-          getDocs(collection(db, 'projects'))
-        )
-        const featured = snapshot.docs
+        // 2. Enriched firestore-driven data in background Node absolute
+        const snapshot = await getDocs(collection(db, 'projects'))
+        const featuredConfigs = snapshot.docs
           .map(d => d.data())
           .filter((d: any) => d.featured)
           .sort((a: any, b: any) => a.order - b.order)
 
-        if (featured.length === 0) {
-          await loadFallback()
-          return
+        if (featuredConfigs.length > 0 && active) {
+          const matched = featuredConfigs
+            .map((f: any) => allRepos.find(r => r.name === f.repoName))
+            .filter(Boolean) as any[]
+
+          const enriched: EnrichedProject[] = await Promise.all(
+            matched.map(async (repo, i) => {
+              const [commitCount, languages] = await Promise.all([
+                fetchCommitCount(repo.name),
+                fetchLanguages(repo.name),
+                // Stopped: fetchProjectMeta(repo.name) because of 404 spam Node absolute
+              ])
+              return {
+                ...repo,
+                commitCount,
+                languages,
+                meta: null, // Meta will be enriched from local projectMetadata instead Node absolute
+                featured: true,
+                order: featuredConfigs[i].order,
+              }
+            })
+          )
+          setProjects(enriched)
         }
-
-        const allRepos = await tracedCall('github/fetchAllRepos', () => fetchAllRepos())
-
-        const matched = featured
-          .map((f: any) => allRepos.find(r => r.name === f.repoName))
-          .filter(Boolean) as any[]
-
-        const enriched: EnrichedProject[] = await Promise.all(
-          matched.map(async (repo, i) => {
-            const [commitCount, languages, meta] = await Promise.all([
-              tracedCall(`github/commitCount/${repo.name}`, () => fetchCommitCount(repo.name)),
-              tracedCall(`github/languages/${repo.name}`, () => fetchLanguages(repo.name)),
-              tracedCall(`github/projectMeta/${repo.name}`, () => fetchProjectMeta(repo.name)),
-            ])
-            return {
-              ...repo,
-              commitCount,
-              languages,
-              meta,
-              featured: true,
-              order: featured[i].order,
-            }
-          })
-        )
-
-        setProjects(enriched)
-      } catch (err: any) {
-        await loadFallback()
+      } catch (err) {
+        console.warn('Projects enrichment partially blocked or failed (likely client restrictions):', err)
+      } finally {
+        if (active) setLoading(false)
       }
     }
 
-    fetchFirestore()
+    loadFast()
+    return () => { active = false }
   }, [])
 
   return { projects, loading, error }

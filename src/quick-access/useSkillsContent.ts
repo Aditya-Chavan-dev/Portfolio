@@ -6,21 +6,15 @@ import type { SkillsContent } from './skills.types'
 import fallbackContent from './content.json'
 
 export function useSkillsContent() {
-  const [content, setContent] = useState<SkillsContent | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [content, setContent] = useState<SkillsContent | null>(fallbackContent as unknown as SkillsContent)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const docRef = doc(db, 'live', 'skills')
 
-    const timeoutTimer = setTimeout(() => {
-      setContent(fallbackContent as unknown as SkillsContent)
-      setLoading(false)
-    }, 2500)
-
     const unsubscribe = onSnapshot(
       docRef,
       (snap) => {
-        clearTimeout(timeoutTimer)
         incrementLocalCounter('reads')
         if (snap.exists()) {
           setContent(snap.data() as SkillsContent)
@@ -30,17 +24,13 @@ export function useSkillsContent() {
         setLoading(false)
       },
       (error) => {
-        clearTimeout(timeoutTimer)
-        console.error('Skills content subscription error:', error)
-        setContent(fallbackContent as unknown as SkillsContent)
+        console.warn('Skills content subscription error (likely blocked by client):', error)
+        // Keep fallback content as is
         setLoading(false)
       }
     )
 
-    return () => {
-      clearTimeout(timeoutTimer)
-      unsubscribe()
-    }
+    return () => unsubscribe()
   }, [])
 
   return { content, loading } as const
