@@ -71,12 +71,12 @@ export function AmbientDust({ count = 60 }: AmbientDustProps) {
         // Soft shimmer alpha interpolation
         p.alpha += (p.targetAlpha - p.alpha) * 0.005
         if (Math.abs(p.alpha - p.targetAlpha) < 0.01) {
-          p.targetAlpha = Math.random() * 0.4
+          p.targetAlpha = Math.random() * 0.2
         }
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, p.alpha)})`
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, p.alpha * 0.5)})`
         ctx.fill()
       }
 

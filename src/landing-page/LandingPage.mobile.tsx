@@ -1,14 +1,12 @@
 import { WelcomeDialogue } from './WelcomeDialogue'
 import type { WelcomeConfig } from './landing.types'
 import { AmbientDust } from './AmbientDust'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useEditMode } from '@/admin/EditModeContext'
 import EditableText from '@/admin/EditableText'
 
 interface Props {
   readonly content:        WelcomeConfig
-  readonly showCTA:        boolean
-  readonly showSkipHint:   boolean
   readonly skipAnimation:  boolean
   readonly onDialogueComplete: () => void
   readonly onNavigateHub:  () => void
@@ -16,33 +14,30 @@ interface Props {
 
 export function LandingPageMobile({
   content,
-  showCTA,
-  showSkipHint,
   skipAnimation,
   onDialogueComplete,
   onNavigateHub,
 }: Props) {
   const { mode } = useEditMode()
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (showCTA && mode !== 'edit' && (e.key === 'Enter' || e.key === ' ')) {
-      if (e.key === ' ') e.preventDefault()
-      onNavigateHub()
-    }
-  }
-
   return (
     <div
-      onClick={() => showCTA && mode !== 'edit' && onNavigateHub()}
-      onKeyDown={handleKeyDown}
+      onClick={() => mode !== 'edit' && onNavigateHub()}
       role="button"
       tabIndex={0}
-      className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center select-none cursor-pointer overflow-hidden py-[48px] relative px-8"
+      className="min-h-dvh bg-theme-base text-theme-primary flex flex-col items-center justify-center select-none cursor-pointer overflow-hidden py-4 relative px-8 transition-colors duration-700"
     >
       <AmbientDust count={40} />
-      <div className="max-w-[320px] w-full flex flex-col items-center justify-center text-center relative z-10">
+      
+      {/* Cinematic HUD Layer */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-system-grid opacity-[0.2]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
+      </div>
+
+      <div className="w-full flex-1 flex flex-col items-center justify-start text-center relative z-10 overflow-hidden py-2">
         
-        {/* 2. Dialogue */}
+        {/* 2. Dialogue (Full Screen Width) */}
         <WelcomeDialogue
           lines={content.dialogue}
           skip={skipAnimation}
@@ -50,40 +45,23 @@ export function LandingPageMobile({
           highlightIndex={content.highlightIndex}
         />
 
-        {/* 3. Prompts */}
-        <div className="mt-[42px] flex flex-col items-center justify-center h-[50px] relative">
-          <AnimatePresence mode="wait">
-            {showCTA ? (
-              <motion.div
-                key="continue"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="text-[12px] text-[#555555] tracking-[0.02em] flex items-center"
-              >
-                <EditableText id="welcome.ctaMobile" value={content.ctaMobile} />
-                <motion.span 
-                  animate={{ opacity: [1, 0.3, 1] }} 
-                  transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-                  className="ml-1"
-                >
-                  ▋
-                </motion.span>
-              </motion.div>
-            ) : showSkipHint ? (
-              <motion.p
-                key="skip"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.4 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-[12px] text-[#555555] tracking-[0.02em]"
-              >
-                <EditableText id="welcome.skipHintMobile" value={content.skipHintMobile} />
-              </motion.p>
-            ) : null}
-          </AnimatePresence>
+        {/* 3. Prompts (Persistent Button) */}
+        <div className="mt-8 flex flex-col items-center justify-center h-[50px] relative">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="text-[14px] text-theme-muted tracking-[0.2em] font-mono flex items-center gap-2"
+          >
+            <EditableText id="welcome.ctaMobile" value={content.ctaMobile || 'ENTER_WORKSPACE'} />
+            <motion.span 
+              animate={{ opacity: [1, 0.3, 1] }} 
+              transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+              className="text-amber-500"
+            >
+              ▋
+            </motion.span>
+          </motion.div>
         </div>
 
       </div>

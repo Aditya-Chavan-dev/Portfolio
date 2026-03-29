@@ -1,15 +1,11 @@
-import { useEffect } from 'react'
 import { WelcomeDialogue } from './WelcomeDialogue'
 import type { WelcomeConfig } from './landing.types'
 import { AmbientDust } from './AmbientDust'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useEditMode } from '@/admin/EditModeContext'
+import { motion } from 'framer-motion'
 import EditableText from '@/admin/EditableText'
 
 interface Props {
   readonly content:        WelcomeConfig
-  readonly showCTA:        boolean
-  readonly showSkipHint:   boolean
   readonly skipAnimation:  boolean
   readonly onDialogueComplete: () => void
   readonly onNavigateHub:  () => void
@@ -17,44 +13,25 @@ interface Props {
 
 export function LandingPageDesktop({
   content,
-  showCTA,
-  showSkipHint,
   skipAnimation,
   onDialogueComplete,
   onNavigateHub,
 }: Props) {
-  const { mode } = useEditMode()
-
-  // Support "Press any key to continue" once dialogue is complete
-  useEffect(() => {
-    if (!showCTA || mode === 'edit') return
-
-    const handleAnyKey = () => {
-      onNavigateHub()
-    }
-
-    window.addEventListener('keydown', handleAnyKey)
-    return () => window.removeEventListener('keydown', handleAnyKey)
-  }, [showCTA, mode, onNavigateHub])
 
   return (
-    <div className="h-screen w-screen bg-theme-base flex flex-col items-center justify-center select-none overflow-hidden py-12 relative text-theme-primary">
+    <div className="h-screen w-screen bg-theme-base flex flex-col items-center justify-center select-none overflow-hidden py-6 relative text-theme-primary transition-colors duration-700">
       <AmbientDust count={120} />
       
-      {/* Background HUD Layer */}
-      <div className="absolute inset-0 pointer-events-none opacity-20 bg-system-grid" />
+      {/* Cinematic HUD Layer - Refined V2 */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-system-grid opacity-[0.15]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.6)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.9)_100%)]" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/10 to-transparent opacity-30" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/10 to-transparent opacity-30" />
+      </div>
       
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-[800px] w-full flex flex-col items-center justify-center text-center relative z-10 glass-premium p-12 rounded-[2.5rem] magnetic-area"
-      >
-        <div className="mono-label !opacity-60 mb-8 border-b border-white/5 pb-2">
-          SYSTEM_VERSION :: v3.1.0_PROD
-        </div>
-
-        {/* 2. Dialogue */}
+      <div className="w-full flex-1 flex flex-col items-center justify-start relative z-10 px-12 overflow-hidden py-4">
+        {/* 2. Dialogue (Full Screen Width) */}
         <WelcomeDialogue
           lines={content.dialogue}
           skip={skipAnimation}
@@ -62,48 +39,39 @@ export function LandingPageDesktop({
           highlightIndex={content.highlightIndex}
         />
 
-        {/* 3. Prompts */}
-        <div className="mt-[56px] flex flex-col items-center justify-center h-[60px] relative">
-          <AnimatePresence mode="wait">
-            {showCTA ? (
-              <motion.div
-                key="continue"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4 }}
-                onClick={onNavigateHub}
-                className="group relative cursor-pointer"
-              >
-                <div className="absolute -inset-4 bg-amber-500/5 blur-xl group-hover:bg-amber-500/10 transition-colors rounded-full" />
-                <div className="text-[13px] text-white/40 tracking-[0.2em] font-mono group-hover:text-amber-500 transition-colors duration-300 flex items-center gap-3">
-                  <EditableText id="welcome.ctaDesktop" value={content.ctaDesktop} />
-                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping" />
-                </div>
-              </motion.div>
-            ) : showSkipHint ? (
-              <motion.p
-                key="skip"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.2 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-                className="mono-label text-[10px]"
-              >
-                <EditableText id="welcome.skipHintDesktop" value={content.skipHintDesktop} />
-              </motion.p>
-            ) : null}
-          </AnimatePresence>
+        {/* 3. Prompts (Persistent Button) */}
+        <div className="mt-8 flex flex-col items-center justify-center h-[50px] relative">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1 }}
+            onClick={onNavigateHub}
+            className="group relative cursor-pointer"
+          >
+            <div className="absolute -inset-4 bg-amber-500/5 blur-xl group-hover:bg-amber-500/10 transition-colors rounded-full" />
+            <div className="text-[14px] text-theme-muted tracking-[0.2em] font-mono group-hover:text-theme-accent transition-colors duration-300 flex items-center gap-3">
+              <EditableText id="welcome.ctaDesktop" value={content.ctaDesktop || 'ENTER_WORKSPACE'} />
+              <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping" />
+            </div>
+          </motion.div>
         </div>
-      </motion.div>
-
-      {/* Aesthetic Metadata corners */}
-      <div className="absolute bottom-12 left-12 mono-label !opacity-30 flex flex-col gap-1 text-[8px]">
-        <span>X: [REDACTED]</span>
-        <span>Y: [REDACTED]</span>
       </div>
-      <div className="absolute top-12 right-12 mono-label !opacity-30 text-[8px]">
-        LOC: SECTOR_7_G
+
+      {/* Metadata corners — minimalist HUD - V2 Subtler */}
+      <div className="absolute top-8 left-8 mono-label !opacity-10 hidden md:flex flex-col gap-1 text-[8px]">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-1 bg-amber-500/40 rounded-full" />
+          <span>SYS.RDY: TRUE</span>
+        </div>
+        <span>PROTO: 2.4.0</span>
+      </div>
+      
+      <div className="absolute bottom-12 left-12 mono-label !opacity-10 flex flex-col gap-1 text-[7px]">
+        <span>REG: [ENCRYPTED]</span>
+      </div>
+      
+      <div className="absolute bottom-12 right-12 mono-label !opacity-10 text-[7px] text-right">
+        <span>SESSION_INIT</span>
       </div>
     </div>
   )
