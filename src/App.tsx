@@ -66,17 +66,16 @@ function PublicTracker() {
   return null
 }
 
-import { CursorProbe } from '@/common/shared/CursorProbe'
+
 
 export default function App() {
   const location = useLocation()
-  const isWelcomeScreen = location.pathname === '/'
+
 
   return (
     <ThemeProvider>
-      <div className="scanline h-[100dvh] overflow-hidden bg-system-grid transition-colors duration-500">
-        <CursorProbe />
-        {!isWelcomeScreen && <FloatingThemeToggle />}
+      <div className="scanline h-[100dvh] overflow-hidden bg-theme-base bg-system-grid transition-colors duration-500">
+        <FloatingThemeToggle />
         <BottomDock />
         <PublicTracker />
         <AnimatePresence mode="wait">

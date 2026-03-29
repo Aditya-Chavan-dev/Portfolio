@@ -8,6 +8,17 @@
   --font-sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
   --font-serif: 'Syne', 'Helvetica Neue', Arial, sans-serif;
   --font-quote: 'Playfair Display', serif;
+
+  /* Theme-aware color utility mappings */
+  --color-theme-base:      var(--bg-base);
+  --color-theme-surface:   var(--bg-surface);
+  --color-theme-card:      var(--bg-card);
+  --color-theme-elevated:  var(--bg-elevated);
+  --color-theme-primary:   var(--text-primary);
+  --color-theme-secondary: var(--text-secondary);
+  --color-theme-muted:     var(--text-muted);
+  --color-theme-accent:    var(--accent);
+  --color-theme-default:   var(--border-default);
 }
 
 /* ─── Design tokens — theme-aware CSS custom properties ────────────────────
@@ -94,6 +105,21 @@ html[data-theme="dark"] {
   border: 1px solid var(--border-default);
   box-shadow: var(--shadow);
   transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glass-premium-dark {
+  background-color: color-mix(in srgb, var(--bg-card), black 40%);
+  backdrop-filter: blur(25px);
+  border: 1px solid var(--gold2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  color: var(--text-primary);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glass-premium-dark:hover {
+  background-color: color-mix(in srgb, var(--bg-card), var(--accent) 5%);
+  border-color: var(--accent);
+  box-shadow: 0 0 40px var(--gold3);
 }
 
 .magnetic-area {
