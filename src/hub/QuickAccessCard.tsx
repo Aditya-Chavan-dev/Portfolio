@@ -54,7 +54,7 @@ export function QuickAccessCard({ title, description, route, icon, index }: Quic
       onClick={handleClick}
       onMouseMove={handleMouseMove}
       className="
-        group relative w-full h-full p-5 text-left rounded-2xl
+        group relative w-full h-full p-6 text-left rounded-2xl
         glass-premium hover:border-amber-500/40
         transition-all duration-500 overflow-hidden cursor-pointer
         flex flex-col justify-between
@@ -72,10 +72,10 @@ export function QuickAccessCard({ title, description, route, icon, index }: Quic
         </div>
         
         <div className="space-y-1">
-            <p className="font-black text-lg font-serif text-theme-primary leading-tight tracking-tight group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">
+            <p className="font-black text-xl font-serif text-theme-primary leading-tight tracking-tight group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">
             {title}
             </p>
-            <p className="text-[10px] font-medium text-theme-secondary leading-relaxed">
+            <p className="text-xs font-medium text-theme-secondary leading-relaxed">
             {description}
             </p>
         </div>

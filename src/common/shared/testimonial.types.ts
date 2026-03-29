@@ -4,6 +4,8 @@ export interface Testimonial {
   id:           string
   name:         string
   relationship: string
+  company?:     string        // New field
+  photoUrl?:    string        // New field
   message:      string
   /** @internal PII — never expose in public APIs or client-rendered UI */
   email:        string

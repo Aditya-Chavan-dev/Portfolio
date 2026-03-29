@@ -2,6 +2,7 @@ export interface TestimonialPageContent {
   pageTitle:         string
   pageSubtitle:      string
   namePlaceholder:   string
+  companyPlaceholder: string
   rolePlaceholder:   string
   messagePlaceholder: string
   emailPlaceholder:  string

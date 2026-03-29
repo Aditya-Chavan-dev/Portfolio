@@ -1,8 +1,9 @@
 {
   "pageTitle": "Leave a Testimonial",
   "pageSubtitle": "Share your experience working with me",
-  "namePlaceholder": "Your name",
-  "rolePlaceholder": "Your role or company",
+  "namePlaceholder": "Full Name",
+  "companyPlaceholder": "Company (optional)",
+  "rolePlaceholder": "Current Role (e.g. CTO, Design Lead)",
   "messagePlaceholder": "Write your testimonial (max 300 characters)…",
   "emailPlaceholder": "Your email (optional, never displayed)",
   "consentLabel": "I give permission for this testimonial to be displayed publicly on the portfolio.",
