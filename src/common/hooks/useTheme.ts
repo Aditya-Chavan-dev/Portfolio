@@ -4,19 +4,14 @@ type Theme = 'light' | 'dark'
 const STORAGE_KEY = 'theme' as const
 
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>('light')
-
-  // Read persisted / system preference — client only
-  useEffect(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Initial read during state setup (Client-side only)
+    if (typeof window === 'undefined') return 'dark' // default for SSR 
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored === 'light' || stored === 'dark') {
-      setTheme(stored)
-      return
-    }
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark')
-    }
-  }, [])
+    if (stored === 'light' || stored === 'dark') return stored
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark'
+    return 'light'
+  })
 
   // Apply attribute + persist
   useEffect(() => {
