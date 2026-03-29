@@ -542,7 +542,16 @@ It is done when it is correct, minimal, and clean.
 
 ---
 
-*Tokens are not a soft resource. They are the unit cost of every decision made in this session. Waste them on noise and the project pays for it in speed, budget, and trust. The discipline in this file is what makes AI a force multiplier rather than an expensive approximation.*
+## Part 9 — Strict Browser Policy
+
+**Rule: DO NOT use browser tools or subagents for self-testing unless explicitly asked.**
+
+- Tools `open_browser_url`, `browser_control`, and `read_browser_page` are restricted to retrieval and analysis only.
+- Verification, screenshot capture, and "seeing if it works" is strictly for the USER.
+- Do not proactively offer browser testing as a verification step.
+
+---
+*End of AI Constitution*
 
 # HALLUCINATION_GUARD.md
 > Hallucination is not a minor error. It is confident wrongness — the most expensive failure mode in AI-assisted development.

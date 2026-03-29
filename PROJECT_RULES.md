@@ -194,6 +194,9 @@ If a change can be achieved through Firestore data (i.e., it is a content change
 ### 8. When in Doubt
 If something is ambiguous — a feature isn't clearly in or out of scope, or a tech choice has trade-offs — ask before building. A 10-second question is better than a 30-minute detour.
 
+### 9. Strict Browser Policy
+**DO NOT** use browser tools (`open_browser_url`, `browser_control`, `read_browser_page`) or browser subagents for self-testing, verification, or screenshot capture unless explicitly requested by the user in the current session. The user prefers to test the UI personally.
+
 ---
 
 *This file describes the objective. The codebase is the implementation. When they conflict, this file wins — unless the owner explicitly says otherwise.*
