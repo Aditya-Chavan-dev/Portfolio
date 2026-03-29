@@ -66,7 +66,7 @@ export function WelcomeDialogue({
       if (currentLineText.length < lineText.length) {
         const t = setTimeout(() => {
           setCurrentLineText(p => p + lineText[currentLineText.length])
-        }, 35)
+        }, 20)
         return () => clearTimeout(t)
       } else {
         if (currentLine === currentContent.lines.length - 1) {
@@ -86,7 +86,7 @@ export function WelcomeDialogue({
         setCurrentLine(l => l + 1)
         setCurrentLineText('')
         setState('TYPING_LINE')
-      }, 200)
+      }, 100)
       return () => clearTimeout(t)
     }
 
@@ -95,7 +95,7 @@ export function WelcomeDialogue({
         setCurrentLine(l => l + 1)
         setCurrentLineText('')
         setState('TYPING_LINE')
-      }, 800)
+      }, 400)
       return () => clearTimeout(t)
     }
 
@@ -105,12 +105,12 @@ export function WelcomeDialogue({
 
   return (
     <div 
-      className="flex flex-col items-center justify-center w-full"
+      className="flex flex-col items-center justify-start w-full my-auto"
       style={{
-        '--gap-paragraph': '28px',
-        '--gap-batman': '36px',
-        '--gap-closing': '48px',
-        '--gap-name': '48px',
+        '--gap-paragraph': '8px',
+        '--gap-batman': '12px',
+        '--gap-closing': '16px',
+        '--gap-name': '16px',
       } as React.CSSProperties}
     >
 
@@ -147,59 +147,75 @@ export function WelcomeDialogue({
             i < currentLine ||
             (i === currentLine && (state === 'PAUSE_LINE' || state === 'PAUSE_BATMAN'))
           const isTyping = !skip && state === 'TYPING_LINE' && i === currentLine
-
-          // Instead of null, we return hidden to keep layout stable
+          const isActive = isTyping || (i === currentLine && (state === 'PAUSE_LINE' || state === 'PAUSE_BATMAN'));
+          
+          // V4: All lines visible once typed/typing
           const isVisible = isCompleted || isTyping;
 
           return (
             <motion.div
               key={i}
-              initial={skip ? { opacity: 0, x: -10, filter: 'blur(5px)' } : { opacity: 0, x: -10 }}
+              initial={skip ? { opacity: 0, scale: 0.98, filter: 'blur(10px)' } : { opacity: 0, x: -10, filter: 'blur(5px)', height: 0 }}
               animate={{ 
-                opacity: isVisible ? 1 : 0, 
-                x: isVisible ? 0 : -10,
-                filter: isVisible ? 'blur(0px)' : 'blur(5px)'
+                opacity: isVisible ? (isActive ? 1 : 0.85) : 0, 
+                x: isVisible ? 0 : -5,
+                scale: isVisible ? (isActive ? (isBatmanLine ? 1.02 : 1) : 0.98) : 0.95,
+                filter: isVisible ? 'blur(0px)' : 'blur(8px)',
+                height: isVisible ? 'auto' : 0,
+                marginBottom: isVisible ? (isBatmanLine ? 14 : 8) : 0
               }}
-              transition={skip ? { duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.04 } : { duration: 0.5 }}
-              className={`flex flex-col gap-1 items-center mb-6 ${!isVisible ? 'pointer-events-none' : ''}`}
+              transition={{ 
+                duration: isBatmanLine ? 1.2 : 0.6, 
+                ease: [0.22, 1, 0.36, 1],
+                height: { duration: 0.4 }
+              }}
+              className={`flex flex-col items-center transition-all duration-1000 ${!isVisible ? 'pointer-events-none overflow-hidden' : ''}`}
               style={{ marginTop }}
             >
-               {/* Technical Identifier */}
-               <div className="flex items-center gap-2 mb-1">
-                 <span className="mono-label !text-[8px] text-theme-muted">LOG_{String(i).padStart(2, '0')}</span>
-                 <div className="w-1 h-1 bg-theme-muted/20 rounded-full" />
-                 {isBatmanLine && (
-                   <motion.span 
-                    animate={{ opacity: [1, 0.4, 1] }}
-                    transition={{ repeat: Infinity, duration: 1 }}
-                    className="text-[8px] font-mono text-amber-500 uppercase tracking-widest"
-                   >
-                     Critical_Header
-                   </motion.span>
-                 )}
-               </div>
-
-              <p
-                className={`text-[15px] md:text-[20px] tracking-[0.02em] leading-[1.6] ${colorClass} text-center ${isBatmanLine ? 'font-serif font-black italic' : isMuted ? 'font-mono !text-[12px] opacity-40 italic' : 'font-serif font-bold'}`}
-              >
-                {isCompleted ? (
-                  <EditableText id={`welcome.dialogue.${i}`} value={text} />
-                ) : (
-                  <>
-                    {text.split('').map((char, index) => {
-                      const isVisible = index < currentLineText.length;
-                      return (
-                        <span key={index} className={isVisible ? 'opacity-100' : 'opacity-0'}>
-                          {char}
-                          {isTyping && index === currentLineText.length - 1 && (
-                            <span className="ml-0.5 text-amber-500 inline-block animate-pulse">▋</span>
-                          )}
-                        </span>
-                      )
-                    })}
-                  </>
+              <div className="relative group">
+                {/* Ethereal Glow effect for high-impact lines - V2 Refined */}
+                {isBatmanLine && isVisible && isActive && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 0.25, scale: 1 }}
+                    className="absolute inset-x-[-100px] inset-y-[-60px] bg-[radial-gradient(circle,rgba(245,158,11,0.4)_0%,transparent_70%)] -z-10 blur-2xl"
+                  />
                 )}
-              </p>
+                
+                <p
+                  className={`tracking-[0.05em] leading-[1.3] ${colorClass} text-center transition-all duration-1000
+                    ${isBatmanLine 
+                      ? 'text-[18px] md:text-[26px] font-black italic tracking-[0.08em] drop-shadow-[0_0_25px_rgba(245,158,11,0.2)]' 
+                      : isMuted 
+                        ? 'text-[10px] font-mono opacity-30 italic uppercase tracking-[0.2em]' 
+                        : 'text-[13px] md:text-[18px] font-serif font-bold tracking-[0.04em]'
+                    }`}
+                >
+                  {isCompleted ? (
+                    <EditableText id={`welcome.dialogue.${i}`} value={text} />
+                  ) : (
+                    <>
+                      {text.split('').map((char, index) => {
+                        const isVisible = index < currentLineText.length;
+                        return (
+                          <span key={index} className={isVisible ? 'opacity-100' : 'opacity-0'}>
+                            {char}
+                            {isTyping && index === currentLineText.length - 1 && (
+                              <motion.span 
+                                animate={{ opacity: [1, 0, 1] }}
+                                transition={{ repeat: Infinity, duration: 0.8 }}
+                                className="ml-0.5 text-amber-500 inline-block"
+                              >
+                                ▋
+                              </motion.span>
+                            )}
+                          </span>
+                        )
+                      })}
+                    </>
+                  )}
+                </p>
+              </div>
             </motion.div>
           )
         })}
