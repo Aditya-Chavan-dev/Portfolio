@@ -48,7 +48,7 @@ export function SkillCategoryBlock({ category, categoryIndex, allCategories, onC
                 <EditableText id={`skills.categories.${categoryIndex}.name`} value={category.name} as="span" />
             </h2>
         </div>
-        <div className="mono-label !opacity-20 !text-[8px]">SUB_SYS_0x{categoryIndex + 1}</div>
+
         {isEditing && (
           <button
             onClick={handleDeleteCategory}

@@ -58,7 +58,7 @@ export default function Skills() {
     )
   }
 
-  const categories = localCategories || content.categories
+  const categories = localCategories || content.categories || []
 
   return (
     <div className="h-screen bg-transparent flex flex-col overflow-hidden relative">

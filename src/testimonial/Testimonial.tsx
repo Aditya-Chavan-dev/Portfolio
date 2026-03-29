@@ -57,6 +57,7 @@ export default function Testimonial() {
 
         <TestimonialForm
           namePlaceholder={content.namePlaceholder}
+          companyPlaceholder={content.companyPlaceholder}
           rolePlaceholder={content.rolePlaceholder}
           messagePlaceholder={content.messagePlaceholder}
           emailPlaceholder={content.emailPlaceholder}

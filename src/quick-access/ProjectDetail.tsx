@@ -86,20 +86,12 @@ export default function ProjectDetail() {
                 >
                   <span className="group-hover:-translate-x-1 transition-transform">←</span> RETURN_TO_GALLERY
                 </Link>
-                <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
-                    <span className="mono-label !text-amber-500 !opacity-100">DATA_REPORTS // PRJ_{mergedProject.name.substring(0,3).toUpperCase()}</span>
-                </div>
-            </div>
-            <div className="flex flex-col items-end opacity-20 mono-label text-[8px]">
-                <span>REF_ID: {Math.random().toString(16).substring(2, 8).toUpperCase()}</span>
-                <span>LEVEL: SEC_04</span>
             </div>
         </div>
 
         {/* COMBINED DOSSIER HEADER */}
         <div className="glass-premium p-10 grid grid-cols-1 md:grid-cols-3 gap-12 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 mono-label !opacity-10">MOD_DESC_0x1</div>
+
           
           {/* Left Column (Primary Details) */}
           <div className="md:col-span-1 flex flex-col justify-between gap-8 h-full">
@@ -147,7 +139,7 @@ export default function ProjectDetail() {
           
           {/* Box 1: TECH STACK (The Hardware) */}
           <div className="glass-premium p-8 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors group">
-            <div className="absolute top-0 right-0 p-4 mono-label !opacity-10">MOD_STACK_0x2</div>
+
             <div className="flex items-center justify-between">
                 <h2 className="mono-label !opacity-60 tracking-[0.2em]">01_SYSTEM_COMPONENTS</h2>
                 <div className="w-2 h-2 bg-amber-500/20 rounded-full" />
@@ -163,7 +155,7 @@ export default function ProjectDetail() {
 
           {/* Box 2: METRICS (The Vital Signs) */}
           <div className="glass-premium p-8 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors">
-            <div className="absolute top-0 right-0 p-4 mono-label !opacity-10">MOD_SIG_0x3</div>
+
             <h2 className="mono-label !opacity-60 tracking-[0.2em]">02_PERFORMANCE_METRICS</h2>
             <ul className="flex flex-col gap-4 mt-2">
               {(mergedProject.meta?.metrics || []).map((m: any, i: number) => (
@@ -180,7 +172,7 @@ export default function ProjectDetail() {
 
           {/* Box 3: FLAGSHIP FEATURES (The Payload) */}
           <div className="glass-premium p-8 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors">
-            <div className="absolute top-0 right-0 p-4 mono-label !opacity-10">MOD_PAYLOAD_0x4</div>
+
             <h2 className="mono-label !opacity-60 tracking-[0.2em]">03_CORE_FEATURES</h2>
             <ul className="flex flex-col gap-6 mt-2">
               {(mergedProject.meta?.flagshipFeatures || []).map((feat: any, i: number) => (
@@ -197,7 +189,7 @@ export default function ProjectDetail() {
 
           {/* Box 4: LEARNINGS & ISSUES (The Debug Log) */}
           <div className="glass-premium p-8 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors">
-            <div className="absolute top-0 right-0 p-4 mono-label !opacity-10">MOD_LOG_0x5</div>
+
             <h2 className="mono-label !opacity-60 tracking-[0.2em]">04_POST_MORTEM</h2>
             <ul className="flex flex-col gap-6 mt-2">
               {(mergedProject.meta?.learningsIssues || []).map((learn: any, i: number) => (
