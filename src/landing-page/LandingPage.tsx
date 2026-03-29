@@ -5,83 +5,59 @@ import { useIsMobile } from '@/common/shared/useIsMobile'
 import { useWelcomeContent } from './useWelcomeContent'
 import { LandingPageDesktop } from './LandingPage.desktop'
 import { LandingPageMobile }  from './LandingPage.mobile'
-import { useThemeContext } from '@/common/shared/ThemeProvider'
 import { SESSION_KEYS } from '@/common/shared/constants'
 
 export default function LandingPage() {
   const isMobile               = useIsMobile()
   const { content, loading }   = useWelcomeContent()
   const navigate               = useNavigate()
-  const { setTheme }           = useThemeContext()
 
-  // Force dark theme for the cinematic intro
-  useEffect(() => {
-    setTheme('dark')
-  }, [setTheme])
-
-  const [showCTA,        setShowCTA       ] = useState(false)
   const [skipAnimation,  setSkipAnimation ] = useState(false)
   const [isExiting,      setIsExiting     ] = useState(false)
 
-  const ctaTimeoutRef         = useRef<number | undefined>(undefined)
   const enterResetTimeoutRef  = useRef<number | undefined>(undefined)
   const enterCountRef         = useRef(0)
 
-  // SSR-safe: read sessionStorage client-side only
-  useEffect(() => {
-    const seen = sessionStorage.getItem(SESSION_KEYS.HAS_SEEN_WELCOME) === 'true'
-    if (seen) {
-      setShowCTA(true)
-      setSkipAnimation(true)
-    }
-  }, [])
-
-  // Double-Enter to skip on desktop
-  useEffect(() => {
-    if (isMobile) return
-
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Enter') return
-
-      clearTimeout(enterResetTimeoutRef.current)
-
-      enterCountRef.current += 1
-      if (enterCountRef.current >= 2) {
-        setSkipAnimation(true)
-        enterCountRef.current = 0
-        return
-      }
-
-      enterResetTimeoutRef.current = window.setTimeout(() => {
-        enterCountRef.current = 0
-      }, 800)
-    }
-
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [isMobile])
-
-  // Cleanup all timers on unmount
-  useEffect(() => {
-    return () => {
-      clearTimeout(ctaTimeoutRef.current)
-      clearTimeout(enterResetTimeoutRef.current)
-    }
-  }, [])
-
   const handleDialogueComplete = useCallback(() => {
     sessionStorage.setItem(SESSION_KEYS.HAS_SEEN_WELCOME, 'true')
-    // If we're skipping, show CTA immediately. Otherwise, wait for cinematic effect.
-    if (skipAnimation) {
-      setShowCTA(true)
-    } else {
-      ctaTimeoutRef.current = window.setTimeout(() => setShowCTA(true), 2000)
-    }
-  }, [skipAnimation])
+  }, [])
 
   const handleNavigateHub = useCallback(() => {
     setIsExiting(true)
   }, [])
+
+  // Combinatory input handler: Double-Enter to skip, Any-Key to continue
+  useEffect(() => {
+    if (isMobile) return
+
+    const handleKey = (e: KeyboardEvent) => {
+      // Ignore system/modifier keys
+      if (['Control', 'Alt', 'Shift', 'Meta'].includes(e.key)) return
+
+      // Logic: If already completed/skipped or if not Enter -> go to Hub
+      // If Enter -> first press tracks for skip, second press skips
+      if (e.key === 'Enter' && !skipAnimation) {
+        clearTimeout(enterResetTimeoutRef.current)
+        enterCountRef.current += 1
+        
+        if (enterCountRef.current >= 2) {
+          setSkipAnimation(true)
+          enterCountRef.current = 0
+          return
+        }
+
+        enterResetTimeoutRef.current = window.setTimeout(() => {
+          enterCountRef.current = 0
+        }, 800)
+        return
+      }
+
+      handleNavigateHub()
+    }
+
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [isMobile, skipAnimation, handleNavigateHub])
 
   if (loading || !content) {
     return (
@@ -93,8 +69,6 @@ export default function LandingPage() {
 
   const sharedProps = {
     content,
-    showCTA,
-    showSkipHint:        !showCTA,
     skipAnimation,
     onDialogueComplete:  handleDialogueComplete,
     onNavigateHub:       handleNavigateHub,
