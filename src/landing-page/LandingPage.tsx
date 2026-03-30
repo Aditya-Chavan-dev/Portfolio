@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useIsMobile } from '@/common/shared/useIsMobile'
 import { useWelcomeContent } from './useWelcomeContent'
-import { LandingPageDesktop } from './LandingPage.desktop'
-import { LandingPageMobile }  from './LandingPage.mobile'
+import { LandingPageDesktop } from './LandingPage.desktop.tsx'
+import { LandingPageMobile }  from './LandingPage.mobile.tsx'
 import { SESSION_KEYS } from '@/common/shared/constants'
 
 export default function LandingPage() {
@@ -13,12 +13,14 @@ export default function LandingPage() {
   const navigate               = useNavigate()
 
   const [skipAnimation,  setSkipAnimation ] = useState(false)
+  const [isDialogueComplete, setIsDialogueComplete] = useState(false)
   const [isExiting,      setIsExiting     ] = useState(false)
 
   const enterResetTimeoutRef  = useRef<number | undefined>(undefined)
   const enterCountRef         = useRef(0)
 
   const handleDialogueComplete = useCallback(() => {
+    setIsDialogueComplete(true)
     sessionStorage.setItem(SESSION_KEYS.HAS_SEEN_WELCOME, 'true')
   }, [])
 
@@ -26,17 +28,33 @@ export default function LandingPage() {
     setIsExiting(true)
   }, [])
 
-  // Combinatory input handler: Double-Enter to skip, Any-Key to continue
+  // Navigation listener - re-enabled post-completion
+  useEffect(() => {
+    if (!isDialogueComplete) return
+
+    const handleContinue = (e: MouseEvent | KeyboardEvent) => {
+      // If it's a mouse event, ignore if the user clicked an interactive control (like a theme toggle)
+      if (e instanceof MouseEvent) {
+        const target = e.target as HTMLElement;
+        if (target.closest('button') || target.closest('a') || target.closest('[role="button"]')) return;
+      }
+      handleNavigateHub()
+    }
+    
+    window.addEventListener('keydown', handleContinue)
+    window.addEventListener('mousedown', handleContinue)
+    return () => {
+      window.removeEventListener('keydown', handleContinue)
+      window.removeEventListener('mousedown', handleContinue)
+    }
+  }, [isDialogueComplete, handleNavigateHub])
+
+  // Skip detection (Double-Enter)
   useEffect(() => {
     if (isMobile) return
 
     const handleKey = (e: KeyboardEvent) => {
-      // Ignore system/modifier keys
-      if (['Control', 'Alt', 'Shift', 'Meta'].includes(e.key)) return
-
-      // Logic: If already completed/skipped or if not Enter -> go to Hub
-      // If Enter -> first press tracks for skip, second press skips
-      if (e.key === 'Enter' && !skipAnimation) {
+      if (e.key === 'Enter' && !skipAnimation && !isDialogueComplete) {
         clearTimeout(enterResetTimeoutRef.current)
         enterCountRef.current += 1
         
@@ -49,15 +67,12 @@ export default function LandingPage() {
         enterResetTimeoutRef.current = window.setTimeout(() => {
           enterCountRef.current = 0
         }, 800)
-        return
       }
-
-      handleNavigateHub()
     }
 
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  }, [isMobile, skipAnimation, handleNavigateHub])
+  }, [isMobile, skipAnimation, isDialogueComplete])
 
   if (loading || !content) {
     return (
@@ -70,6 +85,7 @@ export default function LandingPage() {
   const sharedProps = {
     content,
     skipAnimation,
+    isDialogueComplete,
     onDialogueComplete:  handleDialogueComplete,
     onNavigateHub:       handleNavigateHub,
   }

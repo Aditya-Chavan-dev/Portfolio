@@ -39,23 +39,22 @@ const SAMPLE_TESTIMONIALS: SampleTestimonial[] = [
 function TestimonialCard({ testimonial }: { readonly testimonial: SampleTestimonial }) {
   return (
     <article className="
-      p-4 rounded-xl shrink-0
-      glass-premium hover:border-amber-500/20
-      w-full transition-all duration-500
+      p-5 ethereal-glass
+      w-full transition-all duration-700
     ">
       <div className="flex items-center gap-4 mb-3">
         <div className="w-10 h-10 rounded-full bg-theme-base/20 border border-theme-default/20 overflow-hidden shrink-0">
             {testimonial.photoUrl && <img src={testimonial.photoUrl} alt={testimonial.name} className="w-full h-full object-cover grayscale" />}
         </div>
         <div className="flex flex-col min-w-0">
-            <span className="text-xs font-black text-theme-primary truncate">{testimonial.name}</span>
-            <span className="text-[9px] font-mono text-amber-600/60 dark:text-amber-500/60 truncate uppercase tracking-tighter">
-                {testimonial.relationship} @ {testimonial.company}
+            <span className="text-sm font-black text-theme-primary truncate tracking-tight">{testimonial.name}</span>
+            <span className="font-hud !text-theme-accent !opacity-60 !text-[10px] truncate">
+                {testimonial.relationship} | {testimonial.company}
             </span>
         </div>
       </div>
-      <blockquote>
-        <p className="text-[11px] text-theme-secondary leading-relaxed line-clamp-3">
+      <blockquote className="mt-4">
+        <p className="text-[12px] text-theme-secondary/80 leading-relaxed font-serif italic">
           "{testimonial.message}"
         </p>
       </blockquote>

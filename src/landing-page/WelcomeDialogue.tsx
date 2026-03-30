@@ -1,226 +1,184 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, memo } from 'react'
 import { motion } from 'framer-motion'
-import { useEditMode } from '@/admin/EditModeContext'
-import EditableText from '@/admin/EditableText'
 
 interface WelcomeDialogueProps {
   readonly lines: string[]
+  readonly highlightIndex?: number[]
   readonly skip: boolean
-  readonly highlightIndex?: number | number[] | null
   readonly onComplete: () => void
 }
 
-type WelcomeState = 'READY' | 'TYPING_NAME' | 'PAUSE_NAME' | 'TYPING_LINE' | 'PAUSE_LINE' | 'PAUSE_BATMAN' | 'COMPLETE' | 'PROMPT' | 'EXITING';
+// 1. Memoized Line Component for Massive Performance
+const DialogueLine = memo(({ 
+  text, 
+  isHighlighted, 
+  isCompleted, 
+  isProjecting, 
+  lineIdx,
+  skip,
+  onLineComplete 
+}: {
+  text: string
+  isHighlighted: boolean
+  isCompleted: boolean
+  isProjecting: boolean
+  lineIdx: number
+  skip: boolean
+  onLineComplete: (idx: number) => void
+}) => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: skip ? 0.001 : 0.06, // Elite cinematic character reveal
+        delayChildren: lineIdx === 0 ? 0.5 : 0.1,
+      }
+    }
+  }
+
+  const charVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 5, 
+      filter: 'blur(2px)', 
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      filter: 'blur(0px)',
+      transition: { 
+        duration: 0.4, 
+        ease: [0.22, 1, 0.36, 1] as any
+      }
+    }
+  }
+
+  if (text.trim() === '') return <div className="h-6" />
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial={isCompleted ? "visible" : "hidden"}
+      animate="visible"
+      onAnimationComplete={() => onLineComplete(lineIdx)}
+      className="mb-3 overflow-visible"
+      style={{ transform: 'translateZ(0)' }} // GPU Layer
+    >
+      <p 
+        className={`
+          leading-[1.5] font-serif tracking-tight transition-colors duration-700
+          ${isHighlighted 
+            ? 'text-theme-accent font-bold text-xl md:text-2xl lg:text-3xl' 
+            : 'text-theme-primary text-lg md:text-xl lg:text-2xl'}
+        `}
+        style={{ 
+          textShadow: isHighlighted 
+            ? '0 0 30px rgba(var(--accent-rgb), 0.3), 0 0 60px rgba(var(--accent-rgb), 0.1)' 
+            : 'none' 
+        }}
+      >
+        {isCompleted ? (
+          // STATIC: Simple text
+          <span>{text}</span>
+        ) : (
+          // ANIMATED: Character-level reveal
+          text.split('').map((char, charIdx) => (
+            <motion.span
+              key={charIdx}
+              variants={charVariants}
+              className="inline-block will-change-[transform,opacity]"
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </motion.span>
+          ))
+        )}
+        
+        {/* Elite Pulsing Cursor */}
+        {isProjecting && (
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }}
+            className="inline-block w-[2px] h-[1em] bg-theme-accent ml-1 translate-y-[0.15em]"
+          />
+        )}
+      </p>
+    </motion.div>
+  )
+})
+
+DialogueLine.displayName = 'DialogueLine'
 
 export function WelcomeDialogue({
   lines,
-  skip,
   highlightIndex,
+  skip,
   onComplete,
 }: WelcomeDialogueProps) {
-  const { mode } = useEditMode()
-  const [state, setState] = useState<WelcomeState>('READY')
   const [currentLine, setCurrentLine] = useState(0)
-  const [currentLineText, setCurrentLineText] = useState('')
-  const [currentContent, setCurrentContent] = useState({ lines, highlightIndex })
   const completedRef = useRef(false)
 
-  // Buffer live Firestore updates safely only at pauses
+  // Handle skip/complete
   useEffect(() => {
-    if (state === 'READY' || state === 'COMPLETE' || state === 'PROMPT') {
-      setCurrentContent({ lines, highlightIndex })
-    }
-  }, [lines, highlightIndex, state])
-
-  // Skip behaviour triggers
-  useEffect(() => {
-    const forceSkip = skip
-    if (forceSkip && !completedRef.current && state !== 'COMPLETE' && state !== 'PROMPT') {
+    if (skip && !completedRef.current) {
       completedRef.current = true
-      setState('COMPLETE')
+      setCurrentLine(lines.length)
       onComplete()
     }
-  }, [skip, state, onComplete])
+  }, [skip, lines.length, onComplete])
 
-  // Core State Machine Typewriter Controller
+  // Sequential line triggers
+  const handleLineComplete = (index: number) => {
+    if (skip || completedRef.current) return
+    if (index === currentLine && index < lines.length - 1) {
+      setCurrentLine(prev => prev + 1)
+    } else if (index === lines.length - 1) {
+      completedRef.current = true
+      onComplete()
+    }
+  }
+
+  // Handle empty lines (spacers) automatically
   useEffect(() => {
-    const forceSkip = skip
-    if (forceSkip || state === 'COMPLETE' || state === 'PROMPT' || state === 'EXITING') return
-
-    if (state === 'READY') {
-      const t = setTimeout(() => setState('TYPING_LINE'), 400)
-      return () => clearTimeout(t)
-    }
-
-    if (state === 'TYPING_LINE') {
-      const lineText = currentContent.lines[currentLine] || ''
-      if (lineText.trim() === '') {
-        setState('PAUSE_LINE') // skip typing Empty paragraph buffers
-        return
-      }
-
-      const isBatman = Array.isArray(currentContent.highlightIndex) 
-        ? currentContent.highlightIndex.includes(currentLine) 
-        : currentLine === currentContent.highlightIndex
-
-      if (currentLineText.length < lineText.length) {
-        const t = setTimeout(() => {
-          setCurrentLineText(p => p + lineText[currentLineText.length])
-        }, 20)
-        return () => clearTimeout(t)
-      } else {
-        if (currentLine === currentContent.lines.length - 1) {
-          if (!completedRef.current) {
-            completedRef.current = true
-            setState('COMPLETE')
-            onComplete()
-          }
+    if (skip || completedRef.current) return
+    const text = lines[currentLine]
+    if (text?.trim() === '') {
+      const t = setTimeout(() => {
+        if (currentLine < lines.length - 1) {
+          setCurrentLine(prev => prev + 1)
         } else {
-          setState(isBatman ? 'PAUSE_BATMAN' : 'PAUSE_LINE')
+          completedRef.current = true
+          onComplete()
         }
-      }
-    }
-
-    if (state === 'PAUSE_LINE') {
-      const t = setTimeout(() => {
-        setCurrentLine(l => l + 1)
-        setCurrentLineText('')
-        setState('TYPING_LINE')
-      }, 100)
+      }, 500)
       return () => clearTimeout(t)
     }
-
-    if (state === 'PAUSE_BATMAN') {
-      const t = setTimeout(() => {
-        setCurrentLine(l => l + 1)
-        setCurrentLineText('')
-        setState('TYPING_LINE')
-      }, 400)
-      return () => clearTimeout(t)
-    }
-
-  }, [state, currentLineText, currentLine, currentContent, skip, mode, onComplete])
-
-
+  }, [currentLine, lines, skip, onComplete])
 
   return (
-    <div 
-      className="flex flex-col items-center justify-start w-full my-auto"
-      style={{
-        '--gap-paragraph': '8px',
-        '--gap-batman': '12px',
-        '--gap-closing': '16px',
-        '--gap-name': '16px',
-      } as React.CSSProperties}
-    >
-
-
-      <div className="w-full text-center max-w-[640px] mx-auto px-[24px] md:px-[48px] box-border">
-        {currentContent.lines.map((text, i) => {
-          const isBatmanLine = typeof currentContent.highlightIndex === 'number'
-            ? (i === currentContent.highlightIndex || i === currentContent.highlightIndex + 1)
-            : Array.isArray(currentContent.highlightIndex)
-              ? currentContent.highlightIndex.includes(i)
-              : false;
-
-          const isMuted = text.includes('(They all say passionate.)')
-
-          let colorClass = 'text-theme-primary'
-          if (isBatmanLine) colorClass = 'text-amber-600 dark:text-amber-400'
-          else if (isMuted) colorClass = 'text-theme-muted'
-
-          if (text.trim() === '') {
-            return <div key={i} className="h-0" />
-          }
-
-          const isNewParagraph = i > 0 && currentContent.lines[i - 1].trim() === ''
-          let marginTop = '0px'
-          if (isNewParagraph) {
-            if (isBatmanLine) marginTop = 'var(--gap-batman)'
-            else if (i >= currentContent.lines.length - 2) marginTop = 'var(--gap-closing)'
-            else marginTop = 'var(--gap-paragraph)'
-          }
-
-          const isCompleted = skip || 
-            state === 'COMPLETE' || 
-            state === 'PROMPT' || 
-            i < currentLine ||
-            (i === currentLine && (state === 'PAUSE_LINE' || state === 'PAUSE_BATMAN'))
-          const isTyping = !skip && state === 'TYPING_LINE' && i === currentLine
-          const isActive = isTyping || (i === currentLine && (state === 'PAUSE_LINE' || state === 'PAUSE_BATMAN'));
-          
-          // V4: All lines visible once typed/typing
-          const isVisible = isCompleted || isTyping;
+    <div className="w-full h-full flex flex-col items-center justify-start relative z-10 px-12 overflow-hidden pt-[1vh]">
+      <div className="w-full text-center max-w-[900px] mx-auto px-6">
+        {lines.map((text, lineIdx) => {
+          // Only show lines that have been reached
+          if (lineIdx > currentLine && !skip) return null
 
           return (
-            <motion.div
-              key={i}
-              initial={skip ? { opacity: 0, scale: 0.98, filter: 'blur(10px)' } : { opacity: 0, x: -10, filter: 'blur(5px)', height: 0 }}
-              animate={{ 
-                opacity: isVisible ? (isActive ? 1 : 0.85) : 0, 
-                x: isVisible ? 0 : -5,
-                scale: isVisible ? (isActive ? (isBatmanLine ? 1.02 : 1) : 0.98) : 0.95,
-                filter: isVisible ? 'blur(0px)' : 'blur(8px)',
-                height: isVisible ? 'auto' : 0,
-                marginBottom: isVisible ? (isBatmanLine ? 14 : 8) : 0
-              }}
-              transition={{ 
-                duration: isBatmanLine ? 1.2 : 0.6, 
-                ease: [0.22, 1, 0.36, 1],
-                height: { duration: 0.4 }
-              }}
-              className={`flex flex-col items-center transition-all duration-1000 ${!isVisible ? 'pointer-events-none overflow-hidden' : ''}`}
-              style={{ marginTop }}
-            >
-              <div className="relative group">
-                {/* Ethereal Glow effect for high-impact lines - V2 Refined */}
-                {isBatmanLine && isVisible && isActive && (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 0.25, scale: 1 }}
-                    className="absolute inset-x-[-100px] inset-y-[-60px] bg-[radial-gradient(circle,rgba(245,158,11,0.4)_0%,transparent_70%)] -z-10 blur-2xl"
-                  />
-                )}
-                
-                <p
-                  className={`tracking-[0.05em] leading-[1.3] ${colorClass} text-center transition-all duration-1000
-                    ${isBatmanLine 
-                      ? 'text-[18px] md:text-[26px] font-black italic tracking-[0.08em] drop-shadow-[0_0_25px_rgba(245,158,11,0.2)]' 
-                      : isMuted 
-                        ? 'text-[10px] font-mono opacity-30 italic uppercase tracking-[0.2em]' 
-                        : 'text-[13px] md:text-[18px] font-serif font-bold tracking-[0.04em]'
-                    }`}
-                >
-                  {isCompleted ? (
-                    <EditableText id={`welcome.dialogue.${i}`} value={text} />
-                  ) : (
-                    <>
-                      {text.split('').map((char, index) => {
-                        const isVisible = index < currentLineText.length;
-                        return (
-                          <span key={index} className={isVisible ? 'opacity-100' : 'opacity-0'}>
-                            {char}
-                            {isTyping && index === currentLineText.length - 1 && (
-                              <motion.span 
-                                animate={{ opacity: [1, 0, 1] }}
-                                transition={{ repeat: Infinity, duration: 0.8 }}
-                                className="ml-0.5 text-amber-500 inline-block"
-                              >
-                                ▋
-                              </motion.span>
-                            )}
-                          </span>
-                        )
-                      })}
-                    </>
-                  )}
-                </p>
-              </div>
-            </motion.div>
+            <DialogueLine
+              key={lineIdx}
+              text={text}
+              lineIdx={lineIdx}
+              isHighlighted={highlightIndex?.includes(lineIdx) ?? false}
+              isCompleted={skip || lineIdx < currentLine || completedRef.current}
+              isProjecting={!skip && lineIdx === currentLine && !completedRef.current}
+              skip={skip}
+              onLineComplete={handleLineComplete}
+            />
           )
         })}
       </div>
     </div>
   )
 }
+
 

@@ -41,7 +41,7 @@ export function QuickAccessCard({ title, description, route, icon, index }: Quic
     mouseY.set(clientY - top)
   }
 
-  const background = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(245, 158, 11, 0.1), transparent 80%)`
+  const background = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(var(--accent-rgb), 0.15), transparent 80%)`
 
   const handleClick = () => {
     logMetric('click', { target: title, route })
@@ -54,36 +54,35 @@ export function QuickAccessCard({ title, description, route, icon, index }: Quic
       onClick={handleClick}
       onMouseMove={handleMouseMove}
       className="
-        group relative w-full h-full p-6 text-left rounded-2xl
-        glass-premium hover:border-amber-500/40
-        transition-all duration-500 overflow-hidden cursor-pointer
+        group relative w-full h-full p-8 text-left rounded-2xl
+        ethereal-glass overflow-hidden cursor-pointer
         flex flex-col justify-between
       "
     >
       <motion.div 
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{ background }}
+        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
+        style={{ background, willChange: "background" }}
       />
 
-      <div className="relative z-10 flex flex-col gap-3">
+      <div className="relative z-10 flex flex-col gap-4">
         <div className="flex items-center justify-between">
-            {IconComponent && <IconComponent size={20} className="text-amber-500 group-hover:scale-110 transition-transform duration-500" />}
-            <span className="mono-label !opacity-30 text-[8px]">RSRC_0{index + 1}</span>
+            {IconComponent && <IconComponent size={24} className="text-theme-accent group-hover:scale-110 transition-transform duration-500 text-bloom" />}
+            <span className="font-hud !opacity-40 text-[9px]">RSRC_0{index + 1}</span>
         </div>
         
-        <div className="space-y-1">
-            <p className="font-black text-xl font-serif text-theme-primary leading-tight tracking-tight group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">
+        <div className="space-y-2">
+            <p className="text-2xl font-black text-theme-primary tracking-tighter leading-none group-hover:text-theme-accent transition-colors duration-500">
             {title}
             </p>
-            <p className="text-xs font-medium text-theme-secondary leading-relaxed">
+            <p className="text-[11px] font-medium text-theme-secondary/60 leading-relaxed max-w-[90%]">
             {description}
             </p>
         </div>
       </div>
 
-      <div className="relative z-10 mt-4 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0 duration-500">
-         <span className="mono-label !text-amber-600 dark:!text-amber-500/60 font-black text-[8px]">ACCESS_GRANTED</span>
-         <div className="w-8 h-[1px] bg-amber-500/20" />
+      <div className="relative z-10 mt-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0 duration-700">
+         <span className="font-hud !text-theme-accent text-[9px] text-bloom">ACCESS_GRANTED</span>
+         <div className="w-10 h-[1px] bg-theme-accent/20" />
       </div>
     </button>
   )

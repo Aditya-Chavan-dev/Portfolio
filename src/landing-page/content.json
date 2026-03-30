@@ -2,27 +2,26 @@
   "name": "Aditya Chavan",
   "role": "Developer",
   "dialogue": [
-    "Most portfolios tell you the developer is passionate.",
-    "(They all say passionate.)",
-    "",
-    "This one skips that part.",
+    "Precision is a choice.",
+    "Most settle for 'passionate'.",
+    "I settle for absolute.",
     "",
     "It's not how I code underneath —",
     "but how I think that defines me.",
     "",
-    "One vision. One developer. AI as the instrument.",
-    "A live system built to a standard",
-    "that didn't ask for permission.",
+    "This is a live system.",
+    "A digital heartbeat built to a standard",
+    "that never asked for permission.",
     "",
-    "You're already reading this far.",
-    "That's a good sign."
+    "You're already here.",
+    "Let's explore the architecture of thought."
   ],
   "highlightIndex": [
-    5,
-    6
+    4,
+    5
   ],
   "ctaDesktop": "Press any key to continue",
   "ctaMobile": "Tap to continue",
-  "skipHintDesktop": "Press Enter twice to skip",
-  "skipHintMobile": "Double tap to skip"
+  "skipHintDesktop": "(Press enter twice to skip the animation)",
+  "skipHintMobile": "(Double-tap to skip)"
 }

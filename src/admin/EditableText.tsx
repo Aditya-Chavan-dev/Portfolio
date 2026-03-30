@@ -64,8 +64,8 @@ export default function EditableText({
       onClick={(e) => isEditing && e.stopPropagation()}
       className={`
         ${className} 
-        ${isEditing ? 'select-text cursor-text outline-none focus:ring-2 focus:ring-amber-500/50 rounded-sm' : ''} 
-        ${isEditing ? 'border border-dashed border-amber-500/40 hover:border-amber-500/80 px-1 -mx-1' : ''} 
+        ${isEditing ? 'select-text cursor-text outline-none focus:ring-2 focus:ring-theme-accent/50 rounded-sm' : ''} 
+        ${isEditing ? 'border border-dashed border-theme-accent/40 hover:border-theme-accent/80 px-1 -mx-1' : ''} 
         ${isPreview ? 'transition-all duration-300' : ''}
       `}
       style={isEditing ? { minHeight: '1em', minWidth: '1ch', display: 'inline-block' } : undefined}

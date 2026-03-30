@@ -67,8 +67,13 @@ export default function ProjectDetail() {
   const mergedProject = { ...project, ...meta, ...fsOverrides } as any
 
   return (
-    <div className="h-screen w-full bg-transparent flex flex-col overflow-hidden font-sans relative">
-      <div className="absolute inset-0 pointer-events-none opacity-5 bg-system-grid" />
+    <div className="h-screen w-full bg-theme-base flex flex-col overflow-hidden font-sans relative theme-transition">
+      {/* ── Dynamic Starstruck Background ────────────────────────── */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 bg-system-grid opacity-[0.03]" />
+        <div className="absolute top-[20%] left-[-10%] w-[60%] h-[60%] starstruck-bg-glow opacity-30" />
+        <div className="absolute bottom-[20%] right-[-10%] w-[50%] h-[50%] starstruck-bg-glow opacity-20" />
+      </div>
       <SectionNav />
 
       <motion.main 
@@ -81,10 +86,10 @@ export default function ProjectDetail() {
         <div className="flex items-end justify-between mb-2">
             <div className="flex flex-col gap-1">
                 <Link 
-                  to="/projects" 
-                  className="mono-label !opacity-40 hover:!opacity-100 hover:text-amber-500 transition-all flex items-center gap-2 mb-4 group"
+                  to="/hub" 
+                  className="font-hud !text-theme-accent !opacity-60 hover:!opacity-100 transition-all flex items-center gap-2 mb-4 group !text-[10px]"
                 >
-                  <span className="group-hover:-translate-x-1 transition-transform">←</span> RETURN_TO_GALLERY
+                  <span className="group-hover:-translate-x-1 transition-transform">←</span> SYSTEM_HUB_RETURN
                 </Link>
             </div>
         </div>
@@ -96,7 +101,7 @@ export default function ProjectDetail() {
           {/* Left Column (Primary Details) */}
           <div className="md:col-span-1 flex flex-col justify-between gap-8 h-full">
             <div className="space-y-4">
-                <h1 className="text-5xl font-black text-theme-primary tracking-tighter leading-none">
+                <h1 className="text-6xl font-black text-theme-primary tracking-tighter leading-none text-bloom">
                 {mergedProject.name}
                 </h1>
                 <div className="flex flex-col gap-1 mono-label !opacity-40 !text-[10px]">
@@ -115,21 +120,21 @@ export default function ProjectDetail() {
               href={mergedProject.githubUrl} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="group relative w-full py-4 glass-premium text-[10px] font-mono text-theme-secondary hover:text-amber-600 dark:hover:text-amber-500 hover:border-amber-500/40 transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-3"
+              className="group relative w-full py-4 ethereal-glass font-hud text-[10px] !text-theme-accent hover:!bg-theme-accent/20 transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-3 border-theme-accent/20"
             >
               INIT_REMOTE_ACCESS
-              <span className="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
+              <span className="text-theme-accent opacity-0 group-hover:opacity-100 transition-opacity">↗</span>
             </a>
           </div>
 
           {/* Right Column (Abstract Narrative) */}
-          <div className="md:col-span-2 flex flex-col justify-center border-t md:border-t-0 md:border-l border-theme-default pt-8 md:pt-0 md:pl-12">
-            <span className="mono-label !opacity-30 mb-4 tracking-[0.3em]">EXECUTIVE_SUMMARY</span>
+          <div className="md:col-span-2 flex flex-col justify-center border-t md:border-t-0 md:border-l border-theme-accent/10 pt-8 md:pt-0 md:pl-12">
+            <span className="font-hud !text-theme-accent !opacity-30 mb-4 !text-[10px]">EXECUTIVE_SUMMARY</span>
             <EditableText 
               id={`projects.${project.name}.description`} 
               value={mergedProject.description || "No description provided."} 
               as="p" 
-              className="text-xl text-theme-secondary font-serif leading-relaxed italic" 
+              className="text-2xl text-theme-secondary font-serif leading-relaxed italic opacity-90" 
             />
           </div>
         </div>
@@ -138,15 +143,14 @@ export default function ProjectDetail() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-0 w-full mb-8">
           
           {/* Box 1: TECH STACK (The Hardware) */}
-          <div className="glass-premium p-8 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors group">
-
+          <div className="ethereal-glass p-8 flex flex-col gap-6 relative overflow-hidden hover:border-theme-accent/20 transition-colors group">
             <div className="flex items-center justify-between">
-                <h2 className="mono-label !opacity-60 tracking-[0.2em]">01_SYSTEM_COMPONENTS</h2>
-                <div className="w-2 h-2 bg-amber-500/20 rounded-full" />
+                <h2 className="font-hud !text-theme-accent !opacity-60 !text-[10px]">01_SYSTEM_COMPONENTS</h2>
+                <div className="w-1.5 h-1.5 bg-theme-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(var(--accent-rgb),0.6)]" />
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
               {(mergedProject.meta?.techStack || mergedProject.topics || []).map((tech: string, i: number) => (
-                <span key={i} className="px-4 py-2 glass-premium text-[10px] font-mono text-theme-secondary border border-theme-default hover:border-amber-500/30 hover:text-amber-600 dark:hover:text-amber-500 transition-all duration-300">
+                <span key={i} className="px-4 py-2 ethereal-glass text-[10px] font-hud !text-theme-accent/60 !border-theme-accent/10 hover:!border-theme-accent/40 hover:!text-theme-accent transition-all duration-300">
                   <EditableText id={`projects.${project.name}.techStack.${i}`} value={tech} as="span" />
                 </span>
               ))}
@@ -154,33 +158,31 @@ export default function ProjectDetail() {
           </div>
 
           {/* Box 2: METRICS (The Vital Signs) */}
-          <div className="glass-premium p-8 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors">
-
-            <h2 className="mono-label !opacity-60 tracking-[0.2em]">02_PERFORMANCE_METRICS</h2>
+          <div className="ethereal-glass p-8 flex flex-col gap-6 relative overflow-hidden hover:border-theme-accent/20 transition-colors">
+            <h2 className="font-hud !text-theme-accent !opacity-60 !text-[10px]">02_PERFORMANCE_METRICS</h2>
             <ul className="flex flex-col gap-4 mt-2">
               {(mergedProject.meta?.metrics || []).map((m: any, i: number) => (
-                <li key={i} className="flex justify-between items-center text-sm border-b border-theme-default pb-3">
-                  <span className="text-[11px] font-mono text-theme-muted uppercase tracking-widest">{m.title}</span>
-                  <span className="font-bold text-amber-600 dark:text-amber-500 font-mono tracking-tighter">{m.value}</span>
+                <li key={i} className="flex justify-between items-center text-sm border-b border-theme-accent/10 pb-3">
+                  <span className="font-hud !text-theme-muted !opacity-40 !text-[9px]">{m.title}</span>
+                  <span className="font-black text-theme-accent font-hud !text-[12px] text-bloom">{m.value}</span>
                 </li>
               ))}
               {(!mergedProject.meta?.metrics || mergedProject.meta.metrics.length === 0) && (
-                <li className="text-[10px] text-theme-muted font-mono italic">NO_CUSTOM_METRICS_LOGGED</li>
+                <li className="text-[10px] text-theme-muted font-hud opacity-40 italic">NO_CUSTOM_METRICS</li>
               )}
             </ul>
           </div>
 
           {/* Box 3: FLAGSHIP FEATURES (The Payload) */}
-          <div className="glass-premium p-8 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors">
-
-            <h2 className="mono-label !opacity-60 tracking-[0.2em]">03_CORE_FEATURES</h2>
+          <div className="ethereal-glass p-8 flex flex-col gap-6 relative overflow-hidden hover:border-theme-accent/20 transition-colors">
+            <h2 className="font-hud !text-theme-accent !opacity-60 !text-[10px]">03_CORE_FEATURES</h2>
             <ul className="flex flex-col gap-6 mt-2">
               {(mergedProject.meta?.flagshipFeatures || []).map((feat: any, i: number) => (
                 <li key={i} className="flex gap-4 items-start group">
-                  <span className="text-[8px] font-mono text-amber-600/40 dark:text-amber-500/40 bg-amber-500/5 w-6 h-6 flex items-center justify-center rounded-full border border-amber-500/10 transition-colors group-hover:bg-amber-500/20 group-hover:text-amber-600 dark:group-hover:text-amber-500">0{i+1}</span>
+                  <span className="font-hud !text-[10px] text-theme-accent/40 bg-theme-accent/5 w-7 h-7 flex items-center justify-center rounded-full border border-theme-accent/10 transition-colors group-hover:bg-theme-accent/20 group-hover:text-theme-accent">0{i+1}</span>
                   <div className="flex flex-col gap-1">
-                    <EditableText id={`projects.${project.name}.flagshipFeatures.${i}.title`} value={feat.title} as="span" className="font-bold text-theme-primary group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors text-sm uppercase tracking-wider" />
-                    <EditableText id={`projects.${project.name}.flagshipFeatures.${i}.description`} value={feat.description} as="span" className="text-theme-muted text-xs leading-relaxed" />
+                    <EditableText id={`projects.${project.name}.flagshipFeatures.${i}.title`} value={feat.title} as="span" className="font-hud !text-theme-primary group-hover:!text-theme-accent transition-colors !text-[12px] !tracking-wider" />
+                    <EditableText id={`projects.${project.name}.flagshipFeatures.${i}.description`} value={feat.description} as="span" className="text-theme-secondary text-sm leading-relaxed opacity-80" />
                   </div>
                 </li>
               ))}
@@ -188,16 +190,15 @@ export default function ProjectDetail() {
           </div>
 
           {/* Box 4: LEARNINGS & ISSUES (The Debug Log) */}
-          <div className="glass-premium p-8 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors">
-
-            <h2 className="mono-label !opacity-60 tracking-[0.2em]">04_POST_MORTEM</h2>
+          <div className="ethereal-glass p-8 flex flex-col gap-6 relative overflow-hidden hover:border-theme-accent/20 transition-colors">
+            <h2 className="font-hud !text-theme-accent !opacity-60 !text-[10px]">04_POST_MORTEM</h2>
             <ul className="flex flex-col gap-6 mt-2">
               {(mergedProject.meta?.learningsIssues || []).map((learn: any, i: number) => (
                 <li key={i} className="flex gap-4 items-start group">
-                  <span className="text-[8px] font-mono text-theme-muted bg-theme-muted/5 w-6 h-6 flex items-center justify-center rounded-full border border-theme-default group-hover:bg-amber-500/10 group-hover:text-amber-600 dark:group-hover:text-amber-500/60 transition-colors">0{i+1}</span>
+                  <span className="font-hud !text-[10px] text-theme-muted bg-theme-muted/5 w-7 h-7 flex items-center justify-center rounded-full border border-theme-accent/5 group-hover:bg-theme-accent/10 group-hover:text-theme-accent transition-colors">0{i+1}</span>
                   <div className="flex flex-col gap-1">
-                    <EditableText id={`projects.${project.name}.learningsIssues.${i}.title`} value={learn.title} as="span" className="font-bold text-theme-secondary text-sm uppercase tracking-wider group-hover:text-theme-primary transition-colors" />
-                    <EditableText id={`projects.${project.name}.learningsIssues.${i}.description`} value={learn.description} as="span" className="text-theme-muted text-xs leading-relaxed" />
+                    <EditableText id={`projects.${project.name}.learningsIssues.${i}.title`} value={learn.title} as="span" className="font-hud !text-theme-secondary !text-[12px] group-hover:!text-theme-primary transition-colors" />
+                    <EditableText id={`projects.${project.name}.learningsIssues.${i}.description`} value={learn.description} as="span" className="text-theme-secondary text-sm leading-relaxed opacity-80" />
                   </div>
                 </li>
               ))}

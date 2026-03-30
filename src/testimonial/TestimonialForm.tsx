@@ -42,7 +42,7 @@ export function TestimonialForm({
     bg-theme-secondary
     text-theme-primary
     placeholder-gray-400 dark:placeholder-gray-600
-    focus-visible:ring-2 focus-visible:ring-amber-500/20
+    focus-visible:ring-2 focus-visible:ring-theme-accent/20
     transition-colors duration-150
     disabled:opacity-50 disabled:cursor-not-allowed
   `
@@ -65,7 +65,7 @@ export function TestimonialForm({
             />
             <label 
                 htmlFor="photo-upload" 
-                className="w-24 h-24 rounded-full border-2 border-dashed border-theme-default/40 flex items-center justify-center cursor-pointer hover:border-amber-500/50 transition-all overflow-hidden relative"
+                className="w-24 h-24 rounded-full border-2 border-dashed border-theme-default/40 flex items-center justify-center cursor-pointer hover:border-theme-accent/50 transition-all overflow-hidden relative"
             >
                {photoPreview ? (
                    <img src={photoPreview} className="w-full h-full object-cover" alt="Preview" />

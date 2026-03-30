@@ -1,13 +1,12 @@
+import { motion, AnimatePresence } from 'framer-motion'
 import { WelcomeDialogue } from './WelcomeDialogue'
 import type { WelcomeConfig } from './landing.types'
-import { AmbientDust } from './AmbientDust'
-import { motion } from 'framer-motion'
-import { useEditMode } from '@/admin/EditModeContext'
 import EditableText from '@/admin/EditableText'
 
 interface Props {
   readonly content:        WelcomeConfig
   readonly skipAnimation:  boolean
+  readonly isDialogueComplete: boolean
   readonly onDialogueComplete: () => void
   readonly onNavigateHub:  () => void
 }
@@ -15,57 +14,74 @@ interface Props {
 export function LandingPageMobile({
   content,
   skipAnimation,
+  isDialogueComplete,
   onDialogueComplete,
   onNavigateHub,
 }: Props) {
-  const { mode } = useEditMode()
 
   return (
-    <div
-      onClick={() => mode !== 'edit' && onNavigateHub()}
-      role="button"
-      tabIndex={0}
-      className="min-h-dvh bg-theme-base text-theme-primary flex flex-col items-center justify-center select-none cursor-pointer overflow-hidden py-4 relative px-8 transition-colors duration-700"
-    >
-      <AmbientDust count={40} />
+    <div className="h-[100dvh] w-screen bg-theme-base flex flex-col items-center justify-between select-none overflow-hidden relative text-theme-primary transition-colors duration-700">
       
-      {/* Cinematic HUD Layer */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-system-grid opacity-[0.2]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
-      </div>
+      {/* 1. Top Runway */}
+      <div className="h-[3vh] w-full" />
 
-      <div className="w-full flex-1 flex flex-col items-center justify-start text-center relative z-10 overflow-hidden py-2">
-        
-        {/* 2. Dialogue (Full Screen Width) */}
+      {/* 2. Dialogue Container (Scroll-free) */}
+      <div className="w-full flex-1 flex flex-col items-center justify-start text-center relative z-10 overflow-hidden px-6 pt-[2vh]">
         <WelcomeDialogue
           lines={content.dialogue}
+          highlightIndex={content.highlightIndex}
           skip={skipAnimation}
           onComplete={onDialogueComplete}
-          highlightIndex={content.highlightIndex}
         />
+      </div>
 
-        {/* 3. Prompts (Persistent Button) */}
-        <div className="mt-8 flex flex-col items-center justify-center h-[50px] relative">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="text-[14px] text-theme-muted tracking-[0.2em] font-mono flex items-center gap-2"
+      {/* 3. Navigation Prompt Zone (Fixed Height, Centered) */}
+      <div className="h-[10vh] w-full flex items-center justify-center relative z-20">
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={isDialogueComplete ? 'complete' : 'typing'}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative flex items-center justify-center p-6"
           >
-            <EditableText id="welcome.ctaMobile" value={content.ctaMobile || 'ENTER_WORKSPACE'} />
-            <motion.span 
-              animate={{ opacity: [1, 0.3, 1] }} 
-              transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-              className="text-amber-500"
-            >
-              ▋
-            </motion.span>
-          </motion.div>
-        </div>
+            {/* Pulsating Background Glow (Only in complete state) */}
+            {isDialogueComplete && (
+              <motion.div
+                animate={{ 
+                  opacity: [0.3, 0.6, 0.3],
+                  scale: [0.9, 1.2, 0.9],
+                }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 3, 
+                  ease: "easeInOut" 
+                }}
+                className="absolute inset-0 bg-theme-accent/40 blur-[50px] rounded-full -z-10"
+              />
+            )}
 
+            <div
+              onClick={onNavigateHub}
+              className="group relative cursor-pointer"
+            >
+              <div className={`
+                text-[12px] font-black italic tracking-[0.3em] font-sans 
+                transition-all duration-500 flex items-center gap-3 uppercase
+                ${isDialogueComplete 
+                  ? 'text-theme-accent cta-bloom' 
+                  : 'text-theme-primary/50'}
+              `}>
+                <EditableText 
+                  id="welcome.ctaMobile" 
+                  value={isDialogueComplete ? 'TAP ANYWHERE TO CONTINUE' : '(DOUBLE-TAP TO SKIP)'} 
+                />
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   )
 }
-

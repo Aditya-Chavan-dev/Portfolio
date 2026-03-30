@@ -22,104 +22,162 @@ export function HubDesktop({ content }: Props) {
     : content.ownerPhotoUrl
 
   return (
-    <div className="h-screen bg-transparent flex flex-col antialiased overflow-hidden relative">
-      <div className="absolute inset-0 pointer-events-none opacity-5 bg-system-grid" />
+    <div className="h-screen bg-theme-base flex flex-col antialiased overflow-hidden relative theme-transition">
+      {/* ── Dynamic Starstruck Background ────────────────────────── */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 bg-system-grid opacity-[0.03]" />
+        
+        {/* Atmospheric Radial Blooms — Optimized Opacity Only */}
+        <motion.div
+          animate={{ 
+            opacity: [0.08, 0.15, 0.08],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: "opacity" }}
+          className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] starstruck-bg-glow"
+        />
+        <motion.div
+          animate={{ 
+            opacity: [0.03, 0.1, 0.03],
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          style={{ willChange: "opacity" }}
+          className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] starstruck-bg-glow"
+        />
+      </div>
       
       {/* ── Main Bento Grid ─────────────────────────────────────── */}
       <motion.main 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2 }}
         className="grid grid-cols-12 grid-rows-12 gap-4 p-6 w-full flex-1 relative z-10 overflow-hidden"
       >
-        {/* Module 1: Profile & Hero (Compact) */}
-        <div className="col-span-9 row-span-5 glass-premium p-8 flex flex-col justify-center relative overflow-hidden group hover:border-amber-500/30 transition-colors">
-
+        {/* Module 1: Profile & Hero (Holographic) */}
+        <div className="col-span-9 row-span-5 ethereal-glass p-10 flex flex-col justify-center relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4">
+             <div className="w-1.5 h-1.5 bg-theme-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(var(--accent-rgb),0.6)]" />
+          </div>
           
-          <div className="flex items-center justify-between gap-8">
-            <div className="space-y-3 flex-1">
-              <div className="flex items-center gap-3">
-                <EditableText id="hub.ownerRole" value={content.ownerRole} as="p" className="mono-label !opacity-60 !text-amber-600 dark:!text-amber-500/60" />
-                <div className="h-[1px] w-8 bg-theme-default/10" />
+          <div className="flex items-center justify-between gap-12">
+            <div className="space-y-4 flex-1">
+              <div className="flex items-center gap-4">
+                <EditableText 
+                  id="hub.ownerRole" 
+                  value={content.ownerRole} 
+                  as="p" 
+                  className="font-hud !text-theme-accent !opacity-80 !text-[12px]" 
+                />
+                <div className="h-[1px] flex-1 bg-theme-accent/20" />
               </div>
-              <EditableText id="hub.ownerName" value={content.ownerName} as="h1" className="text-5xl font-black text-theme-primary tracking-tight leading-none" />
+              
+              <EditableText 
+                id="hub.ownerName" 
+                value={content.ownerName} 
+                as="h1" 
+                className="text-6xl font-black text-theme-primary tracking-tighter leading-none text-bloom" 
+              />
+              
               {content.ownerQuote && (
-                <div className="max-w-[450px] border-l-2 border-amber-500/20 pl-4 mt-4">
-                  <EditableText id="hub.ownerQuote" value={content.ownerQuote} as="p" className="text-base text-theme-secondary font-serif italic leading-relaxed" />
+                <div className="max-w-[500px] border-l-2 border-theme-accent/20 pl-6 py-2 mt-6">
+                  <EditableText 
+                    id="hub.ownerQuote" 
+                    value={content.ownerQuote} 
+                    as="p" 
+                    className="text-lg text-theme-secondary font-serif italic leading-relaxed opacity-80" 
+                  />
                 </div>
               )}
             </div>
 
             <ImageUpload 
               id="hub.ownerPhotoUrl"
-              className="w-44 h-44 rounded-[2.5rem] bg-theme-base/20 shrink-0 shadow-2xl relative overflow-hidden group/img border border-theme-default/20"
+              className="w-52 h-52 rounded-full ethereal-glass shrink-0 shadow-2xl relative overflow-hidden group/img p-1 border-theme-accent/20"
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 opacity-0 group-hover/img:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-t from-theme-accent/20 to-transparent z-10 opacity-0 group-hover/img:opacity-100 transition-opacity" />
               {photoUrl ? (
-                <img src={photoUrl} className="w-full h-full rounded-[2.4rem] object-cover grayscale group-hover/img:grayscale-0 transition-all duration-700 scale-125 group-hover/img:scale-110" alt={content.ownerName} />
+                <img 
+                  src={photoUrl} 
+                  className="w-full h-full rounded-full object-cover grayscale brightness-110 group-hover/img:grayscale-0 transition-all duration-1000 scale-110 group-hover/img:scale-100" 
+                  alt={content.ownerName} 
+                />
               ) : (
-                <span className="text-theme-muted text-[10px] font-mono">[ NULL_IMG ]</span>
+                <div className="w-full h-full flex items-center justify-center font-hud text-[10px] text-theme-accent animate-pulse">
+                  [ PROJECTION_OFF ]
+                </div>
               )}
             </ImageUpload>
           </div>
         </div>
 
-        {/* Module 2: Active Comms / Testimonials (Tall Sidebar) */}
-        <aside className="col-span-3 row-span-12 glass-premium p-6 flex flex-col gap-6 relative overflow-hidden hover:border-amber-500/20 transition-colors">
+        {/* Module 2: Active Comms / Testimonials (System Feed) */}
+        <aside className="col-span-3 row-span-12 ethereal-glass p-6 flex flex-col gap-8 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-20">
+             <div className="w-8 h-8 border-t border-r border-theme-accent/40" />
+          </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-                <EditableText id="hub.testimonialsLabel" value={content.testimonialsLabel} as="p" className="mono-label !opacity-60" />
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.4)]" />
+                <EditableText 
+                  id="hub.testimonialsLabel" 
+                  value={content.testimonialsLabel} 
+                  as="p" 
+                  className="font-hud !text-theme-accent !opacity-80 !text-[11px]" 
+                />
+                <div className="w-1.5 h-1.5 bg-theme-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(var(--accent-rgb),0.6)]" />
             </div>
           </div>
 
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 min-h-0 relative">
+            <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-bg-surface to-transparent z-10 pointer-events-none" />
             <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
+            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-bg-surface to-transparent z-10 pointer-events-none" />
           </div>
 
           <motion.button
-            whileHover={{ x: 5 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             type="button"
             onClick={() => navigate('/testimonial')}
-            className="w-full py-3 glass-premium text-[9px] font-mono text-theme-secondary hover:text-amber-600 dark:hover:text-amber-500 hover:border-amber-500 transition-all duration-300 uppercase tracking-widest flex items-center justify-center gap-3 group"
+            className="w-full py-4 bg-theme-accent/5 border border-theme-accent/10 text-theme-accent font-hud text-[11px] hover:bg-theme-accent/20 hover:border-theme-accent/40 transition-all duration-500 flex items-center justify-center gap-4 group/btn overflow-hidden relative"
           >
-            <EditableText id="hub.leaveTestimonialLabel" value={content.leaveTestimonialLabel} as="span" />
-            <span className="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
+            <EditableText id="hub.leaveTestimonialLabel" value={content.leaveTestimonialLabel} as="span" className="relative z-10" />
+            <span className="relative z-10 group-hover:translate-x-1 transition-transform">→</span>
           </motion.button>
         </aside>
 
-        {/* Module 4: Immersive Journey (Wide Button) */}
+        {/* Module 4: Immersive Journey (Ethereal Status Bar) */}
         <motion.button
           whileHover={{ scale: 1.005 }}
           whileTap={{ scale: 0.995 }}
           onClick={() => navigate('/journey')}
-          className="col-span-9 row-span-2 glass-premium-dark p-6 flex items-center justify-between relative overflow-hidden group hover:border-amber-500/40 transition-colors"
+          className="col-span-9 row-span-2 ethereal-glass p-8 flex items-center justify-between relative overflow-hidden group"
         >
-           <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-           <div className="flex items-center gap-8 relative z-10">
-              <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-500/20 transition-colors">
-                 <Sparkles size={24} className="text-amber-500" />
+           <div className="absolute inset-0 bg-gradient-to-r from-theme-accent/10 via-transparent to-theme-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+           <div className="flex items-center gap-10 relative z-10">
+              <div className="w-14 h-14 rounded-full bg-theme-accent/10 flex items-center justify-center border border-theme-accent/20 group-hover:bg-theme-accent/30 transition-all duration-500 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]">
+                 <Sparkles size={28} className="text-theme-accent text-bloom" />
               </div>
               <div className="flex flex-col text-left">
-                 <EditableText id="hub.journeyButtonLabel" value={content.journeyButtonLabel} as="span" className="text-2xl font-black uppercase tracking-wider" />
-                 <EditableText id="hub.journeyButtonSubtext" value={content.journeyButtonSubtext} as="span" className="mono-label !opacity-60 !text-inherit" />
+                 <EditableText id="hub.journeyButtonLabel" value={content.journeyButtonLabel} as="span" className="text-3xl font-black uppercase tracking-[0.2em] italic text-bloom" />
+                 <EditableText id="hub.journeyButtonSubtext" value={content.journeyButtonSubtext} as="span" className="font-hud !text-theme-accent !opacity-60 !text-[11px]" />
               </div>
            </div>
            
-           <div className="flex items-center gap-4 relative z-10">
-
-              <div className="w-10 h-10 rounded-full border border-theme-default/20 flex items-center justify-center group-hover:border-amber-500 transition-colors">
-                 <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+           <div className="flex items-center gap-6 relative z-10 pr-4">
+              <div className="w-12 h-12 rounded-full border border-theme-accent/20 flex items-center justify-center group-hover:border-theme-accent group-hover:bg-theme-accent/10 transition-all duration-500">
+                 <ChevronRight className="group-hover:translate-x-1 transition-transform text-theme-accent" />
               </div>
            </div>
         </motion.button>
 
-        {/* Module 3: System Access / Quick Access (Horizontal Base) */}
-        <div className="col-span-9 row-span-5 glass-premium p-6 flex flex-col gap-4 relative overflow-hidden">
-
-          <div className="flex items-center gap-4">
-             <div className="h-[1px] flex-1 bg-theme-default" />
+        {/* Module 3: System Access / Quick Access (Ethereal Grid) */}
+        <div className="col-span-9 row-span-5 ethereal-glass p-8 flex flex-col gap-6 relative overflow-hidden">
+          <div className="flex items-center gap-6">
+             <div className="h-[1px] flex-1 bg-theme-accent/10" />
+             <div className="w-2 h-2 border border-theme-accent/40 rotate-45" />
+             <div className="h-[1px] w-12 bg-theme-accent/10" />
           </div>
           
           <QuickAccessGrid
