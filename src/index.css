@@ -4,10 +4,9 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
-  --color-gray-980: #03040b;
-  --font-sans: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
-  --font-serif: 'Syne', 'Helvetica Neue', Arial, sans-serif;
-  --font-quote: 'Playfair Display', serif;
+  --gold1:             #F59E0B;
+  --gold2:             #B45309; /* Amber 700 */
+  --gold3:             #78350F; /* Amber 800 */
 
   /* Theme-aware color utility mappings */
   --color-theme-base:      var(--bg-base);
@@ -29,49 +28,58 @@
    ─────────────────────────────────────────────────────────────────────── */
 
 html[data-theme="light"] {
-  --bg-base: #F5F4F0;
-  --bg-surface: #ECEAE4;
-  --bg-card: #E4E2DC;
+  --bg-base: #FDFEFE;
+  --bg-surface: #FAFBFB;
+  --bg-card: rgba(255, 255, 255, 0.4); /* Glass base */
   --bg-elevated: #FFFFFF;
-  --text-primary: #1A1917;
-  --text-secondary: #6B6863;
-  --text-muted: #A09C98;
-  --border-subtle: rgba(0, 0, 0, 0.05);
-  --border-default: rgba(0, 0, 0, 0.1);
-  --accent: #2A2A2A;
+  --text-primary: #1E293B; /* Slate 800 */
+  --text-secondary: #0F172A; /* Slate 900 for punchier readability */
+  --text-muted: #64748B;
+  --border-subtle: rgba(245, 158, 11, 0.08); /* Amber Tint */
+  --border-default: rgba(245, 158, 11, 0.15); /* Gold Tint */
+  --accent: #D97706; /* Amber 600 for contrast on light */
+  --accent-secondary: #B45309; /* Amber 700 */
+  --accent-secondary-rgb: 180, 83, 9;
+  --accent-tertiary: #78350F; /* Amber 800 */
+  --accent-rgb: 217, 119, 6;
+  --hover-glow-rgb: 217, 119, 6; /* Amber hover */
   --accent-text: #FFFFFF;
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  --overlay: rgba(0, 0, 0, 0.4);
+  --shadow: 0 10px 40px rgba(180, 83, 9, 0.05);
+  --overlay: rgba(15, 23, 42, 0.1);
 
-  /* Semantic fallback/accent constants — Darker for contrast */
-  --gold:  #8b6c2f;
-  --gold2: #b6924d;
-  --gold3: rgba(139, 108, 47, 0.1);
-  --r: 12px;
-  --r2: 8px;
-  --glow-hover: 0 12px 40px rgba(139, 108, 47, 0.2);
-  --grid-color: rgba(0, 0, 0, 0.03);
+  /* Gold Rush Background Gradient */
+  --nebula-bg: linear-gradient(135deg, #FDFEFE 0%, #FFFBEB 50%, #FEF3C7 100%);
+
+  /* Golden Glass */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(245, 158, 11, 0.2);
+  --glow-hover: 0 12px 40px rgba(245, 158, 11, 0.2);
+  --grid-color: rgba(245, 158, 11, 0.06); /* Amber Grid */
 }
 
 html[data-theme="dark"] {
-  --bg-base: #020617; /* Deeper Space Blue */
-  --bg-surface: #0F172A;
-  --bg-card: #1E293B;
-  --bg-elevated: #334155;
+  --bg-base: #080808; /* Deep Matte Black */
+  --bg-surface: #121212;
+  --bg-card: #181818;
+  --bg-elevated: #1e1e1e;
   --text-primary: #F8FAFC;
   --text-secondary: #94A3B8;
   --text-muted: #64748B;
   --border-subtle: rgba(255, 255, 255, 0.03);
   --border-default: rgba(255, 255, 255, 0.06);
-  --accent: #38BDF8; /* Starstruck Identity: Sky Blue */
-  --accent-rgb: 56, 189, 248;
-  --accent-text: #020617;
+  --accent: var(--gold); 
+  --accent-rgb: 245, 158, 11; /* Amber 500 */
+  --hover-glow-rgb: 245, 158, 11;
+  --accent-text: #080808;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  --overlay: rgba(2, 6, 23, 0.85);
+  --overlay: rgba(8, 8, 8, 0.85);
 
-  /* Operative Accents */
-  --glow-hover: 0 0 30px rgba(56, 189, 248, 0.15);
-  --grid-color: rgba(56, 189, 248, 0.03);
+  /* Golden/Black Glass */
+  --glass-bg: rgba(24, 24, 24, 0.6);
+  --glass-border: rgba(245, 158, 11, 0.15);
+  --glow-hover: 0 0 30px rgba(245, 158, 11, 0.1);
+  --grid-color: rgba(245, 158, 11, 0.05);
+  --nebula-bg: radial-gradient(circle at 50% 50%, #121212 0%, #080808 100%);
 }
 
 /* ─── Starstruck Elite Utilities ─────────────────────────── */
@@ -101,10 +109,10 @@ html[data-theme="dark"] {
 }
 
 .ethereal-glass {
-  background: rgba(15, 23, 42, 0.3);
-  backdrop-filter: blur(16px); /* Reduced from 24px for performance */
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
   transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: backdrop-filter, transform;
   transform: translateZ(0);
@@ -113,9 +121,9 @@ html[data-theme="dark"] {
 }
 
 .ethereal-glass:hover {
-  background: rgba(15, 23, 42, 0.4);
-  border-color: rgba(var(--accent-rgb), 0.2);
-  box-shadow: 0 0 50px rgba(var(--accent-rgb), 0.1);
+  background: color-mix(in srgb, var(--glass-bg), var(--accent) 8%);
+  border-color: rgba(var(--accent-rgb), 0.4);
+  box-shadow: var(--glow-hover);
 }
 
 /* ─── Premium System HUD Effects ─────────────────────────── */
@@ -137,6 +145,10 @@ html[data-theme="dark"] {
   background-size: 100% 3px, 3px 100%;
   pointer-events: none;
   opacity: 0.15;
+}
+
+.bg-nebula {
+  background: var(--nebula-bg, var(--bg-base));
 }
 
 /* Theme-aware glass effect */

@@ -41,7 +41,7 @@ export function QuickAccessCard({ title, description, route, icon, index }: Quic
     mouseY.set(clientY - top)
   }
 
-  const background = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(var(--accent-rgb), 0.15), transparent 80%)`
+  const background = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(var(--hover-glow-rgb), 0.15), transparent 80%)`
 
   const handleClick = () => {
     logMetric('click', { target: title, route })

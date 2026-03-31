@@ -23,7 +23,7 @@ export function HubMobile({ content }: Props) {
     : content.ownerPhotoUrl
 
   return (
-    <div className="min-h-dvh bg-theme-base pb-12 flex flex-col antialiased overflow-x-hidden relative theme-transition">
+    <div className="min-h-dvh bg-nebula pb-12 flex flex-col antialiased overflow-x-hidden relative theme-transition">
       {/* ── Dynamic Starstruck Background ────────────────────────── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-system-grid opacity-[0.03]" />

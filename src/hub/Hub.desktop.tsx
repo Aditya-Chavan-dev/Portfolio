@@ -22,7 +22,7 @@ export function HubDesktop({ content }: Props) {
     : content.ownerPhotoUrl
 
   return (
-    <div className="h-screen bg-theme-base flex flex-col antialiased overflow-hidden relative theme-transition">
+    <div className="h-screen bg-nebula flex flex-col antialiased overflow-hidden relative theme-transition">
       {/* ── Dynamic Starstruck Background ────────────────────────── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-system-grid opacity-[0.03]" />
@@ -129,9 +129,9 @@ export function HubDesktop({ content }: Props) {
           </div>
 
           <div className="flex-1 min-h-0 relative">
-            <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-bg-surface to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-theme-surface to-transparent z-10 pointer-events-none" />
             <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
-            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-bg-surface to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-theme-surface to-transparent z-10 pointer-events-none" />
           </div>
 
           <motion.button
