@@ -1,5 +1,8 @@
-import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
+import { initializeApp, getApps, type FirebaseApp, setLogLevel } from 'firebase/app';
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
+
+// Silence internal transport warnings during network flickers
+setLogLevel('error');
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 import { getDatabase } from 'firebase/database';

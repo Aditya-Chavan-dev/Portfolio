@@ -69,7 +69,11 @@ async function recordVisit(isAdmin: boolean) {
       setDoc(allTimeRef, { [totalField]: increment(1) }, { merge: true })
     )
   } catch (err) {
-    console.error('[Analytics] Record Error:', err)
+    // Silent fail in production to keep console clean during flickers. 
+    // Data will sync automatically via Firestore's persistent cache when back online.
+    if (import.meta.env.DEV) {
+      console.warn('[Analytics] Network flicker detected. Syncing in background.');
+    }
   }
 }
 

@@ -2,23 +2,12 @@
   "name": "Aditya Chavan",
   "role": "Developer",
   "dialogue": [
-    "Precision is a choice.",
-    "Most settle for 'passionate'.",
-    "I settle for absolute.",
-    "",
-    "It's not how I code underneath —",
-    "but how I think that defines me.",
-    "",
-    "This is a live system.",
-    "A digital heartbeat built to a standard",
-    "that never asked for permission.",
-    "",
-    "You're already here.",
-    "Let's explore the architecture of thought."
+    "Its not how i write the code",
+    "But how i think that defines me"
   ],
   "highlightIndex": [
-    4,
-    5
+    0,
+    1
   ],
   "ctaDesktop": "Press any key to continue",
   "ctaMobile": "Tap to continue",
