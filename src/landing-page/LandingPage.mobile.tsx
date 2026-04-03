@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { WelcomeDialogue } from './WelcomeDialogue'
 import type { WelcomeConfig } from './landing.types'
 import EditableText from '@/admin/EditableText'
+import { AmbientDust } from './AmbientDust'
 
 interface Props {
   readonly content:        WelcomeConfig
@@ -20,13 +21,15 @@ export function LandingPageMobile({
 }: Props) {
 
   return (
-    <div className="h-[100dvh] w-screen bg-theme-base flex flex-col items-center justify-between select-none overflow-hidden relative text-theme-primary transition-colors duration-700">
+    <div className="h-[100dvh] w-screen bg-black flex items-center justify-center select-none overflow-hidden relative text-white transition-colors duration-700">
       
-      {/* 1. Top Runway */}
-      <div className="h-[3vh] w-full" />
+      {/* 1. Cinematic Background Layers */}
+      <AmbientDust count={40} />
+      <div className="absolute inset-0 bg-radial-glow opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 grain-overlay opacity-5 pointer-events-none" />
 
-      {/* 2. Dialogue Container (Scroll-free) */}
-      <div className="w-full flex-1 flex flex-col items-center justify-start text-center relative z-10 overflow-hidden px-6 pt-[2vh]">
+      {/* 2. Dialogue Container (Perfect Centering) */}
+      <div className="w-full h-full flex flex-col items-center justify-center relative z-10 px-6 overflow-hidden">
         <WelcomeDialogue
           lines={content.dialogue}
           highlightIndex={content.highlightIndex}
@@ -35,51 +38,35 @@ export function LandingPageMobile({
         />
       </div>
 
-      {/* 3. Navigation Prompt Zone (Fixed Height, Centered) */}
-      <div className="h-[10vh] w-full flex items-center justify-center relative z-20">
+      {/* 3. Navigation Prompt Zone (Subtle & Delayed) */}
+      <div className="absolute bottom-8 left-0 w-full flex flex-col items-center justify-center z-20 pointer-events-none">
         <AnimatePresence mode="wait">
-          <motion.div 
-            key={isDialogueComplete ? 'complete' : 'typing'}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative flex items-center justify-center p-6"
-          >
-            {/* Pulsating Background Glow (Only in complete state) */}
-            {isDialogueComplete && (
-              <motion.div
-                animate={{ 
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [0.9, 1.2, 0.9],
-                }}
-                transition={{ 
-                  repeat: Infinity, 
-                  duration: 3, 
-                  ease: "easeInOut" 
-                }}
-                className="absolute inset-0 bg-theme-accent/40 blur-[50px] rounded-full -z-10"
-              />
-            )}
-
-            <div
-              onClick={onNavigateHub}
-              className="group relative cursor-pointer"
+          {isDialogueComplete && (
+            <motion.div 
+              key="complete"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeInOut", delay: 0.8 }}
+              className="flex flex-col items-center gap-2 pointer-events-auto"
             >
-              <div className={`
-                text-[12px] font-black italic tracking-[0.3em] font-sans 
-                transition-all duration-500 flex items-center gap-3 uppercase
-                ${isDialogueComplete 
-                  ? 'text-theme-accent cta-bloom' 
-                  : 'text-theme-primary/50'}
-              `}>
-                <EditableText 
-                  id="welcome.ctaMobile" 
-                  value={isDialogueComplete ? 'TAP ANYWHERE TO CONTINUE' : '(DOUBLE-TAP TO SKIP)'} 
-                />
+              <div
+                onClick={onNavigateHub}
+                className="group cursor-pointer"
+              >
+                <motion.div 
+                  animate={{ opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                  className="text-[10px] font-medium tracking-[0.4em] font-display text-theme-accent uppercase transition-all duration-700"
+                >
+                  <EditableText 
+                    id="welcome.ctaMobile" 
+                    value="TAP TO CONTINUE" 
+                  />
+                </motion.div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
     </div>
