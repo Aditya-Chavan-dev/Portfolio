@@ -1,112 +1,56 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect } from 'react'
-import { ThemeProvider } from '@/common/shared/ThemeProvider'
-import { ProtectedRoute } from '@/common/shared/ProtectedRoute'
-import { FloatingThemeToggle } from '@/common/shared/FloatingThemeToggle'
-import BottomDock from '@/admin/BottomDock'
-import { usePresence } from '@/common/hooks/usePresence'
-import { useRecordVisit } from '@/common/hooks/useRecordVisit'
-import { logMetric } from '@/common/lib/metrics'
-
-import LandingPage      from '@/landing-page/LandingPage'
-import Hub              from '@/hub/Hub'
-import ImmersiveJourney from '@/immersive-journey/ImmersiveJourney'
-import Projects         from '@/quick-access/Projects'
-import Skills           from '@/quick-access/Skills'
-import Experience       from '@/quick-access/Experience'
-import Certifications   from '@/quick-access/Certifications'
-import ProjectDetail    from '@/quick-access/ProjectDetail'
-import Testimonial      from '@/testimonial/Testimonial'
-import NotFound         from '@/not-found/NotFound'
-import AdminLogin       from '@/admin/AdminLogin'
-import AdminPanel       from '@/admin/AdminPanel'
-
-function PageTransition({ children }: { readonly children: React.ReactNode }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
-      animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-      exit={{ opacity: 0, scale: 1.02, filter: 'blur(4px)' }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="w-full h-full overflow-hidden"
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-/** Runs visitor tracking hooks on public routes only */
-function PublicTracker() {
-  // Hooks must always be called — but they no-op internally when conditions are wrong
-  usePresence()
-  useRecordVisit()
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const observer = new PerformanceObserver((list) => {
-      const entries = list.getEntriesByName('first-contentful-paint')
-      if (entries.length > 0) {
-        logMetric('web-vitals/fcp', entries[0].startTime)
-        // Stop after first measurement
-        observer.disconnect()
-      }
-    })
-
-    try {
-      observer.observe({ type: 'paint', buffered: true })
-    } catch (_) {
-      // Browser might not support this type
-    }
-    
-    return () => observer.disconnect()
-  }, [])
-
-  return null
-}
-
-
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
+import { LandingPage } from '@/pages/LandingPage'
+import { Hub } from '@/pages/Hub'
+import { Projects } from '@/pages/Projects'
+import { Experience } from '@/pages/Experience'
+import { TechStack } from '@/pages/TechStack'
+import { Certifications } from '@/pages/Certifications'
+import { About } from '@/pages/About'
+import { ComingSoon } from '@/pages/ComingSoon'
+import { DetailLayout } from '@/layouts/DetailLayout'
 
 export default function App() {
   const location = useLocation()
 
-
   return (
-    <ThemeProvider>
-      <div className="scanline h-[100dvh] overflow-hidden bg-theme-base bg-system-grid transition-colors duration-500">
-        <FloatingThemeToggle />
-        <BottomDock />
-        <PublicTracker />
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            {/* ── Public routes ─────────────────────────────────── */}
-            <Route path="/"           element={<PageTransition><LandingPage /></PageTransition>}      />
-            <Route path="/hub"        element={<PageTransition><Hub /></PageTransition>}              />
-            <Route path="/journey"    element={<PageTransition><ImmersiveJourney /></PageTransition>} />
-            <Route path="/projects"   element={<PageTransition><Projects /></PageTransition>}         />
-            <Route path="/projects/:projectId" element={<PageTransition><ProjectDetail /></PageTransition>} />
-            <Route path="/skills"     element={<PageTransition><Skills /></PageTransition>}           />
-            <Route path="/experience" element={<PageTransition><Experience /></PageTransition>}       />
-            <Route path="/certifications" element={<PageTransition><Certifications /></PageTransition>} />
-            <Route path="/testimonial" element={<PageTransition><Testimonial /></PageTransition>}     />
-            <Route path="/404"        element={<PageTransition><NotFound /></PageTransition>}         />
-
-            {/* ── Admin routes ─────────────────────────────────── */}
-            <Route path="/amgl-3-10"  element={<PageTransition><AdminLogin /></PageTransition>} />
-            <Route path="/amgl-panel" element={
-              <PageTransition>
-                <ProtectedRoute>
-                  <AdminPanel />
-                </ProtectedRoute>
-              </PageTransition>
-            } />
-
-            {/* ── Catch-all ────────────────────────────────────── */}
-            <Route path="*" element={<Navigate to="/404" replace />} />
-          </Routes>
-        </AnimatePresence>
-      </div>
-    </ThemeProvider>
+    <div className="h-[100dvh] w-full overflow-hidden bg-bg-base transition-colors duration-500 grain-overlay">
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Hub />} />
+          <Route path="/welcome" element={<LandingPage />} />
+          <Route path="/hub" element={<Hub />} />
+          
+          {/* Detail Views wrapped in DetailLayout */}
+          <Route path="/hub/projects" element={
+            <DetailLayout title="Projects">
+              <Projects />
+            </DetailLayout>
+          } />
+          <Route path="/hub/experience" element={
+            <DetailLayout title="Experience">
+              <Experience />
+            </DetailLayout>
+          } />
+          <Route path="/hub/stack" element={
+            <DetailLayout title="Tech Stack">
+              <TechStack />
+            </DetailLayout>
+          } />
+          <Route path="/hub/certifications" element={
+            <DetailLayout title="Certifications">
+              <Certifications />
+            </DetailLayout>
+          } />
+          <Route path="/hub/about" element={
+            <DetailLayout title="About">
+              <About />
+            </DetailLayout>
+          } />
+          
+          <Route path="/coming-soon" element={<ComingSoon />} />
+        </Routes>
+      </AnimatePresence>
+    </div>
   )
 }
