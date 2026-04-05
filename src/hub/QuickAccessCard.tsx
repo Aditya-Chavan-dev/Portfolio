@@ -1,89 +1,54 @@
-import { useNavigate } from 'react-router-dom'
-import { logMetric } from '@/admin/MetricsOrchestrator'
-import { Folder, Diamond, Briefcase, User, Award } from 'lucide-react'
-
-import { motion, useMotionValue, useMotionTemplate } from 'framer-motion'
+import React from "react";
+import { motion } from "framer-motion";
 
 interface QuickAccessCardProps {
-  readonly title:       string
-  readonly description: string
-  readonly route:       string
-  readonly icon?:        string
-  readonly index:       number
+  title: string;
+  label: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+  className?: string;
 }
 
-const iconMap: Record<string, any> = {
-  Folder,
-  Diamond,
-  Briefcase,
-  User,
-  Award
-}
-
-const fallbackIconMap: Record<string, any> = {
-  Projects: Folder,
-  Skills: Diamond,
-  Experience: Briefcase,
-  About: User,
-  Certifications: Award
-}
-
-export function QuickAccessCard({ title, description, route, icon, index }: QuickAccessCardProps) {
-  const navigate = useNavigate()
-  const IconComponent = icon ? iconMap[icon] : (fallbackIconMap[title] || null)
-
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect()
-    mouseX.set(clientX - left)
-    mouseY.set(clientY - top)
-  }
-
-  const background = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(var(--hover-glow-rgb), 0.15), transparent 80%)`
-
-  const handleClick = () => {
-    logMetric('click', { target: title, route })
-    navigate(route)
-  }
+export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({
+  title,
+  label,
+  icon,
+  onClick,
+  className = "",
+}) => {
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      onMouseMove={handleMouseMove}
-      className="
-        group relative w-full h-full p-8 text-left rounded-2xl
-        ethereal-glass overflow-hidden cursor-pointer
-        flex flex-col justify-between
-      "
+    <motion.button
+      whileHover={{ y: -2, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className={`group relative flex flex-col items-start p-5 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-md overflow-hidden transition-all hover:bg-white/[0.03] hover:border-accent/20 ${className}`}
     >
-      <motion.div 
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
-        style={{ background, willChange: "background" }}
-      />
+      {/* Azure Glow Effect */}
+      <div className="absolute -inset-1 bg-accent/5 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
-      <div className="relative z-10 flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-            {IconComponent && <IconComponent size={24} className="text-theme-accent group-hover:scale-110 transition-transform duration-500 text-bloom" />}
-            <span className="font-hud !opacity-40 text-[9px]">RSRC_0{index + 1}</span>
-        </div>
-        
-        <div className="space-y-2">
-            <p className="text-2xl font-black text-theme-primary tracking-tighter leading-none group-hover:text-theme-accent transition-colors duration-500">
-            {title}
-            </p>
-            <p className="text-[11px] font-medium text-theme-secondary/60 leading-relaxed max-w-[90%]">
-            {description}
-            </p>
+      {/* Icon with Azure Glow */}
+      <div className="relative mb-4">
+        <div className="absolute inset-0 bg-accent/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="relative p-2 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+          <div className="w-4 h-4 text-accent">
+            {icon}
+          </div>
         </div>
       </div>
 
-      <div className="relative z-10 mt-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0 duration-700">
-         <span className="font-hud !text-theme-accent text-[9px] text-bloom">ACCESS_GRANTED</span>
-         <div className="w-10 h-[1px] bg-theme-accent/20" />
+      {/* Content */}
+      <div className="relative">
+        <h3 className="text-lg font-bold text-[#F8FAFC] tracking-tight mb-1 font-syne group-hover:text-accent transition-colors">
+          {title}
+        </h3>
+        <p className="text-[8px] font-bold text-accent/40 tracking-[0.2em] uppercase text-left leading-relaxed">
+          {label}
+        </p>
       </div>
-    </button>
-  )
-}
+      
+      {/* Bottom Accent Line */}
+      <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-500" />
+    </motion.button>
+  );
+};
