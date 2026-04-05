@@ -1,5 +1,6 @@
 import { initializeApp, getApps, type FirebaseApp, setLogLevel } from 'firebase/app';
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 
 // Silence internal transport warnings during network flickers
 setLogLevel('error');
@@ -18,6 +19,20 @@ const firebaseConfig = {
 };
 
 const app: FirebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+
+// Initialize App Check
+if (typeof window !== 'undefined') {
+  // Enable debug token in development if the flag is set
+  if (import.meta.env.VITE_APP_CHECK_DEBUG_TOKEN === 'true') {
+    (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  }
+
+  initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_RECAPTCHA_SITE_KEY as string),
+    isTokenAutoRefreshEnabled: true,
+  });
+  console.log('🛡️ App Check initialized');
+}
 
 export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
