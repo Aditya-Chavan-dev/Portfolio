@@ -26,7 +26,7 @@ export function LandingPageDesktop({
       {/* 1. Cinematic Background Layers */}
       <AmbientDust count={100} />
       <div className="absolute inset-0 bg-radial-glow opacity-40 pointer-events-none" />
-      <div className="absolute inset-0 grain-overlay opacity-15 pointer-events-none" />
+
       
       {/* Cinematic Vignette */}
       <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_200px_rgba(0,0,0,0.8)] z-30" />

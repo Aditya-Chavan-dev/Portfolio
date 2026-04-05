@@ -26,7 +26,7 @@ export function LandingPageMobile({
       {/* 1. Cinematic Background Layers */}
       <AmbientDust count={40} />
       <div className="absolute inset-0 bg-radial-glow opacity-20 pointer-events-none" />
-      <div className="absolute inset-0 grain-overlay opacity-5 pointer-events-none" />
+
 
       {/* 2. Dialogue Container (Perfect Centering) */}
       <div className="w-full h-full flex flex-col items-center justify-center relative z-10 px-6 overflow-hidden">
