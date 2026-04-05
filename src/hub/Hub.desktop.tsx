@@ -1,190 +1,165 @@
-import { useNavigate } from 'react-router-dom'
-import { QuickAccessGrid } from './QuickAccessGrid'
-import { TestimonialsStrip } from './TestimonialsStrip'
-import EditableText from '@/admin/EditableText'
-import ImageUpload from '@/admin/ImageUpload'
-import { useEditMode } from '@/admin/EditModeContext'
-import type { HubContent } from './hub.types'
-import { motion } from 'framer-motion'
-import { Sparkles, ChevronRight } from 'lucide-react'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { Folder, Zap } from 'lucide-react';
+import { QuickAccessCard } from './QuickAccessCard';
 
-interface Props {
-  readonly content: HubContent
+interface HubDesktopProps {
+  content: any;
 }
 
-export function HubDesktop({ content }: Props) {
-  const navigate = useNavigate()
-  const { draftData } = useEditMode()
-  
-  // Resolve current display photo (Draft > Live)
-  const photoUrl = draftData['hub.ownerPhotoUrl'] !== undefined 
-    ? (draftData['hub.ownerPhotoUrl'] as string) 
-    : content.ownerPhotoUrl
+export const HubDesktop: React.FC<HubDesktopProps> = ({ content }) => {
+  const navigate = useNavigate();
 
   return (
-    <div className="h-screen bg-nebula flex flex-col antialiased overflow-hidden relative theme-transition">
-      {/* ── Dynamic Starstruck Background ────────────────────────── */}
+    <div className="relative w-full h-screen bg-bg-base overflow-hidden flex items-center justify-center p-8">
+      {/* ─── Background Atmosphere ─────────────────────────────── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-system-grid opacity-[0.03]" />
-        
-        {/* Atmospheric Radial Blooms — Optimized Opacity Only */}
-        <motion.div
-          animate={{ 
-            opacity: [0.08, 0.15, 0.08],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          style={{ willChange: "opacity" }}
-          className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] starstruck-bg-glow"
-        />
-        <motion.div
-          animate={{ 
-            opacity: [0.03, 0.1, 0.03],
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          style={{ willChange: "opacity" }}
-          className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] starstruck-bg-glow"
-        />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] nebula-glow opacity-30" />
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] nebula-glow opacity-10" />
+        <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] nebula-glow opacity-10" />
       </div>
-      
-      {/* ── Main Bento Grid ─────────────────────────────────────── */}
-      <motion.main 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2 }}
-        className="grid grid-cols-12 grid-rows-12 gap-4 p-6 w-full flex-1 relative z-10 overflow-hidden"
-      >
-        {/* Module 1: Profile & Hero (Holographic) */}
-        <div className="col-span-9 row-span-5 ethereal-glass p-10 flex flex-col justify-center relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4">
-             <div className="w-1.5 h-1.5 bg-theme-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(var(--accent-rgb),0.6)]" />
-          </div>
-          
-          <div className="flex items-center justify-between gap-12">
-            <div className="space-y-4 flex-1">
-              <div className="flex items-center gap-4">
-                <EditableText 
-                  id="hub.ownerRole" 
-                  value={content.ownerRole} 
-                  as="p" 
-                  className="font-hud !text-theme-accent !opacity-80 !text-[12px]" 
-                />
-                <div className="h-[1px] flex-1 bg-theme-accent/20" />
-              </div>
-              
-              <EditableText 
-                id="hub.ownerName" 
-                value={content.ownerName} 
-                as="h1" 
-                className="text-6xl font-black text-theme-primary tracking-tighter leading-none text-bloom" 
-              />
-              
-              {content.ownerQuote && (
-                <div className="max-w-[500px] border-l-2 border-theme-accent/20 pl-6 py-2 mt-6">
-                  <EditableText 
-                    id="hub.ownerQuote" 
-                    value={content.ownerQuote} 
-                    as="p" 
-                    className="text-lg text-theme-secondary font-serif italic leading-relaxed opacity-80" 
-                  />
-                </div>
-              )}
-            </div>
 
-            <ImageUpload 
-              id="hub.ownerPhotoUrl"
-              className="w-52 h-52 rounded-full ethereal-glass shrink-0 shadow-2xl relative overflow-hidden group/img p-1 border-theme-accent/20"
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-theme-accent/20 to-transparent z-10 opacity-0 group-hover/img:opacity-100 transition-opacity" />
-              {photoUrl ? (
+      {/* ─── Orbital System ───────────────────────────────────── */}
+      <div className="relative w-[1000px] h-[1000px] flex items-center justify-center scale-90 xxl:scale-100">
+        
+        {/* Orbit Rings */}
+        <div className="absolute w-[500px] h-[500px] border border-accent/10 rounded-full" />
+        <div className="absolute w-[800px] h-[800px] border border-accent/5 rounded-full" />
+
+        {/* ─── Central Identity Hub ───────────────────────────── */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="relative z-20 w-80 h-80 rounded-full ethereal-glass flex flex-col items-center justify-center p-8 text-center"
+        >
+          <div className="mb-4 relative">
+            <div className="w-32 h-32 rounded-full border-2 border-accent p-1">
+              <div className="w-full h-full rounded-full bg-slate-900 overflow-hidden">
                 <img 
-                  src={photoUrl} 
-                  className="w-full h-full rounded-full object-cover grayscale brightness-110 group-hover/img:grayscale-0 transition-all duration-1000 scale-110 group-hover/img:scale-100" 
-                  alt={content.ownerName} 
+                  src="https://images.unsplash.com/photo-1597384708133-af8b03bb1287?q=80&w=256&h=256&auto=format&fit=crop" 
+                  alt="Identity"
+                  className="w-full h-full object-cover grayscale opacity-80"
                 />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center font-hud text-[10px] text-theme-accent animate-pulse">
-                  [ PROJECTION_OFF ]
-                </div>
-              )}
-            </ImageUpload>
-          </div>
-        </div>
-
-        {/* Module 2: Active Comms / Testimonials (System Feed) */}
-        <aside className="col-span-3 row-span-12 ethereal-glass p-6 flex flex-col gap-8 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-20">
-             <div className="w-8 h-8 border-t border-r border-theme-accent/40" />
+              </div>
+            </div>
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-2 border-t-2 border-accent rounded-full opacity-40"
+            />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-                <EditableText 
-                  id="hub.testimonialsLabel" 
-                  value={content.testimonialsLabel} 
-                  as="p" 
-                  className="font-hud !text-theme-accent !opacity-80 !text-[11px]" 
-                />
-                <div className="w-1.5 h-1.5 bg-theme-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(var(--accent-rgb),0.6)]" />
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-hud text-accent/80">System Operator</span>
+            <div className="w-1 h-1 rounded-full bg-accent" />
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-[10px] font-black text-green-500/60 tracking-widest uppercase">ONLINE</span>
             </div>
           </div>
 
-          <div className="flex-1 min-h-0 relative">
-            <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-theme-surface to-transparent z-10 pointer-events-none" />
-            <TestimonialsStrip emptyStateText={content.testimonialsEmptyState} />
-            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-theme-surface to-transparent z-10 pointer-events-none" />
-          </div>
+          <h1 className="text-4xl font-black tracking-tighter text-white mb-2 text-bloom uppercase">
+            {content?.hero?.name || "ADITYA CHAVAN"}
+          </h1>
+          <p className="font-hud text-accent/40 max-w-[200px] leading-relaxed uppercase">
+            {content?.hero?.description || "Architecture of the Unexpected"}
+          </p>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            type="button"
-            onClick={() => navigate('/testimonial')}
-            className="w-full py-4 bg-theme-accent/5 border border-theme-accent/10 text-theme-accent font-hud text-[11px] hover:bg-theme-accent/20 hover:border-theme-accent/40 transition-all duration-500 flex items-center justify-center gap-4 group/btn overflow-hidden relative"
+            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(56, 189, 248, 0.4)" }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate("/welcome")}
+            className="absolute -bottom-12 px-8 py-3 bg-accent rounded-full text-bg-base text-[10px] font-black tracking-[0.2em] shadow-xl shadow-accent/20 border border-white/20 whitespace-nowrap"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
-            <EditableText id="hub.leaveTestimonialLabel" value={content.leaveTestimonialLabel} as="span" className="relative z-10" />
-            <span className="relative z-10 group-hover:translate-x-1 transition-transform">→</span>
+            INITIATE IMMERSIVE JOURNEY
           </motion.button>
-        </aside>
+        </motion.div>
 
-        {/* Module 4: Immersive Journey (Ethereal Status Bar) */}
-        <motion.button
-          whileHover={{ scale: 1.005 }}
-          whileTap={{ scale: 0.995 }}
-          onClick={() => navigate('/journey')}
-          className="col-span-9 row-span-2 ethereal-glass p-8 flex items-center justify-between relative overflow-hidden group"
-        >
-           <div className="absolute inset-0 bg-gradient-to-r from-theme-accent/10 via-transparent to-theme-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-           <div className="flex items-center gap-10 relative z-10">
-              <div className="w-14 h-14 rounded-full bg-theme-accent/10 flex items-center justify-center border border-theme-accent/20 group-hover:bg-theme-accent/30 transition-all duration-500 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]">
-                 <Sparkles size={28} className="text-theme-accent text-bloom" />
-              </div>
-              <div className="flex flex-col text-left">
-                 <EditableText id="hub.journeyButtonLabel" value={content.journeyButtonLabel} as="span" className="text-3xl font-black uppercase tracking-[0.2em] italic text-bloom" />
-                 <EditableText id="hub.journeyButtonSubtext" value={content.journeyButtonSubtext} as="span" className="font-hud !text-theme-accent !opacity-60 !text-[11px]" />
-              </div>
-           </div>
-           
-           <div className="flex items-center gap-6 relative z-10 pr-4">
-              <div className="w-12 h-12 rounded-full border border-theme-accent/20 flex items-center justify-center group-hover:border-theme-accent group-hover:bg-theme-accent/10 transition-all duration-500">
-                 <ChevronRight className="group-hover:translate-x-1 transition-transform text-theme-accent" />
-              </div>
-           </div>
-        </motion.button>
-
-        {/* Module 3: System Access / Quick Access (Ethereal Grid) */}
-        <div className="col-span-9 row-span-5 ethereal-glass p-8 flex flex-col gap-6 relative overflow-hidden">
-          <div className="flex items-center gap-6">
-             <div className="h-[1px] flex-1 bg-theme-accent/10" />
-             <div className="w-2 h-2 border border-theme-accent/40 rotate-45" />
-             <div className="h-[1px] w-12 bg-theme-accent/10" />
-          </div>
-          
-          <QuickAccessGrid
-            items={content.quickAccessItems}
+        {/* ─── Inner Orbit Cards (Projects & Skills) ────────── */}
+        <OrbitingContent radius={250} angle={-30} delay={0.2}>
+          <QuickAccessCard 
+            title="Logic" 
+            label="Capabilities" 
+            icon={<Zap className="w-4 h-4" />} 
+            onClick={() => navigate("/hub/stack")}
           />
-        </div>
-      </motion.main>
+        </OrbitingContent>
+
+        <OrbitingContent radius={250} angle={150} delay={0.4}>
+          <QuickAccessCard 
+            title="Works" 
+            label="Archived" 
+            icon={<Folder className="w-4 h-4" />} 
+            onClick={() => navigate("/hub/projects")}
+          />
+        </OrbitingContent>
+
+        {/* ─── Outer Orbit (Experience & Feedbacks) ─────────── */}
+        <OrbitingContent radius={400} angle={60} delay={0.6}>
+          <div className="ethereal-glass-strong p-6 rounded-3xl w-80">
+            <div className="text-[9px] font-black text-accent/40 tracking-[0.3em] mb-3">SATELLITE FEEDBACK</div>
+            <p className="text-xs font-bold text-white/80 leading-relaxed mb-3 italic">
+              "Aditya doesn't just design — he architects experiences. A rare mind: systems thinker and visual poet."
+            </p>
+            <div className="text-[10px] font-black text-accent tracking-widest uppercase">SARAH JENKINS</div>
+          </div>
+        </OrbitingContent>
+
+        <OrbitingContent radius={400} angle={240} delay={0.8}>
+           <div className="ethereal-glass-strong p-6 rounded-3xl w-80">
+            <div className="text-[9px] font-black text-accent/40 tracking-[0.3em] mb-3">SATELLITE FEEDBACK</div>
+            <p className="text-xs font-bold text-white/80 leading-relaxed mb-3 italic">
+              "Working with Aditya redefined how our team thinks about interface design. Elevated our entire product language."
+            </p>
+            <div className="text-[10px] font-black text-accent tracking-widest uppercase">ROHAN MEHTA</div>
+          </div>
+        </OrbitingContent>
+      </div>
+
+      {/* ─── Global HUD Elements ───────────────────────────────── */}
+      <div className="absolute bottom-8 left-8 flex items-center gap-4 text-[9px] font-bold text-accent/20 tracking-[0.4em]">
+        <span>AZURE.CYBER.OS</span>
+        <span>/</span>
+        <span>BUILD.2604</span>
+      </div>
     </div>
-  )
-}
+  );
+};
+
+const OrbitingContent: React.FC<{ radius: number; angle: number; children: React.ReactNode; delay: number }> = ({ 
+  radius, angle, children, delay 
+}) => {
+  const x = Math.cos((angle * Math.PI) / 180) * radius;
+  const y = Math.sin((angle * Math.PI) / 180) * radius;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 0, y: 0 }}
+      animate={{ opacity: 1, x, y }}
+      transition={{ 
+        delay, 
+        duration: 0.8, 
+        type: "spring", 
+        stiffness: 50 
+      }}
+      className="absolute"
+    >
+      <motion.div
+        animate={{ 
+          y: [0, -10, 0],
+          x: [0, 5, 0]
+        }}
+        transition={{ 
+          duration: 6, 
+          repeat: Infinity, 
+          ease: "easeInOut" 
+        }}
+        className="pointer-events-auto"
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+};
