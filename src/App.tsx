@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { LandingPage } from '@/pages/LandingPage'
-import { Hub } from '@/pages/Hub'
+import Hub from '@/hub/Hub'
 import { Projects } from '@/pages/Projects'
 import { Experience } from '@/pages/Experience'
 import { TechStack } from '@/pages/TechStack'
@@ -14,7 +14,7 @@ export default function App() {
   const location = useLocation()
 
   return (
-    <div className="h-[100dvh] w-full overflow-hidden bg-bg-base transition-colors duration-500 grain-overlay">
+    <div className="h-[100dvh] w-full overflow-hidden bg-bg-base transition-colors duration-500">
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Hub />} />
