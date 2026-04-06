@@ -66,7 +66,7 @@ export const HubMobile: React.FC<HubMobileProps> = ({ content }) => {
           <div className="w-full h-full rounded-full overflow-hidden shadow-2xl">
             <img 
               src="https://images.unsplash.com/photo-1597384708133-af8b03bb1287?q=80&w=512&h=512&auto=format&fit=crop" 
-              alt="Aditya"
+              alt={content?.ownerName || "Profile image"}
               className="w-full h-full object-cover grayscale contrast-125"
             />
           </div>

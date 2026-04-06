@@ -28,6 +28,10 @@
   
   --animate-pulse-azure: pulse-azure 4s ease-in-out infinite;
 
+  /* Theme Tokens for Welcome/Dialogue */
+  --color-theme-primary: #FFFFFF;
+  --color-theme-accent: #D4AF37;
+
   @keyframes pulse-azure {
     0%, 100% { opacity: 0.2; transform: scale(1); filter: blur(40px); }
     50% { opacity: 0.4; transform: scale(1.1); filter: blur(60px); }
@@ -48,8 +52,8 @@
     background-color: #050506;
     color: #FFFFFF;
     font-family: var(--font-body);
-    overflow: hidden;
-    height: 100dvh;
+    overflow-x: hidden;
+    min-height: 100dvh;
   }
 
   :root {
@@ -57,6 +61,7 @@
     --easing-entry: cubic-bezier(0.34, 1.56, 0.64, 1);
     --accent-gold: #D4AF37;
     --accent-pink: #FF007A;
+    --accent-rgb: 212, 175, 55;
   }
 }
 

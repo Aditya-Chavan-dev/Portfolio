@@ -1,8 +1,10 @@
+import { type ReactNode } from 'react'
+
 export interface QuickAccessItem {
   title:       string
   label:       string
   route:       string
-  icon?:       React.ReactNode
+  icon?:       ReactNode
   onClick?:    () => void
 }
 

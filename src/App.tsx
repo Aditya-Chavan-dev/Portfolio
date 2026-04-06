@@ -14,7 +14,7 @@ export default function App() {
   const location = useLocation()
 
   return (
-    <div className="h-[100dvh] w-full overflow-hidden bg-bg-base transition-colors duration-500">
+    <div className="min-h-[100dvh] w-full overflow-x-hidden bg-bg-base transition-colors duration-500">
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Hub />} />

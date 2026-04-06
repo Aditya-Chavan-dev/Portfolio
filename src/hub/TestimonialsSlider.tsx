@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { PublicTestimonial } from '@/common/shared/testimonial.types';
@@ -17,23 +17,25 @@ export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
+    if (!testimonials || testimonials.length === 0) return;
     setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
+  }, [testimonials]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
+    if (!testimonials || testimonials.length === 0) return;
     setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  }, [testimonials]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!testimonials || testimonials.length <= 1) return;
     const timer = setInterval(() => {
       handleNext();
     }, 5000);
     return () => clearInterval(timer);
-  }, [currentIndex, testimonials.length]);
+  }, [handleNext, testimonials.length]);
 
   if (!testimonials || testimonials.length === 0) return null;
 
@@ -66,7 +68,8 @@ export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
               whileHover={{ scale: 1.1, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
               whileTap={{ scale: 0.9 }}
               onClick={handlePrev}
-              className="absolute left-[-60px] z-10 p-3 rounded-full border border-white/10 bg-white/[0.03] text-accent-gold transition-colors hidden md:flex"
+              aria-label="Previous testimonial"
+              className="absolute left-[-60px] z-10 p-3 rounded-full border border-white/10 bg-white/[0.03] text-accent-gold transition-colors hidden md:flex focus-visible:ring-2 focus-visible:ring-accent-gold outline-none"
             >
               <ChevronLeft className="w-6 h-6" />
             </motion.button>
@@ -74,7 +77,8 @@ export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
               whileHover={{ scale: 1.1, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
               whileTap={{ scale: 0.9 }}
               onClick={handleNext}
-              className="absolute right-[-60px] z-10 p-3 rounded-full border border-white/10 bg-white/[0.03] text-accent-gold transition-colors hidden md:flex"
+              aria-label="Next testimonial"
+              className="absolute right-[-60px] z-10 p-3 rounded-full border border-white/10 bg-white/[0.03] text-accent-gold transition-colors hidden md:flex focus-visible:ring-2 focus-visible:ring-accent-gold outline-none"
             >
               <ChevronRight className="w-6 h-6" />
             </motion.button>
@@ -124,7 +128,9 @@ export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
                 setDirection(idx > currentIndex ? 1 : -1);
                 setCurrentIndex(idx);
               }}
-              className={`transition-all duration-300 rounded-full ${
+              aria-label={`Go to testimonial ${idx + 1}`}
+              aria-current={idx === currentIndex ? "true" : "false"}
+              className={`transition-all duration-300 rounded-full focus-visible:ring-2 focus-visible:ring-accent-gold outline-none ${
                 idx === currentIndex 
                   ? "w-8 h-1 bg-accent-gold" 
                   : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"

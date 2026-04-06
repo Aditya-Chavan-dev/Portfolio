@@ -18,25 +18,25 @@ export function useTestimonials() {
           setTestimonials([
             {
               id: "dummy-1",
-              name: "TechFlow CEO",
-              relationship: "Client",
-              message: "Aditya is a wizard of full-stack development. His attention to detail and cinematic UI design is world-class.",
+              name: "Collaborator",
+              relationship: "Colleague",
+              message: "Aditya provided excellent technical solutions for our project. His expertise in full-stack architecture was a key asset to our success.",
               status: "approved",
               submittedAt: Date.now()
             },
             {
               id: "dummy-2",
-              name: "CreativeSphere Lead",
-              relationship: "Collaborator",
-              message: "Working with Aditya was a seamless experience. He transformed our concept into a high-performance reality.",
+              name: "Project Lead",
+              relationship: "Client",
+              message: "It was a pleasure working with Aditya. He delivered a high-quality, performant application on schedule.",
               status: "approved",
               submittedAt: Date.now()
             },
             {
               id: "dummy-3",
-              name: "Meta Principal Engineer",
-              relationship: "Mentor",
-              message: "The most impressive portfolio I've seen in years. The Hub is a masterpiece of modern engineering.",
+              name: "Software Engineer",
+              relationship: "Peer",
+              message: "Aditya has a great eye for design and performance. The technical implementation of this hub is impressive.",
               status: "approved",
               submittedAt: Date.now()
             }

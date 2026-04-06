@@ -42,7 +42,7 @@ export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({
         <h3 className="text-xl font-extrabold text-white tracking-tight mb-1 font-syne group-hover:text-accent-gold transition-colors">
           {title}
         </h3>
-        <p className="text-[10px] font-bold text-accent-gold/40 tracking-[0.2em] uppercase text-left leading-relaxed font-mono">
+        <p className="text-xs font-bold text-accent-gold/60 tracking-widest uppercase text-left leading-relaxed font-mono">
           {label}
         </p>
       </div>

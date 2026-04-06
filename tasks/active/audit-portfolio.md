@@ -38,24 +38,24 @@ What is explicitly OUT of scope (do not touch):
 ## Plan
 
 ### [Parent Task 1 — Initial Codebase Scan]
-- [ ] **[T1.1]** Read core configuration files (`package.json`, `firebase.json`, `README.md`). — *Definition of done: Config files analyzed for dependencies and settings.*
+- [x] **[T1.1]** Read core configuration files (`package.json`, `firebase.json`, `README.md`). — *Definition of done: Config files analyzed for dependencies and settings.*
   - Estimated effort: S
   - Depends on: none
-- [ ] **[T1.2]** Examine security rules (`firestore.rules`, `database.rules.json`). — *Definition of done: Security vulnerabilities in rules identified.*
+- [x] **[T1.2]** Examine security rules (`firestore.rules`, `database.rules.json`). — *Definition of done: Security vulnerabilities in rules identified.*
   - Estimated effort: S
   - Depends on: T1.1
-- [ ] **[T1.3]** Map the main application structure (`src/hub`, `src/App.tsx`). — *Definition of done: High-level architectural diagram or understanding formed.*
+- [x] **[T1.3]** Map the main application structure (`src/hub`, `src/App.tsx`). — *Definition of done: High-level architectural diagram or understanding formed.*
   - Estimated effort: M
   - Depends on: T1.1
 
 ### [Parent Task 2 — Detailed Security & Design Audit]
-- [ ] **[T2.1]** Search for hardcoded secrets and analyze `.env.example`. — *Definition of done: Vulnerable secret exposure identified.*
+- [x] **[T2.1]** Search for hardcoded secrets and analyze `.env.example`. — *Definition of done: Vulnerable secret exposure identified.*
   - Estimated effort: S
   - Depends on: T1.1
-- [ ] **[T2.2]** Audit input handling and data flow in `src/admin` components. — *Definition of done: XSS or injection vulnerabilities identified.*
+- [x] **[T2.2]** Audit input handling and data flow in `src/admin` components. — *Definition of done: XSS or injection vulnerabilities identified.*
   - Estimated effort: M
   - Depends on: T1.3
-- [ ] **[T2.3]** Evaluate system design patterns (e.g., DRY principle, coupling). — *Definition of done: Design flaws documented.*
+- [x] **[T2.3]** Evaluate system design patterns (e.g., DRY principle, coupling). — *Definition of done: Design flaws documented.*
   - Estimated effort: M
   - Depends on: T1.3
 
