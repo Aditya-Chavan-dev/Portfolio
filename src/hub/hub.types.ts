@@ -1,8 +1,9 @@
 export interface QuickAccessItem {
   title:       string
-  description: string
+  label:       string
   route:       string
-  icon?:       string
+  icon?:       React.ReactNode
+  onClick?:    () => void
 }
 
 export interface HubContent {

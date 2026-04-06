@@ -6,10 +6,10 @@ import { HubMobile }      from './Hub.mobile'
 function LoadingSpinner() {
   console.log('[Hub] Rendering LoadingSpinner');
   return (
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center" role="status" aria-live="polite" aria-busy="true">
+    <div className="min-h-screen bg-bg-base flex items-center justify-center font-body" role="status" aria-live="polite" aria-busy="true">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-6 h-6 border-2 border-accent/20 border-t-accent rounded-full animate-spin" aria-hidden="true" />
-        <span className="text-sm text-accent/60 font-hud tracking-widest text-[#F8FAFC]">LOADING SYSTEM…</span>
+        <div className="w-6 h-6 border-2 border-accent-gold/20 border-t-accent-gold rounded-full animate-spin" aria-hidden="true" />
+        <span className="text-sm text-accent-gold/60 font-hud tracking-[0.4em]">LOADING SYSTEM…</span>
       </div>
     </div>
   )

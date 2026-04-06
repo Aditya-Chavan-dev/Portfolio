@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Terminal, Folder, Zap, History, Plus } from 'lucide-react';
-import { QuickAccessCard } from './QuickAccessCard';
-import { TestimonialsMarquee } from './TestimonialsMarquee';
+import { Play, Folder, Cpu, Briefcase, Award } from 'lucide-react';
+import { QuickAccessGrid } from './QuickAccessGrid';
+import { TestimonialsSlider } from './TestimonialsSlider';
+import { useTestimonials } from './useTestimonials';
+import type { QuickAccessItem } from './hub.types';
 
 interface HubMobileProps {
   content: any;
@@ -11,118 +13,127 @@ interface HubMobileProps {
 
 export const HubMobile: React.FC<HubMobileProps> = ({ content }) => {
   const navigate = useNavigate();
+  const { testimonials } = useTestimonials();
+
+  const quickAccessItems: QuickAccessItem[] = [
+    {
+      title: "PROJECTS",
+      label: "WORKS",
+      icon: <Folder className="w-5 h-5" />,
+      route: "/hub/projects",
+      onClick: () => navigate("/hub/projects")
+    },
+    {
+      title: "SKILLS",
+      label: "STACK",
+      icon: <Cpu className="w-5 h-5" />,
+      route: "/hub/stack",
+      onClick: () => navigate("/hub/stack")
+    },
+    {
+      title: "EXPERIENCE",
+      label: "HISTORY",
+      icon: <Briefcase className="w-5 h-5" />,
+      route: "/hub/experience",
+      onClick: () => navigate("/hub/experience")
+    },
+    {
+      title: "CONNECT",
+      label: "VERIFIED",
+      icon: <Award className="w-5 h-5" />,
+      route: "/hub/certifications",
+      onClick: () => navigate("/hub/certifications")
+    }
+  ];
 
   return (
-    <div className="relative min-h-screen bg-bg-base text-text-primary overflow-y-auto overflow-x-hidden flex flex-col p-5 gap-8">
-      {/* Background Gradients */}
-      <div className="fixed top-0 left-0 w-full h-screen pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-20%] w-[80%] h-[40%] bg-accent/5 blur-[100px] rounded-full opacity-20" />
-        <div className="absolute bottom-[-10%] right-[-20%] w-[80%] h-[40%] bg-accent/5 blur-[100px] rounded-full opacity-10" />
+    <div className="relative min-h-screen bg-bg-base text-white overflow-y-auto overflow-x-hidden flex flex-col p-6 gap-16 pb-20">
+      {/* Background Atmosphere */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[300px] h-[300px] nebula-glow-gold opacity-10" />
+        <div className="absolute bottom-1/4 right-0 w-[200px] h-[200px] nebula-glow-gold opacity-5" />
       </div>
 
-      {/* Hero Section */}
-      <section className="relative flex flex-col items-center gap-5 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-md p-6 pt-8 overflow-hidden text-center mt-1">
-        <span className="font-hud text-accent/80 uppercase opacity-80">
-          System Operator
-        </span>
-        <h1 className="text-4xl font-black tracking-tighter leading-none font-syne text-bloom uppercase">
-          {content?.hero?.name || "ADITYA CHAVAN"}
-        </h1>
-
-        {/* Portrait */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="relative w-40 h-40 rounded-full border border-accent/40 p-1 group"
-        >
-          <div className="absolute inset-0 bg-accent/5 blur-2xl rounded-full opacity-40" />
-          <div className="relative w-full h-full rounded-full overflow-hidden border border-accent/20 flex items-center justify-center bg-slate-900 shadow-xl">
+      {/* ─── Hero Section ───────────────────────────────────── */}
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 flex flex-col items-center text-center gap-6 mt-4"
+      >
+        <div className="relative w-48 h-48 rounded-full border-2 border-accent-gold/20 p-2">
+          <div className="w-full h-full rounded-full overflow-hidden shadow-2xl">
             <img 
               src="https://images.unsplash.com/photo-1597384708133-af8b03bb1287?q=80&w=512&h=512&auto=format&fit=crop" 
-              alt="Portrait"
-              className="w-full h-full object-cover grayscale brightness-110 contrast-125"
+              alt="Aditya"
+              className="w-full h-full object-cover grayscale contrast-125"
             />
           </div>
-        </motion.div>
+        </div>
 
-        <p className="font-hud text-accent/60 max-w-xs mt-1 uppercase px-4 leading-relaxed italic">
-          {content?.hero?.description || "Architecture of the Unexpected"}
-        </p>
+        <div className="flex flex-col gap-2">
+          <div className="space-y-1">
+            <h1 className="text-5xl font-extrabold font-syne tracking-tight leading-[0.9] flex flex-col uppercase">
+              {content?.ownerName ? (
+                content.ownerName.split(' ').map((name: string, i: number) => (
+                  <span key={i}>{name}</span>
+                ))
+              ) : (
+                <>
+                  <span>ADITYA</span>
+                  <span>CHAVAN</span>
+                </>
+              )}
+            </h1>
+            <p className="text-[12px] font-bold text-text-muted tracking-[0.3em] font-mono mt-4 uppercase">
+               {content?.ownerRole || "FULL STACK ARCHITECT"}
+            </p>
+          </div>
+        </div>
 
         <motion.button
-          whileHover={{ scale: 1.02, y: -1 }}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/welcome")}
-          className="relative w-full h-12 bg-accent rounded-lg flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(56,189,248,0.3)] mb-1"
+          className="mt-4 flex items-center justify-center gap-3 w-full h-14 bg-accent-gold rounded-full shadow-lg shadow-accent-gold/10"
         >
-          <Terminal className="w-4 h-4 text-bg-base" />
-          <span className="text-bg-base text-xs font-black tracking-[0.2em]">
-            INITIATE COMMAND
+          <Play size={18} fill="black" stroke="black" />
+          <span className="text-bg-base text-xs font-bold tracking-[0.1em] uppercase font-syne">
+            ENTER JOURNEY
           </span>
         </motion.button>
+      </motion.section>
+
+      {/* ─── Quick Access Grid ─────────────────────────────── */}
+      <section className="relative z-10 flex flex-col gap-6">
+        <div className="flex items-center gap-4">
+          <span className="text-[10px] font-bold text-accent-pink tracking-[0.2em] font-mono uppercase whitespace-nowrap">
+            QUICK ACCESS
+          </span>
+          <div className="h-px bg-white/5 flex-1" />
+        </div>
+        <QuickAccessGrid items={quickAccessItems} />
       </section>
 
-      {/* Quick Access (2x2 Grid) */}
-      <section className="relative flex flex-col gap-6">
-        <div className="flex items-center gap-4 px-1">
-          <span className="font-hud text-accent/40 flex-none uppercase">
-            System Access
+      {/* ─── Testimonials Slider ───────────────────────────── */}
+      <section className="relative z-10 flex flex-col gap-6">
+        <div className="flex items-center gap-4">
+          <span className="text-[10px] font-bold text-accent-pink tracking-[0.2em] font-mono uppercase whitespace-nowrap">
+            TESTIMONIALS
           </span>
-          <div className="h-px bg-accent/10 flex-1" />
+          <div className="h-px bg-white/5 flex-1" />
         </div>
-        
-        <div className="grid grid-cols-2 gap-3 h-[280px]">
-          <QuickAccessCard
-            title="Projects"
-            label="ARCHIVED WORKS"
-            icon={<Folder className="w-5 h-5" />}
-            onClick={() => navigate("/hub/projects")}
-            className="flex-1"
-          />
-          <QuickAccessCard
-            title="Skills"
-            label="SYSTEM STACK"
-            icon={<Zap className="w-5 h-5" />}
-            onClick={() => navigate("/hub/stack")}
-            className="flex-1"
-          />
-          <QuickAccessCard
-            title="Experience"
-            label="HISTORY"
-            icon={<History className="w-5 h-5" />}
-            onClick={() => navigate("/hub/experience")}
-            className="flex-1"
-          />
-          <QuickAccessCard
-            title="Connect"
-            label="VERIFIED"
-            icon={<Plus className="w-5 h-5" />}
-            onClick={() => navigate("/hub/certifications")}
-            className="flex-1"
-          />
-        </div>
-      </section>
-
-      {/* Testimonials (Horizontal Scroll) */}
-      <section className="relative flex flex-col gap-6 mb-12">
-        <div className="flex items-center gap-4 px-1">
-          <span className="font-hud text-accent/40 flex-none uppercase">
-            Commendations
-          </span>
-          <div className="h-px bg-accent/10 flex-1" />
-        </div>
-        
-        <TestimonialsMarquee 
-          direction="horizontal"
-          className="h-[220px]"
+        <TestimonialsSlider 
+          testimonials={testimonials} 
+          showArrows={false}
+          className="w-full"
         />
       </section>
 
       {/* Footer Indicator */}
-      <div className="flex flex-col items-center gap-2 pb-12 opacity-40">
-        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-        <span className="font-hud text-accent text-center uppercase">
+      <div className="relative z-10 flex flex-col items-center gap-2 mt-8 opacity-20">
+        <div className="w-1.5 h-1.5 rounded-full bg-accent-gold animate-pulse" />
+        <span className="font-mono text-[9px] tracking-[0.4em] text-center text-accent-gold uppercase">
           HUB / TERMINAL 01-MOB
         </span>
       </div>

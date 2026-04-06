@@ -6,23 +6,26 @@
   --font-body: "Syne", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   
-  /* Azure Cyber Palette */
-  --color-bg-base: #020617;
-  --color-bg-card: #0F172A;
-  --color-bg-card-hover: #1E293B;
-  --color-border: rgba(255, 255, 255, 0.04);
-  --color-border-hover: rgba(255, 255, 255, 0.1);
-  --color-text-primary: #F8FAFC;
-  --color-text-muted: #94A3B8;
-  --color-text-faint: #475569;
-  --color-accent: #38BDF8;
-  --color-accent-dim: rgba(56, 189, 248, 0.12);
+  /* Portfolio Hub Palette */
+  --color-bg-base: #050506;
+  --color-bg-card: #1E293B;
+  --color-bg-card-hover: #2D3748;
+  --color-border: rgba(255, 255, 255, 0.05);
+  --color-border-hover: rgba(212, 175, 55, 0.3);
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #F8F8F8;
+  --color-text-muted: #E5E7EB;
+  
+  /* Accents */
+  --color-accent-gold: #D4AF37;
+  --color-accent-gold-header: #C9A96E;
+  --color-accent-pink: #FF007A;
+  --color-accent-blue: #38BDF8;
 
   --duration-fast: 200ms;
   --duration-base: 400ms;
   --duration-slow: 700ms;
   
-
   --animate-pulse-azure: pulse-azure 4s ease-in-out infinite;
 
   @keyframes pulse-azure {
@@ -42,8 +45,8 @@
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #020617;
-    color: #F8FAFC;
+    background-color: #050506;
+    color: #FFFFFF;
     font-family: var(--font-body);
     overflow: hidden;
     height: 100dvh;
@@ -52,39 +55,41 @@
   :root {
     --easing-default: cubic-bezier(0.22, 1, 0.36, 1);
     --easing-entry: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --accent: #38BDF8;
-    --accent-rgb: 56, 189, 248;
+    --accent-gold: #D4AF37;
+    --accent-pink: #FF007A;
   }
 }
 
 /* ─── Utilities ──────────────────────────────────────────── */
 @layer utilities {
   .ethereal-glass {
-    background: rgba(255, 255, 255, 0.01);
+    background: rgba(21, 30, 50, 0.4);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(56, 189, 248, 0.1);
-    box-shadow: inset 0 0 40px rgba(56, 189, 248, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .ethereal-glass-strong {
-    background: rgba(2, 6, 23, 0.8);
+    background: rgba(5, 5, 6, 0.85);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.2);
   }
 
-  .text-bloom {
-    text-shadow: 0 0 20px rgba(56, 189, 248, 0.3), 0 0 40px rgba(56, 189, 248, 0.05);
+  .text-bloom-gold {
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.05);
   }
 
-  .nebula-glow {
-    background: radial-gradient(circle at center, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+  .nebula-glow-gold {
+    background: radial-gradient(circle at center, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
     filter: blur(50px);
-    animation: var(--animate-pulse-azure);
+    animation: pulse-gold 6s ease-in-out infinite;
   }
 
-
+  @keyframes pulse-gold {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
+  }
 
   .font-hud {
     font-family: var(--font-mono);
@@ -96,10 +101,4 @@
   /* Scrollbar Hide */
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
-  /* Theme color helpers for tailwind @theme */
-  .bg-theme-base { background-color: #020617; }
-  .text-theme-primary { color: #F8FAFC; }
-  .text-theme-accent { color: var(--accent); }
-  .bg-theme-accent { background-color: var(--accent); }
 }
