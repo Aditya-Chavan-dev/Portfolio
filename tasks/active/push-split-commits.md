@@ -1,76 +1,73 @@
-# Task: Push split commits to GitHub
-**Created:** 2026-04-03
-**Tier:** 2 — Feature/Changes (Refactoring & Implementation)
+# Task: Push Code to GitHub with 10 Splits
+**Created:** 2026-04-09
+**Tier:** 2
 **Status:** In Planning
 
 ---
 
 ## Context Summary Reference
-- Modified files: 9
-- Untracked files/directories: 4
-- Primary Theme: Premium Noir Aesthetic (Restoration)
-- Architecture: Simplified `main.tsx` and `App.tsx` (removed complex providers).
+**Tier:** 2
 
-**Changes found (by area):**
-1. **Core:** `src/main.tsx`, `src/App.tsx`, `src/common/lib/firebase.ts` simplified.
-2. **Styles:** `src/index.css`, `tailwind.config.js` added premium design tokens.
-3. **Landing:** `src/landing-page/*` updated with cinematic cinematic dialogue and anamorphic layout.
-4. **New Directory Structure:** `src/components/`, `src/layouts/`, `src/pages/` being initialized.
-5. **Utils/Hooks:** `src/common/hooks/useRecordVisit.ts` modified.
+**What already exists relevant to this task:**
+- `scripts/github-sync.ts` (untracked)
+- Git repository is initialized with existing history.
+- Many files in `tasks/active` are marked as deleted in `git status`.
+
+**Dependencies and affected areas:**
+- Entire repository.
+- Remote GitHub repository (needs to be checked).
+
+**Spec vs Reality gaps found:**
+- User asked for "10 splits" for a push, which requires custom commit logic.
+- Repository is in a "messy" state with many deletions and untracked files.
+
+**Hidden config files relevant to this task:**
+- `.gitignore`
+
+**Existing partial implementations found:**
+- None for the split logic.
 
 ---
 
 ## Scope Boundary
 What is explicitly IN scope for this task:
-- Staging and committing current changes in 5 logical splits.
-- Pushing to GitHub (origin main).
+- Staging all current changes (deletions and additions).
+- Splitting the staged changes into 10 logical or quantitative groups.
+- Committing each group separately.
+- Pushing all 10 commits to GitHub.
 
 What is explicitly OUT of scope (do not touch):
-- Modifying the existing code logic (unless necessary to fix a commitment error).
-- Adding new features.
+- Modifying project logic (except for the commit structure).
+- Deleting essential files.
 
 ---
 
 ## Plan
 
-### [Phase 1: Commit Analysis]
-- [ ] **[T1.1]** Define the 5 commit groups based on logical separation — *Definition of done: 5 distinct file lists with commit messages*
-  - Estimated effort: S
-  - Depends on: none
-  - External blocker: none
+### [T1] Preparation
+- [ ] **[T1.1]** Verify remote repository connection — *Definition of done: Remote "origin" is confirmed.*
+- [ ] **[T1.2]** Stage all changes (additions and deletions) — *Definition of done: All changes are staged.*
+- [ ] **[T1.3]** Get the list of all staged changes — *Definition of done: List of files and their statuses is retrieved.*
 
-### [Phase 2: Partial Commits]
-- [ ] **[T2.1]** Stage and commit Group 1: Core Infrastructure Cleanup — *Definition of done: Commit 1 created*
-  - Estimated effort: S
-  - Depends on: T1.1
-- [ ] **[T2.2]** Stage and commit Group 2: Global Design System (CSS/Tailwind) — *Definition of done: Commit 2 created*
-  - Estimated effort: S
-  - Depends on: T2.1
-- [ ] **[T2.3]** Stage and commit Group 3: Premium Landing Page Rebrand — *Definition of done: Commit 3 created*
-  - Estimated effort: S
-  - Depends on: T2.2
-- [ ] **[T2.4]** Stage and commit Group 4: Component and Layout Skeleton — *Definition of done: Commit 4 created*
-  - Estimated effort: S
-  - Depends on: T2.3
-- [ ] **[T2.5]** Stage and commit Group 5: Core Pages and Behavioral Hooks — *Definition of done: Commit 5 created*
-  - Estimated effort: S
-  - Depends on: T2.4
+### [T2] Commit Splitting
+- [ ] **[T2.1]** Calculate the split size (total files / 10) — *Definition of done: Split size is determined.*
+- [ ] **[T2.2]** Unstage all changes to begin atomic commits — *Definition of done: Index is cleared.*
+- [ ] **[T2.3]** Commit files in 10 batches — *Definition of done: 10 commits are created in local history.*
 
-### [Phase 3: GitHub Push]
-- [ ] **[T3.1]** Push all 5 commits to GitHub 'origin main' — *Definition of done: git push successful*
-  - Estimated effort: S
-  - Depends on: T2.5
+### [T3] Execution & Verification
+- [ ] **[T3.1]** Push the 10 commits to GitHub — *Definition of done: Code is pushed to remote.*
+- [ ] **[T3.2]** Verify the push in GitHub (if possible) or via git log — *Definition of done: 10 new commits appear in log.*
 
 ---
 
 ## Rollback Plan
-If execution fails or is abandoned midway:
-- Use `git reset --soft <original_hash>` to return to current working directory state.
+If execution fails:
+- Use `git reset --soft HEAD~{n}` to undo the local commits.
 
 ---
 
 ## Risk Flags (for user review)
-- [T3.1] — Pushing to main. High-risk if build fails, but requested.
+- [T2.3] — Creating 10 commits might make the history cluttered if not named logically. I will use generic batch names unless instructed otherwise.
 
 ---
 
