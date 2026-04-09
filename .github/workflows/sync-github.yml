@@ -1,0 +1,33 @@
+name: Sync GitHub Stats to Firestore
+
+on:
+  schedule:
+    # Runs every 6 hours at :00
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  sync:
+    name: Fetch & Write GitHub Data
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run GitHub sync script
+        env:
+          # Your GitHub PAT — stores in GitHub Repo Secrets (never in code)
+          SYNC_GITHUB_TOKEN: ${{ secrets.SYNC_GITHUB_TOKEN }}
+          # Your Firebase Service Account JSON — stores in GitHub Repo Secrets
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: npx tsx scripts/github-sync.ts
