@@ -90,20 +90,6 @@ export function subscribeToApprovedTestimonials(
   )
 }
 
-// ─── GitHub cache ──────────────────────────────────────────────────────────
-
-export async function getGitHubCache(): Promise<GitHubCache | null> {
-  const snap = await tracedCall('firestore/cache/github', () => 
-    withTimeout(getDoc(doc(db, 'cache', 'github')))
-  )
-  return snap.exists() ? (snap.data() as GitHubCache) : null
-}
-
-export async function setGitHubCache(data: GitHubCache): Promise<void> {
-  await tracedWrite('firestore/cache/github', () => 
-    setDoc(doc(db, 'cache', 'github'), data)
-  )
-}
 
 
 

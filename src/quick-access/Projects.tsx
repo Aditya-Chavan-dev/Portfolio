@@ -17,7 +17,7 @@ export default function Projects() {
           Featured Projects
         </h1>
         <p className="text-theme-secondary mb-10 font-medium">
-          A curated selection of what I've built, synchronized with GitHub.
+          A curated selection of what I've built.
         </p>
 
         {loading && <ProjectsSkeleton />}

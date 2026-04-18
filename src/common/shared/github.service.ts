@@ -8,7 +8,6 @@
  * This ensures the GitHub Personal Access Token is NEVER exposed in the browser.
  */
 
-import { getGitHubCache } from '@/common/shared/firestore.service'
 import type { GitHubCache } from '@/common/types/github.types'
 
 // ─── Public API ───────────────────────────────────────────────────────────────
@@ -19,14 +18,7 @@ import type { GitHubCache } from '@/common/types/github.types'
  * Falls back to an empty state if the cache hasn't been seeded yet.
  */
 export async function getGitHubData(): Promise<GitHubCache> {
-  const cached = await getGitHubCache()
-
-  if (cached) {
-    return cached
-  }
-
-  // Cache miss — return safe empty state (first-run before Action has seeded data)
-  console.warn('[github] Cache empty. Run the GitHub sync Action to seed data.')
+  // Synchronized GitHub data has been disabled/removed.
   return {
     repos:    [],
     activity: null,

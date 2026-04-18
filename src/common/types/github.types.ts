@@ -14,21 +14,6 @@ export interface GitHubRepo {
   private:          boolean
 }
 
-export interface GitHubContributionDay {
-  date:              string
-  contributionCount: number
-}
-
-export interface GitHubActivity {
-  totalContributions: number
-  weeks: { contributionDays: GitHubContributionDay[] }[]
-}
-
-export interface GitHubCache {
-  repos:    GitHubRepo[]
-  activity: GitHubActivity | null
-  cachedAt: number  // Unix timestamp ms — used for TTL check
-}
 
 
 
