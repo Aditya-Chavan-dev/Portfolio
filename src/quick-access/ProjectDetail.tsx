@@ -4,14 +4,14 @@ import { motion } from 'framer-motion'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { db } from '@/common/lib/firebase'
 import { incrementLocalCounter } from '@/common/lib/metrics'
-import { useGithubProjects } from '@/common/hooks/useGithubProjects'
+import { useFeaturedProjects } from '@/common/hooks/useFeaturedProjects'
 import { projectMetadata } from '@/common/lib/projectMetadata'
 import { SectionNav } from '@/common/shared/SectionNav'
 import EditableText from '@/admin/EditableText'
 
 export default function ProjectDetail() {
   const { projectId } = useParams<{ projectId: string }>()
-  const { projects, loading, error } = useGithubProjects()
+  const { projects, loading, error } = useFeaturedProjects()
   const [firestoreOverrides, setFirestoreOverrides] = useState<Record<string, any>>({})
 
   useEffect(() => {

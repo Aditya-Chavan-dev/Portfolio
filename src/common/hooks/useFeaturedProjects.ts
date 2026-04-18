@@ -1,85 +1,71 @@
 import { useEffect, useState } from 'react'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import { db } from '../lib/firebase'
-import {
-  fetchAllRepos,
-  fetchCommitCount,
-  fetchLanguages
-} from '../lib/github'
 import type { EnrichedProject } from '../types/project'
+import { projectMetadata } from '../lib/projectMetadata'
 
 export function useFeaturedProjects() {
   const [projects, setProjects] = useState<EnrichedProject[]>([])
   const [loading, setLoading] = useState(true)
-  const [error] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
 
-    const loadFast = async () => {
+    const loadProjects = async () => {
       try {
         setLoading(true)
-        // 1. Kick off GitHub baseline (no firestore dependency yet) Node absolute
-        const allRepos = await fetchAllRepos()
+        
+        // 1. Fetch configurations from Firestore
+        const q = query(collection(db, 'projects'), orderBy('order', 'asc'))
+        const snapshot = await getDocs(q)
+        
         if (!active) return
 
-        // Baseline data Node absolute
-        const baseline = allRepos.map((repo, i) => ({
-          ...repo,
-          commitCount: 0,
-          languages: {},
-          meta: null,
-          featured: true,
-          order: i,
-        })) as EnrichedProject[]
-        
-        setProjects(baseline)
-        setLoading(false)
-
-        // 2. Enriched firestore-driven data in background Node absolute
-        const snapshot = await getDocs(collection(db, 'projects'))
         const featuredConfigs = snapshot.docs
-          .map(d => d.data())
-          .filter((d: any) => d.featured)
-          .sort((a: any, b: any) => a.order - b.order)
+          .map(d => ({ id: d.id, ...d.data() } as any))
+          .filter(d => d.featured)
 
-        if (featuredConfigs.length > 0 && active) {
-          const matched = featuredConfigs
-            .map((f: any) => allRepos.find(r => r.name === f.repoName))
-            .filter(Boolean) as any[]
+        // 2. Map to EnrichedProject format
+        const enriched: EnrichedProject[] = featuredConfigs.map((config: any) => {
+          const meta = projectMetadata[config.repoName] || {}
+          
+          const baseline: EnrichedProject = {
+            id: Number(config.id) || 0,
+            name: config.repoName,
+            description: config.description || meta.shortDescription || '',
+            topics: [],
+            language: null,
+            githubUrl: config.githubUrl || `https://github.com/Aditya-Chavan-dev/${config.repoName}`,
+            liveUrl: null,
+            stars: 0,
+            forksCount: 0,
+            openIssuesCount: 0,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            isFork: false,
+            commitCount: 0,
+            languages: {},
+            featured: true,
+            order: config.order || 0,
+            meta: meta
+          }
+          
+          return baseline
+        })
 
-          const enriched: EnrichedProject[] = await Promise.all(
-            matched.map(async (repo, i) => {
-              const [commitCount, languages] = await Promise.all([
-                fetchCommitCount(repo.name),
-                fetchLanguages(repo.name),
-                // Stopped: fetchProjectMeta(repo.name) because of 404 spam Node absolute
-              ])
-              return {
-                ...repo,
-                commitCount,
-                languages,
-                meta: null, // Meta will be enriched from local projectMetadata instead Node absolute
-                featured: true,
-                order: featuredConfigs[i].order,
-              }
-            })
-          )
-          setProjects(enriched)
-        }
-      } catch (err) {
-        console.warn('Projects enrichment partially blocked or failed (likely client restrictions):', err)
+        setProjects(enriched)
+      } catch (err: any) {
+        console.error('[useFeaturedProjects] Failed to load projects:', err)
+        setError(err.message)
       } finally {
         if (active) setLoading(false)
       }
     }
 
-    loadFast()
+    loadProjects()
     return () => { active = false }
   }, [])
 
   return { projects, loading, error }
 }
-
-
-

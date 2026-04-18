@@ -16,7 +16,7 @@ import type { HubContent }             from '@/hub/hub.types'
 import type { ProjectsContent }        from '@/quick-access/projects.types'
 import type { TestimonialPageContent } from '@/testimonial/testimonial.types'
 import type { PublicTestimonial }      from '@/common/types/testimonial.types'
-import type { GitHubCache }            from '@/common/types/github.types'
+
 
 // ─── Generic helper with timeout ───────────────────────────────────────────
 

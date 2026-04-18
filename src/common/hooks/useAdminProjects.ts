@@ -4,8 +4,7 @@ import {
   setDoc, deleteDoc, serverTimestamp
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
-import { tracedCall, tracedWrite } from '../lib/metrics'
-import { fetchAllRepos } from '../lib/github'
+import { tracedWrite } from '../lib/metrics'
 import type { Project } from '../types/project'
 
 interface AdminProject {
@@ -19,21 +18,30 @@ export function useAdminProjects() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // onSnapshot is a stream, so we track the initial/subsequent repo fetches
-    const unsub = onSnapshot(collection(db, 'projects'), async snapshot => {
+    const unsub = onSnapshot(collection(db, 'projects'), snapshot => {
       try {
-        const firestoreMap = new Map(
-          snapshot.docs.map(d => [d.id, d.data()])
-        )
-        const allRepos = await tracedCall('github/fetchAllRepos/admin', () => fetchAllRepos())
-        const merged: AdminProject[] = allRepos.map(repo => {
-          const fs = firestoreMap.get(repo.name) as any
+        const merged: AdminProject[] = snapshot.docs.map(d => {
+          const data = d.data() as any
+          const repo: Project = {
+            id: 0,
+            name: data.repoName || d.id,
+            description: data.description || '',
+            topics: [],
+            language: null,
+            githubUrl: data.githubUrl || `https://github.com/Aditya-Chavan-dev/${data.repoName}`,
+            liveUrl: null,
+            stars: 0,
+            createdAt: '',
+            updatedAt: '',
+            isFork: false
+          }
           return {
             repo,
-            featured: fs?.featured ?? false,
-            order: fs?.order ?? 999,
+            featured: data.featured ?? false,
+            order: data.order ?? 999,
           }
         })
+
         merged.sort((a, b) => {
           if (a.featured && !b.featured) return -1
           if (!a.featured && b.featured) return 1
@@ -77,5 +85,3 @@ export function useAdminProjects() {
 
   return { items, loading, toggleFeatured, updateOrder }
 }
-
-

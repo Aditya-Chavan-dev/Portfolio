@@ -8,7 +8,7 @@
  * This ensures the GitHub Personal Access Token is NEVER exposed in the browser.
  */
 
-import type { GitHubCache } from '@/common/types/github.types'
+
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -17,7 +17,7 @@ import type { GitHubCache } from '@/common/types/github.types'
  * The cache is refreshed every 6 hours by the GitHub Actions workflow.
  * Falls back to an empty state if the cache hasn't been seeded yet.
  */
-export async function getGitHubData(): Promise<GitHubCache> {
+export async function getGitHubData(): Promise<any> {
   // Synchronized GitHub data has been disabled/removed.
   return {
     repos:    [],
