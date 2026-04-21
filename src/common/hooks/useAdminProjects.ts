@@ -1,53 +1,26 @@
 import { useEffect, useState } from 'react'
 import {
   collection, onSnapshot, doc,
-  setDoc, deleteDoc, serverTimestamp
+  setDoc, deleteDoc, updateDoc,
+  serverTimestamp, query, orderBy
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { tracedWrite } from '../lib/metrics'
-import type { Project } from '../types/project'
-
-interface AdminProject {
-  repo: Project
-  featured: boolean
-  order: number
-}
+import { ProjectEntry } from '../types/content.types'
 
 export function useAdminProjects() {
-  const [items, setItems] = useState<AdminProject[]>([])
+  const [items, setItems] = useState<ProjectEntry[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'projects'), snapshot => {
+    const q = query(collection(db, 'projects'), orderBy('order', 'asc'))
+    const unsub = onSnapshot(q, snapshot => {
       try {
-        const merged: AdminProject[] = snapshot.docs.map(d => {
-          const data = d.data() as any
-          const repo: Project = {
-            id: 0,
-            name: data.repoName || d.id,
-            description: data.description || '',
-            topics: [],
-            language: null,
-            githubUrl: data.githubUrl || `https://github.com/Aditya-Chavan-dev/${data.repoName}`,
-            liveUrl: null,
-            stars: 0,
-            createdAt: '',
-            updatedAt: '',
-            isFork: false
-          }
-          return {
-            repo,
-            featured: data.featured ?? false,
-            order: data.order ?? 999,
-          }
-        })
-
-        merged.sort((a, b) => {
-          if (a.featured && !b.featured) return -1
-          if (!a.featured && b.featured) return 1
-          return a.order - b.order
-        })
-        setItems(merged)
+        const projects = snapshot.docs.map(d => ({
+          id: d.id,
+          ...d.data()
+        } as ProjectEntry))
+        setItems(projects)
       } catch (error) {
         console.error("Error in useAdminProjects:", error)
       } finally {
@@ -57,31 +30,43 @@ export function useAdminProjects() {
     return () => unsub()
   }, [])
 
-  async function toggleFeatured(repoName: string, current: boolean, order: number) {
-    const ref = doc(db, 'projects', repoName)
-    if (current) {
-      await tracedWrite(`firestore/projects/delete/${repoName}`, () => deleteDoc(ref))
-    } else {
-      await tracedWrite(`firestore/projects/create/${repoName}`, () => 
-        setDoc(ref, {
-          repoName,
-          featured: true,
-          order,
-          addedAt: serverTimestamp(),
-        })
-      )
-    }
-  }
-
-  async function updateOrder(repoName: string, order: number) {
-    await tracedWrite(`firestore/projects/updateOrder/${repoName}`, () => 
-      setDoc(
-        doc(db, 'projects', repoName),
-        { order },
-        { merge: true }
-      )
+  async function addProject(project: Partial<ProjectEntry>) {
+    const id = project.title?.toLowerCase().replace(/\s+/g, '-') || Date.now().toString()
+    const ref = doc(db, 'projects', id)
+    await tracedWrite(`firestore/projects/create/${id}`, () => 
+      setDoc(ref, {
+        ...project,
+        id,
+        featured: project.featured ?? false,
+        order: project.order ?? items.length,
+        createdAt: new Date().toISOString()
+      })
     )
   }
 
-  return { items, loading, toggleFeatured, updateOrder }
+  async function updateProject(id: string, updates: Partial<ProjectEntry>) {
+    const ref = doc(db, 'projects', id)
+    await tracedWrite(`firestore/projects/update/${id}`, () => 
+      updateDoc(ref, updates as any)
+    )
+  }
+
+  async function deleteProject(id: string) {
+    const ref = doc(db, 'projects', id)
+    await tracedWrite(`firestore/projects/delete/${id}`, () => 
+      deleteDoc(ref)
+    )
+  }
+
+  async function updateOrder(items: ProjectEntry[]) {
+    // Local update first for snappy UI
+    setItems(items)
+    for (let i = 0; i < items.length; i++) {
+       if (items[i].id) {
+         await updateDoc(doc(db, 'projects', items[i].id!), { order: i })
+       }
+    }
+  }
+
+  return { items, loading, addProject, updateProject, deleteProject, updateOrder }
 }
