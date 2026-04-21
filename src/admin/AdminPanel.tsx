@@ -13,12 +13,15 @@ import BudgetPanel from './BudgetPanel'
 import QualityPanel from './QualityPanel'
 import SettingsPanel from './SettingsPanel'
 import AdminProjectsTab from './AdminProjectsTab'
+import AdminExperienceTab from './AdminExperienceTab'
+import AdminCertificationsTab from './AdminCertificationsTab'
+import AdminStackTab from './AdminStackTab'
 import { SESSION_KEYS } from '@/common/shared/constants'
 import { useInactivityLogout } from './useInactivityLogout'
 import { Activity, Shield, Users, HardDrive, History, Wallet, Edit3, LayoutDashboard, LogOut, Sparkles, Settings, FolderGit2 } from 'lucide-react'
 
 const CATEGORIES = [
-  { id: 'system', label: 'System', items: ['overview', 'settings', 'projects'] },
+  { id: 'system', label: 'System', items: ['overview', 'settings', 'projects', 'experience', 'certs', 'stack'] },
   { id: 'analytics', label: 'Analytics', items: ['hive', 'pulse', 'engine'] },
   { id: 'operations', label: 'Operations', items: ['shield', 'timemachine', 'budget', 'editor'] },
 ]
@@ -27,6 +30,9 @@ const TABS = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'settings', label: 'Settings', icon: Settings },
   { id: 'projects', label: 'Projects', icon: FolderGit2 },
+  { id: 'experience', label: 'Experience', icon: Briefcase },
+  { id: 'certs', label: 'Certs', icon: Award },
+  { id: 'stack', label: 'Stack', icon: Cpu },
   { id: 'hive', label: 'Active Users', icon: Users },
   { id: 'pulse', label: 'Performance', icon: Activity },
   { id: 'engine', label: 'System Health', icon: HardDrive },
@@ -245,6 +251,9 @@ export default function AdminPanel() {
                 
                 {activeTab === 'settings' && <SettingsPanel />}
                 {activeTab === 'projects' && <AdminProjectsTab />}
+                {activeTab === 'experience' && <AdminExperienceTab />}
+                {activeTab === 'certs' && <AdminCertificationsTab />}
+                {activeTab === 'stack' && <AdminStackTab />}
                 {activeTab === 'pulse' && <PulsePanel />}
                 {activeTab === 'shield' && <ShieldPanel />}
                 {activeTab === 'hive' && <HivePanel />}
@@ -253,7 +262,7 @@ export default function AdminPanel() {
                 {activeTab === 'budget' && <BudgetPanel />}
                 {activeTab === 'editor' && <QualityPanel />}
                 
-                {!['overview', 'settings', 'projects', 'pulse', 'shield', 'hive', 'engine', 'timemachine', 'budget', 'editor'].includes(activeTab) && (
+                {!['overview', 'settings', 'projects', 'experience', 'certs', 'stack', 'pulse', 'shield', 'hive', 'engine', 'timemachine', 'budget', 'editor'].includes(activeTab) && (
                   <div className="flex flex-col items-center justify-center py-32 border-2 border-dashed border-black/[0.04] dark:border-white/[0.04] rounded-[2.5rem] opacity-50">
                     <p className="text-theme-muted font-serif italic text-lg">Module "{tabLabel(activeTab)}" Offline</p>
                     <p className="text-[10px] uppercase tracking-[0.3em] text-theme-muted/50 mt-4 font-mono">Initializing System Components...</p>
