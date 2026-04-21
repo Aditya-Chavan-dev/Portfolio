@@ -16,6 +16,7 @@ import { ProtectedRoute } from '@/common/shared/ProtectedRoute'
 // Lazy loaded Admin modules
 const AdminLogin = lazy(() => import('@/admin/AdminLogin'))
 const AdminPanel = lazy(() => import('@/admin/AdminPanel'))
+const ImmersiveJourney = lazy(() => import('@/immersive-journey/ImmersiveJourney'))
 
 // Admin Loading fallback
 const AdminFallback = () => (
@@ -38,6 +39,7 @@ export default function App() {
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<LandingPage />} />
               <Route path="/hub" element={<Hub />} />
+              <Route path="/journey" element={<ImmersiveJourney />} />
               
               {/* Detail Views wrapped in DetailLayout */}
               <Route path="/hub/projects" element={
