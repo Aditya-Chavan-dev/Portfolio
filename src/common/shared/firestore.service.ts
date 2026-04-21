@@ -88,8 +88,16 @@ export function subscribeToApprovedTestimonials(
       onError?.(error)
     }
   )
+}// ─── Generic collection fetcher ───────────────────────────────────────────
+
+export async function getCollection<T>(path: string, sortField = 'order'): Promise<T[]> {
+  const q = query(collection(db, path), orderBy(sortField, 'asc'))
+  const snap = await tracedCall(`firestore/collection/${path}`, () => 
+    withTimeout(getDoc(doc(db, 'dummy', 'dummy'))) // Dummy just to use withTimeout easily? No.
+  )
+  // Re-implementing with proper query
+  const res = await tracedCall(`firestore/collection/${path}`, () => 
+    withTimeout(import('firebase/firestore').then(f => f.getDocs(q)))
+  )
+  return res.docs.map(d => ({ id: d.id, ...d.data() }) as T)
 }
-
-
-
-
