@@ -94,7 +94,7 @@ export const HubMobile: React.FC<HubMobileProps> = ({ content }) => {
 
         <motion.button
           whileTap={{ scale: 0.95 }}
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/journey")}
           className="mt-4 flex items-center justify-center gap-3 w-full h-14 bg-accent-gold rounded-full shadow-lg shadow-accent-gold/10"
         >
           <Play size={18} fill="black" stroke="black" />

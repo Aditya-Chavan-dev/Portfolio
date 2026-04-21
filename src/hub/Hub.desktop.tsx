@@ -101,7 +101,7 @@ export const HubDesktop: React.FC<HubDesktopProps> = ({ content }) => {
                 boxShadow: "0 0 60px rgba(212, 175, 55, 0.8)" 
               }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/journey")}
               className="relative flex items-center justify-center gap-3 w-[280px] h-16 bg-accent-gold rounded-full shadow-[0_0_40px_rgba(212,175,55,0.4)] transition-all group overflow-hidden"
             >
               {/* Shimmer Effect */}
