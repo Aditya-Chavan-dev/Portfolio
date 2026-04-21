@@ -1,14 +1,17 @@
 import { motion } from 'framer-motion';
-
-const certs = [
-  { title: "AWS Solutions Architect", issuer: "Amazon Web Services", date: "2023", icon: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Amazon_Web_Services_Logo.svg" },
-  { title: "Meta Senior UI Engineer", issuer: "Meta / Coursera", date: "2022", icon: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
-  { title: "Professional Google Cloud Dev", issuer: "Google Cloud", date: "2022", icon: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-  { title: "React Performance Expert", issuer: "Frontend Masters", date: "2021", icon: "https://frontendmasters.com/favicon-32x32.png" },
-  { title: "UX Design Specialization", issuer: "Google", date: "2020", icon: "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" }
-];
+import { useCertifications } from '@/common/hooks/useCertifications';
 
 export function Certifications() {
+  const { certifications, loading } = useCertifications();
+
+  if (loading && certifications.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 opacity-40">
+        <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mb-4" />
+        <span className="font-hud text-[10px] tracking-widest uppercase">Verifying Credentials…</span>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-2">

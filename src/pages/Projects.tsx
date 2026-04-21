@@ -1,27 +1,18 @@
 import { motion } from 'framer-motion';
-
-const projects = [
-  {
-    title: "AI Spatial Dashboard",
-    desc: "A futuristic command center for managing multi-modal AI agents with zero-paint budget glassmorphism.",
-    tags: ["React 19", "Framer Motion", "Tailwind 4"],
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop"
-  },
-  {
-    title: "Cyberpunk Terminal",
-    desc: "Interactive CLI-based portfolio experience for low-latency developer networking.",
-    tags: ["TypeScript", "Vite", "Canvas"],
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop"
-  },
-  {
-    title: "Web3 Identity Hub",
-    desc: "Decentralized identity management with biometric fallback and zero-knowledge proofs.",
-    tags: ["Solidity", "Next.js", "GraphQL"],
-    image: "https://images.unsplash.com/photo-1644088379091-d574269d422f?q=80&w=2593&auto=format&fit=crop"
-  }
-];
+import { Github, ExternalLink } from 'lucide-react';
+import { useProjects } from '@/common/hooks/useProjects';
 
 export function Projects() {
+  const { featuredProjects, loading } = useProjects();
+
+  if (loading && featuredProjects.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 opacity-40">
+        <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mb-4" />
+        <span className="font-hud text-[10px] tracking-widest uppercase">Initializing Portfolio…</span>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-2">
@@ -30,9 +21,9 @@ export function Projects() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {projects.map((p, i) => (
+        {featuredProjects.map((p, i) => (
           <motion.article
-            key={i}
+            key={p.id || i}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -57,7 +48,7 @@ export function Projects() {
                 {p.title}
               </h3>
               <p className="text-sm font-body text-text-muted leading-relaxed">
-                {p.desc}
+                {p.description}
               </p>
               <div className="flex flex-wrap gap-2 mt-2">
                 {p.tags.map(tag => (
@@ -70,6 +61,34 @@ export function Projects() {
           </motion.article>
         ))}
       </div>
+      {/* Archive Section */}
+      {archivedProjects.length > 0 && (
+        <div className="flex flex-col gap-8 mt-12 pt-12 border-t border-border-default/50">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-xl font-display font-bold text-text-primary tracking-wide uppercase opacity-60">System Archive</h3>
+            <p className="text-sm text-text-muted font-body italic">Legacy deployments and research prototypes.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {archivedProjects.map((p, i) => (
+              <motion.div
+                key={p.id || i}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="p-4 bg-bg-surface/50 border border-border-default rounded-lg flex flex-col gap-2 group hover:border-accent/20 transition-all shadow-sm"
+              >
+                <h4 className="text-md font-bold text-text-primary group-hover:text-accent transition-colors">{p.title}</h4>
+                <p className="text-[11px] text-text-muted leading-relaxed line-clamp-2">{p.description}</p>
+                <div className="flex gap-2 mt-2">
+                  {p.repoUrl && <a href={p.repoUrl} target="_blank" className="text-text-muted hover:text-accent transition-colors"><Github size={12} /></a>}
+                  {p.liveUrl && <a href={p.liveUrl} target="_blank" className="text-text-muted hover:text-accent transition-colors"><ExternalLink size={12} /></a>}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
