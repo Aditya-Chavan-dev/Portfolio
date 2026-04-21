@@ -1,13 +1,15 @@
 {
   "name": "Aditya Chavan",
-  "role": "Developer",
+  "role": "Digital Architect",
   "dialogue": [
-    "Its not how i write the code",
-    "But how i think that defines me"
+    "Architecture is the story.",
+    "Code is just the ink.",
+    "I build systems that feel like magic."
   ],
   "highlightIndex": [
     0,
-    1
+    1,
+    2
   ],
   "ctaDesktop": "Press any key to continue",
   "ctaMobile": "Tap to continue",

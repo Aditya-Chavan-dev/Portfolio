@@ -3,9 +3,11 @@ import { useEffect, useRef } from 'react'
 interface AmbientDustProps {
   /** Total particle count for the drift layer */
   readonly count?: number
+  readonly mouseX?: number
+  readonly mouseY?: number
 }
 
-export function AmbientDust({ count = 60 }: AmbientDustProps) {
+export function AmbientDust({ count = 60, mouseX = 0, mouseY = 0 }: AmbientDustProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -24,6 +26,7 @@ export function AmbientDust({ count = 60 }: AmbientDustProps) {
       size: number
       alpha: number
       targetAlpha: number
+      depth: number // Added for parallax variance
     }> = []
 
     const resize = () => {
@@ -39,7 +42,7 @@ export function AmbientDust({ count = 60 }: AmbientDustProps) {
     window.addEventListener('resize', resize)
     resize()
 
-    // Init Particles standard frame counts
+    // Init Particles
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * window.innerWidth,
@@ -48,7 +51,8 @@ export function AmbientDust({ count = 60 }: AmbientDustProps) {
         vy: (Math.random() - 0.5) * 0.12,
         size: Math.random() * 1.5 + 0.4,
         alpha: Math.random() * 0.3,
-        targetAlpha: Math.random() * 0.4
+        targetAlpha: Math.random() * 0.4,
+        depth: Math.random() * 30 + 10 // Variance in parallax depth
       })
     }
 
@@ -59,23 +63,28 @@ export function AmbientDust({ count = 60 }: AmbientDustProps) {
       ctx.clearRect(0, 0, width, height)
 
       for (const p of particles) {
+        // Apply base velocity
         p.x += p.vx
         p.y += p.vy
 
-        // Wrap around viewport edges
-        if (p.x < 0) p.x = width
-        if (p.x > width) p.x = 0
-        if (p.y < 0) p.y = height
-        if (p.y > height) p.y = 0
+        // Wrap around
+        if (p.x < -50) p.x = width + 50
+        if (p.x > width + 50) p.x = -50
+        if (p.y < -50) p.y = height + 50
+        if (p.y > height + 50) p.y = -50
 
-        // Soft shimmer alpha interpolation
+        // Subtle Shimmer
         p.alpha += (p.targetAlpha - p.alpha) * 0.005
         if (Math.abs(p.alpha - p.targetAlpha) < 0.01) {
           p.targetAlpha = Math.random() * 0.2
         }
 
+        // Apply Mouse Parallax
+        const offsetX = mouseX * p.depth
+        const offsetY = mouseY * p.depth
+
         ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+        ctx.arc(p.x + offsetX, p.y + offsetY, p.size, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, p.alpha * 0.5)})`
         ctx.fill()
       }
@@ -89,12 +98,12 @@ export function AmbientDust({ count = 60 }: AmbientDustProps) {
       window.removeEventListener('resize', resize)
       cancelAnimationFrame(animationFrameId)
     }
-  }, [count])
+  }, [count, mouseX, mouseY])
 
   return (
     <canvas 
       ref={canvasRef} 
-      className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none" 
+      className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none" 
       style={{ mixBlendMode: 'screen' }}
     />
   )
