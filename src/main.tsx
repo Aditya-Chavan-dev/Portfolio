@@ -1,8 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from '@/App'
-import { BrowserRouter } from 'react-router-dom'
+import { ErrorBoundary } from '@/common/shared/ErrorBoundary'
 
 // Theme initialization
 const initTheme = () => {
@@ -20,7 +21,9 @@ if (!rootElement) throw new Error('Root element not found')
 createRoot(rootElement).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </BrowserRouter>
   </StrictMode>
 )

@@ -5,6 +5,8 @@ import { LandingPage } from '@/pages/LandingPage'
 import Hub from '@/hub/Hub'
 import { Projects } from '@/pages/Projects'
 import { Experience } from '@/pages/Experience'
+import Testimonial from './testimonial/Testimonial'
+import TestimonialGallery from './pages/TestimonialGallery'
 import { TechStack } from '@/pages/TechStack'
 import { Certifications } from '@/pages/Certifications'
 import { About } from '@/pages/About'
@@ -67,6 +69,9 @@ export default function App() {
                   <About />
                 </DetailLayout>
               } />
+              
+              <Route path="/testimonial" element={<Testimonial />} />
+              <Route path="/hub/testimonials" element={<TestimonialGallery />} />
               
               <Route path="/coming-soon" element={<ComingSoon />} />
 
