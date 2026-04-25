@@ -8,6 +8,7 @@ export interface Testimonial {
   /** @internal PII — never expose in public APIs or client-rendered UI */
   email:        string
   status:       TestimonialStatus
+  photo?:       string | null // Base64 compressed image
   submittedAt:  number        // Unix timestamp ms
   approvedAt?:  number        // Set when admin approves
 }
