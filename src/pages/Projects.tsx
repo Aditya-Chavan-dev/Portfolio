@@ -3,7 +3,7 @@ import { Github, ExternalLink } from 'lucide-react';
 import { useProjects } from '@/common/hooks/useProjects';
 
 export function Projects() {
-  const { featuredProjects, loading } = useProjects();
+  const { featuredProjects, archivedProjects, loading } = useProjects();
 
   if (loading && featuredProjects.length === 0) {
     return (

@@ -59,7 +59,9 @@ export function TechStack() {
               ))}
             </div>
           </motion.section>
-        ))}
+          );
+        })}
+
       </div>
     </div>
   );
