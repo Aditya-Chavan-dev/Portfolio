@@ -2,29 +2,30 @@ export const projectMetadata: Record<string, any> = {
   'Portfolio': {
     startDate: 'Jan 2024',
     endDate: 'Mar 2024',
-    features: [
-      'Cinematic Ambient Particle Effects (Canvas 2D)',
-      'Global dark/light theme persistence and tokens presets',
-      'Dynamic components with Framer motion transitions limits'
+    flagshipFeatures: [
+      { title: 'Cinematic Particle Effects', description: 'Canvas 2D ambient dust system with real-time physics and 60fps performance' },
+      { title: 'Theme Persistence', description: 'Dark/light mode with design token presets persisted across sessions' },
+      { title: 'Dynamic Page Transitions', description: 'Framer Motion route-level animations with spatial awareness' },
     ],
-    learnings: [
-      'Optimising frame rendering loops to deliver 60fps buffers',
-      'Absolute Layout sizing across fluid Viewport breakpoints'
+    learningsIssues: [
+      { title: 'Frame Loop Optimization', description: 'Tuning requestAnimationFrame render loops to maintain 60fps across device classes' },
+      { title: 'Fluid Viewport Sizing', description: 'Absolute layout sizing calibrated across all breakpoints without layout shift' },
     ]
   },
   'ATLAS': {
     startDate: 'Oct 2023',
     endDate: 'Dec 2023',
-    features: [
-      'Architecture Integrity Audit engine streams node locks',
-      'Dockerized build Sandboxing coordinates securely',
-      'Graph Differ visualization with Tree structures node limits'
+    flagshipFeatures: [
+      { title: 'Architecture Integrity Audit Engine', description: 'Stream-based node lock system for detecting dependency conflicts' },
+      { title: 'Dockerized Build Sandboxing', description: 'Isolated container builds coordinated securely via CI pipeline' },
+      { title: 'Graph Differ Visualization', description: 'Tree structure diff engine with cyclic node rendering' },
     ],
-    learnings: [
-      'Transactional Isolation levels handling lock concurrency limits',
-      'Grid layout algorithms for rendering cyclic Nodes correctly'
+    learningsIssues: [
+      { title: 'Transactional Isolation', description: 'Handling lock concurrency and isolation levels under high-frequency writes' },
+      { title: 'Cyclic Graph Rendering', description: 'Grid layout algorithms adapted to correctly display circular dependency graphs' },
     ]
   }
 }
+
 
 

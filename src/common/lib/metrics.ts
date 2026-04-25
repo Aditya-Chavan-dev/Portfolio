@@ -12,12 +12,5 @@ export {
 
 export type MetricType = 'performance' | 'security' | 'traffic' | 'engine' | 'audit' | 'reads' | 'writes';
 
-// Optional: Metadata wrapper for tracing if future-proofing is needed
-export interface TraceOptions {
-  label: string;
-  category: MetricType;
-  metadata?: Record<string, any>;
-}
-
 
 
