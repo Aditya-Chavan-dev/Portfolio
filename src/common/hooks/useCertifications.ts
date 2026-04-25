@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { getCollection } from '@/common/shared/firestore.service'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/common/lib/firebase'
 import { CertificationEntry } from '@/common/types/content.types'
 
 const staticCerts: CertificationEntry[] = [
@@ -17,7 +18,9 @@ export function useCertifications() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await getCollection<CertificationEntry>('certifications')
+        const querySnapshot = await getDocs(collection(db, 'certifications'))
+        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as CertificationEntry))
+        
         if (data && data.length > 0) {
           setCertifications(data)
         }

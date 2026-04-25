@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { getCollection } from '@/common/shared/firestore.service'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/common/lib/firebase'
 import { TechStackEntry } from '@/common/types/content.types'
-import { Layout, Server, Terminal, Shield } from 'lucide-react'
 
 const staticStack: TechStackEntry[] = [
   {
@@ -29,7 +29,9 @@ export function useTechStack() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await getCollection<TechStackEntry>('techstack')
+        const querySnapshot = await getDocs(collection(db, 'techstack'))
+        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TechStackEntry))
+
         if (data && data.length > 0) {
           setStack(data)
         }

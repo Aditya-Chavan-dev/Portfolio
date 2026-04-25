@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { getCollection } from '@/common/shared/firestore.service'
+import { collection, getDocs, query, orderBy } from 'firebase/firestore'
+import { db } from '@/common/lib/firebase'
 import { ExperienceEntry } from '@/common/types/content.types'
 
 const staticExperience: ExperienceEntry[] = [
@@ -42,7 +43,10 @@ export function useExperience() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await getCollection<ExperienceEntry>('experience')
+        const q = query(collection(db, 'experience'), orderBy('date', 'desc'))
+        const querySnapshot = await getDocs(q)
+        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ExperienceEntry))
+        
         if (data && data.length > 0) {
           setExperience(data)
         }
