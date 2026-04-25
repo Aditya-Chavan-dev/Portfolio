@@ -101,6 +101,11 @@ export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
               }}
               className="w-full glass-surface rounded-[24px] p-6 md:p-8 border border-accent-gold/10 flex flex-col items-center text-center gap-6"
             >
+              {current.photo && (
+                <div className="w-12 h-12 rounded-xl overflow-hidden border border-accent-gold/20 mb-[-12px]">
+                   <img src={current.photo} className="w-full h-full object-cover" alt={current.name} />
+                </div>
+              )}
               <p className="text-base md:text-xl font-syne italic font-medium leading-relaxed text-text-secondary px-4">
                 "{current.message}"
               </p>

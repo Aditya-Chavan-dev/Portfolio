@@ -4,7 +4,7 @@ import { getTestimonialPageContent } from '@/common/shared/firestore.service'
 import { TestimonialForm }      from './TestimonialForm'
 import EditableText from '@/admin/EditableText'
 import type { TestimonialPageContent } from './testimonial.types'
-import fallbackContent from './content.json'
+import { testimonialFallback as fallbackContent } from '@/common/config/fallbacks'
 
 export default function Testimonial() {
   const navigate = useNavigate()
