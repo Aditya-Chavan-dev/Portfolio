@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import type { EnrichedProject } from '../types/project'
+import type { ProjectEntry } from '../types/content.types'
 import { projectMetadata } from '../lib/projectMetadata'
 
 export function useFeaturedProjects() {
@@ -23,7 +24,7 @@ export function useFeaturedProjects() {
         if (!active) return
 
         const featuredConfigs = snapshot.docs
-          .map(d => ({ id: d.id, ...d.data() } as any))
+          .map(d => ({ id: d.id, ...d.data() } as ProjectEntry))
           .filter(d => d.featured)
 
         // 2. Map to EnrichedProject format

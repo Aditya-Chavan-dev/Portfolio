@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import {
   collection, onSnapshot, doc,
   setDoc, deleteDoc, updateDoc,
-  serverTimestamp, query, orderBy
+  serverTimestamp, query, orderBy,
+  type UpdateData
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { tracedWrite } from '../lib/metrics'
@@ -47,7 +48,7 @@ export function useAdminProjects() {
   async function updateProject(id: string, updates: Partial<ProjectEntry>) {
     const ref = doc(db, 'projects', id)
     await tracedWrite(`firestore/projects/update/${id}`, () => 
-      updateDoc(ref, updates as any)
+      updateDoc(ref, updates as UpdateData<ProjectEntry>)
     )
   }
 

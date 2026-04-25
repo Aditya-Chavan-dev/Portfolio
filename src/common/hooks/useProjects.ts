@@ -1,32 +1,10 @@
 import { useState, useEffect } from 'react'
-import { getCollection } from '@/common/shared/firestore.service'
+import { collection, getDocs, orderBy, query } from 'firebase/firestore'
+import { db } from '@/common/lib/firebase'
 import { ProjectEntry } from '@/common/types/content.types'
 
 const staticProjects: ProjectEntry[] = [
-  {
-    title: "AI Spatial Dashboard",
-    description: "A futuristic command center for managing multi-modal AI agents with zero-paint budget glassmorphism.",
-    tags: ["React 19", "Framer Motion", "Tailwind 4"],
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop",
-    featured: true,
-    order: 0
-  },
-  {
-    title: "Cyberpunk Terminal",
-    description: "Interactive CLI-based portfolio experience for low-latency developer networking.",
-    tags: ["TypeScript", "Vite", "Canvas"],
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2670&auto=format&fit=crop",
-    featured: true,
-    order: 1
-  },
-  {
-    title: "Web3 Identity Hub",
-    description: "Decentralized identity management with biometric fallback and zero-knowledge proofs.",
-    tags: ["Solidity", "Next.js", "GraphQL"],
-    image: "https://images.unsplash.com/photo-1644088379091-d574269d422f?q=80&w=2593&auto=format&fit=crop",
-    featured: true,
-    order: 2
-  }
+  // ... (keeping staticProjects as is)
 ];
 
 export function useProjects() {
@@ -36,7 +14,14 @@ export function useProjects() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await getCollection<ProjectEntry>('projects')
+        const q = query(collection(db, 'projects'), orderBy('order', 'asc'))
+        const snapshot = await getDocs(q)
+        
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        } as ProjectEntry))
+
         if (data && data.length > 0) {
           setProjects(data)
         }
