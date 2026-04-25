@@ -39,7 +39,7 @@ export default function BudgetPanel() {
       {/* Usage Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {Object.entries(LIMITS).map(([key, limit]) => {
-          const current = (usage as any)[key] || 0
+          const current = (usage as Record<string, number>)[key] ?? 0
           const percentage = (current / limit) * 100
           const isWarning = percentage > 70
           const isCritical = percentage > 90

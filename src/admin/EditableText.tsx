@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, type Ref } from 'react'
 import { useEditMode } from '@/admin/EditModeContext'
 
 interface EditableTextProps {
@@ -56,7 +56,7 @@ export default function EditableText({
 
   return (
     <Component
-      ref={elementRef as any}
+      ref={elementRef as Ref<HTMLElement>}
       contentEditable={isEditing}
       suppressContentEditableWarning={true}
       onInput={handleInput}
