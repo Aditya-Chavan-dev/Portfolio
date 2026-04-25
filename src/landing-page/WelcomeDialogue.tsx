@@ -36,7 +36,7 @@ const DialogueLine = memo(({
         staggerChildren: skip ? 0.005 : 0.04, // Snappier stagger (0.08 -> 0.04)
         delayChildren: lineIdx === 0 ? 0.4 : 0.1, // Reduced initial delay (0.6 -> 0.4)
         duration: 1.2,
-        ease: [0.22, 1, 0.36, 1] as any
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number]
       }
     }
   }
@@ -53,7 +53,7 @@ const DialogueLine = memo(({
       y: 0,
       transition: { 
         duration: 0.7, // Snappier focus-pull (1.2 -> 0.7)
-        ease: "easeOut" as any
+        ease: "easeOut"
       }
     }
   }

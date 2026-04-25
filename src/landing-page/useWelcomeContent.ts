@@ -3,7 +3,7 @@ import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/common/lib/firebase'
 import { incrementLocalCounter } from '@/common/lib/metrics'
 import type { WelcomeConfig } from './landing.types'
-import fallbackContent from './content.json'
+import { welcomeFallback as fallbackContent } from '@/common/config/fallbacks'
 
 export function useWelcomeContent() {
   const [content, setContent] = useState<WelcomeConfig | null>(null)

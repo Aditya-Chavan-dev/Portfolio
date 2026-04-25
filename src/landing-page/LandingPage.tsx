@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useIsMobile } from '@/common/shared/useIsMobile'
+import { useIsMobile } from '@/common/hooks/useIsMobile'
 import { useWelcomeContent } from './useWelcomeContent'
 import { LandingPageDesktop } from './LandingPage.desktop.tsx'
 import { LandingPageMobile }  from './LandingPage.mobile.tsx'
