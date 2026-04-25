@@ -5,10 +5,10 @@ import { Play, Folder, Cpu, Briefcase, Award } from 'lucide-react';
 import { QuickAccessGrid } from './QuickAccessGrid';
 import { TestimonialsSlider } from './TestimonialsSlider';
 import { useTestimonials } from './useTestimonials';
-import type { QuickAccessItem } from './hub.types';
+import type { QuickAccessItem, HubContent } from './hub.types';
 
 interface HubMobileProps {
-  content: any;
+  content: HubContent | null;
 }
 
 export const HubMobile: React.FC<HubMobileProps> = ({ content }) => {
@@ -128,6 +128,22 @@ export const HubMobile: React.FC<HubMobileProps> = ({ content }) => {
           showArrows={false}
           className="w-full"
         />
+        
+        <div className="flex flex-col gap-4 mt-2">
+          <button
+            onClick={() => navigate("/testimonial")}
+            className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center gap-3 text-xs font-bold text-white uppercase tracking-widest hover:bg-white/10 transition-all active:scale-[0.98]"
+          >
+            Leave a Testimonial
+          </button>
+          
+          <button
+            onClick={() => navigate("/hub/testimonials")}
+            className="w-full py-3 text-[10px] font-bold text-white/40 uppercase tracking-[0.3em] flex items-center justify-center gap-2"
+          >
+            View Signal Archive
+          </button>
+        </div>
       </section>
 
       {/* Footer Indicator */}

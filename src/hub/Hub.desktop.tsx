@@ -5,10 +5,10 @@ import { Play, Folder, Cpu, Briefcase, Award } from 'lucide-react';
 import { QuickAccessGrid } from './QuickAccessGrid';
 import { TestimonialsSlider } from './TestimonialsSlider';
 import { useTestimonials } from './useTestimonials';
-import type { QuickAccessItem } from './hub.types';
+import type { QuickAccessItem, HubContent } from './hub.types';
 
 interface HubDesktopProps {
-  content: any;
+  content: HubContent | null;
 }
 
 export const HubDesktop: React.FC<HubDesktopProps> = ({ content }) => {
@@ -152,11 +152,29 @@ export const HubDesktop: React.FC<HubDesktopProps> = ({ content }) => {
             </span>
             <div className="w-12 h-px bg-accent-gold/20" />
           </div>
-          <TestimonialsSlider 
-            testimonials={testimonials} 
-            showArrows={true}
-            className="w-full"
-          />
+          <div className="relative group">
+            <TestimonialsSlider 
+              testimonials={testimonials} 
+              showArrows={true}
+              className="w-full"
+            />
+            
+            <div className="flex items-center justify-between mt-6 px-4">
+              <button
+                onClick={() => navigate("/hub/testimonials")}
+                className="text-[10px] font-bold text-white/30 hover:text-accent-gold uppercase tracking-[0.2em] transition-all cursor-pointer"
+              >
+                View Archive Signals
+              </button>
+              
+              <button
+                onClick={() => navigate("/testimonial")}
+                className="px-6 py-2 rounded-full border border-accent-gold/20 bg-accent-gold/5 text-[10px] font-bold text-accent-gold uppercase tracking-[0.2em] hover:bg-accent-gold hover:text-bg-base transition-all cursor-pointer shadow-[0_0_20px_rgba(212,175,55,0.1)] active:scale-95"
+              >
+                Leave a Testimonial
+              </button>
+            </div>
+          </div>
         </div>
       </motion.div>
 

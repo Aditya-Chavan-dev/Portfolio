@@ -3,7 +3,7 @@ import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '@/common/lib/firebase'
 import { incrementLocalCounter } from '@/common/lib/metrics'
 import type { HubContent } from './hub.types'
-import fallbackContent from './content.json'
+import { hubFallback as fallbackContent } from '@/common/config/fallbacks'
 
 export function useHubContent() {
   const [content, setContent] = useState<HubContent | null>(null)

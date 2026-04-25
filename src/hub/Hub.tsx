@@ -1,10 +1,9 @@
-import { useIsMobile }    from '@/common/shared/useIsMobile'
+import { useIsMobile }    from '@/common/hooks/useIsMobile'
 import { useHubContent }  from './useHubContent'
 import { HubDesktop }     from './Hub.desktop'
 import { HubMobile }      from './Hub.mobile'
 
 function LoadingSpinner() {
-  console.log('[Hub] Rendering LoadingSpinner');
   return (
     <div className="min-h-screen bg-bg-base flex items-center justify-center font-body" role="status" aria-live="polite" aria-busy="true">
       <div className="flex flex-col items-center gap-3">
@@ -17,19 +16,11 @@ function LoadingSpinner() {
 
 export default function Hub() {
   const isMobile           = useIsMobile()
-  const { content, loading, error } = useHubContent() as any
-
-  console.log('[Hub] Initializing...', { isMobile, loading, hasContent: !!content });
-  
-  if (error) {
-    console.error('[Hub] Content Loading Error:', error);
-  }
+  const { content, loading } = useHubContent()
 
   if (loading || !content) {
     return <LoadingSpinner />
   }
-
-  console.log('[Hub] Content Loaded. Dispatching to:', isMobile ? 'Mobile' : 'Desktop');
 
   return isMobile
     ? <HubMobile   content={content} />
