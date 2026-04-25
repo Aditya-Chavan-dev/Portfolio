@@ -67,7 +67,8 @@ export async function restoreSnapshot(snapshotId: string) {
     
     // Batch updates (non-atomic for simplicity)
     const promises = Object.entries(configData).map(([docId, data]) => {
-      return setDoc(doc(db, 'adminConfig', docId), data as any);
+      // Intentional: snapshot data is dynamically shaped — can't be statically typed
+      return setDoc(doc(db, 'adminConfig', docId), data as Record<string, unknown>);
     });
     
     await Promise.all(promises);

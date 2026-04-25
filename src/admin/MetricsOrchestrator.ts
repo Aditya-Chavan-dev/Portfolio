@@ -1,8 +1,24 @@
 import { db } from '@/common/lib/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
-const buffer: any[] = [];
-let flushTimer: any = null;
+interface BufferEntry {
+  label: string;
+  latency: number;
+  status: 'ok' | 'error';
+  ts: number;
+  type?: string;
+  data?: unknown;
+}
+
+interface RateLimitEntry {
+  label: string;
+  ts: number;
+  code: number | string;
+}
+
+const buffer: BufferEntry[] = [];
+let flushTimer: ReturnType<typeof setTimeout> | null = null;
+const rateLimitHits: RateLimitEntry[] = [];
 
 /**
  * Traced Call Wrapper
@@ -41,7 +57,7 @@ export function tracedWrite<T>(label: string, fn: () => T): T {
 /**
  * Analytics Buffer Logic
  */
-function pushToBuffer(entry: any) {
+function pushToBuffer(entry: BufferEntry) {
   buffer.push(entry);
   if (!flushTimer) {
     // Flush metrics every 60 seconds to save writes
@@ -69,12 +85,10 @@ async function flushBuffer() {
 async function logRateLimit(label: string, code: number | string) {
   try {
     const ref = doc(db, 'admin_metrics', 'ratelimits');
-    const existing = (window as any).__rateLimitHits || [];
-    existing.push({ label, ts: Date.now(), code });
-    (window as any).__rateLimitHits = existing;
-    await setDoc(ref, { 
-      hits: existing.slice(-50), 
-      updatedAt: serverTimestamp() 
+    rateLimitHits.push({ label, ts: Date.now(), code });
+    await setDoc(ref, {
+      hits: rateLimitHits.slice(-50),
+      updatedAt: serverTimestamp()
     }, { merge: true });
   } catch (_) {}
 }
@@ -99,16 +113,16 @@ export function incrementLocalCounter(type: 'reads' | 'writes' | 'deletes') {
 /**
  * Manual metric logging (e.g. for Web Vitals or Clicks)
  */
-export function logMetric(type: string, data: any, status: 'ok' | 'error' = 'ok') {
-  pushToBuffer({ 
-    type, 
-    data, 
-    status, 
-    timestamp: Date.now(),
-    label: typeof data === 'string' ? data : (data.target || type),
-    latency: data.latency || 0,
-    ts: Date.now()
-  });
+export function logMetric(type: string, data: Record<string, unknown>, status: 'ok' | 'error' = 'ok') {
+  const entry: BufferEntry = {
+    label: typeof data === 'string' ? data : ((data['target'] as string) || type),
+    latency: (data['latency'] as number) || 0,
+    status,
+    ts: Date.now(),
+    type,
+    data,
+  };
+  pushToBuffer(entry);
 }
 
 export function getLocalCounters() {

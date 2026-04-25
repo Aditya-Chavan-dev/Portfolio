@@ -4,22 +4,9 @@ import { db } from '@/common/lib/firebase'
 import { tracedCall, tracedWrite } from '@/common/lib/metrics'
 import { useEditMode } from './EditModeContext'
 import { useToastContext } from '@/common/shared/Toast'
-import welcomeFallback from '@/landing-page/content.json'
-import hubFallback from '@/hub/content.json'
-import skillsFallback from '@/quick-access/content.json'
-import experienceFallback from '@/quick-access/content.json'
-import certificationsFallback from '@/quick-access/content.json'
+import { FALLBACK_MAP } from '@/common/config/fallbacks'
 
-const FALLBACKS: Record<string, any> = {
-  welcome: welcomeFallback,
-  hub: hubFallback,
-  skills: skillsFallback,
-  experience: experienceFallback,
-  certifications: certificationsFallback,
-  projects: {},
-}
-
-function setNestedPath(obj: any, path: string, value: any) {
+function setNestedPath(obj: Record<string, any>, path: string, value: any) {
   const parts = path.split('.')
   let current = obj
   for (let i = 0; i < parts.length - 1; i++) {
@@ -92,7 +79,7 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
       addToast('Creating recovery snapshot...', 'info')
       await createSnapshot('Post-Deploy Recovery Point')
 
-      const updatesByDoc: Record<string, any> = {}
+      const updatesByDoc: Record<string, Record<string, any>> = {}
       
       for (const key in draftData) {
         const parts = key.split('.')
@@ -106,7 +93,7 @@ export default function DeployModal({ isOpen, onClose, onSuccess }: DeployModalP
             getDoc(doc(db, 'live', docId))
           )
           const currentData = currentSnap.data() || {}
-          const fallback = FALLBACKS[docId] || {}
+          const fallback = FALLBACK_MAP[docId] || {}
           
           updatesByDoc[docId] = {
             ...fallback,
