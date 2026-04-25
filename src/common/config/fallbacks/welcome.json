@@ -1,0 +1,18 @@
+{
+  "name": "Aditya Chavan",
+  "role": "Digital Architect",
+  "dialogue": [
+    "Architecture is the story.",
+    "Code is just the ink.",
+    "I build systems that feel like magic."
+  ],
+  "highlightIndex": [
+    0,
+    1,
+    2
+  ],
+  "ctaDesktop": "Press any key to continue",
+  "ctaMobile": "Tap to continue",
+  "skipHintDesktop": "(Press enter twice to skip the animation)",
+  "skipHintMobile": "(Double-tap to skip)"
+}
