@@ -35,7 +35,7 @@ export function TestimonialForm({
     name: '',
     relationship: '',
     company: '',
-    message: '',
+    text: '',
     email: '',
     consent: false,
     website: '', // Honeypot
@@ -64,7 +64,7 @@ export function TestimonialForm({
     if (formData.website) return
     
     // Validation
-    if (!formData.name || !formData.message || !formData.consent) {
+    if (!formData.name || !formData.text || !formData.consent) {
       setErrorMessage('Please fill in all mandatory fields.')
       return
     }
@@ -203,8 +203,8 @@ export function TestimonialForm({
             placeholder={messagePlaceholder} 
             className={`${inputClasses} resize-none h-32 no-scrollbar`} 
             maxLength={400}
-            value={formData.message}
-            onChange={(e) => setFormData({...formData, message: e.target.value})}
+            value={formData.text}
+            onChange={(e) => setFormData({...formData, text: e.target.value})}
             required
           />
           {isEditing && <EditableText id="testimonial.messagePlaceholder" value={messagePlaceholder} className="absolute -top-4 right-0 text-[10px] scale-75 opacity-50" />}
