@@ -3,6 +3,7 @@ import { WelcomeDialogue } from './WelcomeDialogue'
 import type { WelcomeConfig } from './landing.types'
 import EditableText from '@/admin/EditableText'
 import { AmbientDust } from './AmbientDust'
+import { CinematicOverlay } from './CinematicOverlay'
 
 interface Props {
   readonly content:        WelcomeConfig
@@ -22,6 +23,7 @@ export function LandingPageMobile({
 
   return (
     <div className="h-[100dvh] w-screen bg-bg-base flex items-center justify-center select-none overflow-hidden relative text-white transition-colors duration-700">
+      <CinematicOverlay />
       
       {/* 1. Cinematic Background Layers */}
       <AmbientDust count={40} />
