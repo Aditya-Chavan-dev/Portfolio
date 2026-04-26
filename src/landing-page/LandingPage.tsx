@@ -1,93 +1,61 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { useIsMobile } from '@/common/hooks/useIsMobile'
+import { LandingPageMobile } from './LandingPage.mobile'
+import { LandingPageDesktop } from './LandingPage.desktop'
+import { WarpTransition } from './WarpTransition'
 import { useWelcomeContent } from './useWelcomeContent'
-import { LandingPageDesktop } from './LandingPage.desktop.tsx'
-import { LandingPageMobile }  from './LandingPage.mobile.tsx'
-import { SESSION_KEYS } from '@/common/shared/constants'
+import type { WelcomeConfig } from './landing.types'
 
 export default function LandingPage() {
-  const isMobile               = useIsMobile()
-  const { content, loading }   = useWelcomeContent()
-  const navigate               = useNavigate()
-
-  const [skipAnimation,  setSkipAnimation ] = useState(false)
+  const navigate = useNavigate()
+  const isMobile = useIsMobile()
+  const { content, loading } = useWelcomeContent()
+  
   const [isDialogueComplete, setIsDialogueComplete] = useState(false)
-  const [isExiting,      setIsExiting     ] = useState(false)
+  const [isExiting, setIsExiting] = useState(false)
+  const [skipAnimation, setSkipAnimation] = useState(false)
 
-  const enterResetTimeoutRef  = useRef<number | undefined>(undefined)
-  const enterCountRef         = useRef(0)
+  // 1. Keyboard skip logic (Double Enter)
+  useEffect(() => {
+    let lastKeyTime = 0
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        const now = Date.now()
+        if (now - lastKeyTime < 300) {
+          setSkipAnimation(true)
+          setIsDialogueComplete(true)
+        }
+        lastKeyTime = now
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   const handleDialogueComplete = useCallback(() => {
     setIsDialogueComplete(true)
-    sessionStorage.setItem(SESSION_KEYS.HAS_SEEN_WELCOME, 'true')
   }, [])
 
   const handleNavigateHub = useCallback(() => {
     setIsExiting(true)
   }, [])
 
-  // Navigation listener - re-enabled post-completion
-  useEffect(() => {
-    if (!isDialogueComplete) return
-
-    const handleContinue = (e: MouseEvent | KeyboardEvent) => {
-      // If it's a mouse event, ignore if the user clicked an interactive control (like a theme toggle)
-      if (e instanceof MouseEvent) {
-        const target = e.target as HTMLElement;
-        if (target.closest('button') || target.closest('a') || target.closest('[role="button"]')) return;
-      }
-      handleNavigateHub()
-    }
-    
-    window.addEventListener('keydown', handleContinue)
-    window.addEventListener('mousedown', handleContinue)
-    return () => {
-      window.removeEventListener('keydown', handleContinue)
-      window.removeEventListener('mousedown', handleContinue)
-    }
-  }, [isDialogueComplete, handleNavigateHub])
-
-  // Skip detection (Double-Enter)
-  useEffect(() => {
-    if (isMobile) return
-
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' && !skipAnimation && !isDialogueComplete) {
-        clearTimeout(enterResetTimeoutRef.current)
-        enterCountRef.current += 1
-        
-        if (enterCountRef.current >= 2) {
-          setSkipAnimation(true)
-          enterCountRef.current = 0
-          return
-        }
-
-        enterResetTimeoutRef.current = window.setTimeout(() => {
-          enterCountRef.current = 0
-        }, 800)
-      }
-    }
-
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [isMobile, skipAnimation, isDialogueComplete])
-
   if (loading || !content) {
     return (
-      <div className="min-h-screen bg-theme-primary" role="status" aria-live="polite">
-        <span className="sr-only">Loading…</span>
+      <div className="min-h-screen bg-bg-base flex items-center justify-center" role="status">
+        <div className="w-8 h-8 border-2 border-accent-gold/20 border-t-accent-gold rounded-full animate-spin" />
       </div>
     )
   }
 
   const sharedProps = {
-    content,
+    content: content as WelcomeConfig,
     skipAnimation,
     isDialogueComplete,
-    onDialogueComplete:  handleDialogueComplete,
-    onNavigateHub:       handleNavigateHub,
+    onDialogueComplete: handleDialogueComplete,
+    onNavigateHub: handleNavigateHub
   }
 
   return (
@@ -100,14 +68,7 @@ export default function LandingPage() {
 
       <AnimatePresence>
         {isExiting && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="fixed inset-0 bg-black z-[9999] pointer-events-none"
-            onAnimationComplete={() => navigate('/hub')}
-          />
+          <WarpTransition key="warp" onComplete={() => navigate('/hub')} />
         )}
       </AnimatePresence>
     </>

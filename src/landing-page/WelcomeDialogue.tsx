@@ -52,7 +52,7 @@ const DialogueLine = memo(({
       filter: 'blur(0px)',
       y: 0,
       transition: { 
-        duration: 0.7, // Snappier focus-pull (1.2 -> 0.7)
+        duration: 0.7,
         ease: "easeOut"
       }
     }
@@ -68,7 +68,7 @@ const DialogueLine = memo(({
       onAnimationComplete={() => {
         if (onLineComplete) onLineComplete(lineIdx)
       }}
-      className="mb-1 md:mb-2 overflow-visible"
+      className="mb-1 md:mb-2 overflow-visible relative z-10"
       style={{ transform: 'translateZ(0)' }}
     >
       <p 
