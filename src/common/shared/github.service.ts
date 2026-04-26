@@ -12,16 +12,34 @@
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '@/common/lib/firebase'
+
 /**
  * Returns the latest GitHub data from Firestore cache.
  * The cache is refreshed every 6 hours by the GitHub Actions workflow.
  * Falls back to an empty state if the cache hasn't been seeded yet.
  */
 export async function getGitHubData(): Promise<any> {
-  // Synchronized GitHub data has been disabled/removed.
-  return {
-    repos:    [],
-    activity: null,
-    cachedAt: 0,
+  try {
+    const docRef = doc(db, 'cache', 'github')
+    const snapshot = await getDoc(docRef)
+    
+    if (snapshot.exists()) {
+      return snapshot.data()
+    }
+
+    return {
+      repos: [],
+      activity: null,
+      lastUpdated: null,
+    }
+  } catch (err) {
+    console.error('Failed to get cached GitHub data:', err)
+    return {
+      repos: [],
+      activity: null,
+      lastUpdated: null,
+    }
   }
 }
