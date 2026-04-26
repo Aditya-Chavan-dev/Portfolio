@@ -42,17 +42,18 @@ export function AmbientDust({ count = 60, mouseX = 0, mouseY = 0 }: AmbientDustP
     window.addEventListener('resize', resize)
     resize()
 
-    // Init Particles
+    // Init Particles with varying depths for a 3D parallax feel
     for (let i = 0; i < count; i++) {
+      const depth = Math.random() * 40 + 10
       particles.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: (Math.random() - 0.5) * 0.12,
-        size: Math.random() * 1.5 + 0.4,
-        alpha: Math.random() * 0.3,
+        vx: (Math.random() - 0.5) * (0.15 / (depth * 0.05)), // Depth affects speed
+        vy: (Math.random() - 0.5) * (0.15 / (depth * 0.05)),
+        size: Math.random() * 1.8 + 0.2, // Some tiny, some larger
+        alpha: Math.random() * 0.2,
         targetAlpha: Math.random() * 0.4,
-        depth: Math.random() * 30 + 10 // Variance in parallax depth
+        depth: depth
       })
     }
 
