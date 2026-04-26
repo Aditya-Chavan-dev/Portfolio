@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useCertifications } from '@/common/hooks/useCertifications';
+import { Shield, Fingerprint, Award, CheckCircle } from 'lucide-react';
 
 export function Certifications() {
   const { certifications, loading } = useCertifications();
@@ -7,40 +8,73 @@ export function Certifications() {
   if (loading && certifications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 opacity-40">
-        <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mb-4" />
-        <span className="font-hud text-[10px] tracking-widest uppercase">Verifying Credentials…</span>
+        <div className="w-8 h-8 border-2 border-amber-500/20 border-t-amber-500 rounded-full animate-spin mb-4" />
+        <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white">Validating_Credentials…</span>
       </div>
     );
   }
+
   return (
-    <div className="flex flex-col gap-10">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-4xl font-display font-bold text-text-primary tracking-tight">Certifications & Badges</h2>
-        <p className="text-text-muted font-body">Verified credentials in cloud architecture and specialized UI/UX design.</p>
+    <div className="flex flex-col gap-20">
+      {/* ─── Header Section ───────────────────────────────────── */}
+      <div className="flex flex-col gap-4 max-w-2xl">
+         <div className="flex items-center gap-3">
+            <div className="p-2 bg-amber-500/10 rounded-lg text-amber-500 border border-amber-500/20">
+               <Shield size={16} />
+            </div>
+            <span className="text-[10px] font-mono tracking-[0.4em] text-white/30 uppercase">Credential_Ledger</span>
+         </div>
+         <h2 className="text-5xl font-bold text-white tracking-tighter font-serif uppercase">Verified Keys</h2>
+         <p className="text-sm text-white/40 leading-relaxed italic">
+           A cryptographic record of verified credentials in architectural design, systems engineering, and data security.
+         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-        {certs.map((c, i) => (
+      {/* ─── Modernized Token Grid ───────────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {certifications.map((c, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: i * 0.08 }}
-            className="flex flex-col items-center text-center p-6 bg-bg-surface border border-border-default rounded-xl hover:border-accent/40 hover:bg-bg-elevated transition-all duration-base group"
+            transition={{ duration: 0.6, delay: i * 0.05 }}
+            className="group relative h-[220px] bg-white/[0.015] border border-white/5 rounded-[2rem] p-8 flex flex-col items-center text-center justify-between hover:bg-white/[0.03] hover:border-amber-500/20 transition-all duration-700"
           >
-            <div className="w-16 h-16 mb-4 flex items-center justify-center p-3 bg-white rounded-lg border border-border-default group-hover:scale-110 transition-transform">
-              <img src={c.icon} alt={c.issuer} className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all" />
+            {/* Top Security Status */}
+            <div className="absolute top-4 left-0 right-0 px-6 flex justify-between items-center opacity-20 group-hover:opacity-100 transition-opacity">
+               <Fingerprint size={10} className="text-amber-500" />
+               <span className="text-[7px] font-mono tracking-[0.2em] text-white uppercase italic">Sig_Verified.088</span>
             </div>
-            <h3 className="text-sm font-display font-bold text-text-primary leading-tight h-10 flex items-center">
-              {c.title}
-            </h3>
-            <span className="mt-2 text-[10px] font-body font-bold text-text-muted uppercase tracking-widest">
-              {c.issuer}
-            </span>
-            <span className="mt-1 text-[9px] font-body text-accent opacity-60">
-              Issued {c.date}
-            </span>
+
+            {/* Issuer Badge */}
+            <div className="relative mt-2">
+               <div className="absolute inset-0 bg-white/20 blur-[20px] rounded-full opacity-0 group-hover:opacity-40 transition-opacity" />
+               <div className="w-16 h-16 bg-white rounded-2xl p-3 border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-700 relative z-10 flex items-center justify-center">
+                 <img 
+                    src={c.icon} 
+                    alt={c.issuer} 
+                    className="max-w-full max-h-full object-contain grayscale-0" 
+                 />
+               </div>
+            </div>
+
+            {/* Text Segment */}
+            <div className="space-y-1">
+               <h3 className="text-[12px] font-bold text-white uppercase tracking-wider leading-tight px-4 font-serif">
+                 {c.title}
+               </h3>
+               <p className="text-[9px] font-mono text-white/30 uppercase tracking-[0.2em]">{c.issuer}</p>
+            </div>
+
+            {/* Verification Footer */}
+            <div className="flex items-center gap-2 pt-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+               <CheckCircle size={10} className="text-emerald-500" />
+               <span className="text-[8px] font-mono text-emerald-500 uppercase tracking-widest">Valid_Deployment_{c.date.split(' ')[1]}</span>
+            </div>
+            
+            {/* Corner Decorative Notch */}
+            <div className="absolute bottom-4 left-4 w-2 h-2 border-l border-b border-white/5 group-hover:border-amber-500/40 transition-colors" />
           </motion.div>
         ))}
       </div>
