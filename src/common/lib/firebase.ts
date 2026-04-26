@@ -1,12 +1,11 @@
-import { initializeApp, getApps, type FirebaseApp, setLogLevel } from 'firebase/app';
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
-
-// Silence internal transport warnings during network flickers
-setLogLevel('error');
+import { initializeApp, getApps, getApp, type FirebaseApp, setLogLevel } from 'firebase/app';
+import { initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager, type Firestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 import { getDatabase } from 'firebase/database';
+
+// Silence internal transport warnings
+setLogLevel('error');
 
 const firebaseConfig = {
   apiKey:            import.meta.env.VITE_FIREBASE_API_KEY            as string,
@@ -18,49 +17,25 @@ const firebaseConfig = {
   appId:             import.meta.env.VITE_FIREBASE_APP_ID             as string,
 };
 
-const app: FirebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+// ─── App Singleton ───────────────────────────────────────────────────────────
+const app: FirebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Initialize App Check with defensive logic and Debug Mode support
-if (typeof window !== 'undefined') {
-  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  const isDebug = import.meta.env.DEV || import.meta.env.VITE_APP_CHECK_DEBUG === 'true';
-  const isValidKey = siteKey && siteKey !== 'your_site_key_here' && siteKey.length > 10;
-
-  if (isDebug || isValidKey) {
-    // Enable debug token for local development
-    if (isDebug) {
-      if (!(self as any).FIREBASE_APPCHECK_DEBUG_TOKEN) {
-        (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-      }
-      console.info('Firebase App Check: Debug Mode Enabled. Copy the token from the console below and add it to the Firebase Console (App Check > Manage Debug Tokens).');
-    }
-
-    try {
-      initializeAppCheck(app, {
-        provider: new ReCaptchaEnterpriseProvider(siteKey as string),
-        isTokenAutoRefreshEnabled: true,
-      });
-    } catch (err) {
-      // Catch "already initialized" errors in HMR
-      console.debug('App Check already initialized or failed safely:', err);
-    }
-  } else {
-    console.warn('Firebase App Check: Bypassing initialization due to missing or invalid VITE_RECAPTCHA_SITE_KEY.');
-  }
+// ─── Firestore Singleton ──────────────────────────────────────────────────────
+let dbInstance: Firestore;
+try {
+  dbInstance = initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+    cache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager()
+    })
+  } as any);
+} catch (e) {
+  dbInstance = getFirestore(app);
 }
 
-// Intentional: experimentalForceLongPolling options not fully typed in FirestoreSettings
-export const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true,
-  cache: persistentLocalCache({
-    tabManager: persistentMultipleTabManager()
-  })
-} as any);
-
-export const auth = getAuth(app);
+export const db      = dbInstance;
+export const auth    = getAuth(app);
 export const storage = getStorage(app);
-export const rtdb = getDatabase(app);
+export const rtdb    = getDatabase(app);
 
 export default app;
-
-

@@ -2,17 +2,18 @@
   "name": "Aditya Chavan",
   "role": "Digital Architect",
   "dialogue": [
-    "Architecture is the story.",
-    "Code is just the ink.",
-    "I build systems that feel like magic."
+    "Establishing neural link...",
+    "Scanning the digital void.",
+    "The world is built on echoes and light.",
+    "I am the one who architects the silence.",
+    "Shall we witness the Genesis?"
   ],
   "highlightIndex": [
-    0,
-    1,
-    2
+    3,
+    4
   ],
-  "ctaDesktop": "Press any key to continue",
-  "ctaMobile": "Tap to continue",
-  "skipHintDesktop": "(Press enter twice to skip the animation)",
-  "skipHintMobile": "(Double-tap to skip)"
+  "ctaDesktop": "Initialize Voyage",
+  "ctaMobile": "Tap to Begin",
+  "skipHintDesktop": "(Double Enter to Bypass Uplink)",
+  "skipHintMobile": "(Double Tap to Skip)"
 }
