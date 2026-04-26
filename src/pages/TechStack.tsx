@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Layout, Server, Terminal, Shield } from 'lucide-react';
+import { Layout, Server, Terminal, Shield, Cpu, Activity, Zap } from 'lucide-react';
 import { useTechStack } from '@/common/hooks/useTechStack';
 
 const ICON_MAP: Record<string, any> = {
@@ -15,53 +15,98 @@ export function TechStack() {
   if (loading && stack.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 opacity-40">
-        <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mb-4" />
-        <span className="font-hud text-[10px] tracking-widest uppercase">Calibrating Visual Logic…</span>
+        <div className="w-8 h-8 border-2 border-amber-500/20 border-t-amber-500 rounded-full animate-spin mb-4" />
+        <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white">Initializing_Signals…</span>
       </div>
     );
   }
+
   return (
-    <div className="flex flex-col gap-12">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-4xl font-display font-bold text-text-primary tracking-tight">Technology Stack</h2>
-        <p className="text-text-muted font-body">My current battle-tested arsenal for high-velocity development.</p>
+    <div className="flex flex-col gap-20">
+      {/* ─── Header Section ───────────────────────────────────── */}
+      <div className="flex flex-col gap-4 max-w-2xl">
+         <div className="flex items-center gap-3">
+            <div className="p-2 bg-amber-500/10 rounded-lg text-amber-500 border border-amber-500/20">
+               <Cpu size={16} />
+            </div>
+            <span className="text-[10px] font-mono tracking-[0.4em] text-white/30 uppercase">System_Arsenal</span>
+         </div>
+         <h2 className="text-5xl font-bold text-white tracking-tighter font-serif uppercase">Kernel Modules</h2>
+         <p className="text-sm text-white/40 leading-relaxed italic">
+           A technical breakdown of the architectural layers and specialized modules used in my high-fidelity deployments.
+         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* ─── Modernized Grid ─────────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {stack.map((group, i) => {
           const Icon = ICON_MAP[group.category] || Terminal;
           return (
             <motion.section
               key={i}
-              initial={{ opacity: 0, scale: 0.98 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="flex flex-col gap-6 p-8 bg-bg-surface border border-border-default rounded-2xl group hover:border-accent/20 transition-all shadow-sm"
+              transition={{ duration: 0.8, delay: i * 0.1 }}
+              className="bg-white/[0.015] border border-white/5 rounded-[2.5rem] p-10 flex flex-col gap-10 group hover:bg-white/[0.03] transition-all"
             >
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-bg-elevated rounded-xl text-accent border border-border-default group-hover:shadow-[0_0_15px_rgba(212,165,116,0.15)] transition-all">
-                  <Icon size={28} strokeWidth={1.5} />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                   <div className="p-4 bg-amber-500/[0.05] rounded-2xl text-amber-500 border border-amber-500/10 shadow-[0_0_20px_rgba(245,158,11,0.1)] group-hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] transition-all">
+                      <Icon size={24} />
+                   </div>
+                   <div className="space-y-1">
+                      <h3 className="text-xl font-bold text-white tracking-tight uppercase font-serif">
+                        {group.category}
+                      </h3>
+                      <p className="text-[9px] font-mono text-white/20 uppercase tracking-[0.2em]">Operational_Capacity: Optimized</p>
+                   </div>
                 </div>
-                <h3 className="text-xl font-display font-bold text-text-primary uppercase tracking-tight">
-                  {group.category}
-                </h3>
+                
+                <div className="hidden sm:flex flex-col items-end gap-1.5 opacity-30 group-hover:opacity-100 transition-opacity">
+                   <span className="text-[8px] font-mono tracking-widest text-white/40 uppercase">Load_Index</span>
+                   <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map(dot => (
+                         <div key={dot} className={`w-3 h-1 rounded-full ${dot <= 4 ? 'bg-amber-500' : 'bg-white/10'}`} />
+                      ))}
+                   </div>
+                </div>
               </div>
 
-            <div className="flex flex-wrap gap-3">
-              {group.tools.map(tool => (
-                <div 
-                  key={tool} 
-                  className="px-4 py-2 bg-bg-elevated border border-border-default rounded-lg font-body font-medium text-sm text-text-secondary hover:text-text-primary hover:border-accent/30 transition-all"
-                >
-                  {tool}
-                </div>
-              ))}
-            </div>
-          </motion.section>
+              {/* Tools Cluster */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {group.tools.map((tool, ti) => (
+                  <motion.div 
+                    key={tool}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 0.2 + ti * 0.05 }}
+                    className="relative px-4 py-3 bg-white/[0.02] border border-white/5 rounded-xl group/node hover:border-amber-500/30 transition-all cursor-default"
+                  >
+                    <div className="flex items-center justify-between gap-2 overflow-hidden">
+                       <span className="text-[10px] font-bold text-white/60 group-hover/node:text-white transition-colors truncate">
+                         {tool.toUpperCase()}
+                       </span>
+                       <Zap size={10} className="text-amber-500/20 group-hover/node:text-amber-500 transition-colors shrink-0" />
+                    </div>
+                    
+                    {/* Tool Sub-Data (Hover) */}
+                    <div className="absolute top-0 left-0 w-1 h-0 bg-amber-500 group-hover/node:h-full transition-all duration-300" />
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Statistics Footer */}
+              <div className="mt-4 pt-4 border-t border-white/[0.03] flex items-center justify-between">
+                 <div className="flex items-center gap-2">
+                    <Activity size={10} className="text-emerald-500/40" />
+                    <span className="text-[8px] font-mono text-white/20 uppercase tracking-[0.2em]">Cluster_Health: Stable</span>
+                 </div>
+                 <span className="text-[10px] font-black text-white/5 uppercase italic font-serif">A.CHAVAN_OS</span>
+              </div>
+            </motion.section>
           );
         })}
-
       </div>
     </div>
   );
