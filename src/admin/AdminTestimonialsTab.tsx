@@ -156,10 +156,10 @@ export default function AdminTestimonialsTab() {
                     </div>
                   </div>
 
-                  <div className="relative">
+                  <div className="relative w-full">
                     <MessageSquare size={16} className="absolute -left-6 top-0 text-white/5" />
-                    <p className="text-sm text-text-muted leading-relaxed font-sans italic">
-                      "{testimonial.message}"
+                    <p className="text-sm text-text-muted leading-relaxed font-sans italic whitespace-pre-wrap break-words">
+                      "{testimonial.text}"
                     </p>
                   </div>
                 </div>

@@ -34,7 +34,7 @@ const TABS = [
   { id: 'experience', label: 'Experience', icon: Briefcase },
   { id: 'certs', label: 'Certs', icon: Award },
   { id: 'stack', label: 'Stack', icon: Cpu },
-  { id: 'testimonials', label: 'Feed', icon: MessageSquare },
+  { id: 'testimonials', label: 'Testimonials', icon: MessageSquare },
   { id: 'hive', label: 'Active Users', icon: Users },
   { id: 'pulse', label: 'Performance', icon: Activity },
   { id: 'engine', label: 'System Health', icon: HardDrive },
