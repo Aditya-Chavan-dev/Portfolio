@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useCallback } from 'react'
+import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react'
 import { SESSION_KEYS, ADMIN_ROUTES } from '@/common/shared/constants'
 
 type EditMode = 'idle' | 'edit' | 'preview'
@@ -35,6 +35,13 @@ export function EditModeProvider({ children }: Props) {
   const [mode, setMode] = useState<EditMode>('idle')
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [draftData, setDraftData] = useState<Record<string, any>>({})
+
+  useEffect(() => {
+    const isEditSession = sessionStorage.getItem(SESSION_KEYS.ADMIN_EDIT_SESSION) === 'true'
+    if (isEditSession) {
+      setMode('edit')
+    }
+  }, [])
 
   const updateDraft = useCallback((id: string, value: any) => {
     setDraftData((prev) => ({ ...prev, [id]: value }))
