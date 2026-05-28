@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
-import { getEngineHealth } from './EngineService'
+import { getEngineHealth, refreshEngineHealth } from './EngineService'
 import type { EngineHealth } from './EngineService'
 import { HardDrive, Activity, Star, AlertCircle, Cpu, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useToast } from '@/common/hooks/useToast'
 
 export default function EnginePanel() {
   const [health, setHealth] = useState<EngineHealth | null>(null)
   const [loading, setLoading] = useState(true)
+  const [syncing, setSyncing] = useState(false)
+  const { addToast } = useToast()
 
   useEffect(() => {
     getEngineHealth().then(h => {
@@ -14,6 +17,20 @@ export default function EnginePanel() {
       setLoading(false)
     })
   }, [])
+
+  async function handleRefresh() {
+    setSyncing(true)
+    try {
+      const updated = await refreshEngineHealth()
+      setHealth(updated)
+      addToast('Engine health telemetry synced with GitHub API.', 'success')
+    } catch (err: any) {
+      console.error(err)
+      addToast(err.message || 'Sync blocked. Rate-limits may be active.', 'error')
+    } finally {
+      setSyncing(false)
+    }
+  }
 
   if (loading || !health) {
     return (
@@ -33,9 +50,18 @@ export default function EnginePanel() {
             <span>Professional code integrity score based on GitHub repository metrics</span>
           </p>
         </div>
-        <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] font-bold text-white uppercase tracking-widest font-mono">Kernel Stable</span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleRefresh}
+            disabled={syncing}
+            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-black font-extrabold text-[10px] uppercase tracking-widest transition-all duration-300 cursor-pointer"
+          >
+            {syncing ? 'Syncing...' : 'Sync GitHub'}
+          </button>
+          <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 flex items-center gap-3">
+            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-white uppercase tracking-widest font-mono">Kernel Stable</span>
+          </div>
         </div>
       </div>
 

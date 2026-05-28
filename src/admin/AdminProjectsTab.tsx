@@ -3,9 +3,11 @@ import { useAdminProjects } from '@/common/hooks/useAdminProjects'
 import { Plus, Trash2, GripVertical, ExternalLink, Github, Star, Check, X, RefreshCw, Layers } from 'lucide-react'
 import { motion, Reorder, AnimatePresence } from 'framer-motion'
 import { ProjectEntry } from '@/common/types/content.types'
+import { useToast } from '@/common/hooks/useToast'
 
 export default function AdminProjectsTab() {
   const { items, loading, addProject, updateProject, deleteProject, updateOrder } = useAdminProjects()
+  const { addToast } = useToast()
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState<Partial<ProjectEntry>>({
@@ -40,20 +42,28 @@ export default function AdminProjectsTab() {
       }
     } catch (err) {
       console.error('Failed to import metadata:', err)
+      addToast('Failed to import GitHub metadata.', 'error')
     } finally {
       setImporting(false)
     }
   }
 
   async function handleSubmit() {
-    if (editingId) {
-      await updateProject(editingId, formData)
-      setEditingId(null)
-    } else {
-      await addProject(formData)
-      setIsAdding(false)
+    try {
+      if (editingId) {
+        await updateProject(editingId, formData)
+        setEditingId(null)
+        addToast('Project signature updated successfully.', 'success')
+      } else {
+        await addProject(formData)
+        setIsAdding(false)
+        addToast('Project signature deployed successfully.', 'success')
+      }
+      resetForm()
+    } catch (err: any) {
+      console.error('Failed to submit project:', err)
+      addToast(err.message || 'Failed to submit project schema.', 'error')
     }
-    resetForm()
   }
 
   function resetForm() {
@@ -270,7 +280,16 @@ export default function AdminProjectsTab() {
                       <Layers size={14} />
                     </button>
                     <button 
-                      onClick={() => confirm('Purge project from reservoir?') && deleteProject(item.id!)}
+                      onClick={async () => {
+                        if (confirm('Purge project from reservoir?')) {
+                          try {
+                            await deleteProject(item.id!)
+                            addToast('Project signature purged successfully.', 'success')
+                          } catch (err: any) {
+                            addToast(err.message || 'Failed to purge project signature.', 'error')
+                          }
+                        }
+                      }}
                       className="p-2 bg-white/5 hover:bg-red-500 transition-colors"
                     >
                       <Trash2 size={14} />

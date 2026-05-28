@@ -3,7 +3,7 @@ import {
   collection, onSnapshot, doc,
   setDoc, deleteDoc, updateDoc,
   serverTimestamp, query, orderBy,
-  type UpdateData
+  type UpdateData, writeBatch, getDoc
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { tracedWrite } from '../lib/metrics'
@@ -34,6 +34,12 @@ export function useAdminProjects() {
   async function addProject(project: Partial<ProjectEntry>) {
     const id = project.title?.toLowerCase().replace(/\s+/g, '-') || Date.now().toString()
     const ref = doc(db, 'projects', id)
+    
+    const check = await getDoc(ref)
+    if (check.exists()) {
+      throw new Error('Project signature already registered in archive.')
+    }
+
     await tracedWrite(`firestore/projects/create/${id}`, () => 
       setDoc(ref, {
         ...project,
@@ -59,13 +65,25 @@ export function useAdminProjects() {
     )
   }
 
-  async function updateOrder(items: ProjectEntry[]) {
-    // Local update first for snappy UI
-    setItems(items)
-    for (let i = 0; i < items.length; i++) {
-       if (items[i].id) {
-         await updateDoc(doc(db, 'projects', items[i].id!), { order: i })
-       }
+  async function updateOrder(newItems: ProjectEntry[]) {
+    const original = [...items]
+    setItems(newItems)
+    
+    try {
+      await tracedWrite('firestore/projects/reorder', async () => {
+        const batch = writeBatch(db)
+        newItems.forEach((item, index) => {
+          if (item.id) {
+            const ref = doc(db, 'projects', item.id)
+            batch.update(ref, { order: index })
+          }
+        })
+        await batch.commit()
+      })
+    } catch (err) {
+      console.error('Priority reorder transmission failed:', err)
+      setItems(original)
+      throw err
     }
   }
 
