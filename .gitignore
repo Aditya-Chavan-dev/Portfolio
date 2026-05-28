@@ -7,43 +7,45 @@
 .agent/brain/
 .agent/logs/
 
-# Root Cleanup
+# Root Cleanup & Dumps
 progress.txt
 commit_msg.txt
 uid.txt
 test_results/
 coverage/
+dump/
+tasks/
+issues/
+
+# Node Dependencies & Build Targets
 node_modules/
 dist/
+dist-ssr/
 build/
 .cache/
-.firebase/
-firebaserc
-# (keeping existing ignores below for safety)
-# Environment variables
+
+# Environment Variables & Secrets
 .env
 *.env
 .env.*
 
-# Node dependencies
-node_modules/
-dist/
-build/
-.cache/
-dist-ssr/
+# Environment Negation Override (Must follow env wildcards immediately)
+!.env.example
 
-# Firebase
+# Firebase CLI Local Cache
 .firebase/
-firebaserc
 
-# Logs
+# Framework & Transpilation Caches
+*.tsbuildinfo
+
+# Logs & Traces
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# IDE
+# IDE & Editor Configuration
 .vscode/
 .idea/
 *.swp
@@ -53,23 +55,18 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 
-# OS
+# OS-Specific Files
 .DS_Store
 Thumbs.db
 
-# Secrets
+# Private Credentials & Secret Keys
 serviceAccountKey.json
+service-account.json
 
-# Local env files
+# Local Environment Overrides
 *.local
 
-# Dump
-dump/
-tasks/
-issues/
-uid.txt
-
-# Learning documentation (personal reference only)
+# Developer reference only
 LEARNING_DOCS/
 
 # Agent Instruction Files
