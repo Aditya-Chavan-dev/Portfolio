@@ -7,6 +7,7 @@ import { useMousePosition } from '@/common/shared/useMousePosition'
 
 interface Props {
   readonly content:        WelcomeConfig
+  readonly skipAnimation:  boolean
   readonly isDialogueComplete: boolean
   readonly onDialogueComplete: () => void
   readonly onNavigateHub:  () => void
@@ -14,6 +15,7 @@ interface Props {
 
 export function LandingPageDesktop({
   content,
+  skipAnimation,
   isDialogueComplete,
   onDialogueComplete,
   onNavigateHub,
@@ -46,7 +48,8 @@ export function LandingPageDesktop({
       <div className="relative z-50 flex flex-col items-center">
         <WelcomeDialogue 
           lines={content.dialogue}
-          highlightIndexes={content.highlightIndex}
+          highlightIndex={content.highlightIndex}
+          skip={skipAnimation}
           onComplete={onDialogueComplete}
         />
         

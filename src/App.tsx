@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { LandingPage } from '@/pages/LandingPage'
+import LandingPage from '@/landing-page/LandingPage'
 import Hub from '@/hub/Hub'
 import { Projects } from '@/pages/Projects'
 import { Experience } from '@/pages/Experience'
@@ -15,6 +15,7 @@ import { AuthProvider } from '@/admin/AuthProvider'
 import { EditModeProvider } from '@/admin/EditModeContext'
 import AdminToolbar from '@/admin/AdminToolbar'
 import { ProtectedRoute } from '@/common/shared/ProtectedRoute'
+import NotFound from '@/not-found/NotFound'
 
 // Lazy loaded Admin modules
 const AdminLogin = lazy(() => import('@/admin/AdminLogin'))
@@ -60,6 +61,9 @@ export default function App() {
                   </ProtectedRoute>
                 } 
               />
+              
+              {/* Catch-all 404 Route */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         </div>

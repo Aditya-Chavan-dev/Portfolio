@@ -6,6 +6,7 @@ import { LandingPageMobile } from './LandingPage.mobile'
 import { LandingPageDesktop } from './LandingPage.desktop'
 import { WarpTransition } from './WarpTransition'
 import { useWelcomeContent } from './useWelcomeContent'
+import { LoadingSpinner } from '@/common/components/LoadingSpinner'
 import type { WelcomeConfig } from './landing.types'
 
 export default function LandingPage() {
@@ -43,11 +44,7 @@ export default function LandingPage() {
   }, [])
 
   if (loading || !content) {
-    return (
-      <div className="min-h-screen bg-bg-base flex items-center justify-center" role="status">
-        <div className="w-8 h-8 border-2 border-accent-gold/20 border-t-accent-gold rounded-full animate-spin" />
-      </div>
-    )
+    return <LoadingSpinner fullScreen label="INITIALIZING CORE CORE_OS…" />
   }
 
   const sharedProps = {
