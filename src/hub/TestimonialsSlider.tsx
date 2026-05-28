@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { PublicTestimonial } from '@/common/shared/testimonial.types';
+import type { PublicTestimonial } from '@/common/types/testimonial.types';
 
 interface TestimonialsSliderProps {
   testimonials: PublicTestimonial[];
@@ -107,7 +107,7 @@ export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
                 </div>
               )}
               <p className="text-base md:text-xl font-syne italic font-medium leading-relaxed text-text-secondary px-4">
-                "{current.message}"
+                "{current.text}"
               </p>
               
               <div className="flex flex-col items-center gap-1">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { subscribeToApprovedTestimonials } from '@/common/shared/firestore.service'
-import type { PublicTestimonial } from '@/common/shared/testimonial.types'
+import type { PublicTestimonial } from '@/common/types/testimonial.types'
 
 export function useTestimonials() {
   const [testimonials, setTestimonials] = useState<PublicTestimonial[]>([])

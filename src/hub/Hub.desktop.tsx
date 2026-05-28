@@ -60,7 +60,7 @@ export const HubDesktop = ({ content }: { content: any }) => {
 
           <div className="relative group">
             <div className="w-56 h-72 rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl grayscale brightness-110">
-              <img src="https://images.unsplash.com/photo-1597384708133-af8b03bb1287?q=80&w=1080&h=960&auto=format&fit=crop" className="w-full h-full object-cover" alt="Profile" />
+              <img src={content?.ownerPhotoUrl || "https://images.unsplash.com/photo-1597384708133-af8b03bb1287?q=80&w=1080&h=960&auto=format&fit=crop"} className="w-full h-full object-cover" alt="Profile" />
             </div>
             <div className="absolute bottom-4 -right-4 bg-amber-500 text-[#050507] px-4 py-2 rounded-xl text-[10px] font-black uppercase italic shadow-2xl">
               Verified_Identity
