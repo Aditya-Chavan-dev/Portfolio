@@ -37,7 +37,7 @@ export function useFeaturedProjects() {
             description: config.description || meta.shortDescription || '',
             topics: [],
             language: null,
-            githubUrl: config.githubUrl || `https://github.com/Aditya-Chavan-dev/${config.repoName}`,
+            githubUrl: config.githubUrl || `https://github.com/${import.meta.env.VITE_GITHUB_USERNAME || 'Aditya-Chavan-dev'}/${config.repoName}`,
             liveUrl: null,
             stars: 0,
             forksCount: 0,

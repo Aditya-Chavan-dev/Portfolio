@@ -16,6 +16,38 @@ interface RateLimitEntry {
   code: number | string;
 }
 
+function sanitizePII(val: any): any {
+  if (!val) return val;
+  if (typeof val === 'string') {
+    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+    return val.replace(emailRegex, '[REDACTED_EMAIL]');
+  }
+  if (Array.isArray(val)) {
+    return val.map(sanitizePII);
+  }
+  if (typeof val === 'object') {
+    const copy: Record<string, any> = {};
+    for (const key of Object.keys(val)) {
+      const lowerKey = key.toLowerCase();
+      if (
+        lowerKey.includes('password') ||
+        lowerKey.includes('email') ||
+        lowerKey.includes('credential') ||
+        lowerKey.includes('token') ||
+        lowerKey.includes('secret') ||
+        lowerKey.includes('key') ||
+        lowerKey.includes('auth')
+      ) {
+        copy[key] = '[REDACTED]';
+      } else {
+        copy[key] = sanitizePII(val[key]);
+      }
+    }
+    return copy;
+  }
+  return val;
+}
+
 const buffer: BufferEntry[] = [];
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
 const rateLimitHits: RateLimitEntry[] = [];
@@ -54,11 +86,13 @@ export function tracedWrite<T>(label: string, fn: () => T): T {
   return fn();
 }
 
-/**
- * Analytics Buffer Logic
- */
 function pushToBuffer(entry: BufferEntry) {
-  buffer.push(entry);
+  const sanitizedEntry: BufferEntry = {
+    ...entry,
+    label: sanitizePII(entry.label),
+    data: entry.data ? sanitizePII(entry.data) : undefined
+  };
+  buffer.push(sanitizedEntry);
   if (!flushTimer) {
     // Flush metrics every 60 seconds to save writes
     flushTimer = setTimeout(flushBuffer, 60_000);
