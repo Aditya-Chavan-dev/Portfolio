@@ -79,7 +79,7 @@ export default function TestimonialGallery() {
                     
                     <div className="space-y-6 relative z-10">
                       <p className="text-sm leading-relaxed text-white/50 italic font-mono whitespace-pre-wrap lowercase tracking-tight">
-                        "{t.text || (t as any).message}"
+                        "{t.text}"
                       </p>
 
                       <div className="flex items-center gap-6">

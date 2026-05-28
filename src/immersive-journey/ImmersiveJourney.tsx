@@ -71,7 +71,7 @@ export default function ImmersiveJourney() {
               className={`flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
             >
               <button
-                onClick={() => navigate(`/projects/${project.name}`)}
+                onClick={() => navigate(`/hub/projects?select=${project.name}`)}
                 className="group relative text-left"
               >
                 {/* Node Line Connector (Aesthetic) */}

@@ -1,7 +1,49 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Shield, Zap, Target, Activity } from 'lucide-react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/common/lib/firebase';
+
+interface AboutContent {
+  bioParagraphs: string[];
+  experienceAge: string;
+  globalDeployments: string;
+  systemCommits: string;
+  designPhilosophy: string;
+  offKernel: string;
+}
+
+const FALLBACK_ABOUT: AboutContent = {
+  bioParagraphs: [
+    "I am a digital architect operating at the intersection of aesthetic intent and engineering rigor. With over a decade of deployment history, I specialize in building interfaces that feel alive, fluid, and spatially aware.",
+    "My philosophy follows a strict logic: complexity should be handled by the machine, so the user experiences only simplicity. I optimize for the \"Aha!\" moment—the exact frame where a user realizes they are interacting with a premium architectural system."
+  ],
+  experienceAge: "10Y+",
+  globalDeployments: "150+",
+  systemCommits: "24K+",
+  designPhilosophy: "I believe in the \"Nyquist Validation\" of UI—testing every interaction at its threshold to ensure zero friction. My layouts are built on spatial grids, ensuring mathematical harmony across any viewport.",
+  offKernel: "When I'm not architecting systems, I'm likely exploring automotive design, studying mid-century modern furniture, or experimenting with generative art in GLSL."
+};
 
 export function About() {
+  const [content, setContent] = useState<AboutContent>(FALLBACK_ABOUT);
+
+  useEffect(() => {
+    let active = true;
+    async function loadAbout() {
+      try {
+        const snap = await getDoc(doc(db, 'live', 'about'));
+        if (snap.exists() && active) {
+          setContent(snap.data() as AboutContent);
+        }
+      } catch (err) {
+        console.warn('[About] Failed to fetch CMS content, using static fallback:', err);
+      }
+    }
+    loadAbout();
+    return () => { active = false; };
+  }, []);
+
   return (
     <div className="flex flex-col gap-24">
       {/* ─── Header: Strategic Mission ────────────────────────── */}
@@ -21,12 +63,9 @@ export function About() {
             </h2>
             
             <div className="flex flex-col gap-8 text-base font-sans text-white/50 leading-relaxed max-w-[60ch] italic">
-              <p>
-                I am a digital architect operating at the intersection of aesthetic intent and engineering rigor. With over a decade of deployment history, I specialize in building interfaces that feel alive, fluid, and spatially aware.
-              </p>
-              <p>
-                My philosophy follows a strict logic: complexity should be handled by the machine, so the user experiences only simplicity. I optimize for the "Aha!" moment—the exact frame where a user realizes they are interacting with a premium architectural system.
-              </p>
+              {content.bioParagraphs?.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
             </div>
           </div>
         </div>
@@ -41,7 +80,7 @@ export function About() {
                   <Activity size={10} className="text-amber-500/40" />
                   <span className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">Experience_Age</span>
                </div>
-               <span className="text-5xl font-bold text-amber-500 tracking-tighter font-serif">10Y+</span>
+               <span className="text-5xl font-bold text-amber-500 tracking-tighter font-serif">{content.experienceAge}</span>
                <div className="w-full h-px bg-white/5 mt-2" />
             </div>
 
@@ -50,7 +89,7 @@ export function About() {
                   <Target size={10} className="text-amber-500/40" />
                   <span className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">Global_Deployments</span>
                </div>
-               <span className="text-5xl font-bold text-white tracking-tighter font-serif">150+</span>
+               <span className="text-5xl font-bold text-white tracking-tighter font-serif">{content.globalDeployments}</span>
                <div className="w-full h-px bg-white/5 mt-2" />
             </div>
 
@@ -59,7 +98,7 @@ export function About() {
                   <Zap size={10} className="text-amber-500/40" />
                   <span className="text-[8px] font-mono font-bold text-white/20 uppercase tracking-widest">System_Commits</span>
                </div>
-               <span className="text-5xl font-bold text-white tracking-tighter font-serif">24K+</span>
+               <span className="text-5xl font-bold text-white tracking-tighter font-serif">{content.systemCommits}</span>
             </div>
 
             <div className="mt-4 pt-4 border-t border-white/[0.03] opacity-20">
@@ -85,7 +124,7 @@ export function About() {
              <h3 className="text-xs font-black text-white uppercase tracking-[0.4em]">Design_Philosophy</h3>
           </div>
           <p className="font-sans text-sm text-white/40 leading-relaxed italic">
-            I believe in the "Nyquist Validation" of UI—testing every interaction at its threshold to ensure zero friction. My layouts are built on spatial grids, ensuring mathematical harmony across any viewport.
+            {content.designPhilosophy}
           </p>
         </motion.div>
 
@@ -101,7 +140,7 @@ export function About() {
              <h3 className="text-xs font-black text-white uppercase tracking-[0.4em]">Off_Kernel</h3>
           </div>
           <p className="font-sans text-sm text-white/40 leading-relaxed italic">
-            When I'm not architecting systems, I'm likely exploring automotive design, studying mid-century modern furniture, or experimenting with generative art in GLSL.
+            {content.offKernel}
           </p>
         </motion.div>
       </section>
