@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc } from 'firebase/firestore'
 import { db } from '@/common/lib/firebase'
 import { compressProfileImage } from '@/common/lib/imageOptimization'
 import EditableText from '@/admin/EditableText'

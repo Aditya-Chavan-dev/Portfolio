@@ -15,8 +15,8 @@ export async function compressProfileImage(file: File, maxWidth = 160, quality =
       
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
+        const width = img.width;
+        const height = img.height;
 
         // Force square crop or just containment? 
         // For testimonials, square looks best.

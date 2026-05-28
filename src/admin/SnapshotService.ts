@@ -1,5 +1,5 @@
 import { db } from '@/common/lib/firebase';
-import { collection, getDocs, doc, setDoc, serverTimestamp, query, orderBy, limit } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, serverTimestamp, query, orderBy, limit, writeBatch, getDoc } from 'firebase/firestore';
 import { tracedCall, tracedWrite } from './MetricsOrchestrator';
 
 export interface Snapshot {
@@ -59,19 +59,20 @@ export async function getRecentSnapshots(max: number = 20): Promise<Snapshot[]> 
 export async function restoreSnapshot(snapshotId: string) {
   return tracedWrite(`snapshot/restore/${snapshotId}`, async () => {
     const snapshotRef = doc(db, 'admin_snapshots', snapshotId);
-    const snap = await (await import('firebase/firestore')).getDoc(snapshotRef);
+    const snap = await getDoc(snapshotRef);
     
     if (!snap.exists()) throw new Error('Snapshot not found');
     
     const { data: configData } = snap.data();
     
-    // Batch updates (non-atomic for simplicity)
-    const promises = Object.entries(configData).map(([docId, data]) => {
+    const batch = writeBatch(db);
+    Object.entries(configData).forEach(([docId, data]) => {
       // Intentional: snapshot data is dynamically shaped — can't be statically typed
-      return setDoc(doc(db, 'adminConfig', docId), data as Record<string, unknown>);
+      const configDocRef = doc(db, 'adminConfig', docId);
+      batch.set(configDocRef, data as Record<string, unknown>);
     });
     
-    await Promise.all(promises);
+    await batch.commit();
     return true;
   });
 }
