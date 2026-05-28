@@ -37,23 +37,7 @@ export interface EnrichedProject extends Project {
   order: number
 }
 
-export function mapGithubRepo(raw: any): Project {
-  return {
-    id: raw.id,
-    name: raw.name,
-    description: raw.description,
-    topics: raw.topics ?? [],
-    language: raw.language,
-    githubUrl: raw.html_url,
-    liveUrl: raw.homepage || null,
-    stars: raw.stargazers_count,
-    forksCount: raw.forks_count,
-    openIssuesCount: raw.open_issues_count,
-    createdAt: raw.created_at,
-    updatedAt: raw.updated_at,
-    isFork: raw.fork,
-  }
-}
+
 
 
 
