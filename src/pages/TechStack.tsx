@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { Layout, Server, Terminal, Shield, Cpu, Activity, Zap } from 'lucide-react';
 import { useTechStack } from '@/common/hooks/useTechStack';
 
+import { LoadingSpinner } from '@/common/components/LoadingSpinner';
+
 const ICON_MAP: Record<string, any> = {
   "Visual Architecture": Layout,
   "Core Engineering": Terminal,
@@ -13,12 +15,7 @@ export function TechStack() {
   const { stack, loading } = useTechStack();
 
   if (loading && stack.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 opacity-40">
-        <div className="w-8 h-8 border-2 border-amber-500/20 border-t-amber-500 rounded-full animate-spin mb-4" />
-        <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white">Initializing_Signals…</span>
-      </div>
-    );
+    return <LoadingSpinner label="INITIALIZING SIGNALS…" />;
   }
 
   return (

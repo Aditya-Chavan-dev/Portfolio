@@ -9,6 +9,8 @@ import { CinematicOverlay } from '@/landing-page/CinematicOverlay'
 import { motion } from 'framer-motion'
 import { Terminal, Shield, Activity, ChevronLeft } from 'lucide-react'
 
+import { LoadingSpinner } from '@/common/components/LoadingSpinner'
+
 export default function Testimonial() {
   const navigate = useNavigate()
   const [content, setContent] = useState<TestimonialPageContent | null>(null)
@@ -28,12 +30,7 @@ export default function Testimonial() {
   }, [])
 
   if (loading || !content) {
-    return (
-      <div className="min-h-screen bg-[#050507] flex flex-col items-center justify-center p-6" role="status">
-         <div className="w-8 h-8 border-2 border-amber-500/20 border-t-amber-500 rounded-full animate-spin mb-4" />
-         <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-white/40">Opening_Uplink…</span>
-      </div>
-    )
+    return <LoadingSpinner fullScreen label="OPENING UPLINK…" />
   }
 
   return (
