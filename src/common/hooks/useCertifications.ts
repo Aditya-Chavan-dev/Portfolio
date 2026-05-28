@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react'
-import { collection, getDocs } from 'firebase/firestore'
-import { db } from '@/common/lib/firebase'
 import { CertificationEntry } from '@/common/types/content.types'
+import { useFirestoreCollection } from './useFirestoreCollection'
 
 const staticCerts: CertificationEntry[] = [
   { title: "AWS Solutions Architect", issuer: "Amazon Web Services", date: "2023", icon: "https://upload.wikimedia.org/wikipedia/commons/5/5c/Amazon_Web_Services_Logo.svg" },
@@ -12,26 +10,10 @@ const staticCerts: CertificationEntry[] = [
 ];
 
 export function useCertifications() {
-  const [certifications, setCertifications] = useState<CertificationEntry[]>(staticCerts)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'certifications'))
-        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as CertificationEntry))
-        
-        if (data && data.length > 0) {
-          setCertifications(data)
-        }
-      } catch (err) {
-        console.error('Failed to fetch certifications:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    load()
-  }, [])
+  const { data: certifications, loading } = useFirestoreCollection<CertificationEntry>(
+    'certifications',
+    staticCerts
+  )
 
   return { certifications, loading }
 }

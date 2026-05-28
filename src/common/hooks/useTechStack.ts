@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react'
-import { collection, getDocs } from 'firebase/firestore'
-import { db } from '@/common/lib/firebase'
 import { TechStackEntry } from '@/common/types/content.types'
+import { useFirestoreCollection } from './useFirestoreCollection'
 
 const staticStack: TechStackEntry[] = [
   {
@@ -23,26 +21,10 @@ const staticStack: TechStackEntry[] = [
 ];
 
 export function useTechStack() {
-  const [stack, setStack] = useState<TechStackEntry[]>(staticStack)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'techstack'))
-        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TechStackEntry))
-
-        if (data && data.length > 0) {
-          setStack(data)
-        }
-      } catch (err) {
-        console.error('Failed to fetch tech stack:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    load()
-  }, [])
+  const { data: stack, loading } = useFirestoreCollection<TechStackEntry>(
+    'techstack',
+    staticStack
+  )
 
   return { stack, loading }
 }

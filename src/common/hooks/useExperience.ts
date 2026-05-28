@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
-import { collection, getDocs, query, orderBy } from 'firebase/firestore'
-import { db } from '@/common/lib/firebase'
+import { orderBy } from 'firebase/firestore'
 import { ExperienceEntry } from '@/common/types/content.types'
+import { useFirestoreCollection } from './useFirestoreCollection'
 
 const staticExperience: ExperienceEntry[] = [
   {
@@ -37,27 +36,11 @@ const staticExperience: ExperienceEntry[] = [
 ];
 
 export function useExperience() {
-  const [experience, setExperience] = useState<ExperienceEntry[]>(staticExperience)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const q = query(collection(db, 'experience'), orderBy('date', 'desc'))
-        const querySnapshot = await getDocs(q)
-        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ExperienceEntry))
-        
-        if (data && data.length > 0) {
-          setExperience(data)
-        }
-      } catch (err) {
-        console.error('Failed to fetch experience:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    load()
-  }, [])
+  const { data: experience, loading } = useFirestoreCollection<ExperienceEntry>(
+    'experience',
+    staticExperience,
+    [orderBy('date', 'desc')]
+  )
 
   return { experience, loading }
 }
