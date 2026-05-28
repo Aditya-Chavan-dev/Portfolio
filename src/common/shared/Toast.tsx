@@ -1,5 +1,5 @@
 import { createContext, useContext, type ReactNode } from 'react'
-import { useToast, type ToastItem, type ToastType } from './useToast'
+import { useToast, type ToastItem, type ToastType } from '@/common/hooks/useToast'
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
